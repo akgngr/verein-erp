@@ -115,6 +115,10 @@
     "unlicensed": {
       "title": "Dieses Modul erfordert eine Lizenz",
       "description": "Diese Funktion ist nur mit einer gültigen Enterprise-Lizenz verfügbar. Admins können sie unter Einstellungen → Lizenz hinterlegen."
+    },
+    "public": {
+      "title": "Diese Seite ist derzeit nicht verfügbar",
+      "description": "Die gesuchte Seite ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Verein."
     }
   },
   "releases": {
@@ -422,7 +426,8 @@
       "accessGrantsPending": "Die von diesem Modul angeforderten Berechtigungen warten auf Administratorfreigabe.",
       "failedJobsDetected": "In der Hintergrund-Warteschlange wurden fehlgeschlagene Aufgaben festgestellt.",
       "notificationsNoChannel": "Für das Benachrichtigungsmodul ist kein aktiver Kanal (E-Mail, Telegram etc.) eingerichtet.",
-      "generalIssue": "Es liegen Konfigurations- oder Workflow-Hinweise für dieses Modul vor."
+      "generalIssue": "Es liegen Konfigurations- oder Workflow-Hinweise für dieses Modul vor.",
+      "portalDisabledByEnv": "Das Mitgliederportal ist aktiv, aber PORTAL_ENABLED=true ist auf dem Server nicht gesetzt; /portal ist für Besucher gesperrt (404)."
     }
   },
   "privacyUi": {

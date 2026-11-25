@@ -15,15 +15,9 @@ import {
   PORTAL_SESSION_COOKIE,
 } from "../../../services/auth-core";
 import { verifyReceiptRef } from "../../../services/receipt-ref";
+import { parseSubjectRef } from "../../../services/subject-ref";
+import { isPortalActionLimited } from "../../../services/portal-guard";
 
-function parseSubjectRef(ref: string): { kind: "member" | "guardian"; id: string } | null {
-  const idx = ref.indexOf(":");
-  if (idx <= 0) return null;
-  const kind = ref.slice(0, idx);
-  const id = ref.slice(idx + 1);
-  if ((kind !== "member" && kind !== "guardian") || !id) return null;
-  return { kind, id };
-}
 
 export async function GET(
   request: Request,
@@ -38,6 +32,9 @@ export async function GET(
   const session = await getActivePortalSession(cookieStore.get(PORTAL_SESSION_COOKIE)?.value);
   if (!session) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+  if (await isPortalActionLimited("receipts", session.subjectRef)) {
+    return NextResponse.json({ ok: false, error: "rateLimited" }, { status: 429 });
   }
 
   if (!isPortalStepUpActive(session)) {

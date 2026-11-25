@@ -47,6 +47,13 @@ _2026-11-25_
 
 - **İyileştirme:** Ayarlar genel bakışında her kart kendi açıklamasını gösterir; aynı modül açıklaması artık altı kartta tekrarlanmaz.
 
+### 1.19.1 — Herkese açık sayfalarda modül kapısı
+
+_2026-11-25_
+
+- **Güvenlik:** Anonim ziyaretçi /portal, /oy, /formular gibi sayfalarda modül yönetimi metni yerine yalnız 'sayfa kullanılamıyor' görür; API'ler 404 döner.
+- **İyileştirme:** Sağlık kokpiti, üye portalı açık ama PORTAL_ENABLED kapalıysa uyarır.
+
 ### 1.19.0 — Sağlık kokpiti, kurulum sihirbazı ve gizlilik ön ayarları
 
 _2026-11-25_
@@ -87,12 +94,4 @@ _2026-11-23_
 
 - **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
-### 1.18.0 — Gizlilik profilleri ve aylık veri çıkışı raporu (F2b)
-
-_2026-11-23_
-
-- **Yeni:** Strict / Standard / Connected gizlilik profilleri için modül ve yapay zekâ sağlayıcısı değişikliklerini önce gösteren, açık yönetici onayı gerektiren arayüz eklendi.
-- **Yeni:** Aylık veri çıkışı ekranı mevcut yapılandırma, gerçekleşen aktarımlar ve sağlayıcı tarafı saklama politikalarını ayrı bölümlerde gösterir.
-- **İyileştirme:** İki dilli ekranlar, yetki denetimi, önizleme onayı ve egress sözleşme testleri eklendi.
-
-Daha eski 30 herkese açık sürüm notu.
+Daha eski 31 herkese açık sürüm notu.

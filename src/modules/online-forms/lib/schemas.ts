@@ -9,19 +9,43 @@ const date = z.string().trim().refine((value) => value === "" || (DATE.test(valu
 const email = z.string().trim().max(200).refine((value) => value === "" || z.email().safeParse(value).success, "online-forms.validation.email").transform((value) => value || null);
 const state = z.string().trim().refine((value) => value === "" || (BUNDESLAENDER as readonly string[]).includes(value), "online-forms.validation.state").transform((value) => value || null);
 const channels = z.array(z.enum(["sms", "whatsapp", "telegram"])).max(3);
-const iban = z.string().trim().max(40).refine((value) => value === "" || /^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(value.replace(/\s/g, "").toUpperCase()), "online-forms.validation.iban").transform((value) => value || null);
+/**
+ * #580: IBAN ISO 13616 Mod-97 sağlama toplamıyla doğrulanır (önceden yalnız biçim kontrolü vardı; yazım
+ * hatalı IBAN SEPA yetkisine girebiliyordu).
+ */
+export function isValidIban(value: string): boolean {
+  const clean = value.replace(/\s/g, "").toUpperCase();
+  if (!/^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(clean)) return false;
+  const rearranged = `${clean.slice(4)}${clean.slice(0, 4)}`;
+  let remainder = 0;
+  for (const char of rearranged) {
+    const digits = /[A-Z]/.test(char) ? String(char.charCodeAt(0) - 55) : char;
+    for (const digit of digits) remainder = (remainder * 10 + Number(digit)) % 97;
+  }
+  return remainder === 1;
+}
+const iban = z.string().trim().max(40).refine((value) => value === "" || isValidIban(value), "online-forms.validation.iban").transform((value) => (value ? value.replace(/\s/g, "").toUpperCase() : null));
+const bic = z.string().trim().refine((value) => value === "" || /^[A-Z0-9]{8}([A-Z0-9]{3})?$/i.test(value), "online-forms.validation.bic").transform((value) => value || null);
+/** SEPA yetkisi verildiyse IBAN ve hesap sahibi zorunlu. */
+const requireBankForMandate = (value: { sepaMandate?: boolean; iban: string | null; accountHolder: string | null }, ctx: z.RefinementCtx) => {
+  if (!value.sepaMandate) return;
+  if (!value.iban) ctx.addIssue({ code: "custom", path: ["iban"], message: "online-forms.validation.ibanRequired" });
+  if (!value.accountHolder) ctx.addIssue({ code: "custom", path: ["accountHolder"], message: "online-forms.validation.accountHolderRequired" });
+};
 
 export const memberDataSchema = z.object({
   email, phone: text(40), street: text(120), houseNumber: text(20), postalCode: text(10), city: text(80), state, country: text(60),
   birthDate: date, profession: text(120), messagingConsents: channels, bulkMailOptOut: z.boolean(), photoConsent: z.boolean(),
-});
+  // #580: SEPA yetki yenileme (MEMBER) — önceden üye formunda banka alanları yoktu.
+  iban: iban.default(""), bic: bic.default(""), accountHolder: text(120).default(""), sepaMandate: z.boolean().default(false),
+}).superRefine(requireBankForMandate);
 export const studentDataSchema = z.object({ birthDate: date, school: text(120), gradeLevel: text(20), email, phone: text(40), photoConsent: z.boolean() });
 export const guardianDataSchema = z.object({
   email, phone: text(40), street: text(120), houseNumber: text(20), postalCode: text(10), city: text(80), state,
   country: z.string().trim().regex(/^[A-Z]{2}$/, "online-forms.validation.country"),
-  iban, bic: z.string().trim().refine((value) => value === "" || /^[A-Z0-9]{8}([A-Z0-9]{3})?$/i.test(value), "online-forms.validation.bic").transform((value) => value || null),
+  iban, bic,
   accountHolder: text(120), messagingConsents: channels, bulkMailOptOut: z.boolean(), sepaMandate: z.boolean(),
-});
+}).superRefine(requireBankForMandate);
 
 export const submitSchema = z.object({
   token: z.string().min(20).max(100),

@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı.",
   "releases": [
     {
+      "version": "0.4.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Portal uçtan uca çalışır, ek doğrulama, güvenlik",
+        "de": "Portal funktioniert durchgängig, Step-up, Sicherheit"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Portal öznesi tek biçimde ('member:<id>'); önceden her gerçek oturumda rıza, düzeltme, makbuz, Art. 15, etkinlik ve imza işlemleri başarısız oluyordu. Giriş bağlantısı tam e-posta eşleşmesiyle bulunur; ana veride gerçek maskeli IBAN gösterilir.",
+          "de": "Einheitliches Portal-Subjekt („member:<id>“); zuvor schlugen Einwilligungen, Korrekturen, Belege, Art. 15, Veranstaltungen und Signaturen in jeder echten Sitzung fehl. Der Anmeldelink nutzt eine exakte E-Mail-Suche; die Stammdaten zeigen die echte maskierte IBAN."
+        },
+        {
+          "type": "security",
+          "tr": "E-postayla ek doğrulama (step-up) eklendi; doğrulamasız geçiş anahtarı yolu kapatıldı. Rıza onayı yalnız sayfadaki düğmeyle (POST) yapılır; tüm portal uçlarında hız sınırı; __Host- çerezleri doğru silinir; makbuz imza anahtarında sabit yedek değer kaldırıldı.",
+          "de": "Step-up per E-Mail ergänzt; der ungeprüfte Passkey-Weg ist gesperrt. Einwilligungen werden nur per Schaltfläche (POST) bestätigt; alle Portal-Endpunkte sind ratenbegrenzt; __Host-Cookies werden korrekt gelöscht; kein fester Ersatzschlüssel mehr für Belegsignaturen."
+        },
+        {
+          "type": "fix",
+          "tr": "Portal içi imza, tam akış bağlanana kadar kapalı; bekleyen formlar e-postadaki bağlantıyla (belge, imza, kanıt, PDF) imzalanır.",
+          "de": "Die Signatur im Portal ist bis zur Anbindung des vollständigen Ablaufs deaktiviert; offene Formulare werden über den E-Mail-Link (Dokument, Signatur, Nachweis, PDF) unterschrieben."
+        },
+        {
+          "type": "fix",
+          "tr": "Ek doğrulama isteği sınıra takılırsa bekleyen bağlantı geçerli kalır ve üyeye yeniden deneme mesajı gösterilir.",
+          "de": "Wird eine Bestätigungsanfrage durch das Limit gebremst, bleibt der ausstehende Link gültig und das Mitglied erhält einen Hinweis zum erneuten Versuch."
+        }
+      ]
+    },
+    {
       "version": "0.3.2",
       "date": "2026-11-25",
       "title": {

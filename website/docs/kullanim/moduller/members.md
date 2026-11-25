@@ -51,6 +51,12 @@ _2026-11-25_
 
 - **Düzeltme:** Aidat ödemeleri başlığı Türkçe arayüzde büyük harfe çevrilmez ("MİTGLİEDSBEİTRÄGE" hatası).
 
+### 1.15.9 — Portal ve form için SEPA API'si
+
+_2026-11-25_
+
+- **İyileştirme:** Maskeli IBAN ve SEPA yetkisi kaydı üye portalı ve çevrimiçi formlar için public API'den sunulur.
+
 ### 1.15.8 — Kanal rızası eşitlemesi
 
 _2026-11-25_
@@ -87,10 +93,4 @@ _2026-11-19_
 
 - **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
 
-### 1.15.2 — Arka plan işleri için üye eşleştirme
-
-_2026-11-19_
-
-- **Düzeltme:** E-postaya göre üye eşleştirmesi arka plan işlerinden de güvenle kullanılabilir.
-
-Daha eski 34 herkese açık sürüm notu.
+Daha eski 35 herkese açık sürüm notu.

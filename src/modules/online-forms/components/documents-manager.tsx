@@ -1,5 +1,6 @@
 "use client";
 
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { notify } from "@/shared/components/ui/notify";
 import { Checkbox, CheckboxGroup, Dialog, Input, Label, Select, Spinner, StatusChip, Switch, TextField, Button } from "@/shared/components/kit";
 
@@ -63,6 +64,8 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
   const hydrated = useHydrated();
   const [editing, setEditing] = useState<typeof empty | null>(null);
   const [pending, start] = useTransition();
+  // #580: Silme onayı uygulamanın onay penceresiyle (önceden tarayıcının window.confirm'i).
+  const [deleting, setDeleting] = useState<{ id: string; title: string } | null>(null);
 
   const call = (
     fn: () => Promise<{ ok: boolean; error?: string }>,
@@ -86,6 +89,7 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
 
   if (!hydrated) return null;
   return (
+    <>
     <div className="flex max-w-4xl flex-col gap-4">
       <div className="flex flex-wrap items-center gap-2">
         <Button
@@ -184,13 +188,7 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
                 size="sm"
                 aria-label={t("delete")}
                 isDisabled={pending}
-                onPress={() =>
-                  window.confirm(t("deleteConfirm", { title: doc.title })) &&
-                  call(
-                    () => deleteFormDocumentAction({ id: doc.id }),
-                    t("deleted"),
-                  )
-                }
+                onPress={() => setDeleting({ id: doc.id, title: doc.title })}
                 variant={actionVariant("danger", "light")}
               >
                 <Trash2 className="size-4" />
@@ -343,5 +341,19 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
               ) : null}
       </Dialog>
     </div>
+      <ConfirmDialog
+        isOpen={deleting !== null}
+        onOpenChange={(open) => !open && setDeleting(null)}
+        title={t("delete")}
+        message={deleting ? t("deleteConfirm", { title: deleting.title }) : ""}
+        confirmLabel={t("delete")}
+        confirmColor="danger"
+        onConfirm={async () => {
+          const target = deleting;
+          setDeleting(null);
+          if (target) call(() => deleteFormDocumentAction({ id: target.id }), t("deleted"));
+        }}
+      />
+    </>
   );
 }

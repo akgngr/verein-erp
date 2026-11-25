@@ -17,6 +17,26 @@
       ]
     },
     {
+      "version": "1.19.1",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Herkese açık sayfalarda modül kapısı",
+        "de": "Modulsperre auf öffentlichen Seiten"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Anonim ziyaretçi /portal, /oy, /formular gibi sayfalarda modül yönetimi metni yerine yalnız 'sayfa kullanılamıyor' görür; API'ler 404 döner.",
+          "de": "Anonyme Besucher sehen auf Seiten wie /portal, /oy, /formular nur „Seite nicht verfügbar“ statt Modulverwaltungstexten; APIs liefern 404."
+        },
+        {
+          "type": "improvement",
+          "tr": "Sağlık kokpiti, üye portalı açık ama PORTAL_ENABLED kapalıysa uyarır.",
+          "de": "Das Gesundheitscockpit warnt, wenn das Mitgliederportal aktiv, PORTAL_ENABLED aber nicht gesetzt ist."
+        }
+      ]
+    },
+    {
       "version": "1.19.0",
       "date": "2026-11-25",
       "title": {

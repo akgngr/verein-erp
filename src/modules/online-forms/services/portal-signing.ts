@@ -1,6 +1,5 @@
 import "server-only";
 
-import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 
 export type PortalPendingFormRow = {
@@ -32,44 +31,19 @@ export async function listPendingOnlineFormsForPortal(
   return rows;
 }
 
+/**
+ * #580: Portal içi imza DEVRE DIŞI. Önceki uygulama formu belge gösterilmeden, imza/kanıt özeti ve PDF
+ * oluşturulmadan ve üye kaydı güncellenmeden "COMPLETED" yapıyordu (hukuken geçersiz). Tam akış
+ * (belge gösterimi → imza → kanıt → PDF → üye güncellemesi) e-postayla gönderilen `/formular/<belirteç>`
+ * bağlantısındadır; portal yalnız bekleyen formları listeler. Bu fonksiyon tam akış portala bağlanana kadar
+ * her zaman `false` döner ve hiçbir şeyi değiştirmez.
+ */
 export async function signOnlineFormForPortal(input: {
   memberId: string;
   subjectRef: string;
   requestId: string;
   signerName: string;
 }): Promise<boolean> {
-  const trimmedName = input.signerName.trim();
-  if (!trimmedName || trimmedName.length > 150) return false;
-
-  const db = getDb();
-  const req = await db.onlineFormRequest.findFirst({
-    where: {
-      id: input.requestId,
-      subjectId: input.memberId,
-      status: "PENDING",
-      expiresAt: { gt: new Date() },
-    },
-    select: { id: true, kind: true },
-  });
-  if (!req) return false;
-
-  await db.onlineFormRequest.update({
-    where: { id: req.id },
-    data: {
-      status: "COMPLETED",
-      completedAt: new Date(),
-      signerName: trimmedName,
-    },
-  });
-
-  await writeAudit({
-    userId: input.subjectRef,
-    userLabel: "Member Portal",
-    action: "PORTAL_FORM_SIGNED",
-    entity: "OnlineFormRequest",
-    entityId: req.id,
-    after: { memberId: input.memberId, kind: req.kind },
-  });
-
-  return true;
+  void input;
+  return false;
 }
