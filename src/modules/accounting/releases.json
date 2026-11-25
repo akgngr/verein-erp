@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.27.4",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "GoBD, vergi, Kassenminus, banka ve PDF güvenlik düzeltmeleri",
+        "de": "GoBD-, Steuer-, Kassenminus-, Bank- und PDF-Sicherheitskorrekturen"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Sayman raporu PDF oluşturucusunda çapraz modül dosya okuma engellendi ve KoSIT doğrulayıcıda DNS-sabitli SSRF koruması eklendi (#573).",
+          "de": "Modulübergreifender Dateizugriff im Kassenbericht-PDF gesperrt und DNS-gepinnter SSRF-Schutz im KoSIT-Validator ergänzt (#573)."
+        },
+        {
+          "type": "fix",
+          "tr": "Kassenminus, banka içe aktarma/ters kayıt, SOLL-Versteuerung UStVA, § 19 UStG, GoBD Z3 UTF-8/ek CSV'ler, yıllık kapanış, e-fatura KDV kategorisi E ve SEPA pain.001 transliterasyon hataları giderildi (#576, #577).",
+          "de": "Kassenminus, Bankimport/Storno, Soll-Versteuerung UStVA, § 19 UStG, GoBD Z3 UTF-8/Zusatz-CSVs, Jahresabschluss, E-Rechnung Steuerkategorie E und SEPA pain.001-Transliteration behoben (#576, #577)."
+        }
+      ]
+    },
+    {
       "version": "1.27.3",
       "date": "2026-11-24",
       "title": {

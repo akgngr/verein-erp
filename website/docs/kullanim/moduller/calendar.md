@@ -13,7 +13,7 @@ Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek gö
 |---|---|
 | Anahtar | `calendar` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.15 |
+| Sürüm | 1.3.16 |
 | Sayfalar | `/calendar`, `/calendar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_shared_calendar_entries` · `list_shared_calendars` · `propose_calendar_entry`
 
 ## Sürüm notları
+
+### 1.3.16 — Kanonik APP_URL abonelik bağlantıları
+
+_2026-11-25_
+
+- **Güvenlik:** Takvim abonelik bağlantıları artık kanonik APP_URL kökü üzerinden üretiliyor (#574).
 
 ### 1.3.15 — nav.json kategori ve alt modül tanımı
 
@@ -84,10 +90,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.3.7 — Mobilde alttan açılan çekmece
-
-_2026-11-16_
-
-- **İyileştirme:** Form/ayrıntı çekmecesi mobilde alttan açılır (masaüstünde sağdan).
-
-Daha eski 13 herkese açık sürüm notu.
+Daha eski 14 herkese açık sürüm notu.

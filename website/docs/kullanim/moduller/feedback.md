@@ -13,7 +13,7 @@ Test kullanıcılarının hata ve önerilerini toplar.
 |---|---|
 | Anahtar | `feedback` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.6 |
+| Sürüm | 1.1.7 |
 | Sayfalar | `/geri-bildirim` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Geri bildirim | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | — | görüntüleme, oluşturma | görüntüleme, oluşturma |
 
 ## Sürüm notları
+
+### 1.1.7 — Geri bildirim bağlantılarında protokol doğrulaması
+
+_2026-11-25_
+
+- **Güvenlik:** Geri bildirim URL alanlarında yalnızca güvenli http/https protokollerine izin veriliyor (#573).
 
 ### 1.1.6 — nav.json kategori ve alt modül tanımı
 

@@ -13,7 +13,7 @@ import { youthProtectionPermissions } from "./permissions";
  */
 export const moduleConfig: ModuleConfig = {
   key: "youth-protection",
-  version: "0.1.2",
+  version: "0.1.3",
   label: "Çocuk Koruma",
   description:
     "Eğitmen ve gönüllülerin genişletilmiş adli sicil belgesi (§ 72a SGB VIII) ibraz takibi ve harç muafiyet yazısı şablonu. Orijinal belge fiziki olarak incelenir, asla sisteme yüklenmez ve dijitalleştirilmez.",

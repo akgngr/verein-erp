@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.7",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Geri bildirim bağlantılarında protokol doğrulaması",
+        "de": "Protokollprüfung für Feedback-Links"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Geri bildirim URL alanlarında yalnızca güvenli http/https protokollerine izin veriliyor (#573).",
+          "de": "Feedback-URLs lassen nun ausschließlich sichere http/https-Protokolle zu (#573)."
+        }
+      ]
+    },
+    {
       "version": "1.1.6",
       "date": "2026-11-24",
       "title": {

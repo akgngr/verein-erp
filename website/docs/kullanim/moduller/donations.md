@@ -13,7 +13,7 @@ Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı 
 |---|---|
 | Anahtar | `donations` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.13 |
+| Sürüm | 1.1.14 |
 | Sayfalar | `/bagislar`, `/bagislar/bagiscilar`, `/bagislar/bildirimler`, `/bagislar/bildirimler/olustur`, `/bagislar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_donation_statistics`
 
 ## Sürüm notları
+
+### 1.1.14 — Bağışçı düzenleme, BMF PDF, 10 yıl saklama ve toplu PDF birleştirme
+
+_2026-11-25_
+
+- **Düzeltme:** Bağışçı güncelleme/mükerrer kontrolü, bağış düzenleme fiş sürümlemesi, BMF PDF numaralandırma ve satır bölme, 10 yıllık saklama koruması ve SHA-256 doğrulamalı pdf-lib toplu birleştirme düzeltildi (#575, #577).
 
 ### 1.1.13 — nav.json kategori ve alt modül tanımı
 
@@ -84,10 +90,4 @@ _2026-11-17_
 
 - **İyileştirme:** Kart ve yüzey görünümleri ortak SurfaceCard/StatCard pattern'ine taşındı; modül bu kullanımda HeroUI Card implementasyonuna doğrudan bağlı değil.
 
-### 1.1.4 — İptal eylemi ortak buton katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Buton görünümü ve etkileşim semantiği ortak ActionButton pattern'ine taşındı; modül bu kullanımda HeroUI Button implementasyonuna doğrudan bağlı değil.
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.

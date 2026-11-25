@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal.",
   "releases": [
     {
+      "version": "0.1.3",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "DOM XSS önleme sertleştirmesi",
+        "de": "DOM-XSS-Schutz"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "İstemci tarafı metin oluşturmada innerHTML yerine güvenli textContent kullanıldı (#573).",
+          "de": "Sichere Verwendung von textContent statt innerHTML bei der clientseitigen Textdarstellung (#573)."
+        }
+      ]
+    },
+    {
       "version": "0.1.2",
       "date": "2026-11-24",
       "title": {

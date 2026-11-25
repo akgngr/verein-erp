@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.15.7 |
+| Sürüm | 1.15.8 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.15.8 — Aidat korumaları, DSGVO dışa aktarım, silme temizliği ve düzeltme talebi paneli
+
+_2026-11-25_
+
+- **Düzeltme:** Aidat fazla ödeme/işlem içi koruma, makbuz PDF tutarı ve denetim kaydı, mükerrer üye uyarısı, tam DSGVO dışa aktarımı, toplu içe aktarma tekilleştirme, silmede SEPA/portal temizliği ve üye düzeltme talebi onay paneli eklendi (#578, #577).
 
 ### 1.15.7 — nav.json kategori ve alt modül tanımı
 
@@ -87,10 +93,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 1.15.0 — Sekreter özetine katkı
-
-_2026-11-18_
-
-- **Yeni:** Kişisel sekreterin sabah özetinde vadesi geçmiş aidat sayısı görünür (yalnız aidat yetkisi olanlara, üye adı olmadan).
-
-Daha eski 32 herkese açık sürüm notu.
+Daha eski 33 herkese açık sürüm notu.

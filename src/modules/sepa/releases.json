@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.2.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "TARGET2 takvimi, pain.008 transliterasyonu ve atomik tahsilat/iade",
+        "de": "TARGET2-Kalender, pain.008-Transliteration und atomare Einzüge/Rücklastschriften"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "TARGET2 tatil günü ve tahsilat tarihi doğrulaması, pain.008 Türkçe çevirim/boş etiket koruması, ileri tarihli yetki kontrolü ve atomik tahsilat/iade işlemleri eklendi (#578).",
+          "de": "TARGET2-Feiertags- und Einzugsdatumsprüfung, pain.008-Transliteration/Leertag-Schutz, Mandatsdatumsprüfung sowie atomare Einzugs- und Rücklastschriftverarbeitung ergänzt (#578)."
+        }
+      ]
+    },
+    {
       "version": "1.2.1",
       "date": "2026-11-23",
       "title": {

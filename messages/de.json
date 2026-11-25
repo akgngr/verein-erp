@@ -920,7 +920,10 @@
       "bookingNotFound2": "Buchung nicht gefunden.",
       "reversedNoFile": "Einer stornierten Buchung können keine Belege hinzugefügt werden.",
       "reversedSuffix": "STORNIERT",
-      "cashClosed": "Die Kasse ist bis {date} abgeschlossen; für diesen Zeitraum sind keine Änderungen mehr möglich."
+      "cashClosed": "Die Kasse ist bis {date} abgeschlossen; für diesen Zeitraum sind keine Änderungen mehr möglich.",
+      "yearNotFinished": "Das Geschäftsjahr {year} ist noch nicht abgeschlossen und kann noch nicht gesperrt werden.",
+      "yearCloseGobdFailed": "Die GoBD-Journalprüfung ist fehlgeschlagen; vor dem Jahresabschluss muss die Inkonsistenz behoben werden.",
+      "unlockRequiresOtherApprover": "Die Entsperrung muss von einer anderen berechtigten Person oder einem Administrator durchgeführt werden (Vier-Augen-Prinzip)."
     },
     "settings": {
       "donationShort": "Spende"
@@ -1449,7 +1452,16 @@
         "private": "Privat",
         "ignore": "Ignorieren",
         "reopen": "Wieder öffnen",
-        "openBooking": "Buchung öffnen"
+        "openBooking": "Buchung öffnen",
+        "reverse": "Stornieren"
+      },
+      "reversed": "Bankbuchung wurde storniert und der Umsatz zur erneuten Zuordnung geöffnet.",
+      "reverseModal": {
+        "title": "Bankbuchung stornieren",
+        "description": "Die verknüpfte Buchung wird GoBD-konform storniert und diese Bankzeile wieder auf offen gesetzt.",
+        "reasonLabel": "Stornogrund",
+        "reasonPlaceholder": "z. B. falsche Kategorie gewählt",
+        "submit": "Stornieren"
       },
       "modal": {
         "title": "Bankumsatz verbuchen",
@@ -1487,6 +1499,8 @@
         "currency": "Es werden nur EUR-Umsätze unterstützt.",
         "notFound": "Umsatz nicht gefunden.",
         "notOpen": "Der Umsatz ist nicht mehr offen.",
+        "notBooked": "Nur bereits verbuchte Bankumsätze können storniert werden.",
+        "reverseInvoiceManaged": "Mit Rechnungen oder Eingangsrechnungen verknüpfte Umsätze müssen über die jeweilige Rechnung storniert werden.",
         "invoiceRequired": "Bitte eine Rechnung wählen.",
         "invoiceNeedsCredit": "Nur Zahlungseingänge können Rechnungen zugeordnet werden.",
         "payableRequired": "Bitte eine Eingangsrechnung wählen.",
@@ -1785,7 +1799,8 @@
       },
       "errors": {
         "gwgLimit": "GWG nur bis 800 € netto.",
-        "poolRange": "Sammelposten nur von 250,01 bis 1.000 € netto."
+        "poolRange": "Sammelposten nur von 250,01 bis 1.000 € netto.",
+        "disposalBeforeAcquisition": "Das Abgangsdatum darf nicht vor dem Anschaffungsdatum liegen."
       }
     },
     "einvoice": {
@@ -2548,6 +2563,7 @@
     "loginButton": "Anmelden",
     "logout": "Abmelden",
     "mustChangePasswordBanner": "Passwort muss aktualisiert werden",
+    "mustChangePasswordHint": "Zu Ihrer Sicherheit müssen Sie unten zuerst ein neues Passwort festlegen, bevor Sie fortfahren können.",
     "meta": {
       "profile": "Profil"
     },
@@ -2564,6 +2580,7 @@
       "changePassword": "Passwort ändern",
       "currentPassword": "Aktuelles Passwort",
       "newPassword": "Neues Passwort",
+      "confirmPassword": "Neues Passwort bestätigen",
       "submit": "Passwort aktualisieren",
       "updated": "Ihr Passwort wurde aktualisiert.",
       "details": "Meine Profildaten",
@@ -2572,13 +2589,17 @@
     "errors": {
       "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
       "currentPasswordWrong": "Das aktuelle Passwort ist falsch.",
+      "samePassword": "Das neue Passwort darf nicht mit dem aktuellen Passwort übereinstimmen.",
       "invalidCredentials": "E-Mail oder Passwort ist falsch.",
       "accountLocked": "Das Konto ist vorübergehend gesperrt. Bitte versuchen Sie es später erneut.",
+      "rateLimited": "Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.",
       "loginFailed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
       "invalidLocale": "Ungültige Sprachauswahl."
     },
     "validation": {
       "currentPasswordRequired": "Bitte das aktuelle Passwort eingeben.",
+      "confirmPasswordRequired": "Bitte das neue Passwort wiederholen.",
+      "passwordsMismatch": "Die neuen Passwörter stimmen nicht überein.",
       "emailRequired": "E-Mail ist erforderlich.",
       "passwordRequired": "Passwort ist erforderlich."
     },
@@ -3083,6 +3104,9 @@
     "errors": {
       "credentials": "Die Anbieter-Schlüssel wurden abgelehnt. Bitte Einstellungen prüfen.",
       "provider": "Der Bankanbieter ist nicht erreichbar oder hat die Anfrage abgelehnt. Bitte später erneut versuchen.",
+      "rateLimit": "Der Bankanbieter hat das Anfragelimit erreicht. Bitte versuchen Sie es später erneut.",
+      "invalidAccount": "Es kann nur ein aktives Bankkonto zugeordnet werden.",
+      "appUrlRequired": "Für die Bankverbindung muss die öffentliche Anwendungsadresse (APP_URL) konfiguriert sein.",
       "notConfigured": "Anbieter nicht eingerichtet.",
       "mockDisabled": "Der Testanbieter ist in dieser Umgebung nicht verfügbar."
     },
@@ -3784,7 +3808,8 @@
       "chargeNotOpen": "Diese Forderung ist nicht offen.",
       "paymentNotFound": "Zahlung nicht gefunden oder bereits zurückgenommen.",
       "categoryMissing": "In den Kurs-Einstellungen ist keine Einnahmekategorie gewählt.",
-      "teacherHasAccount": "Diese Lehrkraft hat bereits ein Konto."
+      "teacherHasAccount": "Diese Lehrkraft hat bereits ein Konto.",
+      "sessionInLockedPayout": "Dieser Termin ist Teil einer freigegebenen oder bezahlten Honorarabrechnung und kann nicht gelöscht werden."
     },
     "validation": {
       "textMax": "Der Text ist zu lang.",
@@ -4683,6 +4708,8 @@
         "note": "Notiz",
         "fromMember": "Aus Mitglied anlegen",
         "fromMemberHint": "Name und Adresse des Mitglieds werden einmalig kopiert; keine Live-Verknüpfung.",
+        "duplicateWarning": "Ein ähnlicher Spender ist bereits vorhanden ({number}). Wenn Sie dennoch einen neuen Spender anlegen möchten, bestätigen Sie unten.",
+        "confirmCreateDuplicate": "Trotzdem speichern",
         "save": "Speichern",
         "cancel": "Abbrechen",
         "toastSaved": "Spender/in gespeichert: {number}"
@@ -4912,6 +4939,7 @@
       "reversedDonation": "Für eine stornierte Spende kann keine Bestätigung ausgestellt werden.",
       "someDonationsMissing": "Einige der ausgewählten Spenden wurden nicht gefunden.",
       "periodSingleYear": "Der Zeitraum einer Sammelbestätigung muss innerhalb eines Kalenderjahres liegen.",
+      "periodOrderInvalid": "Das Startdatum des Zeitraums darf nicht nach dem Enddatum liegen.",
       "donationReversed": "{number} ist storniert.",
       "donationOutsidePeriod": "{number} liegt außerhalb des Zeitraums.",
       "noFeePayments": "Für dieses Mitglied und Jahr gibt es keine bestätigbaren Zahlungen.",
@@ -6891,7 +6919,8 @@
       "notEditable": "Die Sitzung kann nicht bearbeitet werden.",
       "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten.",
       "membersAlreadyAdded": "Die ausgewählten Mitglieder sind bereits in dieser Sitzung.",
-      "assigneeNotAttendee": "Die ausgewählte verantwortliche Person nimmt nicht an dieser Sitzung teil."
+      "assigneeNotAttendee": "Die ausgewählte verantwortliche Person nimmt nicht an dieser Sitzung teil.",
+      "approveHasOpenVotes": "Das Protokoll kann nicht freigegeben werden, solange geheime Abstimmungen offen sind; bitte zuerst alle Abstimmungen schließen."
     },
     "validation": {
       "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
@@ -6912,6 +6941,7 @@
       "votesRange": "Die Stimmenzahl muss zwischen 0 und 1000 liegen.",
       "decisionMin": "Der Beschlusstext muss mindestens 3 Zeichen lang sein.",
       "decisionMax": "Der Beschlusstext darf höchstens 3000 Zeichen lang sein.",
+      "decisionRequired": "Bitte einen gültigen Beschluss auswählen.",
       "titleMin": "Der Titel muss mindestens 3 Zeichen lang sein.",
       "titleMax": "Der Titel darf höchstens 200 Zeichen lang sein.",
       "dateRequired": "Das Sitzungsdatum ist erforderlich.",
@@ -7657,7 +7687,24 @@
       "paymentNotSpecified": "Keine Zahlung angegeben.",
       "paymentNotFound2": "Zahlung nicht gefunden.",
       "datesInvalid": "Die Datumsangaben sind nicht stimmig; bitte markierte Felder prüfen.",
-      "exitDateRequired": "Für ausgetretene oder verstorbene Mitglieder ist ein Austrittsdatum erforderlich."
+      "exitDateRequired": "Für ausgetretene oder verstorbene Mitglieder ist ein Austrittsdatum erforderlich.",
+      "paymentExceedsOpenDue": "Der Zahlungsbetrag darf den offenen Beitragsbetrag ({remaining} €) nicht überschreiten."
+    },
+    "corrections": {
+      "title": "Offene Änderungsvorschläge aus dem Mitgliederportal",
+      "description": "Prüfen, genehmigen oder lehnen Sie Kontakt- und Adressänderungen aus dem Portal ab.",
+      "pendingCount": "{count} offen",
+      "emptyValue": "—",
+      "noteLabel": "Prüfnotiz",
+      "notePlaceholder": "Optionale Notiz",
+      "approve": "Genehmigen",
+      "reject": "Ablehnen",
+      "approved": "Änderungsvorschlag genehmigt und Mitgliedsdaten aktualisiert.",
+      "rejected": "Änderungsvorschlag abgelehnt."
+    },
+    "duplicateWarning": {
+      "title": "Mögliches Duplikat gefunden",
+      "description": "Bestehende Einträge mit gleicher E-Mail oder Name/Geburtsdatum: {matches}. Klicken Sie erneut auf Speichern, um trotzdem anzulegen."
     },
     "validation": {
       "yearMinPrev": "Das Jahr darf höchstens das Vorjahr sein.",
@@ -7704,6 +7751,7 @@
       "voidReasonMax": "Der Stornogrund darf höchstens 300 Zeichen lang sein.",
       "exitDateRequired": "Austrittsdatum ist erforderlich.",
       "amountBelowPaid": "Der Betrag muss mindestens dem bereits gezahlten Betrag entsprechen.",
+      "paymentExceedsOpenDue": "Der Zahlungsbetrag darf den offenen Beitrag nicht überschreiten.",
       "amountInvalid": "Bitte einen Betrag größer 0 eingeben (höchstens 2 Nachkommastellen).",
       "annualDueInvalid": "Bitte einen gültigen Betrag eingeben (höchstens 2 Nachkommastellen, nicht negativ).",
       "birthDateFuture": "Das Geburtsdatum darf nicht in der Zukunft liegen.",
@@ -8603,6 +8651,8 @@
       "assessmentNotFound": "Leistung nicht gefunden.",
       "pointsAboveMax": "Die Punkte dürfen das Maximum ({max}) nicht überschreiten.",
       "enrollmentNotFound": "Der Schüler ist in diesem Kurs nicht angemeldet.",
+      "sessionCancelled": "Für einen ausgefallenen Termin kann keine Anwesenheit gespeichert werden.",
+      "enrollmentWithdrawn": "Für abgemeldete Schüler kann keine Anwesenheit gespeichert werden.",
       "noteNotFound": "Eintrag nicht gefunden.",
       "noteNotYours": "Sie können nur eigene Einträge löschen."
     },
@@ -9018,6 +9068,8 @@
       "noMandate": "Kein SEPA-Mandat",
       "invalidIban": "IBAN ungültig",
       "alreadyInRun": "Bereits in einem offenen Einzug",
+      "futureSignatureDate": "Mandatsdatum liegt in der Zukunft",
+      "missingDebtorName": "Name des Zahlungspflichtigen leer oder ungültig",
       "dormant": "Mandat 36 Monate ungenutzt",
       "renewAfterReturn": "Nach Rückgabe neues Mandat nötig",
       "pausedAfterReturns": "Wegen wiederholter Rückgaben pausiert"
@@ -9071,6 +9123,8 @@
       "date": "Bitte ein gültiges Datum eingeben.",
       "year": "Bitte ein gültiges Jahr eingeben.",
       "pastDate": "Das Einzugsdatum darf nicht in der Vergangenheit liegen.",
+      "invalidCollectionDate": "Das Einzugsdatum muss mindestens 1 TARGET2-Bankarbeitstag in der Zukunft liegen (keine Wochenenden oder TARGET2-Feiertage).",
+      "invalidName": "Name des Zahlungsempfängers oder Zahlungspflichtigen darf im SEPA-Zeichensatz nicht leer sein.",
       "nothingToCollect": "Keine einziehbaren Posten.",
       "notOpen": "Der Einzug ist nicht offen.",
       "notCollected": "Der Posten ist nicht eingezogen.",
@@ -10356,6 +10410,7 @@
       "empty": "Noch kein Zugriffsfenster hinterlegt.",
       "statuses": {
         "active": "Aktiv",
+        "scheduled": "Geplant",
         "expired": "Abgelaufen",
         "revoked": "Widerrufen"
       }
@@ -10372,6 +10427,7 @@
       "toLogin": "Zur Anmeldung",
       "errors": {
         "invalid": "Dieser Einladungslink ist ungültig, abgelaufen oder bereits verwendet. Bitten Sie Ihre Verwaltung um eine neue Einladung.",
+        "rateLimited": "Zu viele Versuche. Bitte versuchen Sie es später erneut.",
         "inactive": "An inaktive Nutzer kann keine Einladung gesendet werden.",
         "mailNotConfigured": "E-Mail-Versand ist nicht eingerichtet (Einstellungen → E-Mail).",
         "appUrl": "Die App-Adresse (APP_URL) muss mit https definiert sein.",

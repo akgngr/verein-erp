@@ -13,7 +13,7 @@ Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
 |---|---|
 | Anahtar | `meetings` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.2 |
+| Sürüm | 1.4.3 |
 | Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
 
 ## Sürüm notları
+
+### 1.4.3 — Gizli oylama kapanış yarış düzeltmesi ve tutanak korumaları
+
+_2026-11-25_
+
+- **Düzeltme:** Gizli oylama kapatma atomik işlem içine alındı, açık oylama varken onay engellendi, düzenlenebilirlik denetimi eklendi, gömülü metinler/window.confirm kaldırıldı ve PDF fontları ortaklaştırıldı (#579, #577).
 
 ### 1.4.2 — nav.json kategori ve alt modül tanımı
 
@@ -86,10 +92,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 1.3.11 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-Daha eski 14 herkese açık sürüm notu.
+Daha eski 15 herkese açık sürüm notu.

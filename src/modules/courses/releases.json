@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.16",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Ücret TOCTOU düzeltmesi, hakediş sertleştirmesi ve PDF denetim kaydı",
+        "de": "Gebühren-TOCTOU-Fix, Honorar-Härtung und PDF-Prüfprotokoll"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Ücret tahsilatı/ters kayıt/feragat işlemlerinde atomik durum kilidi, işlem içi kontenjan denetimi, hakediş P2002 yinelemesi, toplu sorgu ve onaylı hakedişteki dersin silinme koruması eklendi (#579, #578).",
+          "de": "Atomare Statussperre für Zahlungen/Stornos/Erlasse, transaktionale Platzprüfung, Honorar-P2002-Retry, Batch-Abfrage und Löschschutz für abgerechnete Termine ergänzt (#579, #578)."
+        },
+        {
+          "type": "security",
+          "tr": "Öğretmen hakediş PDF dışa aktarımına kişisel veri içermeyen denetim kaydı ve kanonik APP_URL davet bağlantısı eklendi (#579, #574).",
+          "de": "Prüfprotokoll ohne PII für Honorar-PDF-Exporte sowie kanonische APP_URL für Einladungslinks ergänzt (#579, #574)."
+        }
+      ]
+    },
+    {
       "version": "1.4.15",
       "date": "2026-11-24",
       "title": {

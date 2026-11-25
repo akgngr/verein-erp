@@ -13,7 +13,7 @@ Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve
 |---|---|
 | Anahtar | `courses` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.15 |
+| Sürüm | 1.4.16 |
 | Sayfalar | `/kurslar`, `/ogrenciler`, `/ogrenci-takibi`, `/kurslar/ogretmenler`, `/kurslar/odemeler`, `/kurslar/hakedisler`, `/kurslar/ayarlar` |
 | Gerektirir | [Öğrenciler](./students) |
 | Önerir | [Öğrenci takibi](./progress) |
@@ -51,6 +51,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_course_statistics` · `list_courses` · `propose_course` · `propose_course_status` · `propose_delete_course`
 
 ## Sürüm notları
+
+### 1.4.16 — Ücret TOCTOU düzeltmesi, hakediş sertleştirmesi ve PDF denetim kaydı
+
+_2026-11-25_
+
+- **Düzeltme:** Ücret tahsilatı/ters kayıt/feragat işlemlerinde atomik durum kilidi, işlem içi kontenjan denetimi, hakediş P2002 yinelemesi, toplu sorgu ve onaylı hakedişteki dersin silinme koruması eklendi (#579, #578).
+- **Güvenlik:** Öğretmen hakediş PDF dışa aktarımına kişisel veri içermeyen denetim kaydı ve kanonik APP_URL davet bağlantısı eklendi (#579, #574).
 
 ### 1.4.15 — nav.json kategori ve alt modül tanımı
 
@@ -94,10 +101,4 @@ _2026-11-16_
 
 - **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
 
-### 1.4.6 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 11 herkese açık sürüm notu.

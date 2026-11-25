@@ -920,7 +920,10 @@
       "bookingNotFound2": "Fiş bulunamadı.",
       "reversedNoFile": "İptal edilmiş fişe belge eklenemez.",
       "reversedSuffix": "İPTAL EDİLDİ",
-      "cashClosed": "Kasa {date} tarihinde kapatıldı; o güne veya öncesine bu kasada işlem yapılamaz."
+      "cashClosed": "Kasa {date} tarihinde kapatıldı; o güne veya öncesine bu kasada işlem yapılamaz.",
+      "yearNotFinished": "{year} mali yılı henüz tamamlanmadığı için kapatılamaz.",
+      "yearCloseGobdFailed": "GoBD günlük bütünlüğü doğrulaması başarısız; yıl kapatılmadan önce sorun giderilmelidir.",
+      "unlockRequiresOtherApprover": "Kilit açma işlemi, yılı kapatan kullanıcı dışında başka bir yetkili veya yönetici tarafından onaylanmalıdır."
     },
     "settings": {
       "donationShort": "Bağış"
@@ -1449,7 +1452,16 @@
         "private": "Özel",
         "ignore": "Yok say",
         "reopen": "Geri aç",
-        "openBooking": "Fişi aç"
+        "openBooking": "Fişi aç",
+        "reverse": "Ters kayıt (Storno)"
+      },
+      "reversed": "Banka fişi ters kaydedildi ve hareket yeniden eşleştirme için açıldı.",
+      "reverseModal": {
+        "title": "Banka fişini ters kaydet",
+        "description": "Bağlı muhasebe fişi GoBD uyumlu olarak ters kaydedilir ve bu banka satırı yeniden eşleştirme için açık duruma alınır.",
+        "reasonLabel": "İptal gerekçesi",
+        "reasonPlaceholder": "Örn. yanlış kategoriye işlendi",
+        "submit": "Ters kaydet"
       },
       "modal": {
         "title": "Banka hareketini fişe bağla",
@@ -1487,6 +1499,8 @@
         "currency": "Yalnızca EUR hareketleri desteklenir.",
         "notFound": "Hareket bulunamadı.",
         "notOpen": "Hareket artık açık değil.",
+        "notBooked": "Yalnızca fişe bağlanmış banka hareketleri ters kaydedilebilir.",
+        "reverseInvoiceManaged": "Fatura veya gelen fatura ile eşleştirilmiş banka hareketleri ilgili fatura ekranından iptal edilmelidir.",
         "invoiceRequired": "Fatura seçin.",
         "invoiceNeedsCredit": "Faturaya yalnızca gelen ödemeler bağlanabilir.",
         "payableRequired": "Gelen fatura seçin.",
@@ -1785,7 +1799,8 @@
       },
       "errors": {
         "gwgLimit": "GWG yalnızca net 800 €'ya kadar.",
-        "poolRange": "Sammelposten yalnızca net 250,01–1.000 € arası."
+        "poolRange": "Sammelposten yalnızca net 250,01–1.000 € arası.",
+        "disposalBeforeAcquisition": "Çıkış tarihi alış tarihinden önce olamaz."
       }
     },
     "einvoice": {
@@ -2548,6 +2563,7 @@
     "loginButton": "Giriş yap",
     "logout": "Çıkış yap",
     "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur",
+    "mustChangePasswordHint": "Güvenliğiniz için devam etmeden önce aşağıdan yeni bir parola belirlemeniz gerekir.",
     "meta": {
       "profile": "Profil"
     },
@@ -2564,6 +2580,7 @@
       "changePassword": "Parola Değiştir",
       "currentPassword": "Mevcut parola",
       "newPassword": "Yeni parola",
+      "confirmPassword": "Yeni parola (tekrar)",
       "submit": "Parolayı güncelle",
       "updated": "Parolanız güncellendi.",
       "details": "Profil Bilgilerim",
@@ -2572,13 +2589,17 @@
     "errors": {
       "sessionInvalid": "Oturumunuz geçersiz. Lütfen tekrar giriş yapın.",
       "currentPasswordWrong": "Mevcut parolanız hatalı.",
+      "samePassword": "Yeni parola mevcut parolanızla aynı olamaz.",
       "invalidCredentials": "E-posta veya parola hatalı.",
       "accountLocked": "Hesap geçici olarak kilitlendi, daha sonra tekrar deneyin.",
+      "rateLimited": "Çok fazla giriş denemesi yapıldı. Lütfen daha sonra tekrar deneyin.",
       "loginFailed": "Giriş yapılamadı. Lütfen tekrar deneyin.",
       "invalidLocale": "Geçersiz dil seçimi."
     },
     "validation": {
       "currentPasswordRequired": "Mevcut parolanızı girin.",
+      "confirmPasswordRequired": "Yeni parolanızı tekrar girin.",
+      "passwordsMismatch": "Yeni parolalar eşleşmiyor.",
       "emailRequired": "E-posta zorunludur.",
       "passwordRequired": "Parola zorunludur."
     },
@@ -3083,6 +3104,9 @@
     "errors": {
       "credentials": "Sağlayıcı anahtarları reddedildi. Ayarları kontrol edin.",
       "provider": "Banka sağlayıcısına ulaşılamadı veya istek reddedildi. Daha sonra tekrar deneyin.",
+      "rateLimit": "Banka sağlayıcısı istek sınırına ulaştı. Lütfen kısa bir süre sonra tekrar deneyin.",
+      "invalidAccount": "Yalnızca aktif bir banka hesabı eşlenebilir.",
+      "appUrlRequired": "Banka bağlantısı için genel uygulama adresi (APP_URL) tanımlanmalıdır.",
       "notConfigured": "Sağlayıcı ayarlanmamış.",
       "mockDisabled": "Test sağlayıcısı bu ortamda kullanılamaz."
     },
@@ -3784,7 +3808,8 @@
       "chargeNotOpen": "Bu kalem açık değil.",
       "paymentNotFound": "Tahsilat bulunamadı ya da zaten geri alınmış.",
       "categoryMissing": "Kurs ayarlarında muhasebe gelir kategorisi seçilmemiş.",
-      "teacherHasAccount": "Bu öğretmenin zaten bir hesabı var."
+      "teacherHasAccount": "Bu öğretmenin zaten bir hesabı var.",
+      "sessionInLockedPayout": "Bu ders onaylanmış veya ödenmiş bir öğretmen hakedişinde yer aldığı için silinemez."
     },
     "validation": {
       "textMax": "Metin çok uzun.",
@@ -4683,6 +4708,8 @@
         "note": "Not",
         "fromMember": "Üyeden bağışçı oluştur",
         "fromMemberHint": "Üyenin adı ve adresi bir kez kopyalanır; üye kaydıyla canlı bağlantı kurulmaz.",
+        "duplicateWarning": "Benzer bir bağışçı zaten kayıtlı ({number}). Yine de yeni bağışçı oluşturmak istiyorsanız aşağıdan onaylayın.",
+        "confirmCreateDuplicate": "Yine de kaydet",
         "save": "Kaydet",
         "cancel": "Vazgeç",
         "toastSaved": "Bağışçı kaydedildi: {number}"
@@ -4912,6 +4939,7 @@
       "reversedDonation": "İptal edilmiş bağışa bildirim düzenlenemez.",
       "someDonationsMissing": "Seçilen bağışlardan bazıları bulunamadı.",
       "periodSingleYear": "Sammelbestätigung dönemi tek takvim yılı içinde olmalıdır.",
+      "periodOrderInvalid": "Dönem başlangıç tarihi bitiş tarihinden sonra olamaz.",
       "donationReversed": "{number} iptal edilmiş.",
       "donationOutsidePeriod": "{number} dönem yılı dışında.",
       "noFeePayments": "Bu üye ve yıl için bildirilebilir ödeme yok.",
@@ -6891,7 +6919,8 @@
       "notEditable": "Toplantı düzenlenemez.",
       "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş.",
       "membersAlreadyAdded": "Seçilen üyeler bu toplantıda zaten mevcut.",
-      "assigneeNotAttendee": "Seçilen sorumlu bu toplantının katılımcısı değil."
+      "assigneeNotAttendee": "Seçilen sorumlu bu toplantının katılımcısı değil.",
+      "approveHasOpenVotes": "Açık gizli oylama varken toplantı tutanağı onaylanamaz; önce tüm oylamaları kapatın."
     },
     "validation": {
       "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
@@ -6912,6 +6941,7 @@
       "votesRange": "Oy sayısı 0-1000 arasında olmalıdır.",
       "decisionMin": "Karar metni en az 3 karakter olmalıdır.",
       "decisionMax": "Karar metni en fazla 3000 karakter olabilir.",
+      "decisionRequired": "Geçerli bir karar seçin.",
       "titleMin": "Başlık en az 3 karakter olmalıdır.",
       "titleMax": "Başlık en fazla 200 karakter olabilir.",
       "dateRequired": "Toplantı tarihi zorunludur.",
@@ -7657,7 +7687,24 @@
       "paymentNotSpecified": "Ödeme belirtilmedi.",
       "paymentNotFound2": "Ödeme bulunamadı.",
       "datesInvalid": "Tarihler tutarlı değil; işaretli alanları kontrol edin.",
-      "exitDateRequired": "Ayrılan veya vefat eden üye için ayrılış tarihi girin."
+      "exitDateRequired": "Ayrılan veya vefat eden üye için ayrılış tarihi girin.",
+      "paymentExceedsOpenDue": "Ödeme tutarı kalan açık aidat tutarını ({remaining} €) aşamaz."
+    },
+    "corrections": {
+      "title": "Bekleyen üye düzeltme talepleri",
+      "description": "Üye portalından gönderilen iletişim/adres değişiklik önerilerini inceleyip onaylayın veya reddedin.",
+      "pendingCount": "{count} bekliyor",
+      "emptyValue": "—",
+      "noteLabel": "İnceleme notu",
+      "notePlaceholder": "İsteğe bağlı not",
+      "approve": "Onayla",
+      "reject": "Reddet",
+      "approved": "Düzeltme talebi onaylandı ve üye kartı güncellendi.",
+      "rejected": "Düzeltme talebi reddedildi."
+    },
+    "duplicateWarning": {
+      "title": "Benzer üye kaydı bulundu",
+      "description": "Aynı e-posta veya ad/soyad/doğum tarihi ile eşleşen mevcut kayıtlar: {matches}. Yine de yeni üye oluşturmak için tekrar Kaydet'e basın."
     },
     "validation": {
       "yearMinPrev": "Yıl en fazla bir önceki yıl olabilir.",
@@ -7704,6 +7751,7 @@
       "voidReasonMax": "İptal nedeni en fazla 300 karakter olabilir.",
       "exitDateRequired": "Ayrılış tarihi zorunlu.",
       "amountBelowPaid": "Tutar en az ödenen tutar kadar olmalıdır.",
+      "paymentExceedsOpenDue": "Ödeme tutarı kalan açık aidatı aşamaz.",
       "amountInvalid": "0'dan büyük bir tutar girin (en fazla 2 ondalık).",
       "annualDueInvalid": "Geçerli bir tutar girin (en fazla 2 ondalık, negatif olamaz).",
       "birthDateFuture": "Doğum tarihi bugünden sonra olamaz.",
@@ -8603,6 +8651,8 @@
       "assessmentNotFound": "Değerlendirme bulunamadı.",
       "pointsAboveMax": "Puan en yüksek puanı ({max}) aşamaz.",
       "enrollmentNotFound": "Öğrenci bu kursta kayıtlı değil.",
+      "sessionCancelled": "İptal edilen derse yoklama kaydedilemez.",
+      "enrollmentWithdrawn": "Kurstan ayrılmış öğrenciye yoklama kaydedilemez.",
       "noteNotFound": "Not bulunamadı.",
       "noteNotYours": "Yalnızca kendi yazdığınız notu silebilirsiniz."
     },
@@ -9018,6 +9068,8 @@
       "noMandate": "SEPA yetkisi yok",
       "invalidIban": "IBAN geçersiz",
       "alreadyInRun": "Açık bir tahsilatta zaten var",
+      "futureSignatureDate": "Yetki imza tarihi gelecekte",
+      "missingDebtorName": "Borçlu / hesap sahibi adı geçersiz veya boş",
       "dormant": "Yetki 36 aydır kullanılmadı",
       "renewAfterReturn": "İade sonrası yeni yetki gerekli",
       "pausedAfterReturns": "Tekrarlayan iadeler nedeniyle duraklatıldı"
@@ -9071,6 +9123,8 @@
       "date": "Geçerli bir tarih girin.",
       "year": "Geçerli bir yıl girin.",
       "pastDate": "Tahsilat tarihi geçmişte olamaz.",
+      "invalidCollectionDate": "Tahsilat tarihi en az 1 TARGET2 banka iş günü sonrası (hafta sonu ve TARGET2 tatilleri hariç) olmalıdır.",
+      "invalidName": "Alacaklı veya borçlu adı SEPA karakter kümesinde boş olamaz.",
       "nothingToCollect": "Tahsil edilecek kalem yok.",
       "notOpen": "Tahsilat açık değil.",
       "notCollected": "Kalem tahsil edilmiş değil.",
@@ -10356,6 +10410,7 @@
       "empty": "Henüz tanımlı erişim penceresi yok.",
       "statuses": {
         "active": "Aktif",
+        "scheduled": "Planlandı",
         "expired": "Süresi doldu",
         "revoked": "İptal edildi"
       }
@@ -10372,6 +10427,7 @@
       "toLogin": "Girişe git",
       "errors": {
         "invalid": "Bu davet bağlantısı geçersiz, süresi dolmuş veya daha önce kullanılmış. Yöneticinizden yeni bir davet isteyin.",
+        "rateLimited": "Çok fazla deneme yapıldı. Lütfen daha sonra tekrar deneyin.",
         "inactive": "Pasif kullanıcıya davet gönderilemez.",
         "mailNotConfigured": "E-posta gönderimi yapılandırılmamış (Ayarlar → E-posta).",
         "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",

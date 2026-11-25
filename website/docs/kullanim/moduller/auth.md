@@ -13,9 +13,15 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.1.1 |
+| Sürüm | 1.1.2 |
 
 ## Sürüm notları
+
+### 1.1.2 — Zorunlu parola değişimi kilidi ve oturum sertleştirmesi
+
+_2026-11-25_
+
+- **Güvenlik:** Zorunlu parola değişimi sunucu tarafı kilit mekanizması, şifre değişikliğinde oturum iptali ve giriş sertleştirmesi eklendi (#572).
 
 ### 1.1.1 — Davet sayfası
 
@@ -59,11 +65,4 @@ _2026-11-07_
 
 - **Güvenlik:** Kullanıcı silinince silinir: Kullanıcı profili (banka, adres, iletişim).
 
-### 1.0.1 — Güvenlik ve oturum sağlamlaştırması
-
-_2026-11-05_
-
-- **Güvenlik:** Giriş denemesi kilitleme politikası ortaklaştırıldı ve test edilebilir hale getirildi.
-- **Düzeltme:** Dosya yolu doğrulaması Windows ayraçlarını ve kontrol karakterlerini güvenli biçimde işler.
-
-Daha eski 1 herkese açık sürüm notu.
+Daha eski 2 herkese açık sürüm notu.
