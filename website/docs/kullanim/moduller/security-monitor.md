@@ -13,7 +13,7 @@ Regularly runs system security tests and monitors results
 |---|---|
 | Anahtar | `security-monitor` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.7 |
+| Sürüm | 1.4.0 |
 | Sayfalar | `/guvenlik-izleme` |
 | Gerektirir | [Otomasyon](./automation) |
 
@@ -29,11 +29,18 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Güvenlik İzleme | görüntüleme, oluşturma, düzenleme, silme | — | — | — | görüntüleme | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Güvenlik İzleme | görüntüleme, oluşturma, düzenleme, silme | — | — | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.4.0 — Süreç içi güvenlik denetimi
+
+_2026-11-25_
+
+- **Düzeltme:** 'Testleri çalıştır' artık alt süreçte test paketi başlatmaz (her zaman hata veriyordu); çalışan kurulumun güvenlik ayarları süreç içinde denetlenir: uygulama sırrı, sır şifreleme, HTTPS adres, yükleme klasörü, değiştirilemez denetim kaydı, veritabanı göçleri, üretim modu.
+- **Güvenlik:** API'ler Zod ile doğrulanır; 401/403/400/404/500 ayrımı yapılır, ham hata mesajı dönmez; çalıştırma ve uyarı işlemleri denetim kaydı bırakır. Kullanılmayan zamanlama API'si kaldırıldı (zamanlama otomasyondadır).
 
 ### 1.3.7 — Sayfa yetkisi
 
@@ -77,11 +84,4 @@ _2026-11-06_
 
 - **İyileştirme:** Güvenlik testleri adımı için okunur ad ve alan etiketleri eklendi.
 
-### 1.3.0 — Güvenlik testleri iş akışlarında; API adresleri düzeltildi
-
-_2026-11-06_
-
-- **Yeni:** Güvenlik testleri iş akışı düzenleyicisinde görev olarak kullanılabilir.
-- **Düzeltme:** Güvenlik İzleme ekranı var olmayan /api/modules/... adreslerini çağırdığı için 404 alıyordu; istatistik, çalıştırma ve uyarı istekleri ile test kuyruğa alma artık doğru /api/security-monitor/... adreslerini kullanıyor. Menü etiketi Otomasyon İzleme ile çakışmıyor.
-
-Daha eski 4 herkese açık sürüm notu.
+Daha eski 5 herkese açık sürüm notu.

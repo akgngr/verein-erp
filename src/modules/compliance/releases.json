@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.3.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Görev yetkisi ve yan etkisiz görüntüleme",
+        "de": "Aufgabenrecht und Anzeige ohne Nebenwirkungen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Kokpit sayfası görüntülenirken veritabanına yazmaz; bulgu, görev oluşturulurken yeniden değerlendirilip kaydedilir.",
+          "de": "Das Cockpit schreibt beim Anzeigen nicht mehr in die Datenbank; der Befund wird beim Anlegen einer Aufgabe neu bewertet und gespeichert."
+        },
+        {
+          "type": "security",
+          "tr": "Bulgudan görev oluşturma, görevler modülünün açık olmasını ve görev oluşturma iznini ister.",
+          "de": "Das Anlegen einer Aufgabe aus einem Befund erfordert ein aktives Aufgabenmodul und das Recht zum Anlegen von Aufgaben."
+        },
+        {
+          "type": "improvement",
+          "tr": "Hesaplanan değerler dile göre etiketlenir (önceden İngilizce 'value: 0'); tüm kurallar taslaktaysa açıklama gösterilir.",
+          "de": "Berechnete Werte sind sprachabhängig beschriftet (zuvor englisch „value: 0“); sind alle Regeln Entwürfe, erscheint ein Hinweis."
+        }
+      ]
+    },
+    {
       "version": "0.2.1",
       "date": "2026-11-24",
       "title": {

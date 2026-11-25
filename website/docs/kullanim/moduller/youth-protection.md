@@ -13,8 +13,17 @@ Eğitmen ve gönüllülerin genişletilmiş adli sicil belgesi (§ 72a SGB VIII)
 |---|---|
 | Anahtar | `youth-protection` |
 | Tür | Eklenti |
-| Sürüm | 0.1.2 |
+| Sürüm | 0.2.0 |
 | Sayfalar | `/youth-protection` |
+
+## Diğer modüllere erişim
+
+Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yonetim/modul-yonetimi)).
+
+| Modül | İşlem | Gerekçe |
+|---|---|---|
+| [Dernek Bilgileri](./organization) | okuma | Harç muafiyeti yazısında kurum adı ve şehri okunur. |
+| [Üyeler](./members) | okuma | Kayıt bir üyeyle ilişkilendirilirken üye listesi (ad, üye numarası) okunur ve seçilen üye doğrulanır. |
 
 ## Varsayılan yetkiler
 
@@ -25,6 +34,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Çocuk Koruma | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 0.2.0 — Denetim kaydında ad yok, kurum profili, üye bağlantısı
+
+_2026-11-25_
+
+- **Güvenlik:** Denetim kaydına kişi adı yazılmaz (§ 72a Abs. 5 SGB VIII, DSGVO md. 10); yazdırılan harç muafiyeti yazısında HTML kaçışlanır.
+- **Düzeltme:** Yazı kurum adı ve şehrini kurum profilinden alır; satır eylemiyle açılan yazı her seferinde doğru kişiyi gösterir; durum filtresi çalışır; liste kayıttan sonra yenilenir.
+- **Yeni:** Kayıt bir üyeyle ilişkilendirilebilir. Kurum ve üye verisini okumak için yönetici erişim onayı bir kez yenilenmelidir.
 
 ### 0.1.2 — nav.json kategori ve alt modül tanımı
 

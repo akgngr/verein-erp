@@ -13,7 +13,7 @@ Kamu yararı (Gemeinnützigkeit) için iç kontrol listesi: süreler ve sınırl
 |---|---|
 | Anahtar | `compliance` |
 | Tür | Eklenti |
-| Sürüm | 0.2.1 |
+| Sürüm | 0.3.0 |
 | Sayfalar | `/compliance` |
 | Önerir | [Muhasebe](./accounting) |
 
@@ -36,6 +36,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Uyum kontrolü | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma | — | görüntüleme, oluşturma | görüntüleme | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 0.3.0 — Görev yetkisi ve yan etkisiz görüntüleme
+
+_2026-11-25_
+
+- **Düzeltme:** Kokpit sayfası görüntülenirken veritabanına yazmaz; bulgu, görev oluşturulurken yeniden değerlendirilip kaydedilir.
+- **Güvenlik:** Bulgudan görev oluşturma, görevler modülünün açık olmasını ve görev oluşturma iznini ister.
+- **İyileştirme:** Hesaplanan değerler dile göre etiketlenir (önceden İngilizce 'value: 0'); tüm kurallar taslaktaysa açıklama gösterilir.
 
 ### 0.2.1 — nav.json kategori ve alt modül tanımı
 

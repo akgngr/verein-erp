@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler).",
   "releases": [
     {
+      "version": "0.3.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Derneğin şehri, kar simgeleri",
+        "de": "Stadt des Vereins, Schneesymbole"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Sayfa, kart ve başlık widget'ı derneğin şehrini (kurum profili) kullanır; önceden her zaman Frankfurt gösteriliyordu. Günlük özet aynı konumu kullanır.",
+          "de": "Seite, Karte und Header-Widget verwenden die Stadt des Vereins (Organisationsprofil) statt immer Frankfurt; die Tageszusammenfassung nutzt denselben Ort."
+        },
+        {
+          "type": "improvement",
+          "tr": "Kar kodları (WMO 71–77, 85–86) kar simgesiyle gösterilir; hava ve konum önbellekleri sınırlıdır.",
+          "de": "Schneecodes (WMO 71–77, 85–86) erhalten ein Schneesymbol; Wetter- und Ortscaches sind begrenzt."
+        }
+      ]
+    },
+    {
       "version": "0.2.0",
       "date": "2026-11-24",
       "title": {
