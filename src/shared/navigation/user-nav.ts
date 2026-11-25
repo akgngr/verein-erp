@@ -5,6 +5,7 @@ export type NavCategoryGroup = {
   id: string;
   label: string;
   order: number;
+  icon?: string;
   collapsedByDefault?: boolean;
   isCustom?: boolean;
 };
@@ -36,10 +37,15 @@ export type ResolvedNavCategory = {
   id: string;
   label: string;
   order: number;
+  icon?: string;
   isCustom: boolean;
   collapsedByDefault: boolean;
   nodes: ResolvedNavNode[];
 };
+
+export type ResolvedMainMenuEntry =
+  | { kind: "module"; order: number; node: ResolvedNavNode }
+  | { kind: "category"; order: number; category: ResolvedNavCategory };
 
 export function resolveModuleKeyForNavItem(
   item: NavItem,
@@ -53,6 +59,7 @@ export function resolveModuleKeyForNavItem(
  * Kullanıcı bazlı sol menü ağacını üretir:
  * - Girdi `items` zaten aktif modül + rol yetkisi filtresinden geçmiş olmalıdır (yetki aşımı imkânsız).
  * - Varsayılan kategori zorlaması yoktur; yalnızca kullanıcının oluşturduğu özel gruplar (`userConfig.groups`) kullanılır.
+ * - Özel gruplar ve ana modüller `order` alanına göre tek birleşik listede (`mainMenuEntries`) sıralanır.
  * - Alt modül ilişkileri (`parentModule`) varsayılan `nav.json` veya kullanıcı tercihi üzerinden gelir ve üst modülün alt menüsünde açılır.
  * - Üst modül gizli/yoksa veya döngü oluşuyorsa alt modül güvenli biçimde ana listeye çıkar.
  */
@@ -62,6 +69,7 @@ export function resolveUserSidebarTree(input: {
   defaults: Record<string, ModuleNavDefault>;
   userConfig?: UserNavConfig | null;
 }): {
+  mainMenuEntries: ResolvedMainMenuEntry[];
   uncategorizedNodes: ResolvedNavNode[];
   categories: ResolvedNavCategory[];
   childrenByParent: Record<string, ResolvedNavNode[]>;
@@ -112,6 +120,7 @@ export function resolveUserSidebarTree(input: {
       id: customGroup.id,
       label: customGroup.label,
       order: customGroup.order,
+      icon: customGroup.icon,
       isCustom: true,
       collapsedByDefault: Boolean(customGroup.collapsedByDefault),
       nodes: [],
@@ -165,5 +174,23 @@ export function resolveUserSidebarTree(input: {
     .filter((c) => c.nodes.length > 0 || c.isCustom)
     .sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));
 
-  return { uncategorizedNodes, categories, childrenByParent, allItems: rawNodes, pinnedTop };
+  const mainMenuEntries: ResolvedMainMenuEntry[] = [
+    ...uncategorizedNodes.map((node) => ({ kind: "module" as const, order: node.order, node })),
+    ...categories.map((category) => ({ kind: "category" as const, order: category.order, category })),
+  ].sort((a, b) => {
+    if (a.order !== b.order) return a.order - b.order;
+    if (a.kind !== b.kind) return a.kind === "module" ? -1 : 1;
+    const aKey = a.kind === "module" ? a.node.moduleKey : a.category.id;
+    const bKey = b.kind === "module" ? b.node.moduleKey : b.category.id;
+    return aKey.localeCompare(bKey);
+  });
+
+  return {
+    mainMenuEntries,
+    uncategorizedNodes,
+    categories,
+    childrenByParent,
+    allItems: rawNodes,
+    pinnedTop,
+  };
 }

@@ -65,7 +65,8 @@ describe("calendar layout", () => {
 
 describe("calendar ICS", () => {
   test("escapes special characters and folds long lines", () => {
-    assert.equal(escapeIcs("a,b;c\\d\ne"), "a\\,b\;c\\\\d\\ne");
+    // #584: RFC 5545 §3.3.11 — noktalı virgül de kaçışlanır.
+    assert.equal(escapeIcs("a,b;c\\d\ne"), "a\\,b\\;c\\\\d\\ne");
     const ics = buildIcs("Test", [{ uid: "1", title: "x".repeat(200), start: at(2026, 1, 1, 9), end: at(2026, 1, 1, 10), allDay: false }]);
     assert.ok(ics.startsWith("BEGIN:VCALENDAR\r\n"));
     assert.ok(ics.split("\r\n").every((line) => Buffer.byteLength(line) <= 75));

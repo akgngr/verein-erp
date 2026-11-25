@@ -1,12 +1,14 @@
+// #587: Geliştirici aracı; `turbopackIgnore` yorumları bu dosyadaki dinamik yolların derleme anında
+// izlenmesini (src/modules klasörünün standalone pakete kopyalanmasını) engeller. Davranış değişmez.
 import fs from "node:fs";
 import path from "node:path";
 import { SUPPORTED_LOCALES } from "@/i18n/config";
 
 const ROOT_DIR = process.cwd();
-const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
-const MESSAGES_DIR = path.join(ROOT_DIR, "messages");
+const MODULES_DIR = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "modules");
+const MESSAGES_DIR = path.join(/* turbopackIgnore: true */ ROOT_DIR, "messages");
 /** Kabuğa (src/app, ortak bileşenler) ait çevirilerin kaynağı. */
-const SHELL_MESSAGES_DIR = path.join(MESSAGES_DIR, "shell");
+const SHELL_MESSAGES_DIR = path.join(/* turbopackIgnore: true */ MESSAGES_DIR, "shell");
 
 /** Modül çevirisinde kök "nav" ad alanına birleştirilecek ayrılmış anahtar. */
 const RESERVED_NAV_KEY = "nav";
@@ -48,7 +50,7 @@ export function syncModuleTranslations(): {
 
   for (const locale of SUPPORTED_LOCALES) {
     result.modulesMerged[locale] = [];
-    const shellFile = path.join(SHELL_MESSAGES_DIR, `${locale}.json`);
+    const shellFile = path.join(/* turbopackIgnore: true */ SHELL_MESSAGES_DIR, `${locale}.json`);
     const shell: unknown = fs.existsSync(shellFile) ? JSON.parse(fs.readFileSync(shellFile, "utf8")) : {};
     const output: Record<string, unknown> = isPlainObject(shell) ? { ...shell } : {};
     const nav: Record<string, unknown> = isPlainObject(output[RESERVED_NAV_KEY])
@@ -58,8 +60,8 @@ export function syncModuleTranslations(): {
     for (const moduleName of moduleNames) {
       // Standart messages/<locale>.json önceliklidir, i18n/<locale>.json geriye dönük desteklenir
       const candidateFiles = [
-        path.join(MODULES_DIR, moduleName, "messages", `${locale}.json`),
-        path.join(MODULES_DIR, moduleName, "i18n", `${locale}.json`),
+        path.join(/* turbopackIgnore: true */ MODULES_DIR, moduleName, "messages", `${locale}.json`),
+        path.join(/* turbopackIgnore: true */ MODULES_DIR, moduleName, "i18n", `${locale}.json`),
       ];
       const moduleI18nFile = candidateFiles.find((f) => fs.existsSync(f));
       if (!moduleI18nFile) continue;
@@ -80,7 +82,7 @@ export function syncModuleTranslations(): {
 
     output[RESERVED_NAV_KEY] = nav;
     try {
-      fs.writeFileSync(path.join(MESSAGES_DIR, `${locale}.json`), JSON.stringify(output, null, 2) + "\n", "utf8");
+      fs.writeFileSync(path.join(/* turbopackIgnore: true */ MESSAGES_DIR, `${locale}.json`), JSON.stringify(output, null, 2) + "\n", "utf8");
     } catch (err) {
       console.error(`[sync-i18n] Failed to write messages/${locale}.json:`, err);
     }

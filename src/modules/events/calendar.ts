@@ -15,12 +15,12 @@ export const calendar = defineModuleCalendar({
     load: async ({ from, to }, user) => {
       if (!can(user.role, eventsPermissions, "view")) return [];
       const rows = await getDb().event.findMany({
-        where: { status: { not: "CANCELLED" }, startDate: { lt: to }, OR: [{ endDate: { gte: from } }, { endDate: null, startDate: { gte: from } }] },
+        where: { deletedAt: null, status: { not: "CANCELLED" }, startDate: { lt: to }, OR: [{ endDate: { gte: from } }, { endDate: null, startDate: { gte: from } }] },
         select: { id: true, title: true, startDate: true, endDate: true, location: true },
         orderBy: { startDate: "asc" },
         take: 500,
       });
-      return rows.map((row) => ({ id: row.id, title: row.title, start: row.startDate, end: row.endDate, allDay: false, location: row.location, href: "/events" }));
+      return rows.map((row) => ({ id: row.id, title: row.title, start: row.startDate, end: row.endDate, allDay: false, location: row.location, href: `/events?detail=${row.id}` }));
     },
   }],
 });

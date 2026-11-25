@@ -13,7 +13,7 @@ Microsoft 365 / Outlook takvimini salt okunur bağlar (OAuth; yönetici kendi Az
 |---|---|
 | Anahtar | `calendar-outlook` |
 | Tür | Eklenti |
-| Sürüm | 1.0.1 |
+| Sürüm | 1.0.2 |
 | Gerektirir | [Takvim](./calendar) |
 
 ## Varsayılan yetkiler
@@ -25,6 +25,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Outlook Takvim | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 1.0.2 — Tüm gün kayıtları
+
+_2026-11-25_
+
+- **Düzeltme:** Tüm gün kayıtlar sunucu saat diliminden bağımsız olarak Berlin tarihine göre saklanır.
 
 ### 1.0.1 — TAX_ADVISOR rolü izin tanımı
 

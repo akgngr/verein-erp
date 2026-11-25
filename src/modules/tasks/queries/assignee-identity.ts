@@ -6,3 +6,11 @@ export async function resolveTaskAssigneeIds(actor:TaskActorIdentity,legacyLooku
  // Compatibility for the existing user-facing list; never selected by the AI caller.
  return [actor.id,...await legacyLookup(actor.email)];
 }
+
+/**
+ * "Bana atananlar" koşulu (#584): yalnız kullanıcının üye kaydına atanmış görevler; kullanıcının
+ * oluşturduğu ama başkasına atadığı görevler dahil edilmez. Eşleşen üye kaydı yoksa hiçbir görev dönmez.
+ */
+export function assignedToMeCondition(memberIds: string[]): { memberId: { in: string[] } } {
+  return { memberId: { in: memberIds } };
+}

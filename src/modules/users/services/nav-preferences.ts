@@ -10,6 +10,7 @@ const groupSchema = z.object({
   id: z.string().min(1).max(60),
   label: z.string().trim().min(1).max(60),
   order: z.number().int().min(-1000).max(10000),
+  icon: z.string().min(1).max(40).optional(),
   collapsedByDefault: z.boolean().optional(),
   isCustom: z.boolean().optional(),
 });

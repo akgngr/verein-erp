@@ -1,4 +1,5 @@
 import type { RemoteEvent } from "./sync";
+import { berlinMidnight } from "./berlin-date";
 
 /** Unfold RFC 5545 content lines. */
 function unfold(text: string): string[] {
@@ -16,7 +17,8 @@ function unescape(value: string): string {
 export function parseIcsDate(value: string, params: string): { date: Date; allDay: boolean } | null {
   if (/VALUE=DATE(?!-)/i.test(params) || /^\d{8}$/.test(value)) {
     const match = /^(\d{4})(\d{2})(\d{2})$/.exec(value);
-    return match ? { date: new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])), allDay: true } : null;
+    // #584: Tüm gün tarihi Berlin gece yarısı olarak saklanır (bkz. shared/calendar/berlin-date.ts).
+    return match ? { date: berlinMidnight(Number(match[1]), Number(match[2]), Number(match[3])), allDay: true } : null;
   }
   const match = /^(\d{4})(\d{2})(\d{2})T(\d{2})(\d{2})(\d{2})(Z?)$/.exec(value);
   if (!match) return null;

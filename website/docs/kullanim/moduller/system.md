@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.18.3 |
+| Sürüm | 1.18.5 |
 | Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/menu`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -38,6 +38,18 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.18.5 — Menü grubu kimlik çakışması düzeltmesi
+
+_2026-11-25_
+
+- **Düzeltme:** Yeni özel grup kimlikleri mevcut gruplarla çakışmayacak şekilde benzersiz üretilir.
+
+### 1.18.4 — Menü grupları için sıralama ve ikon seçimi
+
+_2026-11-25_
+
+- **İyileştirme:** Menü düzeni sayfasında özel gruplar modüller arasında yukarı/aşağı sıralanabilir ve ikon seçilebilir hâle getirildi.
 
 ### 1.18.3 — Menü düzeni ayar sayfası
 
@@ -79,17 +91,4 @@ _2026-11-23_
 
 - **Yeni:** Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.
 
-### 1.15.0 — Modül ve iş akışı sağlığı kokpiti (F3)
-
-_2026-11-23_
-
-- **Yeni:** Ayarlar → Modül Yönetimi → Modül ve İş Akışı Sağlığı: etkin modüllerin yapılandırma bütünlüğü, erişim onayları, worker kalp atışı ve kuyruk hata durumları tek ekranda özetlenir.
-- **Yeni:** Hata kodları kişisel veri sızdırmadan güvenli kategorilere (TIMEOUT, NETWORK, DATABASE, AUTH) indirgenir; sorunlu alanlar için doğrudan ilgili ayar ekranına yönlendirme kılavuzu sunulur.
-
-### 1.14.0 — Üst çubuk widget altyapısı
-
-_2026-11-22_
-
-- **Yeni:** Üst çubukta yetki ve kullanıcı tercihlerine göre görünen Ayarlar kısayolu widget’ı eklendi; masaüstü ve mobilde tek bileşen yüklenir.
-
-Daha eski 26 herkese açık sürüm notu.
+Daha eski 28 herkese açık sürüm notu.

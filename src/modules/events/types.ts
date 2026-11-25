@@ -65,8 +65,3 @@ export interface EventFilters {
   pageSize?: number
 }
 
-export interface ActionResult<T = unknown> {
-  success: boolean
-  data?: T
-  error?: string
-}

@@ -13,7 +13,7 @@ iCloud takvimini CalDAV ile salt okunur bağlar (Apple ID + uygulamaya özel par
 |---|---|
 | Anahtar | `calendar-apple` |
 | Tür | Eklenti |
-| Sürüm | 1.0.1 |
+| Sürüm | 1.0.2 |
 | Gerektirir | [Takvim](./calendar) |
 
 ## Varsayılan yetkiler
@@ -25,6 +25,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Apple Takvim | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 1.0.2 — iCloud bağlantısı düzeltmeleri
+
+_2026-11-25_
+
+- **Düzeltme:** Takvim listesi kapanış etiketli CalDAV yanıtlarını da tanır; bölüm sunucusuna yönlendirmeler izlenir; tüm gün kayıtlar Berlin tarihine göre saklanır.
 
 ### 1.0.1 — TAX_ADVISOR rolü izin tanımı
 
