@@ -187,7 +187,9 @@
       "resetButton": "Zurücksetzen",
       "saveButton": "Speichern",
       "savedMessage": "Menüanordnung gespeichert.",
-      "resetMessage": "Menüanordnung zurückgesetzt."
+      "resetMessage": "Menüanordnung zurückgesetzt.",
+      "groupBadge": "Gruppe",
+      "iconLabel": "Symbol"
     }
   },
   "panel": {

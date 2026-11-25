@@ -81,8 +81,9 @@ describe("Per-user Sidebar Navigation Tree (nav.json + UserNavConfig)", () => {
       modules,
       defaults: MODULE_NAV_DEFAULTS,
       userConfig: {
-        groups: [{ id: "custom_1", label: "Dernek Özel", order: 1 }],
+        groups: [{ id: "custom_1", label: "Dernek Özel", order: 1, icon: "building" }],
         items: {
+          accounting: { order: 2 },
           members: { categoryId: "custom_1", order: 1 },
           donations: { categoryId: "custom_1", parentModule: null, order: 2 },
           weather: { hidden: true },
@@ -92,13 +93,14 @@ describe("Per-user Sidebar Navigation Tree (nav.json + UserNavConfig)", () => {
 
     const custom = tree.categories.find((c) => c.id === "custom_1");
     assert.ok(custom);
+    assert.equal(custom.icon, "building");
     assert.deepEqual(
       custom.nodes.map((n) => n.moduleKey),
       ["members", "donations"],
     );
     assert.deepEqual(
-      tree.uncategorizedNodes.map((n) => n.moduleKey),
-      ["accounting"],
+      tree.mainMenuEntries.map((e) => (e.kind === "category" ? `cat:${e.category.id}` : e.node.moduleKey)),
+      ["cat:custom_1", "accounting"],
     );
     assert.equal(tree.allItems.find((i) => i.moduleKey === "weather")?.hidden, true);
   });

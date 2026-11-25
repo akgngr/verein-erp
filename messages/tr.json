@@ -187,7 +187,9 @@
       "resetButton": "Varsayılana sıfırla",
       "saveButton": "Kaydet",
       "savedMessage": "Menü düzeni kaydedildi.",
-      "resetMessage": "Menü düzeni varsayılana sıfırlandı."
+      "resetMessage": "Menü düzeni varsayılana sıfırlandı.",
+      "groupBadge": "Grup",
+      "iconLabel": "İkon"
     }
   },
   "panel": {

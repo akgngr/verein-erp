@@ -5,7 +5,6 @@ import {
   Building2,
   ChevronLeft,
   ChevronRight,
-  Folder,
   LayoutDashboard,
   LogOut,
   Menu as MenuIcon,
@@ -29,6 +28,7 @@ import { useTranslations } from "next-intl";
 
 import { registry } from "@/registry";
 import { RoleChip } from "@/shared/components/roles/roles-provider";
+import { getCategoryIcon } from "@/shared/navigation/category-icons";
 import { MODULE_NAV_DEFAULTS } from "@/shared/navigation/nav-defaults.generated";
 import {
   resolveUserSidebarTree,
@@ -259,7 +259,7 @@ function SidebarContent({
       {
         href: `#cat-${cat.id}`,
         label: cat.label,
-        icon: Folder,
+        icon: getCategoryIcon(cat.icon),
         group: "main",
         order: cat.order,
         permission: PANEL_ITEM.permission,
@@ -568,12 +568,16 @@ function SidebarContent({
           : null}
         <div className="flex flex-col gap-1">
           {navTree.pinnedTop.map(renderMainItem)}
-          {navTree.uncategorizedNodes.map((node) => renderMainItem(node.item))}
-          {navTree.categories.map((category) => {
+          {navTree.mainMenuEntries.map((entry) => {
+            if (entry.kind === "module") {
+              return renderMainItem(entry.node.item);
+            }
+            const category = entry.category;
             const catKey = `${CAT_KEY_PREFIX}${category.id}`;
             const active =
               shownModuleKey === catKey ||
               category.nodes.some((n) => n.item.href === activeMainHref);
+            const CatIcon = getCategoryIcon(category.icon);
             const buttonEl = (
               <button
                 key={catKey}
@@ -581,7 +585,7 @@ function SidebarContent({
                 onClick={() => setOverride(catKey)}
                 className={cn(itemClass(active), "w-full cursor-pointer text-left")}
               >
-                <Folder
+                <CatIcon
                   className={cn(
                     "h-[18px] w-[18px] shrink-0 transition-colors",
                     active ? "text-brand-700" : "text-white/65 group-hover:text-white",
