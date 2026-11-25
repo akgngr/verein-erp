@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { createElement, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowDown, ArrowUp, Eye, EyeOff, Plus, RotateCcw, Trash2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -78,6 +78,7 @@ export function MenuCustomizerClient({
   const [newGroupIcon, setNewGroupIcon] = useState<CategoryIconKey>("folder");
   const [pending, setPending] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const groupSeqRef = useRef(1);
 
   const labelFor = (item: MenuCustomizerModuleItem) =>
     item.labelKey && tNav.has(item.labelKey) ? tNav(item.labelKey) : item.fallbackLabel;
@@ -107,7 +108,8 @@ export function MenuCustomizerClient({
   function addCustomGroup() {
     const label = newGroupLabel.trim();
     if (!label) return;
-    const id = `custom_${Date.now().toString(36)}`;
+    const seq = groupSeqRef.current++;
+    const id = `custom_${seq}_${groups.length + 1}`;
     const maxOrder = unifiedRows.reduce((acc, r) => Math.max(acc, r.order), 0);
     setGroups((prev) => [
       ...prev,
@@ -204,7 +206,6 @@ export function MenuCustomizerClient({
     }
   }
 
-  const NewIcon = getCategoryIcon(newGroupIcon);
   const parentCandidates = [...items].sort((a, b) =>
     labelFor(a).localeCompare(labelFor(b)),
   );
@@ -248,7 +249,10 @@ export function MenuCustomizerClient({
       <section className="rounded-2xl border border-ink-200 bg-white p-4 shadow-xs">
         <div className="flex flex-wrap items-center gap-2">
           <div className="flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-2.5 py-1.5">
-            <NewIcon className="h-4 w-4 shrink-0 text-ink-600" aria-hidden />
+            {createElement(getCategoryIcon(newGroupIcon), {
+              className: "h-4 w-4 shrink-0 text-ink-600",
+              "aria-hidden": true,
+            })}
             <select
               aria-label={t("iconLabel")}
               value={newGroupIcon}
@@ -295,14 +299,16 @@ export function MenuCustomizerClient({
 
           {unifiedRows.map((row, idx) => {
             if (row.kind === "group") {
-              const GroupIcon = getCategoryIcon(row.group.icon);
               return (
                 <div
                   key={`group:${row.key}`}
                   className="grid grid-cols-12 items-center gap-3 bg-ink-50/40 px-4 py-2.5 text-sm"
                 >
                   <div className="col-span-4 flex items-center gap-2 font-medium text-ink-900">
-                    <GroupIcon className="h-4 w-4 shrink-0 text-brand-700" aria-hidden />
+                    {createElement(getCategoryIcon(row.group.icon), {
+                      className: "h-4 w-4 shrink-0 text-brand-700",
+                      "aria-hidden": true,
+                    })}
                     <span className="truncate">{row.group.label}</span>
                     <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold text-brand-800">
                       {t("groupBadge")}
