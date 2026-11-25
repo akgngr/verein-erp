@@ -184,7 +184,8 @@
       "unavailable": "Bu eklenti etkin değil.",
       "secretRequired": "İlk kayıtta client secret zorunludur.",
       "auth": "Giriş bilgileri reddedildi.",
-      "failed": "Takvim bağlanamadı."
+      "failed": "Takvim bağlanamadı.",
+      "hostNotAllowed": "Bu sunucu adresine izin verilmiyor. Sağlayıcının resmî adresini kullanın (iCloud için caldav.icloud.com)."
     },
     "settingsTitle": "Takvim ayarları",
     "settingsDescription": "Google ve Outlook senkronu için kendi OAuth uygulamalarınızın bilgileri. Kullanıcılar hesaplarını takvimdeki ayarlardan bağlar.",

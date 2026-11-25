@@ -79,7 +79,9 @@
     "removedToast": "{name} katılımcı listesinden çıkarıldı.",
     "addFailed": "Katılımcı eklenemedi.",
     "statusFailed": "Durum güncellenemedi.",
-    "removeFailed": "Katılımcı silinemedi."
+    "removeFailed": "Katılımcı silinemedi.",
+    "memberPicker": "Üye seç (isteğe bağlı)",
+    "memberPickerHint": "Üye seçerseniz ad alanları doldurulur ve kayıt üyeye bağlanır; misafir için boş bırakın."
   },
   "attendeeStatus": {
     "REGISTERED": "Kayıtlı",
@@ -117,7 +119,9 @@
     "invalidStatus": "Geçersiz durum verisi.",
     "statusUpdateFailed": "Katılım durumu güncellenemedi.",
     "invalidAttendeeId": "Geçersiz katılımcı kimliği.",
-    "attendeeDeleteFailed": "Katılımcı silinemedi."
+    "attendeeDeleteFailed": "Katılımcı silinemedi.",
+    "alreadyRegistered": "Bu üye bu etkinliğe zaten kayıtlı.",
+    "memberNotFound": "Seçilen üye bulunamadı."
   },
   "validation": {
     "titleMin": "Başlık en az 3 karakter olmalıdır.",
@@ -127,7 +131,16 @@
     "eventIdInvalid": "Geçersiz etkinlik kimliği.",
     "firstNameMin": "Ad en az 2 karakter olmalıdır.",
     "lastNameMin": "Soyad en az 2 karakter olmalıdır.",
-    "emailInvalid": "Geçerli bir e-posta giriniz."
+    "emailInvalid": "Geçerli bir e-posta giriniz.",
+    "titleMax": "Başlık en fazla 200 karakter olabilir.",
+    "descriptionMax": "Açıklama en fazla 5000 karakter olabilir.",
+    "dateInvalid": "Geçerli bir tarih ve saat giriniz.",
+    "endBeforeStart": "Bitiş zamanı başlangıçtan önce olamaz.",
+    "locationMax": "Konum en fazla 300 karakter olabilir.",
+    "capacityMax": "Kontenjan en fazla 100000 olabilir.",
+    "nameMax": "Ad ve soyad en fazla 100 karakter olabilir.",
+    "phoneMax": "Telefon en fazla 40 karakter olabilir.",
+    "notesMax": "Not en fazla 1000 karakter olabilir."
   },
   "form": {
     "createTitle": "Yeni Etkinlik Oluştur",

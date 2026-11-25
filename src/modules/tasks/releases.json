@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.14",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Bana atananlar ve toplantı bağlantısı",
+        "de": "Mir zugewiesen und Sitzungsverknüpfung"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "\"Bana atananlar\" yalnız size atanmış görevleri gösterir; oluşturduğunuz ama başkasına atadığınız görevler artık listelenmez.",
+          "de": "\"Mir zugewiesen\" zeigt nur Ihnen zugewiesene Aufgaben; von Ihnen erstellte und anderen zugewiesene Aufgaben erscheinen nicht mehr."
+        },
+        {
+          "type": "fix",
+          "tr": "Bağlanan toplantının varlığı doğrulanır; denetim kaydına kişi adı yazılmaz.",
+          "de": "Die verknüpfte Sitzung wird geprüft; ins Protokoll werden keine Personennamen geschrieben."
+        }
+      ]
+    },
+    {
       "version": "1.3.13",
       "date": "2026-11-24",
       "title": {

@@ -13,7 +13,7 @@ Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi.
 |---|---|
 | Anahtar | `events` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.12 |
+| Sürüm | 1.2.13 |
 | Sayfalar | `/events`, `/events?filter.timeFilter=upcoming`, `/events?filter.timeFilter=past` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,16 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_upcoming_events` · `propose_event`
 
 ## Sürüm notları
+
+### 1.2.13 — Doğrulama, saat dilimi, yetki ve denetim düzeltmeleri
+
+_2026-11-25_
+
+- **Düzeltme:** Bitiş başlangıçtan önce olamaz; güncellemede gönderilmeyen alanlar varsayılanla ezilmez; uzunluk sınırları eklendi.
+- **Düzeltme:** Saatler Europe/Berlin olarak girilir ve gösterilir; sunucu saat dilimine bağlı kayma giderildi.
+- **Düzeltme:** Etkinlik ve katılımcı işlemleri denetim kaydına yazılır; etkinlik silme artık yumuşak silmedir.
+- **Düzeltme:** Kontenjan ve aynı üyenin ikinci kaydı eşzamanlı isteklerde de engellenir; katılımcı formuna üye seçici eklendi.
+- **Düzeltme:** Etkinlik sayfaları görüntüleme yetkisi ister; oluşturma, düzenleme ve katılımcı yönetimi yetkiye göre gösterilir.
 
 ### 1.2.12 — nav.json kategori ve alt modül tanımı
 
@@ -83,10 +93,4 @@ _2026-11-16_
 
 - **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
 
-### 1.2.4 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 6 herkese açık sürüm notu.
+Daha eski 7 herkese açık sürüm notu.

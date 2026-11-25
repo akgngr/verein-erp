@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.0.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "iCloud bağlantısı düzeltmeleri",
+        "de": "Korrekturen an der iCloud-Verbindung"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Takvim listesi kapanış etiketli CalDAV yanıtlarını da tanır; bölüm sunucusuna yönlendirmeler izlenir; tüm gün kayıtlar Berlin tarihine göre saklanır.",
+          "de": "Die Kalenderliste erkennt auch CalDAV-Antworten mit Endtag; Weiterleitungen zum Partitionsserver werden verfolgt; ganztägige Termine werden nach Berliner Datum gespeichert."
+        }
+      ]
+    },
+    {
       "version": "1.0.1",
       "date": "2026-11-23",
       "title": {

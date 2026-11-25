@@ -2,8 +2,11 @@ import "server-only";
 
 import { createHash, randomBytes } from "node:crypto";
 
-import { getUserById } from "@/modules/users/automation";
+import { getUserById, loadPermissionPolicy } from "@/modules/users/automation";
 import { getDb } from "@/shared/db";
+import { can } from "@/shared/permissions/define";
+
+import { calendarPermissions } from "../permissions";
 
 import { buildIcs, rruleFor, type IcsEvent } from "../lib/ics";
 import { loadRange } from "./range";
@@ -40,6 +43,9 @@ export async function buildFeedForToken(token: string, calendarName: string): Pr
   if (!record) return null;
   const user = await getUserById(record.userId);
   if (!user?.isActive) return null;
+  // #584: Abonelik, sahibinin GÜNCEL calendar.view yetkisine bağlıdır (rol değişince akış kapanır).
+  await loadPermissionPolicy();
+  if (!can(user.role, calendarPermissions, "view")) return null;
   await db.calendarFeedToken.update({ where: { id: record.id }, data: { lastUsedAt: new Date() } });
 
   const now = new Date();
@@ -53,6 +59,9 @@ export async function buildFeedForToken(token: string, calendarName: string): Pr
   const entries = new Map((await db.calendarEntry.findMany({ where: { id: { in: entryIds } } })).map((entry) => [entry.id, entry]));
   const events: IcsEvent[] = [];
   for (const item of items) {
+    // #584: Dış takvimlerden (Google/Outlook/Apple) senkronlanan kayıtlar geri yayımlanmaz; aksi halde
+    // abone olunan uygulamada aynı randevu ikinci kez görünür ve senkron döngüsü oluşur.
+    if (item.id.startsWith("sync:")) continue;
     if (item.entryId) {
       if (seenEntries.has(item.entryId)) continue;
       seenEntries.add(item.entryId);

@@ -7,11 +7,12 @@ import { listMeetingOptions } from "@/modules/meetings/server";
 import { findMemberIdsByEmail, listMemberOptions } from "@/modules/members/server";
 import type { ListParams, ListResult } from "@/shared/list-params";
 
-import {resolveTaskAssigneeIds,type TaskActorIdentity} from "./assignee-identity";
+import {assignedToMeCondition,resolveTaskAssigneeIds,type TaskActorIdentity} from "./assignee-identity";
 
 import { TASK_PRIORITY_VALUES, TASK_STATUS_VALUES } from "../constants";
 import type { MeetingOption, MemberOption, TaskFilterKeys, TaskPriority, TasksRow, TaskStatus } from "../types";
 import { berlinToday, formatDateOnly, isTaskOverdue } from "../utils";
+
 
 export const TASK_SORTABLE_FIELDS = [
   "title",
@@ -63,15 +64,11 @@ export async function buildTaskWhere(
     conditions.push({ memberId: memberIdFilter });
   }
 
-  // "Bana atananlar" filtresi: oturum kullanıcısına veya kullanıcının e-postasıyla eşleşen üyeye atanmışlar.
+  // "Bana atananlar": yalnız oturum kullanıcısının üye kaydına (e-postayla eşleşen) atanmış görevler.
+  // #584: Kullanıcının OLUŞTURDUĞU ama başkasına atadığı görevler bu listeye girmez.
   if (params.filters.mine === "1" && currentUser) {
     const candidateIds = await resolveTaskAssigneeIds(currentUser,findMemberIdsByEmail);
-    conditions.push({
-      OR: [
-        { memberId: { in: candidateIds } },
-        { createdById: currentUser.id },
-      ],
-    });
+    conditions.push(assignedToMeCondition(candidateIds));
   }
 
   const today = berlinToday();
