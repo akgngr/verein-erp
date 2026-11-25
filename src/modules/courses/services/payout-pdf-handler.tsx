@@ -2,10 +2,12 @@ import "server-only";
 
 import { renderToBuffer } from "@react-pdf/renderer";
 
+import { writeAudit } from "@/shared/audit/write-audit";
 import { translateMessage } from "@/shared/i18n/translate-message";
 import { registerSharedPdfFonts } from "@/shared/pdf/fonts";
 import { resolvePdfLang } from "@/shared/pdf/i18n";
 import { can } from "@/shared/permissions/define";
+import { buildUserLabel } from "@/shared/utils";
 
 import { requireUser, UnauthorizedError } from "@/modules/auth/server";
 import { getOrganizationLogoDataUri, getOrganizationProfile } from "@/modules/organization/server";
@@ -65,6 +67,14 @@ export async function payoutPdfHandler(request: Request): Promise<Response> {
       }}
     />,
   );
+  await writeAudit({
+    userId: user.id,
+    userLabel: buildUserLabel(user.name, user.email),
+    action: "EXPORT",
+    entity: "CourseTeacherPayout",
+    entityId: payout.id,
+    after: { number: payout.number, period: payout.period, format: "pdf", lang },
+  });
   return new Response(new Uint8Array(buffer), {
     headers: {
       "Content-Type": "application/pdf",

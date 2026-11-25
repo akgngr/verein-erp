@@ -316,7 +316,8 @@
     "chargeNotOpen": "Diese Forderung ist nicht offen.",
     "paymentNotFound": "Zahlung nicht gefunden oder bereits zurückgenommen.",
     "categoryMissing": "In den Kurs-Einstellungen ist keine Einnahmekategorie gewählt.",
-    "teacherHasAccount": "Diese Lehrkraft hat bereits ein Konto."
+    "teacherHasAccount": "Diese Lehrkraft hat bereits ein Konto.",
+    "sessionInLockedPayout": "Dieser Termin ist Teil einer freigegebenen oder bezahlten Honorarabrechnung und kann nicht gelöscht werden."
   },
   "validation": {
     "textMax": "Der Text ist zu lang.",

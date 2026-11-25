@@ -31,9 +31,20 @@ export async function saveAttendanceAction(input: unknown): Promise<ActionResult
     schema: attendanceSchema,
     handler: async ({ input, user, audit }) => {
       const roster = await loadRosterFor(user, input.courseId);
-      if (!roster.sessions.some((session) => session.id === input.sessionId)) throw new ActionError("progress.errors.sessionNotFound");
-      const enrollmentIds = new Set(roster.enrollments.map((enrollment) => enrollment.id));
-      const entries = input.entries.filter((entry) => enrollmentIds.has(entry.enrollmentId));
+      const session = roster.sessions.find((candidate) => candidate.id === input.sessionId);
+      if (!session) throw new ActionError("progress.errors.sessionNotFound");
+      if (session.isCancelled) throw new ActionError("progress.errors.sessionCancelled");
+      const enrollmentById = new Map(roster.enrollments.map((enrollment) => [enrollment.id, enrollment]));
+      for (const entry of input.entries) {
+        const enrollment = enrollmentById.get(entry.enrollmentId);
+        if (enrollment?.status === "WITHDRAWN") {
+          throw new ActionError("progress.errors.enrollmentWithdrawn");
+        }
+      }
+      const entries = input.entries.filter((entry) => {
+        const enrollment = enrollmentById.get(entry.enrollmentId);
+        return enrollment !== undefined && enrollment.status !== "WITHDRAWN";
+      });
       const label = buildUserLabel(user.name, user.email);
       const db = getDb();
       await db.$transaction(

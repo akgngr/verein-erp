@@ -454,7 +454,8 @@
     "notEditable": "Toplantı düzenlenemez.",
     "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş.",
     "membersAlreadyAdded": "Seçilen üyeler bu toplantıda zaten mevcut.",
-    "assigneeNotAttendee": "Seçilen sorumlu bu toplantının katılımcısı değil."
+    "assigneeNotAttendee": "Seçilen sorumlu bu toplantının katılımcısı değil.",
+    "approveHasOpenVotes": "Açık gizli oylama varken toplantı tutanağı onaylanamaz; önce tüm oylamaları kapatın."
   },
   "validation": {
     "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
@@ -475,6 +476,7 @@
     "votesRange": "Oy sayısı 0-1000 arasında olmalıdır.",
     "decisionMin": "Karar metni en az 3 karakter olmalıdır.",
     "decisionMax": "Karar metni en fazla 3000 karakter olabilir.",
+    "decisionRequired": "Geçerli bir karar seçin.",
     "titleMin": "Başlık en az 3 karakter olmalıdır.",
     "titleMax": "Başlık en fazla 200 karakter olabilir.",
     "dateRequired": "Toplantı tarihi zorunludur.",

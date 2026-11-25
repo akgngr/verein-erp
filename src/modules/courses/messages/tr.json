@@ -316,7 +316,8 @@
     "chargeNotOpen": "Bu kalem açık değil.",
     "paymentNotFound": "Tahsilat bulunamadı ya da zaten geri alınmış.",
     "categoryMissing": "Kurs ayarlarında muhasebe gelir kategorisi seçilmemiş.",
-    "teacherHasAccount": "Bu öğretmenin zaten bir hesabı var."
+    "teacherHasAccount": "Bu öğretmenin zaten bir hesabı var.",
+    "sessionInLockedPayout": "Bu ders onaylanmış veya ödenmiş bir öğretmen hakedişinde yer aldığı için silinemez."
   },
   "validation": {
     "textMax": "Metin çok uzun.",
