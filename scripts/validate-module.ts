@@ -3,6 +3,21 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { checkModuleDependencies } from "../src/shared/modules/module-deps";
 
+/**
+ * #587: Eklenti tablo adı kuralından (modül ad alanı öneki) önce üretimde oluşmuş tablolar.
+ * Yeniden adlandırma bir migration ve veri taşıma gerektirir; yeni tablolar bu listeye EKLENMEZ.
+ */
+const LEGACY_EXTENSION_TABLES: Record<string, string[]> = {
+  "member-portal": [
+    "portal_login_tokens",
+    "portal_sessions",
+    "portal_passkeys",
+    "security_rate_limits",
+    "portal_consent_challenges",
+    "portal_art15_requests",
+  ],
+};
+
 const ROOT_DIR = process.cwd();
 const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
 const APP_DIR = path.join(ROOT_DIR, "src", "app", "(dashboard)", "(modules)");
@@ -626,12 +641,18 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
         }
       }
 
-      // EXTENSION modüller için çakışma önleyici @@map kuralı kontrolü
+      // EXTENSION modüller için çakışma önleyici @@map kuralı kontrolü.
+      // #587: PostgreSQL tablo adında tire kullanılmadığı için modül anahtarının alt çizgili biçimi de
+      // kabul edilir (campaign-telegram → campaign_telegram_). Kural konmadan önce üretimde oluşmuş
+      // tablolar yeniden adlandırma migration'ı gerektirdiği için LEGACY_EXTENSION_TABLES'ta tutulur.
       if (info.category === "EXTENSION") {
         const mapMatches = [...schemaText.matchAll(/@@map\(["']([^"']+)["']\)/g)];
+        const prefixes = [`${moduleKey}_`, `${moduleKey.replace(/-/g, "_")}_`];
+        const legacy = LEGACY_EXTENSION_TABLES[moduleKey] ?? [];
         for (const match of mapMatches) {
           const tableName = match[1];
-          if (!tableName.startsWith(`${moduleKey}_`) && tableName !== moduleKey) {
+          if (legacy.includes(tableName)) continue;
+          if (!prefixes.some((prefix) => tableName.startsWith(prefix)) && tableName !== moduleKey) {
             warnings.push(
               `Eklenti tablosu @@map("${tableName}") modül ad alanı (${moduleKey}_) ile başlamalıdır.`,
             );
@@ -661,7 +682,10 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
     }
 
     info.hasAppRoute = hasMatchingRoute;
-    if (!hasMatchingRoute) {
+    // #587: Kendi sayfası olmayan (nav/menü bağlantısı tanımlamayan) eklentiler, ör. takvim senkron
+    // ve kampanya kanal eklentileri, başka modülün ekranına bağlanır; dashboard sayfası beklenmez.
+    const isHeadless = hrefMatches.length === 0 && !/\bbasePath:/.test(configText);
+    if (!hasMatchingRoute && !isHeadless) {
       warnings.push(`Modül için dashboard sayfası bulunamadı (src/modules/${moduleKey}/page.tsx oluşturulmalıdır).`);
     }
   }

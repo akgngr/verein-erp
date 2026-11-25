@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.18.5",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Menü grubu kimlik çakışması düzeltmesi",
+        "de": "Behebung möglicher Gruppen-ID-Kollisionen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Yeni özel grup kimlikleri mevcut gruplarla çakışmayacak şekilde benzersiz üretilir.",
+          "de": "Neue Gruppen-IDs werden eindeutig gegenüber bestehenden Gruppen erzeugt."
+        }
+      ]
+    },
+    {
       "version": "1.18.4",
       "date": "2026-11-25",
       "title": {

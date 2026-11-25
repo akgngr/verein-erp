@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.1 |
+| Sürüm | 1.4.2 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -35,11 +35,17 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
-### 1.4.1 — ADMIN yetki denetimleri, davet hız sınırı ve harici erişim sertleştirmesi
+### 1.4.2 — ADMIN yetki denetimleri, davet hız sınırı ve harici erişim sertleştirmesi
 
 _2026-11-25_
 
 - **Güvenlik:** Yönetici yetki korumaları, davet hız sınırı ve atomik işlem, harici erişim hibesi doğrulaması ve kanonik APP_URL bağlantıları eklendi (#574).
+
+### 1.4.1 — Menü grubu ikon alanı kalıcılığı
+
+_2026-11-25_
+
+- **Düzeltme:** groupSchema içine icon alanı eklenerek özel grup ikonlarının veritabanında saklanması sağlandı.
 
 ### 1.4.0 — Davet bağlantısı
 
@@ -77,10 +83,4 @@ _2026-11-20_
 
 - **İyileştirme:** Bildirim sistemi, duyurular için etkin kullanıcıları (isteğe bağlı role göre) listeleyebilir.
 
-### 1.1.8 — Bildirim alıcısı eşleme
-
-_2026-11-20_
-
-- **İyileştirme:** Diğer modüller, bildirim alıcısını e-posta adresine göre etkin kullanıcılar arasından bulabilir.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 11 herkese açık sürüm notu.

@@ -57,7 +57,7 @@ export const ai = defineModuleAiV2({
       execute: async (input) => {
         // Etkinlik her zaman TASLAK olarak oluşturulur.
         const created = await createEventAction({ ...input, status: "DRAFT" });
-        return { ok: created.success, error: created.error ?? undefined };
+        return created.ok ? { ok: true } : { ok: false, error: created.error };
       },
     }),
   },

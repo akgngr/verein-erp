@@ -75,14 +75,28 @@ export const MAX_REMOTE_EVENTS = 2500;
 
 import { recordEgress } from "@/shared/egress/record-egress";
 
-/** fetch with host allowlist, timeout and JSON/text handling. */
+/** HTTPS ve sağlayıcının izinli sunucu listesindeki (alt alan adları dahil) bir adres mi? */
+export function isAllowedSyncUrl(allowedHosts: readonly string[], url: URL): boolean {
+  return url.protocol === "https:" && allowedHosts.some((host) => url.hostname === host || url.hostname.endsWith(`.${host}`));
+}
+
+/** En fazla bu kadar yönlendirme izlenir (iCloud CalDAV bölüm sunucusuna 1–2 yönlendirme yapar). */
+const MAX_SYNC_REDIRECTS = 5;
+
+/**
+ * fetch with host allowlist, timeout and JSON/text handling.
+ *
+ * #584: Yönlendirmeler elle izlenir: iCloud, CalDAV isteklerini 301/302 ile hesabın bölüm sunucusuna
+ * (ör. p12-caldav.icloud.com) taşır. Her hedef aynı izin listesine göre yeniden doğrulanır (SSRF koruması
+ * korunur); yöntem ve gövde 303 dışında aynen taşınır (PROPFIND/REPORT için gereklidir).
+ */
 export async function syncFetch(
   provider: Pick<CalendarSyncProvider, "allowedHosts"> & { key?: string },
   url: string,
   init: RequestInit = {},
 ): Promise<Response> {
   const parsed = new URL(url);
-  if (parsed.protocol !== "https:" || !provider.allowedHosts.some((host) => parsed.hostname === host || parsed.hostname.endsWith(`.${host}`))) {
+  if (!isAllowedSyncUrl(provider.allowedHosts, parsed)) {
     throw new Error("SYNC_HOST_NOT_ALLOWED");
   }
   const bodyBytes = typeof init.body === "string"
@@ -91,9 +105,23 @@ export async function syncFetch(
       ? Buffer.byteLength(init.body.toString())
       : 0;
   try {
-    const response = await fetch(parsed, { ...init, redirect: "error", signal: AbortSignal.timeout(20_000) });
-    if (response.status === 401 || response.status === 403) throw new SyncAuthError();
-    return response;
+    const signal = AbortSignal.timeout(20_000);
+    let target = parsed;
+    let request: RequestInit = init;
+    for (let hop = 0; ; hop += 1) {
+      const response = await fetch(target, { ...request, redirect: "manual", signal });
+      const location = response.headers.get("location");
+      if (response.status >= 300 && response.status < 400 && location) {
+        if (hop >= MAX_SYNC_REDIRECTS) throw new Error("SYNC_TOO_MANY_REDIRECTS");
+        const next = new URL(location, target);
+        if (!isAllowedSyncUrl(provider.allowedHosts, next)) throw new Error("SYNC_HOST_NOT_ALLOWED");
+        if (response.status === 303) request = { ...request, method: "GET", body: undefined };
+        target = next;
+        continue;
+      }
+      if (response.status === 401 || response.status === 403) throw new SyncAuthError();
+      return response;
+    }
   } finally {
     const providerKey = provider.key ?? provider.allowedHosts[0] ?? "calendar";
     await recordEgress({

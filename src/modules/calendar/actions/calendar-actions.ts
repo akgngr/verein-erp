@@ -5,8 +5,10 @@ import { z } from "zod";
 
 import { ActionError, createAction } from "@/modules/auth/server";
 import { createEventAction } from "@/modules/events/server";
+import { berlinLocalDateTime } from "@/shared/calendar/berlin-date";
 import { emitAutomationEvent } from "@/shared/automation/emit";
 import { getDb } from "@/shared/db";
+import { can } from "@/shared/permissions/define";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
@@ -57,7 +59,7 @@ export async function saveEntryAction(input: unknown): Promise<ActionResult<{ id
   return createAction({
     permission: { definition: calendarPermissions, action: "view" },
     schema: entrySchema,
-    handler: async ({ input, user }) => {
+    handler: async ({ input, user, audit }) => {
       const startsAt = new Date(input.startsAt);
       const endsAt = new Date(input.endsAt);
       if (endsAt < startsAt) throw new ActionError("calendar.errors.endBeforeStart");
@@ -79,6 +81,16 @@ export async function saveEntryAction(input: unknown): Promise<ActionResult<{ id
         const existing = await db.calendarEntry.findUnique({ where: { id: input.id }, include: { calendar: true } });
         if (!existing || !canWriteCalendar(user, existing.calendar)) throw new ActionError("calendar.errors.forbidden");
         await db.calendarEntry.update({ where: { id: input.id }, data });
+        // #584: Ortak takvim değişiklikleri denetlenir (kişisel takvim yalnız sahibine aittir).
+        if (existing.calendar.kind === "SHARED" || calendar.kind === "SHARED") {
+          await audit({
+            action: "UPDATE",
+            entity: "CalendarEntry",
+            entityId: input.id,
+            before: { calendarId: existing.calendarId, startsAt: existing.startsAt, endsAt: existing.endsAt, allDay: existing.allDay },
+            after: { calendarId: calendar.id, startsAt, endsAt, allDay: input.allDay },
+          });
+        }
         revalidatePath("/calendar");
         return { id: input.id };
       }
@@ -90,6 +102,9 @@ export async function saveEntryAction(input: unknown): Promise<ActionResult<{ id
         await emitAutomationEvent(calendarEntryCreatedEvent, { entryId: entry.id, calendarKind: calendar.kind, allDay: entry.allDay }, tx);
         return entry;
       });
+      if (calendar.kind === "SHARED") {
+        await audit({ action: "CREATE", entity: "CalendarEntry", entityId: created.id, after: { calendarId: calendar.id, startsAt, endsAt, allDay: input.allDay } });
+      }
       revalidatePath("/calendar");
       return { id: created.id };
     },
@@ -100,11 +115,23 @@ export async function deleteEntryAction(input: unknown): Promise<ActionResult<{ 
   return createAction({
     permission: { definition: calendarPermissions, action: "view" },
     schema: z.object({ id: z.string().min(1).max(64) }),
-    handler: async ({ input, user }) => {
+    handler: async ({ input, user, audit }) => {
       const db = getDb();
       const entry = await db.calendarEntry.findUnique({ where: { id: input.id }, include: { calendar: true } });
       if (!entry || !canWriteCalendar(user, entry.calendar)) throw new ActionError("calendar.errors.forbidden");
+      // #584: Ortak takvimden silmek calendar.delete ister (update yetkisi yetmez).
+      if (entry.calendar.kind === "SHARED" && !can(user.role, calendarPermissions, "delete")) {
+        throw new ActionError("calendar.errors.forbidden");
+      }
       await db.calendarEntry.delete({ where: { id: input.id } });
+      if (entry.calendar.kind === "SHARED") {
+        await audit({
+          action: "DELETE",
+          entity: "CalendarEntry",
+          entityId: input.id,
+          before: { calendarId: entry.calendarId, startsAt: entry.startsAt, endsAt: entry.endsAt, allDay: entry.allDay },
+        });
+      }
       revalidatePath("/calendar");
       return { ok: true as const };
     },
@@ -121,17 +148,18 @@ export async function convertToEventAction(input: unknown): Promise<ActionResult
       const entry = await db.calendarEntry.findUnique({ where: { id: input.id }, include: { calendar: true } });
       if (!entry || !canSeeCalendar(user, entry.calendar)) throw new ActionError("calendar.errors.forbidden");
       if (entry.eventId) return { eventId: entry.eventId };
+      // #584: Etkinlik saatleri Europe/Berlin duvar saati olarak beklenir.
       const result = await createEventAction({
-        title: entry.title.length >= 3 ? entry.title : `${entry.title} …`,
+        title: entry.title.length >= 3 ? entry.title.slice(0, 200) : `${entry.title} …`,
         description: entry.description,
         type: "OTHER",
         status: "DRAFT",
-        startDate: entry.startsAt.toISOString(),
-        endDate: entry.endsAt.toISOString(),
+        startDate: berlinLocalDateTime(entry.startsAt),
+        endDate: berlinLocalDateTime(entry.endsAt),
         location: entry.location,
         isOnline: false,
-      } as never) as { success: boolean; data?: { id: string }; error?: string };
-      if (!result.success || !result.data) throw new ActionError(result.error ?? "calendar.errors.convertFailed");
+      });
+      if (!result.ok) throw new ActionError(result.error || "calendar.errors.convertFailed");
       await db.calendarEntry.update({ where: { id: entry.id }, data: { eventId: result.data.id } });
       revalidatePath("/calendar");
       return { eventId: result.data.id };
@@ -143,16 +171,24 @@ export async function saveSharedCalendarAction(input: unknown): Promise<ActionRe
   return createAction({
     permission: { definition: calendarPermissions, action: "approve" },
     schema: z.object({ id: z.string().min(1).max(64).optional(), name: z.string().trim().min(2, "calendar.errors.name").max(80), color, isActive: z.boolean().default(true) }),
-    handler: async ({ input, user }) => {
+    handler: async ({ input, user, audit }) => {
       if (!canManageSharedCalendars(user)) throw new ActionError("calendar.errors.forbidden");
       if (input.id) {
         const existing = await getDb().calendar.findUnique({ where: { id: input.id } });
         if (!existing || existing.kind !== "SHARED") throw new ActionError("calendar.errors.forbidden");
         await updateCalendar(input.id, { name: input.name, color: input.color, isActive: input.isActive });
+        await audit({
+          action: "UPDATE",
+          entity: "Calendar",
+          entityId: input.id,
+          before: { name: existing.name, color: existing.color, isActive: existing.isActive },
+          after: { name: input.name, color: input.color, isActive: input.isActive },
+        });
         revalidatePath("/calendar");
         return { id: input.id };
       }
       const created = await createSharedCalendar(input.name, input.color);
+      await audit({ action: "CREATE", entity: "Calendar", entityId: created.id, after: { name: input.name, color: input.color } });
       revalidatePath("/calendar");
       return created;
     },
@@ -177,7 +213,12 @@ export async function rotateFeedAction(input: unknown): Promise<ActionResult<{ t
   return createAction({
     permission: { definition: calendarPermissions, action: "view" },
     schema: z.object({}).passthrough(),
-    handler: async ({ user }) => ({ token: await rotateFeedToken(user.id) }),
+    handler: async ({ user, audit }) => {
+      const token = await rotateFeedToken(user.id);
+      // #584: Abonelik bağlantısı bir erişim anahtarıdır; oluşturma ve iptal denetlenir (anahtarın kendisi yazılmaz).
+      await audit({ action: "ROTATE", entity: "CalendarFeedToken", entityId: user.id });
+      return { token };
+    },
   })(input);
 }
 
@@ -185,8 +226,9 @@ export async function revokeFeedAction(input: unknown): Promise<ActionResult<{ o
   return createAction({
     permission: { definition: calendarPermissions, action: "view" },
     schema: z.object({}).passthrough(),
-    handler: async ({ user }) => {
+    handler: async ({ user, audit }) => {
       await revokeFeedToken(user.id);
+      await audit({ action: "REVOKE", entity: "CalendarFeedToken", entityId: user.id });
       return { ok: true as const };
     },
   })(input);

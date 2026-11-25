@@ -108,8 +108,12 @@ export function MenuCustomizerClient({
   function addCustomGroup() {
     const label = newGroupLabel.trim();
     if (!label) return;
-    const seq = groupSeqRef.current++;
-    const id = `custom_${seq}_${groups.length + 1}`;
+    let seq = groupSeqRef.current++;
+    let id = `custom_${seq}`;
+    while (groups.some((g) => g.id === id)) {
+      seq = groupSeqRef.current++;
+      id = `custom_${seq}`;
+    }
     const maxOrder = unifiedRows.reduce((acc, r) => Math.max(acc, r.order), 0);
     setGroups((prev) => [
       ...prev,

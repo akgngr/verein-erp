@@ -12,7 +12,7 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-import { corePackages, listModuleDeclarations, rangesCompatible, readRootPackage } from "../src/shared/modules/module-deps";
+import { corePackages, installedSatisfies, listModuleDeclarations, rangesCompatible, readRootPackage } from "../src/shared/modules/module-deps";
 
 const checkOnly = process.argv.includes("--check");
 const root = readRootPackage();
@@ -41,7 +41,8 @@ if (errors.length) {
 
 // Çekirdek paketler sahiplenilmez ve kaldırılmaz; diğerleri bildiren modüllere aittir.
 const moduleOwned = [...wanted].filter(([name]) => !core.has(name));
-const toAdd = moduleOwned.filter(([name, { range }]) => !installed[name] || installed[name] !== range).map(([name, { range }]) => `${name}@${range}`);
+// #587: Kurulu aralık modülün istediğini zaten karşılıyorsa (ör. Dependabot yükseltmesi) dokunulmaz.
+const toAdd = moduleOwned.filter(([name, { range }]) => !installed[name] || !installedSatisfies(installed[name], range)).map(([name, { range }]) => `${name}@${range}`);
 const toRemove = Object.keys(owned).filter((name) => !wanted.has(name) && !core.has(name));
 const nextOwned = Object.fromEntries(moduleOwned.map(([name, { owners }]) => [name, owners.sort()]));
 const ownershipChanged = JSON.stringify(nextOwned) !== JSON.stringify(owned);

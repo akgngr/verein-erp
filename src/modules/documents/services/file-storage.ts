@@ -16,15 +16,18 @@ import { getEnv } from "@/shared/env";
  * UPLOAD_DIR içinde değilse işlem reddedilir (path traversal koruması).
  */
 
-/** UPLOAD_DIR kökünü mutlak olarak döner (göreli yollar process.cwd()'ye bağlıdır). */
+/**
+ * UPLOAD_DIR kökünü mutlak olarak döner (göreli yollar process.cwd()'ye bağlıdır).
+ * `turbopackIgnore`: dinamik yol derleme anında izlenmez (bkz. shared/files/storage.ts, #587).
+ */
 export function getUploadRoot(): string {
-  return path.resolve(process.cwd(), getEnv().UPLOAD_DIR);
+  return path.resolve(/* turbopackIgnore: true */ process.cwd(), getEnv().UPLOAD_DIR);
 }
 
 /** storagePath'i UPLOAD_DIR altındaki mutlak yola çözer; yol dışına çıkışı reddeder. */
 export function resolveStoragePath(storagePath: string): string {
   const root = getUploadRoot();
-  const resolved = path.resolve(root, storagePath);
+  const resolved = path.resolve(/* turbopackIgnore: true */ root, storagePath);
   if (resolved !== root && !resolved.startsWith(root + path.sep)) {
     throw new Error("Geçersiz depolama yolu."); // i18n-ignore (geliştirici hatası; kullanıcıya gösterilmez)
   }

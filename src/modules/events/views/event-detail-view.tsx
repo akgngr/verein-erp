@@ -12,11 +12,14 @@ import {
 import { notFound } from "next/navigation";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { LinkButton } from "@/shared/components/ui/link-button";
-import { getCurrentUser } from "@/modules/auth/server";
+import { ForbiddenError, requirePermission } from "@/modules/auth/server";
+import { AccessDenied } from "@/shared/components/ui/access-denied";
+import { can } from "@/shared/permissions/define";
+import { eventsPermissions } from "../permissions";
 import { campaignShortcutHref } from "@/modules/mailings/server";
 import { getEventById } from "../queries/get-event";
 import { eventLabel } from "../recipients";
-import { AttendeeList } from "../components/attendee-list";
+import { AttendeeList, type AttendeeMemberOption } from "../components/attendee-list";
 import { EVENT_TYPES, EVENT_STATUSES } from "../constants";
 import {
   calculateCapacityRatio,
@@ -27,7 +30,30 @@ interface EventDetailViewProps {
   eventId: string;
 }
 
+/**
+ * Üye seçici: yalnız katılımcı yönetebilen kullanıcıya (#584). Etkinlik modülü üyeler modülünü bildirdiği
+ * `members: read` erişimiyle okur (recipients.ts ile aynı yol); okunamazsa seçici gizlenir, misafir kaydı sürer.
+ */
+async function loadMemberOptions(canManage: boolean): Promise<AttendeeMemberOption[]> {
+  if (!canManage) return [];
+  try {
+    const { listMemberOptions } = await import("@/modules/members/server");
+    return await listMemberOptions();
+  } catch {
+    return [];
+  }
+}
+
 export async function EventDetailView({ eventId }: EventDetailViewProps) {
+  // #584: Katılımcı adları ve iletişim bilgileri yalnız events.view yetkisiyle görünür.
+  let user;
+  try {
+    user = await requirePermission(eventsPermissions, "view");
+  } catch (error) {
+    if (error instanceof ForbiddenError) return <AccessDenied />;
+    throw error;
+  }
+  const canManage = can(user.role, eventsPermissions, "update");
   const tStatus = await getTranslations("events.status");
   const tTypes = await getTranslations("events.types");
   const tDetail = await getTranslations("events.detailView");
@@ -40,12 +66,10 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
   }
 
   // Kampanyalar etkin ve yetki varsa: katılımcılara duyuru sihirbazı bu etkinlikle açılır.
-  const user = await getCurrentUser();
-  const announceHref = user
-    ? await campaignShortcutHref(user.role, "events:attendees", {
-        event: eventLabel(event),
-      })
-    : null;
+  const announceHref = await campaignShortcutHref(user.role, "events:attendees", {
+    event: eventLabel(event),
+  });
+  const memberOptions = await loadMemberOptions(canManage);
 
   const typeMeta = EVENT_TYPES.find((t) => t.value === event.type);
   const statusMeta = EVENT_STATUSES.find((s) => s.value === event.status);
@@ -222,6 +246,8 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
           eventId={event.id}
           capacity={event.capacity}
           attendees={event.attendees}
+          memberOptions={memberOptions}
+          canManage={canManage}
         />
       </div>
     </div>

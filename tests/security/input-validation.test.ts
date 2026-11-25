@@ -217,7 +217,8 @@ describe("Input Validation Güvenliği", () => {
       }
     });
     
-    test("Prisma ORM SQL injection'a karşı korur", async () => {
+    // #587: Veritabanı gerektirir; DATABASE_URL yoksa diğer DB testleri gibi atlanır.
+    test("Prisma ORM SQL injection'a karşı korur", { skip: !process.env.DATABASE_URL || !process.env.AUTH_SECRET }, async () => {
       // Prisma ORM parametreli sorgular kullanır, dolayısıyla SQL injection'a karşı korunur
       // Bu test, Prisma'nın raw query'lerinde bile parametreli sorgular kullandığını doğrular
       

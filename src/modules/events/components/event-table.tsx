@@ -40,6 +40,8 @@ interface EventTableProps {
   sort?: string;
   dir?: "asc" | "desc";
   q?: string;
+  canUpdate?: boolean;
+  canDelete?: boolean;
 }
 
 export function EventTable({
@@ -50,6 +52,8 @@ export function EventTable({
   sort,
   dir,
   q,
+  canUpdate = false,
+  canDelete = false,
 }: EventTableProps) {
   const tEvents = useTranslations("events");
   const tCommon = useTranslations("common");
@@ -64,12 +68,12 @@ export function EventTable({
   const handleDeleteConfirm = async () => {
     if (!deletingEvent) return;
     const res = await deleteEventAction(deletingEvent.id);
-    if (res.success) {
+    if (res.ok) {
       notify.success(tTable("deletedToast", { title: deletingEvent.title }));
       setDeletingEvent(null);
       router.refresh();
     } else {
-      notify.error(res.error ?? tTable("deleteFailed"));
+      notify.error(res.error || tTable("deleteFailed"));
     }
   };
 
@@ -242,19 +246,23 @@ export function EventTable({
             icon: <Eye className="h-4 w-4" />,
             href: `/events?detail=${row.id}`,
           },
-          {
-            key: "edit",
-            label: tCommon("edit"),
-            icon: <Pencil className="h-4 w-4" />,
-            onPress: () => setEditingEvent(row),
-          },
-          {
-            key: "delete",
-            label: tCommon("delete"),
-            icon: <Trash2 className="h-4 w-4" />,
-            color: "danger",
-            onPress: () => setDeletingEvent(row),
-          },
+          ...(canUpdate
+            ? [{
+                key: "edit",
+                label: tCommon("edit"),
+                icon: <Pencil className="h-4 w-4" />,
+                onPress: () => setEditingEvent(row),
+              }]
+            : []),
+          ...(canDelete
+            ? [{
+                key: "delete",
+                label: tCommon("delete"),
+                icon: <Trash2 className="h-4 w-4" />,
+                color: "danger" as const,
+                onPress: () => setDeletingEvent(row),
+              }]
+            : []),
         ]}
         emptyMessage={tTable("empty")}
         ariaLabel="Etkinlikler tablosu"

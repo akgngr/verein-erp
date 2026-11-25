@@ -17,7 +17,8 @@ export async function listEvents(filters: EventFilters = {}): Promise<{
   const skip = (page - 1) * pageSize
 
   const now = new Date()
-  const whereConditions: Prisma.EventWhereInput = {}
+  // #584: Yumuşak silinmiş etkinlikler hiçbir listede ve sayaçta görünmez.
+  const whereConditions: Prisma.EventWhereInput = { deletedAt: null }
 
   const searchTerm = (filters.q ?? filters.query)?.trim()
   if (searchTerm && searchTerm.length > 0) {
@@ -82,9 +83,10 @@ export async function listEvents(filters: EventFilters = {}): Promise<{
       },
     }),
     db.event.count({ where: whereConditions }),
-    db.event.count(),
+    db.event.count({ where: { deletedAt: null } }),
     db.event.count({
       where: {
+        deletedAt: null,
         startDate: { gte: now },
         status: { in: ["PUBLISHED", "DRAFT"] },
       },
@@ -93,6 +95,7 @@ export async function listEvents(filters: EventFilters = {}): Promise<{
       where: {
         registeredAt: { gte: startOfMonth, lte: endOfMonth },
         status: { not: "CANCELLED" },
+        event: { deletedAt: null },
       },
     }),
   ])

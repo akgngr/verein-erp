@@ -1,6 +1,7 @@
 "use server";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { listMeetingOptions } from "@/modules/meetings/server";
 import { listMemberOptions } from "@/modules/members/server";
 import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
@@ -18,6 +19,13 @@ import {
 } from "../schemas/item-schema";
 import { parseDateOnly } from "../utils";
 
+/** #584: Bağlanan toplantı gerçekten var olmalı (silinmiş veya uydurma kimlik reddedilir). */
+async function assertMeetingExists(meetingId: string | null | undefined): Promise<void> {
+  if (!meetingId) return;
+  const [meeting] = await listMeetingOptions({ ids: [meetingId] });
+  if (!meeting) throw new ActionError("tasks.errors.meetingNotFound", { meetingId: ["tasks.errors.meetingNotFound"] });
+}
+
 /** Görev oluşturma: yetki, şema ve üye anlık görüntüsü kaydedilir. */
 export async function createTaskAction(input: unknown): Promise<ActionResult<{ id: string }>> {
   const run = createAction({
@@ -32,6 +40,7 @@ export async function createTaskAction(input: unknown): Promise<ActionResult<{ i
         if (!member) throw new ActionError("tasks.errors.memberNotFound");
         memberName = member.label;
       }
+      await assertMeetingExists(input.meetingId);
 
       const isDone = input.status === "DONE";
       const userLabel = buildUserLabel(user.name, user.email);
@@ -60,11 +69,13 @@ export async function createTaskAction(input: unknown): Promise<ActionResult<{ i
         action: "CREATE",
         entity: "Task",
         entityId: created.id,
+        // #584: Denetim kaydına kişi adı yazılmaz; sorumlu üye kimlikle izlenir.
         after: {
           title: created.title,
           status: created.status,
           priority: created.priority,
-          memberName: created.memberName,
+          memberId: created.memberId,
+          meetingId: created.meetingId,
         },
       });
 
@@ -83,6 +94,8 @@ export async function updateTaskAction(input: unknown): Promise<ActionResult<{ i
       const db = getDb();
       const existing = await db.task.findUnique({ where: { id: input.id } });
       if (!existing) throw new ActionError("tasks.errors.notFound");
+
+      if ((input.meetingId ?? null) !== existing.meetingId) await assertMeetingExists(input.meetingId);
 
       let memberName = existing.memberName;
       if (input.memberId !== existing.memberId) {
@@ -139,11 +152,15 @@ export async function updateTaskAction(input: unknown): Promise<ActionResult<{ i
           title: existing.title,
           status: existing.status,
           priority: existing.priority,
+          memberId: existing.memberId,
+          meetingId: existing.meetingId,
         },
         after: {
           title: updated.title,
           status: updated.status,
           priority: updated.priority,
+          memberId: updated.memberId,
+          meetingId: updated.meetingId,
         },
       });
 

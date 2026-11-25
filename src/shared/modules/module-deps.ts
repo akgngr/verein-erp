@@ -1,3 +1,5 @@
+// #587: Geliştirici aracı; `turbopackIgnore` yorumları bu dosyadaki dinamik yolların derleme anında
+// izlenmesini (src/modules klasörünün standalone pakete kopyalanmasını) engeller. Davranış değişmez.
 import fs from "node:fs";
 import path from "node:path";
 
@@ -14,7 +16,7 @@ import semver from "semver";
 export type ModuleDependencyMap = Record<string, string>;
 
 const ROOT = process.cwd();
-const MODULES_DIR = path.join(ROOT, "src", "modules");
+const MODULES_DIR = path.join(/* turbopackIgnore: true */ ROOT, "src", "modules");
 
 /** "qrcode/lib/x" → "qrcode", "@scope/pkg/sub" → "@scope/pkg". Dahili ve göreli yollar null. */
 export function packageNameOf(specifier: string): string | null {
@@ -43,7 +45,7 @@ export function modulePackageUsage(moduleDir: string): Map<string, string[]> {
   const usage = new Map<string, string[]>();
   const walk = (dir: string) => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const fullPath = path.join(dir, entry.name);
+      const fullPath = path.join(/* turbopackIgnore: true */ dir, entry.name);
       if (entry.isDirectory()) walk(fullPath);
       else if (/\.(ts|tsx|mts|js|mjs)$/.test(entry.name)) {
         for (const name of externalPackagesIn(fs.readFileSync(fullPath, "utf8"))) usage.set(name, [...(usage.get(name) ?? []), path.relative(moduleDir, fullPath)]);
@@ -68,15 +70,15 @@ export function corePackages(): Set<string> {
       return;
     }
     for (const entry of fs.readdirSync(target, { withFileTypes: true })) {
-      const full = path.join(target, entry.name);
+      const full = path.join(/* turbopackIgnore: true */ target, entry.name);
       if (full === MODULES_DIR || entry.name === "node_modules" || entry.name.startsWith(".")) continue;
       scan(full);
     }
   };
-  scan(path.join(ROOT, "src"));
-  for (const file of fs.readdirSync(ROOT)) if (/\.(ts|mts|mjs|js|cjs)$/.test(file)) scan(path.join(ROOT, file));
-  scan(path.join(ROOT, "scripts"));
-  scan(path.join(ROOT, "prisma"));
+  scan(path.join(/* turbopackIgnore: true */ ROOT, "src"));
+  for (const file of fs.readdirSync(ROOT)) if (/\.(ts|mts|mjs|js|cjs)$/.test(file)) scan(path.join(/* turbopackIgnore: true */ ROOT, file));
+  scan(path.join(/* turbopackIgnore: true */ ROOT, "scripts"));
+  scan(path.join(/* turbopackIgnore: true */ ROOT, "prisma"));
   return found;
 }
 
@@ -97,13 +99,13 @@ export type RootPackageJson = {
 };
 
 export function readRootPackage(): RootPackageJson {
-  return JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8")) as RootPackageJson;
+  return JSON.parse(fs.readFileSync(path.join(/* turbopackIgnore: true */ ROOT, "package.json"), "utf8")) as RootPackageJson;
 }
 
 export function listModuleDeclarations(): Map<string, ModuleDependencyMap> {
   const result = new Map<string, ModuleDependencyMap>();
   for (const entry of fs.readdirSync(MODULES_DIR, { withFileTypes: true })) {
-    const configPath = path.join(MODULES_DIR, entry.name, "module.config.ts");
+    const configPath = path.join(/* turbopackIgnore: true */ MODULES_DIR, entry.name, "module.config.ts");
     if (entry.isDirectory() && fs.existsSync(configPath)) result.set(entry.name, declaredDependencies(fs.readFileSync(configPath, "utf8")));
   }
   return result;
@@ -116,6 +118,21 @@ export function rangesCompatible(a: string, b: string): boolean {
   const minB = semver.minVersion(b);
   if (!minA || !minB) return false;
   return semver.satisfies(minA, b) || semver.satisfies(minB, a);
+}
+
+/**
+ * Kurulu aralık, modülün istediği aralığı karşılıyor mu? (#587)
+ * Uyumlu (aynı ana sürüm) ve en küçük kurulu sürüm modülün en küçük sürümünden eski değilse yeterlidir.
+ * Böylece Dependabot'un package.json'da yükselttiği aralık `pnpm module:deps` ile geri düşürülmez;
+ * yalnız modül daha yeni bir sürüm isterse ya da uyumsuz bir aralık kuruluysa paket yeniden eklenir.
+ */
+export function installedSatisfies(installedRange: string, wantedRange: string): boolean {
+  if (installedRange === wantedRange) return true;
+  if (!semver.validRange(installedRange) || !semver.validRange(wantedRange)) return false;
+  const minInstalled = semver.minVersion(installedRange);
+  const minWanted = semver.minVersion(wantedRange);
+  if (!minInstalled || !minWanted) return false;
+  return rangesCompatible(installedRange, wantedRange) && semver.gte(minInstalled, minWanted);
 }
 
 /** Doğrulayıcı: bir modülün paket kullanımı ve bildirimi tutarlı mı? */

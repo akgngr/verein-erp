@@ -1,5 +1,14 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
+import os from "node:os";
+import path from "node:path";
+
+// #587: Bu testler saf yol doğrulamasıdır; veritabanına bağlanmaz. getEnv() zorunlu değişkenleri
+// doğruladığı için, ortamda yoksa bağlantı kurulmayan yer tutucular verilir. Böylece `pnpm test`
+// .env olmadan da çalışır ve testler ortam hatası yüzünden "yanlışlıkla" geçmez.
+process.env.DATABASE_URL ??= "postgresql://placeholder@localhost:5432/not-used";
+process.env.AUTH_SECRET ??= "test-only-auth-secret-not-a-real-secret";
+process.env.UPLOAD_DIR = path.join(os.tmpdir(), "verein-erp-path-traversal-test");
 
 describe("Path Traversal Koruması", () => {
   test("resolveSafePath dışarı çıkan ve kontrol karakteri içeren yolları engeller", async () => {
@@ -24,7 +33,7 @@ describe("Path Traversal Koruması", () => {
     for (const candidate of maliciousPaths) {
       assert.throws(
         () => resolveSafePath(candidate),
-        /Geçersiz depolama yolu|invalid/i,
+        /Geçersiz depolama yolu/,
         `Path traversal engellenmeli: ${candidate}`,
       );
     }

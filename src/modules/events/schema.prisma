@@ -13,12 +13,17 @@ model Event {
   createdById String?
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
+  /// #584: Yumuşak silme. Silinen etkinlik listelerden, takvimden ve portaldan kalkar; kayıt ve
+  /// katılımcıları denetim için korunur. Kimin sildiği yalnız kimlik olarak tutulur (ad denetim kaydında).
+  deletedAt   DateTime?
+  deletedById String?
 
   attendees EventAttendee[]
 
   @@index([status])
   @@index([startDate])
   @@index([type])
+  @@index([deletedAt])
   @@map("events_items")
 }
 

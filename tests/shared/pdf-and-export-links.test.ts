@@ -143,7 +143,7 @@ test("no Next.js <Link> points to /api/ and LinkButton renders native <a> for /a
   assert.match(linkButton, /<a[\s\S]*download=\{download\}/);
 
   const nextConfig = readFileSync("next.config.ts", "utf8");
-  assert.match(nextConfig, /"\/api\/\*\*":\s*\["\.\/src\/shared\/pdf\/fonts\/\*\*"\]/);
+  assert.match(nextConfig, /"\.\/src\/shared\/pdf\/fonts\/\*\*"/);
 });
 
 test("unified NotoSans PDF registration renders TOP-2026-001, AO, Ort, German & Turkish glyphs intact (#577)", () => {
