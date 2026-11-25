@@ -213,7 +213,8 @@ export async function FeedbackDetailView({ id }: { id: string }) {
           <p className="break-all text-xs text-ink-500">
             {item.userAgent ?? ""}
           </p>
-          {item.screenshotPath && all ? (
+          {/* #583: getFeedback yalnız yöneticiye veya kaydın sahibine döner; sahibi de kendi görüntüsünü görür. */}
+          {item.screenshotPath ? (
             <a
               href={`/api/feedback/${item.id}/screenshot`}
               target="_blank"

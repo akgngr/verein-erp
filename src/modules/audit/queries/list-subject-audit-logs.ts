@@ -39,10 +39,14 @@ function mapCategory(entity: string): string {
  * Subject processing log for Member Portal (ADR 0010 P3):
  * returns ONLY this subject's entries with role category, time, and category —
  * NEVER any other person's name (userLabel is omitted).
+ *
+ * #583: Yönetimin kaydettiği ödeme/makbuz işlemleri (MemberPayment CREATE/VOID) kaydın kimliğiyle değil,
+ * denetimdeki üye numarasıyla (`after.memberNumber`) eşleşir; önceden bu kişiye ait olsalar da listede yoktu.
  */
 export async function listSubjectAuditLogsForPortal(input: {
   subjectRef: string;
   memberId: string;
+  memberNumber?: string | null;
 }): Promise<PortalSubjectAuditEntry[]> {
   const db = getDb();
   const rows = await db.auditLog.findMany({
@@ -51,6 +55,9 @@ export async function listSubjectAuditLogsForPortal(input: {
         { userId: input.subjectRef },
         { entity: "Member", entityId: input.memberId },
         { entity: "OnlineFormRequest", entityId: input.memberId },
+        ...(input.memberNumber
+          ? [{ entity: "MemberPayment", changes: { path: ["after", "memberNumber"], equals: input.memberNumber } }]
+          : []),
       ],
     },
     orderBy: { createdAt: "desc" },

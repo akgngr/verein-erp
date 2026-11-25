@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı.",
   "releases": [
     {
+      "version": "0.3.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "İşlem günlüğünde ödemeler",
+        "de": "Zahlungen im Verarbeitungsprotokoll"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "İşlem günlüğü ve Art. 15 dışa aktarımı yönetimin kaydettiği ödemeleri de içerir.",
+          "de": "Verarbeitungsprotokoll und Art.-15-Export enthalten auch vom Vorstand erfasste Zahlungen."
+        }
+      ]
+    },
+    {
       "version": "0.3.1",
       "date": "2026-11-24",
       "title": {
