@@ -61,7 +61,7 @@ export const ai = defineModuleAiV2({
     create: aiAction({
       operation: "create",
       schema: createSchema,
-      execute: async (input) => outcome(await createInventoryAction({ ...input, location: input.location ?? "", description: input.description ?? "", purchasePrice: null })),
+      execute: async (input) => outcome(await createInventoryAction({ ...input, location: input.location ?? "", description: input.description ?? "", purchasePrice: null, trackAsAsset: false })),
     }),
     changeStatus: aiAction({
       operation: "update",

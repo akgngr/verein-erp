@@ -90,7 +90,8 @@
     "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
     "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
     "notFound": "Der Inventareintrag wurde nicht gefunden. Möglicherweise wurde er gelöscht.",
-    "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+    "assetForbidden": "Dieser Gegenstand wird in der Buchhaltung als Anlagegut (AfA) geführt. Für Änderungen an Name, Betrag, Datum, Ausmusterung oder AfA-Kennzeichen ist eine Schreibberechtigung in der Buchhaltung erforderlich."
   },
   "export": {
     "filePrefix": "inventar"

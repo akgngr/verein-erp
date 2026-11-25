@@ -4,6 +4,7 @@ import { renderToBuffer } from "@react-pdf/renderer";
 import { NextResponse } from "next/server";
 import { getTranslations } from "next-intl/server";
 
+import { accountingPermissions } from "@/modules/accounting/server";
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 import { getOrganizationLogoDataUri, getOrganizationProfile } from "@/modules/organization/server";
 import { writeAudit } from "@/shared/audit/write-audit";
@@ -27,6 +28,8 @@ export async function grantReportPdfHandler(request: Request, ctx: { id: string 
     throw error;
   }
   if (!can(user.role, grantsPermissions, "view")) return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
+  // #582: Verwendungsnachweis fiş listesini (muhasebe verisi) içerir; muhasebe görme yetkisi de gerekir.
+  if (!can(user.role, accountingPermissions, "view")) return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   const grant = await getGrant(ctx.id.slice(0, 64));
   if (!grant) return NextResponse.json({ ok: false, error: await translateMessage("grants.errors.notFound") }, { status: 404 });
 

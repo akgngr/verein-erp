@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arka plan için izin politikası yükleyicisi",
+        "de": "Berechtigungsrichtlinie für Hintergrundprozesse"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Rol ve izin politikası arka plan çalışanı tarafından da yüklenebilir (özel roller ve geçersiz kılmalar görevlerde geçerli).",
+          "de": "Die Rollen- und Berechtigungsrichtlinie wird auch vom Hintergrund-Worker geladen (eigene Rollen und Overrides gelten in Aufgaben)."
+        }
+      ]
+    },
+    {
       "version": "1.4.1",
       "date": "2026-11-25",
       "title": {

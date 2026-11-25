@@ -90,7 +90,10 @@
     "sourceMissing": "Quelldatensatz nicht gefunden oder Modul deaktiviert.",
     "notFound": "Eintrag nicht gefunden.",
     "summary": "Bitte mindestens 2 Zeichen eingeben.",
-    "title": "Der Titel muss mindestens 2 Zeichen lang sein."
+    "title": "Der Titel muss mindestens 2 Zeichen lang sein.",
+    "sourceForbidden": "Sie dürfen Kontakte aus dieser Quelle nicht sehen.",
+    "amount": "Der Betrag darf nicht negativ sein.",
+    "amountMax": "Der Betrag darf höchstens 20.000.000 € betragen."
   },
   "access": {
     "members": "Liest Name und Kontaktdaten der CRM-Kontakte aus dem Mitgliedsdatensatz (ohne Kopie).",
@@ -126,5 +129,6 @@
         }
       }
     }
-  }
+  },
+  "restricted": "Eingeschränkt (keine Berechtigung für das Quellmodul)"
 }

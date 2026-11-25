@@ -7,6 +7,7 @@ import {assertTaskModulesUsable} from "./module-availability";
 import { taskModuleKey, type TaskDefinition } from "@/shared/automation/define";
 import { getDb } from "@/shared/db";
 
+import { defaultAutomationLocale } from "./automation-locale";
 import { createTaskExecutionRecord } from "./execution-store";
 import { recordAutomationLog } from "./log-store";
 import { queueWorkflowAdvance } from "./workflow-runtime";
@@ -45,7 +46,7 @@ export async function enqueueTask<TSchema extends z.ZodType>(
     sourceModule,
     correlationId: options.correlationId ?? `${sourceModule}:${crypto.randomUUID()}`,
     input: input as Prisma.InputJsonValue,
-    context: { locale: options.locale ?? "de" },
+    context: { locale: options.locale ?? defaultAutomationLocale() },
     scheduledAt: options.scheduledAt,
     idempotencyKey: options.idempotencyKey,
   });

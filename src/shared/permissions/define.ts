@@ -50,6 +50,37 @@ export function getActivePermissionPolicy(): PermissionPolicy | null {
   return activePolicy;
 }
 
+/**
+ * #582: Politikayı veritabanından yükleyen fonksiyon (RoleGrant geçersiz kılmaları, özel roller). `users`
+ * modülü kaydeder (services/roles.ts); `shared` modül koduna bağımlı olmadan arka plan çalışanının (automation
+ * worker) her görevden önce güncel politikayı yüklemesini sağlar. Web isteklerinde düzen (layout) ve
+ * `requireUser` zaten yükler.
+ */
+type PermissionPolicyLoader = () => Promise<PermissionPolicy>;
+let policyLoader: PermissionPolicyLoader | null = null;
+
+export function registerPermissionPolicyLoader(loader: PermissionPolicyLoader): void {
+  policyLoader = loader;
+}
+
+export class PermissionPolicyUnavailableError extends Error {
+  constructor() {
+    super("PERMISSION_POLICY_UNAVAILABLE");
+    this.name = "PermissionPolicyUnavailableError";
+  }
+}
+
+/**
+ * Kayıtlı yükleyiciyle politikayı yükler ve etkinleştirir. Yükleyici yoksa hata verir (fail closed): aksi
+ * halde `can(...)` geçersiz kılmaları ve özel rolleri yok sayıp varsayılan matrise göre izin verirdi.
+ */
+export async function refreshActivePermissionPolicy(): Promise<PermissionPolicy> {
+  if (!policyLoader) throw new PermissionPolicyUnavailableError();
+  const policy = await policyLoader();
+  activePolicy = policy;
+  return policy;
+}
+
 /** Politika uygulanmış izinler (rol + kaynak). Yönetici rolü değiştirilemez. */
 export function effectiveActions(role: Role, definition: PermissionDefinition, policy: PermissionPolicy | null = activePolicy): PermissionAction[] {
   if (role === LOCKED_ROLE) return definition.grants[LOCKED_ROLE] ?? [];

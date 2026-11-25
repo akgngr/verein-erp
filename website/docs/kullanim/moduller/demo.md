@@ -13,7 +13,7 @@ Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler.
 |---|---|
 | Anahtar | `demo` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.3 |
+| Sürüm | 1.0.4 |
 | Sayfalar | `/ayarlar/demo-veri` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Demo veri | görüntüleme, oluşturma, silme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.0.4 — Demo verisi sayfası yetki hatası
+
+_2026-11-25_
+
+- **Düzeltme:** Yetkisiz kullanıcı /ayarlar/demo-veri sayfasında 500 hatası yerine 'Erişim yok' ekranını görür.
 
 ### 1.0.3 — TAX_ADVISOR rolü izin tanımı
 

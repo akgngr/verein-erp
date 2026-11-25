@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.3.7",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Sayfa yetkisi",
+        "de": "Seitenberechtigung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Sayfa sunucuda yetki ister; 'Testleri çalıştır' yalnız oluşturma iznine sahip rollere görünür.",
+          "de": "Die Seite prüft die Berechtigung serverseitig; „Tests ausführen“ ist nur für Rollen mit Anlegerecht sichtbar."
+        }
+      ]
+    },
+    {
       "version": "1.3.6",
       "date": "2026-11-23",
       "title": {

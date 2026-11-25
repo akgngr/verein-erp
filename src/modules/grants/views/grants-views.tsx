@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
-import { listCategoryOptions, listProjectOptions } from "@/modules/accounting/server";
+import { accountingPermissions, listCategoryOptions, listProjectOptions } from "@/modules/accounting/server";
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { FormDrawer } from "@/shared/components/forms/form-drawer";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
@@ -13,7 +13,7 @@ import { GrantDetailApp } from "../components/grant-detail";
 import { GrantForm } from "../components/grant-form";
 import { GrantsList } from "../components/grants-list";
 import { grantsPermissions } from "../permissions";
-import { buildReport, getGrant, listGrants } from "../services/grants";
+import { buildReport, getGrant, listGrants, redactBookingDetails } from "../services/grants";
 
 const berlinToday = () => new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(new Date());
 
@@ -52,7 +52,9 @@ export async function GrantDetailView({ id }: { id: string }) {
   const t = await getTranslations("grants");
   const grant = await getGrant(id);
   if (!grant) notFound();
-  const [report, projects, categories] = await Promise.all([buildReport(grant, t("otherLine")), listProjectOptions(), listCategoryOptions("EXPENSE")]);
+  const [fullReport, projects, categories] = await Promise.all([buildReport(grant, t("otherLine")), listProjectOptions(), listCategoryOptions("EXPENSE")]);
+  // #582: Fiş listesi muhasebe verisidir; muhasebe görme yetkisi olmayan (ör. SECRETARY) yalnız toplamları görür.
+  const report = can(user.role, accountingPermissions, "view") ? fullReport : redactBookingDetails(fullReport);
   return (
     <div>
       <PageHeader title={grant.name} description={`${grant.funder}${grant.fileNumber ? ` · ${grant.fileNumber}` : ""}`} actions={<LinkButton href="/muhasebe/hibeler" variant="bordered">{t("title")}</LinkButton>} />

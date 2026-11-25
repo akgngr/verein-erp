@@ -13,7 +13,7 @@ Kalıcı arka plan görevleri ve iş akışları.
 |---|---|
 | Anahtar | `automation` |
 | Tür | Eklenti |
-| Sürüm | 0.10.16 |
+| Sürüm | 0.10.17 |
 | Sayfalar | `/automation`, `/automation/workflows` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,15 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Otomasyon | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | — | görüntüleme |
 
 ## Sürüm notları
+
+### 0.10.17 — Çalışan izin politikası, denetim kaydı, dil
+
+_2026-11-25_
+
+- **Güvenlik:** Arka plan çalışanı her görevden önce rol geçersiz kılmalarını ve özel rolleri yükler; yüklenemezse görev yeniden denenir.
+- **Güvenlik:** Ham hata metinleri yalnız otomasyonu yönetebilen rollere gösterilir; diğerleri hata kodunu görür.
+- **İyileştirme:** Tüm otomasyon ve iş akışı işlemleri (onay kararı dahil) denetim kaydı bırakır.
+- **Düzeltme:** İş akışı alt görevleri başlatanın dilinde, zamanlanmış görevler belge dilinde çalışır (önceden sabit Almanca).
 
 ### 0.10.16 — nav.json kategori ve alt modül tanımı
 
@@ -78,10 +87,4 @@ _2026-11-17_
 
 - **İyileştirme:** Rozet görünümü ortak StatusChip pattern'ine taşındı; modül artık bu kullanımda HeroUI Chip implementasyonuna doğrudan bağlı değil.
 
-### 0.10.6 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 28 herkese açık sürüm notu.
+Daha eski 29 herkese açık sürüm notu.

@@ -39,6 +39,7 @@ import {
   searchCandidatesAction,
   updatePartyAction,
 } from "../actions/crm-actions";
+import { MAX_DEAL_AMOUNT } from "../lib/limits";
 
 const STAGES = ["LEAD", "ACTIVE", "CUSTOMER", "INACTIVE"] as const;
 const DEAL_STAGES = ["OPEN", "PROPOSAL", "WON", "LOST"] as const;
@@ -62,6 +63,8 @@ export type PartyRow = {
   email: string | null;
   phone: string | null;
   missing: boolean;
+  /** #582: Rol kaynak modülün kişi verisini göremiyor; ad yerine çevrilmiş "kısıtlı" metni gelir. */
+  restricted: boolean;
 };
 export type DealRow = {
   id: string;
@@ -254,7 +257,7 @@ export function CrmApp({
                       onClick={() => setOpenId(row.id)}
                     >
                       <td className="px-3 py-2">
-                        <div className="font-medium">{row.name}</div>
+                        <div className={row.restricted ? "font-medium italic text-ink-500" : "font-medium"}>{row.name}</div>
                         {row.detail ? (
                           <div className="text-xs text-ink-500">
                             {row.detail}
@@ -814,6 +817,8 @@ function PartyDrawer({
                           <Label>{t("amount")}</Label>
                           <Input
                             type="number"
+                            min={0}
+                            max={MAX_DEAL_AMOUNT}
                             className={["h-9 text-sm"]
                               .filter(Boolean)
                               .join(" ")}
