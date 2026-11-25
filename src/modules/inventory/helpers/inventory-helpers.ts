@@ -1,3 +1,5 @@
+import { neutralizeCsvFormula } from "@/shared/files/csv-formula";
+
 import {
   DEFAULT_INVENTORY_CATEGORY,
   DEFAULT_INVENTORY_PAGE_SIZE,
@@ -280,9 +282,10 @@ export function toInventoryWriteData(values: InventoryFormValues) {
 // CSV
 // ---------------------------------------------------------------------------
 
+/** Hücre kaçışı; metin hücrelerinde formül enjeksiyonu nötrlenir (#582, shared/files/csv-formula.ts). */
 export function escapeCsvValue(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return "";
-  const text = String(value);
+  const text = typeof value === "number" ? String(value) : neutralizeCsvFormula(value);
   if (/["\r\n]/.test(text) || text.includes(INVENTORY_CSV_SEPARATOR)) {
     return `"${text.replace(/"/g, '""')}"`;
   }

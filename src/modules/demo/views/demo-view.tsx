@@ -1,8 +1,9 @@
 import { getTranslations } from "next-intl/server";
 
 import { moduleDemoRegistry } from "@/demo-registry";
-import { requirePermission } from "@/modules/auth/server";
+import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { listUsableModuleKeys } from "@/modules/system/server";
+import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 import { DemoControls } from "../components/demo-controls";
@@ -11,7 +12,13 @@ import { getDemoSummary } from "../services/demo-data";
 
 /** Ayarlar → Demo veri: kapsanan modüller, mevcut demo kayıt sayıları, yükle/sil. */
 export async function DemoView() {
-  await requirePermission(demoPermissions, "view");
+  // #582: Yetkisiz kullanıcı 500 yerine erişim reddi görür.
+  try {
+    await requirePermission(demoPermissions, "view");
+  } catch (error) {
+    if (error instanceof ForbiddenError) return <AccessDenied />;
+    throw error;
+  }
   const t = await getTranslations("demo");
   const tRoot = await getTranslations();
   const [summary, usable] = await Promise.all([

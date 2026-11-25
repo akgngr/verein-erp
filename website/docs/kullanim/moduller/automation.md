@@ -13,7 +13,7 @@ Kalıcı arka plan görevleri ve iş akışları.
 |---|---|
 | Anahtar | `automation` |
 | Tür | Eklenti |
-| Sürüm | 0.10.17 |
+| Sürüm | 0.10.18 |
 | Sayfalar | `/automation`, `/automation/workflows` |
 
 ## Diğer modüllere erişim
@@ -36,11 +36,20 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
-### 0.10.17 — Sağlık kokpiti için durum özeti
+### 0.10.18 — Sağlık kokpiti için durum özeti
 
 _2026-11-25_
 
 - **İyileştirme:** Modül sağlık kokpiti için kaynak modül başına başarısız/çalışan iş özeti (girdi/sonuç verisi olmadan).
+
+### 0.10.17 — Çalışan izin politikası, denetim kaydı, dil
+
+_2026-11-25_
+
+- **Güvenlik:** Arka plan çalışanı her görevden önce rol geçersiz kılmalarını ve özel rolleri yükler; yüklenemezse görev yeniden denenir.
+- **Güvenlik:** Ham hata metinleri yalnız otomasyonu yönetebilen rollere gösterilir; diğerleri hata kodunu görür.
+- **İyileştirme:** Tüm otomasyon ve iş akışı işlemleri (onay kararı dahil) denetim kaydı bırakır.
+- **Düzeltme:** İş akışı alt görevleri başlatanın dilinde, zamanlanmış görevler belge dilinde çalışır (önceden sabit Almanca).
 
 ### 0.10.16 — nav.json kategori ve alt modül tanımı
 
@@ -78,10 +87,4 @@ _2026-11-17_
 
 - **İyileştirme:** Eylem butonları ve bildirimler ortak ActionButton/notify adapter katmanına taşındı; ilgili ekran artık bu kullanımda HeroUI Button/Toast implementasyonuna doğrudan bağlı değil.
 
-### 0.10.7 — Çalışma durumu rozeti ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Rozet görünümü ortak StatusChip pattern'ine taşındı; modül artık bu kullanımda HeroUI Chip implementasyonuna doğrudan bağlı değil.
-
-Daha eski 29 herkese açık sürüm notu.
+Daha eski 30 herkese açık sürüm notu.

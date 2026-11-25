@@ -13,7 +13,7 @@ Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kull
 |---|---|
 | Anahtar | `grants` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.11 |
+| Sürüm | 1.0.12 |
 | Gerektirir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,14 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_grant_overview`
 
 ## Sürüm notları
+
+### 1.0.12 — Muhasebe verisi yetkisi ve ödeme denetimi
+
+_2026-11-25_
+
+- **Güvenlik:** Fiş/defter ayrıntıları ve rapor PDF'i yalnız muhasebeyi görebilen rollere gösterilir (ör. SECRETARY özet görür).
+- **Güvenlik:** Ödeme 'alındı' işareti yalnız aynı fona ait ödemede değiştirilebilir; alınmış ödeme geri alınamaz (GoBD).
+- **Düzeltme:** Yeni fon kaydı 'oluşturma', düzenleme 'güncelleme' izni ister; bütçe ve ödeme işlemleri denetim kaydı bırakır.
 
 ### 1.0.11 — TAX_ADVISOR rolü izin tanımı
 
@@ -83,10 +91,4 @@ _2026-11-15_
 
 - **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
 
-### 1.0.3 — Sürümlü AI istatistik sözleşmesi
-
-_2026-11-15_
-
-- **Güvenlik:** Toplu istatistik araçları katı girdi, sunucu sonucu ve modele çıkacak alanların açık şemalarıyla v2 sözleşmesine taşındı; kişisel satırlar modele döndürülmez.
-
-Daha eski 3 herkese açık sürüm notu.
+Daha eski 4 herkese açık sürüm notu.

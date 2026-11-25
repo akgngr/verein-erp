@@ -1,3 +1,4 @@
+import { neutralizeCsvFormula } from "@/shared/files/csv-formula";
 import { parseMarkdown } from "@/shared/markdown/parse";
 
 import { blockLines, plainText } from "./text";
@@ -5,9 +6,8 @@ import { defineFormat } from "./types";
 
 /** Excel (Almanca bölge ayarı) uyumlu: ";" ayırıcı, UTF-8 BOM. Tablolar arası boş satır. */
 export function safeCsvCell(value: string): string {
-  // Only strict signed numeric literals may retain a leading minus sign.
-  const numeric = /^-?\d+(?:[.,]\d+)?$/.test(value);
-  const safe = !numeric && /^[\s\u0000-\u001f\u007f-\u009f]*[=+@-]/u.test(value) ? `'${value}` : value;
+  // Only strict signed numeric literals may retain a leading minus sign (shared/files/csv-formula.ts).
+  const safe = neutralizeCsvFormula(value);
   return /[;"\r\n]/.test(safe) ? `"${safe.replace(/"/g, '""')}"` : safe;
 }
 

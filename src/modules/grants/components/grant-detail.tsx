@@ -399,6 +399,8 @@ export function GrantDetailApp({
             </p>
           ) : null}
           <div className="flex flex-wrap items-center gap-2">
+            {/* #582: Verwendungsnachweis fiş listesini içerir; muhasebe yetkisi yoksa gösterilmez. */}
+            {report.bookingDetailsHidden ? null : (
             <ActionLink
               href={`/api/grants/${grant.id}/report-pdf`}
               target="_blank"
@@ -410,6 +412,7 @@ export function GrantDetailApp({
               {<FileDown className="size-4" />}
               {t("reportPdf")}
             </ActionLink>
+            )}
             {grant.reportSubmittedAt ? (
               <StatusChip tone="success">
                 {t("submittedAt", {
@@ -509,8 +512,11 @@ export function GrantDetailApp({
           </section>
           <section>
             <h3 className="mb-2 font-semibold">
-              {t("report.vouchers")} ({report.vouchers.length})
+              {t("report.vouchers")}{report.bookingDetailsHidden ? "" : ` (${report.vouchers.length})`}
             </h3>
+            {report.bookingDetailsHidden ? (
+              <p className="text-sm text-ink-500">{t("report.detailsHidden")}</p>
+            ) : (
             <div className="max-h-96 overflow-y-auto">
               <table className="w-full text-xs">
                 <thead className="sticky top-0 bg-surface text-ink-500">
@@ -557,6 +563,7 @@ export function GrantDetailApp({
                 </tbody>
               </table>
             </div>
+            )}
           </section>
           <section className="flex flex-col gap-2">
             <h3 className="font-semibold">{t("report.narrative")}</h3>

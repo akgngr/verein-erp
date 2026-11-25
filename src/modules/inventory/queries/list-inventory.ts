@@ -46,6 +46,7 @@ function toInventoryItemRow(item: InventoryRecord): InventoryItemRow {
 function buildWhere(filters: Pick<InventoryFilters, "search" | "category" | "status">) {
   const search = filters.search;
   return {
+    deletedAt: null,
     ...(filters.category ? { category: filters.category } : {}),
     ...(filters.status ? { status: filters.status } : {}),
     ...(search
@@ -137,6 +138,7 @@ export async function getInventoryStats(): Promise<InventoryStats> {
 
   const groups = await db.inventoryItem.groupBy({
     by: ["status"],
+    where: { deletedAt: null },
     _sum: { quantity: true },
     _count: { _all: true },
   });
@@ -157,6 +159,7 @@ export async function getInventoryCategorySummary(): Promise<InventoryCategorySu
 
   const groups = await db.inventoryItem.groupBy({
     by: ["category"],
+    where: { deletedAt: null },
     _sum: { quantity: true },
     _count: { _all: true },
   });

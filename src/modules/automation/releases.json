@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "0.10.17",
+      "version": "0.10.18",
       "date": "2026-11-25",
       "title": {
         "tr": "Sağlık kokpiti için durum özeti",
@@ -13,6 +13,36 @@
           "type": "improvement",
           "tr": "Modül sağlık kokpiti için kaynak modül başına başarısız/çalışan iş özeti (girdi/sonuç verisi olmadan).",
           "de": "Zusammenfassung fehlgeschlagener/laufender Aufgaben je Quellmodul für das Gesundheitscockpit (ohne Ein-/Ausgabedaten)."
+        }
+      ]
+    },
+    {
+      "version": "0.10.17",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Çalışan izin politikası, denetim kaydı, dil",
+        "de": "Worker-Berechtigungsrichtlinie, Protokoll, Sprache"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Arka plan çalışanı her görevden önce rol geçersiz kılmalarını ve özel rolleri yükler; yüklenemezse görev yeniden denenir.",
+          "de": "Der Hintergrund-Worker lädt vor jeder Aufgabe Rollen-Overrides und eigene Rollen; schlägt das fehl, wird die Aufgabe erneut versucht."
+        },
+        {
+          "type": "security",
+          "tr": "Ham hata metinleri yalnız otomasyonu yönetebilen rollere gösterilir; diğerleri hata kodunu görür.",
+          "de": "Rohe Fehlermeldungen sind nur für Rollen sichtbar, die Automationen verwalten; andere sehen den Fehlercode."
+        },
+        {
+          "type": "improvement",
+          "tr": "Tüm otomasyon ve iş akışı işlemleri (onay kararı dahil) denetim kaydı bırakır.",
+          "de": "Alle Automations- und Workflow-Aktionen (einschließlich Freigabeentscheidungen) werden protokolliert."
+        },
+        {
+          "type": "fix",
+          "tr": "İş akışı alt görevleri başlatanın dilinde, zamanlanmış görevler belge dilinde çalışır (önceden sabit Almanca).",
+          "de": "Workflow-Teilaufgaben laufen in der Sprache des Auslösers, geplante Aufgaben in der Dokumentsprache (zuvor fest Deutsch)."
         }
       ]
     },

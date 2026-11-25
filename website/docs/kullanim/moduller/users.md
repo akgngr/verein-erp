@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.1 |
+| Sürüm | 1.4.2 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.4.2 — Arka plan için izin politikası yükleyicisi
+
+_2026-11-25_
+
+- **Güvenlik:** Rol ve izin politikası arka plan çalışanı tarafından da yüklenebilir (özel roller ve geçersiz kılmalar görevlerde geçerli).
 
 ### 1.4.1 — Menü grubu ikon alanı kalıcılığı
 
@@ -77,10 +83,4 @@ _2026-11-20_
 
 - **İyileştirme:** Bildirim sistemi, duyurular için etkin kullanıcıları (isteğe bağlı role göre) listeleyebilir.
 
-### 1.1.8 — Bildirim alıcısı eşleme
-
-_2026-11-20_
-
-- **İyileştirme:** Diğer modüller, bildirim alıcısını e-posta adresine göre etkin kullanıcılar arasından bulabilir.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 11 herkese açık sürüm notu.
