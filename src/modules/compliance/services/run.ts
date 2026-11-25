@@ -30,8 +30,11 @@ function metricByKey(): Map<string, { module: string; metric: ComplianceMetric }
  * Evaluates the rules visible to this user (ADR 0009). Reviewed + effective rules run; drafts run only in
  * preview for admins (labelled, never persisted). A rule whose provider module is unusable or whose read
  * fails is "unchecked" (fail closed). Findings are hidden from users without the provider's permission.
+ *
+ * #585: Evaluation is side-effect free by default (page views/GET no longer write). Findings are persisted
+ * only with `persist: true`, i.e. from an explicit user action (`onlyRuleId` narrows the run to one rule).
  */
-export async function runCockpit(user: { role: Role }, input: { year: number; now?: Date; preview?: boolean }): Promise<CockpitRow[]> {
+export async function runCockpit(user: { role: Role }, input: { year: number; now?: Date; preview?: boolean; persist?: boolean; onlyRuleId?: string }): Promise<CockpitRow[]> {
   const now = input.now ?? new Date();
   const today = berlinToday(now);
   const [usable, states] = await Promise.all([listUsableModuleKeys(), getDb().complianceRuleState.findMany()]);
@@ -39,6 +42,7 @@ export async function runCockpit(user: { role: Role }, input: { year: number; no
   const metrics = metricByKey();
   const rows: CockpitRow[] = [];
   for (const rule of COMPLIANCE_RULES) {
+    if (input.onlyRuleId && rule.id !== input.onlyRuleId) continue;
     if (rule.review.status === "retired" || !isEffective(rule, input.year)) continue;
     const isDraft = rule.review.status === "draft";
     if (isDraft && !input.preview) continue;
@@ -58,7 +62,7 @@ export async function runCockpit(user: { role: Role }, input: { year: number; no
     }
     const findings = evaluateRule(rule, value, { year: input.year, today });
     rows.push({ rule: meta, mode: isDraft ? "preview" : "active", findings });
-    if (!isDraft) await persistFindings(findings);
+    if (!isDraft && input.persist) await persistFindings(findings);
   }
   return rows;
 }

@@ -4,12 +4,27 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { listUsableModuleKeys } from "@/modules/system/automation";
 import { createTaskFromApprovedProposal } from "@/modules/tasks/automation";
+import { permissionResources } from "@/permissions-registry";
 import { getDb } from "@/shared/db";
+import { can } from "@/shared/permissions/define";
 import type { ActionResult } from "@/shared/types/action";
 
 import { compliancePermissions } from "../permissions";
 import { COMPLIANCE_RULES } from "../rules";
+import { runCockpit } from "../services/run";
+
+/**
+ * #585: Görev oluşturma, görevler modülünün açık olmasını ve kullanıcının görev oluşturma iznini ister (önceden
+ * yalnız uyum izni yeterliydi). İzin tanımı üretilmiş izin kaydından okunur; mevcut `tasks: write` erişim
+ * bildirimine `read` eklenmez (yönetici yeniden onayı gerekmez).
+ */
+async function assertCanCreateTask(role: string): Promise<void> {
+  if (!(await listUsableModuleKeys()).includes("tasks")) throw new ActionError("compliance.errors.tasksUnavailable");
+  const definition = permissionResources.find((entry) => entry.moduleKey === "tasks")?.definitions.find((item) => item.resource === "tasks");
+  if (!definition || !can(role, definition, "create")) throw new ActionError("compliance.errors.tasksForbidden");
+}
 
 const ruleId = z.string().regex(/^[a-z]+(\.[a-z0-9-]+)+$/);
 
@@ -41,6 +56,9 @@ export async function createComplianceTaskAction(input: unknown): Promise<Action
     handler: async ({ input, user, audit }) => {
       const rule = COMPLIANCE_RULES.find((candidate) => candidate.id === input.ruleId && candidate.review.status === "reviewed");
       if (!rule?.suggestedTask) throw new ActionError("compliance.errors.noTask");
+      await assertCanCreateTask(user.role);
+      // Bulgu bu anda yeniden değerlendirilir ve kaydedilir (sayfa görüntüleme artık yazmaz).
+      await runCockpit(user, { year: input.period, persist: true, onlyRuleId: input.ruleId });
       const finding = await getDb().complianceFinding.findUnique({ where: { ruleId_period_refKey: { ruleId: input.ruleId, period: input.period, refKey: input.refKey } } });
       if (!finding || finding.status !== "triggered") throw new ActionError("compliance.errors.noFinding");
       const title = `${rule.suggestedTask.title[input.locale]} (${input.period}${input.refKey ? `, ${input.refKey}` : ""})`;
