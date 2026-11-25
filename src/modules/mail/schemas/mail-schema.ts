@@ -65,6 +65,13 @@ export const mailMessageSchema = z.object({
     .trim()
     .refine((value) => value === "" || isValidEmail(value))
     .optional(),
+  headers: z
+    .object({
+      "List-Unsubscribe": z.string().max(1000).regex(/^[^\r\n]*$/).optional(),
+      "List-Unsubscribe-Post": z.literal("List-Unsubscribe=One-Click").optional(),
+    })
+    .strict()
+    .optional(),
   context: z.object({
     module: z.string().trim().min(1).max(100),
     reference: z.string().trim().max(200).optional(),

@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Açık rıza ve tek kullanımlık davet",
+        "de": "Ausdrückliche Einwilligung und Einmal-Einladung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Telegram mesajı yalnız kişinin kaydında açık Telegram rızası varsa gönderilir; rızasını geri alan kişiye artık gitmez.",
+          "de": "Telegram-Nachrichten gehen nur noch an Personen mit ausdrücklicher Telegram-Einwilligung im Datensatz; nach einem Widerruf wird nicht mehr gesendet."
+        },
+        {
+          "type": "security",
+          "tr": "Davet bağlantısı ilk kullanımda yenilenir; iletilmiş eski bağlantı başka bir sohbeti bağlayamaz. /start rızayı kaydeder, /stop geri alır.",
+          "de": "Der Einladungslink wird bei der ersten Nutzung erneuert; ein weitergeleiteter alter Link kann keinen anderen Chat verknüpfen. /start speichert die Einwilligung, /stop widerruft sie."
+        },
+        {
+          "type": "security",
+          "tr": "Webhook gövdesi boyutla sınırlıdır. Rıza eşitlemesi için Kampanyalar erişimi 'yazma' içerir; yönetici onayı yenilenmelidir.",
+          "de": "Der Webhook-Body ist größenbegrenzt. Für die Einwilligungssynchronisierung umfasst der Zugriff auf Kampagnen nun „schreiben“; die Freigabe muss erneut erteilt werden."
+        }
+      ]
+    },
+    {
       "version": "1.0.2",
       "date": "2026-11-23",
       "title": {

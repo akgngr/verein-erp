@@ -1,6 +1,5 @@
-import { timingSafeEqual } from "node:crypto";
-
 import { getChannelConfig, recordProviderStatus } from "@/modules/mailings/server";
+import { readWebhookBody, sameSecret } from "@/shared/campaigns/webhook-body";
 
 import { extractStatuses, verifyMetaSignature, type WhatsappWebhook } from "../../services/webhook";
 
@@ -14,8 +13,9 @@ export async function GET(request: Request) {
   const url = new URL(request.url);
   const token = url.searchParams.get("hub.verify_token") ?? "";
   const expected = config.verifyToken ?? "";
-  const ok = url.searchParams.get("hub.mode") === "subscribe" && expected.length >= 8
-    && token.length === expected.length && timingSafeEqual(Buffer.from(token), Buffer.from(expected));
+  // #581: UTF-8 bayt uzunluğu karşılaştırılır; `string.length` eşit olup bayt uzunluğu farklı belirteç
+  // (ör. "ä") önceden timingSafeEqual'da RangeError ile 500 veriyordu.
+  const ok = url.searchParams.get("hub.mode") === "subscribe" && expected.length >= 8 && sameSecret(token, expected);
   if (!ok) return new Response(null, { status: 403 });
   return new Response(url.searchParams.get("hub.challenge") ?? "", { headers: { "Content-Type": "text/plain" } });
 }
@@ -23,8 +23,10 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const config = await getChannelConfig("whatsapp");
   if (!config.appSecret) return new Response(null, { status: 404 });
-  const raw = await request.text();
-  if (raw.length > 512 * 1024 || !verifyMetaSignature(config.appSecret, raw, request.headers.get("x-hub-signature-256") ?? "")) {
+  // #581: Gövde okunurken sınır uygulanır (önceden tamamı okunup sonra ölçülüyordu).
+  const raw = await readWebhookBody(request, 512 * 1024);
+  if (raw === null) return new Response(null, { status: 413 });
+  if (!verifyMetaSignature(config.appSecret, raw, request.headers.get("x-hub-signature-256") ?? "")) {
     return new Response(null, { status: 403 });
   }
   let payload: WhatsappWebhook;

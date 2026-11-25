@@ -13,7 +13,7 @@ Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gön
 |---|---|
 | Anahtar | `mail` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.5.3 |
+| Sürüm | 1.5.4 |
 | Sayfalar | `/mail`, `/mail/gelen-kutusu`, `/mail/kayitlar` |
 
 ## Diğer modüllere erişim
@@ -38,6 +38,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | E-posta altyapısı | görüntüleme, oluşturma, düzenleme | — | — | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.5.4 — Liste başlıkları ve dizin
+
+_2026-11-25_
+
+- **İyileştirme:** E-posta iletisi izinli List-Unsubscribe başlıklarını taşıyabilir; mail_logs (modül, referans) dizini eklendi.
 
 ### 1.5.3 — TAX_ADVISOR rolü izin tanımı
 
@@ -84,10 +90,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 1.4.0 — İş akışı alanları ve değişkenler
-
-_2026-11-06_
-
-- **Yeni:** Bildirim e-postası metinlerinde üye alanları kullanılabilir; alıcı olarak {{member.email}} ile yeni üyeye de gönderilebilir.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 11 herkese açık sürüm notu.

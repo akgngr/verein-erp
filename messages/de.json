@@ -3381,7 +3381,7 @@
       }
     },
     "access": {
-      "mailings": "Um im Webhook die (verschlüsselten) Bot-Einstellungen zu lesen."
+      "mailings": "Liest im Webhook die (verschlüsselten) Bot-Einstellungen und schreibt die per /start bzw. /stop erteilte oder widerrufene Telegram-Einwilligung in den Datensatz der Person."
     },
     "replies": {
       "linked": "✅ Abo bestätigt. Zum Beenden /stop senden.",
@@ -6363,7 +6363,8 @@
         "templateLanguage": "Vorlagensprache",
         "countryCode": "Standard-Ländervorwahl",
         "appSecret": "App Secret (Signatur der Benachrichtigungen)",
-        "verifyToken": "Verify-Token (identisch bei Meta eintragen, mind. 8 Zeichen)"
+        "verifyToken": "Verify-Token (identisch bei Meta eintragen, mind. 8 Zeichen)",
+        "utilityTemplateName": "Vorlage für Transaktionsnachrichten (Utility; Einzelnachrichten wie Signatur-Links, eine Variable '{{1}}' im Text)"
       },
       "telegram": {
         "botToken": "Bot-Token (BotFather)",
@@ -6472,6 +6473,14 @@
       "columnsHelp": "Zum Befüllen auf eine Spalte im Arbeitsbereich klicken, dann links einen Baustein wählen. Mobil werden Spalten untereinander angezeigt.",
       "designSettings": "Allgemeines Design",
       "selectHint": "Zum Bearbeiten auf einen Block im Arbeitsbereich klicken."
+    },
+    "unsubscribe": {
+      "title": "Newsletter abbestellen",
+      "confirm": "Möchten Sie keine Rundschreiben per E-Mail mehr erhalten?",
+      "button": "Abbestellen",
+      "done": "Sie wurden abgemeldet und erhalten keine Rundschreiben per E-Mail mehr.",
+      "unknown": "Dieser Abmeldelink ist ungültig.",
+      "unsupported": "Die Abmeldung konnte nicht automatisch gespeichert werden. Bitte wenden Sie sich an den Verein."
     }
   },
   "meetings": {

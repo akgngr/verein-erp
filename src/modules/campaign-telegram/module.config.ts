@@ -7,12 +7,13 @@ import type { ModuleConfig } from "@/shared/types/module";
 export const moduleConfig: ModuleConfig = {
   key: "campaign-telegram",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.2",
+  version: "1.1.0",
   label: "Telegram",
   description: "Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone olur; /stop ile ayrılır.",
   category: "EXTENSION",
   hasSchema: true,
   requires: [{ module: "mailings" }],
-  access: [{ module: "mailings", operations: ["read"] }],
+  // #581: /start ve /stop rızayı kaynağın kaydına yazar (mailings `recordChannelConsent`).
+  access: [{ module: "mailings", operations: ["read", "write"] }],
   nav: [],
 };
