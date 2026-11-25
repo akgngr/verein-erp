@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.15.2 |
+| Sürüm | 0.15.3 |
 | Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular`, `/ayarlar/bildirimler/aboneler` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.15.3 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Bildirim tercihlerinde türler okunur adla, duyuru alıcılarında roller çevrilmiş adla gösterilir; zil rozeti mobil başlıkta kesilmez.
 
 ### 0.15.2 — Etkin kanal listesi
 
@@ -81,12 +87,4 @@ _2026-11-22_
 - **Yeni:** Sağ üstte bildirim zili ve okunmamış rozeti; sağ çekmecede bildirimler (okundu, tümünü okundu, ertele). Zil Widget Platformu üzerinden eklenir.
 - **Yeni:** Ayarlar → Bildirimler: tür × kanal tercihleri, sessiz saatler, günlük özet, Telegram bağlama ve tarayıcı (push) bildirimleri.
 
-### 0.10.0 — Web Push istemci ve PWA manifest
-
-_2026-11-21_
-
-- **Yeni:** Web Push istemci bileşenleri (PushToggle, PushCard), tarayıcı izin akışı ve PWA manifest desteği eklendi.
-- **Yeni:** public/sw.js ile anlık bildirim gösterimi, güvenli aynı kökenli bağlantı yönlendirmesi ve pushsubscriptionchange desteği sağlandı.
-- **İyileştirme:** iOS cihazlarda PWA ana ekrana ekleme rehberi ve desteklenmeyen tarayıcılarda zarif geri çekilme sağlandı.
-
-Daha eski 9 herkese açık sürüm notu.
+Daha eski 10 herkese açık sürüm notu.

@@ -13,7 +13,7 @@ Dernek ana verileri, resmi iletişim ve antet logosu.
 |---|---|
 | Anahtar | `organization` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.9 |
+| Sürüm | 1.0.10 |
 | Sayfalar | `/ayarlar/dernek` |
 
 ## Varsayılan yetkiler
@@ -31,6 +31,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_organization_info`
 
 ## Sürüm notları
+
+### 1.0.10 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Kamu yararı bölüm başlığı Türkçe arayüzde büyük harfe çevrilmez ("GEMEİNNÜTZİGKEİT" hatası).
 
 ### 1.0.9 — Profil kaydı ve görünüm
 
@@ -75,8 +81,4 @@ _2026-11-07_
 
 - **İyileştirme:** Arka plan görevleri için kurum profili ve logo okuma girişi (antetli PDF'ler).
 
-### 1.0.0 — İlk sürüm
-
-_2026-10-29_
-
-- **Yeni:** İlk sürüm.
+Daha eski 1 herkese açık sürüm notu.

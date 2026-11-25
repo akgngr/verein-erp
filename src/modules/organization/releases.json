@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.0.10",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Kamu yararı bölüm başlığı Türkçe arayüzde büyük harfe çevrilmez (\"GEMEİNNÜTZİGKEİT\" hatası).",
+          "de": "Die Überschrift zur Gemeinnützigkeit wird in der türkischen Oberfläche nicht mehr in Großbuchstaben umgewandelt (Fehler „GEMEİNNÜTZİGKEİT“)."
+        }
+      ]
+    },
+    {
       "version": "1.0.9",
       "date": "2026-11-25",
       "title": {

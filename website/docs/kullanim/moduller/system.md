@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.19.0 |
+| Sürüm | 1.19.2 |
 | Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/menu`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.19.2 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **İyileştirme:** Ayarlar genel bakışında her kart kendi açıklamasını gösterir; aynı modül açıklaması artık altı kartta tekrarlanmaz.
 
 ### 1.19.0 — Sağlık kokpiti, kurulum sihirbazı ve gizlilik ön ayarları
 
@@ -89,12 +95,4 @@ _2026-11-23_
 - **Yeni:** Aylık veri çıkışı ekranı mevcut yapılandırma, gerçekleşen aktarımlar ve sağlayıcı tarafı saklama politikalarını ayrı bölümlerde gösterir.
 - **İyileştirme:** İki dilli ekranlar, yetki denetimi, önizleme onayı ve egress sözleşme testleri eklendi.
 
-### 1.17.0 — Veri çıkışı defteri ve gizlilik ön ayarları (F2a)
-
-_2026-11-23_
-
-- **Yeni:** Tüm dış ağ bağdaştırıcıları (yapay zekâ sağlayıcıları, bildirimler, kampanya kanalları, bankacılık, takvim senkronizasyonu, e-posta, hava durumu ve döviz kuru) içerik veya kişisel veri saklamadan kategori, sağlayıcı, hacim/adet ve hukuki dayanak meta verilerini veri çıkışı defterine (SystemEgressLedger) yazar.
-- **Yeni:** Aylık veri çıkışı raporlayıcısı yapılandırma, gerçekleşen aktarımlar ve sağlayıcı tarafı saklama sürelerini birbirinden ayırır; akış kapatılsa bile geçmiş aktarım kayıtları değiştirilmez.
-- **Yeni:** Strict / Standard / Connected gizlilik ön ayarları veri olarak tanımlandı; önizleme farkı üretir, yönetici onayı ile uygulanır ve Strict profilinde kendi sunucunuzda barındırılan model ucu önerilir.
-
-Daha eski 29 herkese açık sürüm notu.
+Daha eski 30 herkese açık sürüm notu.

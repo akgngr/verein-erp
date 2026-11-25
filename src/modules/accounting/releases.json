@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.27.4",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Varlık, götürü gider ve kasa kapanışı formlarında tarih alanları yerel biçimde (GG.AA.YYYY) ve takvimle seçilir.",
+          "de": "Datumsfelder in Anlagen-, Pauschalen- und Kassenabschlussformularen nutzen das lokale Format (TT.MM.JJJJ) mit Kalender."
+        }
+      ]
+    },
+    {
       "version": "1.27.3",
       "date": "2026-11-24",
       "title": {

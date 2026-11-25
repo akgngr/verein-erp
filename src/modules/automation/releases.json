@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.19",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Zamanlanmış görevler okunur adla ve doğru aralıkla (dakika/saat/gün) gösterilir; önceden \"meetings.vote_purge\" ve \"Her 0.1 saatte\" görünüyordu.",
+          "de": "Geplante Aufgaben erscheinen mit lesbarem Namen und passender Einheit (Minuten/Stunden/Tage) statt \"meetings.vote_purge\" oder \"Alle 0.1 Stunden\"."
+        }
+      ]
+    },
+    {
       "version": "0.10.18",
       "date": "2026-11-25",
       "title": {

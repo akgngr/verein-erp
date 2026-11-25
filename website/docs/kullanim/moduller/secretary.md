@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.13.3 |
+| Sürüm | 0.13.4 |
 | Sayfalar | `/sekreter` |
 | Önerir | [Evrak Kayıt](./documents) |
 
@@ -39,6 +39,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.13.4 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Takip ve yetki devri tarihleri yerel biçimde girilir ve gösterilir (GG.AA.YYYY).
 
 ### 0.13.3 — nav.json kategori ve alt modül tanımı
 
@@ -83,10 +89,4 @@ _2026-11-20_
 - **İyileştirme:** Günlük özet artık merkezi bildirim sistemiyle teslim edilir: zildeki kutuda görünür; e-posta, Telegram ve tarayıcı bildirimi seçimi Bildirim tercihlerinden yapılır. Önceki e-posta seçimi ve doğrulanmış kanal rızaları otomatik taşınır.
 - **Güvenlik:** Dış kanallara yalnız sayılar ve tarih gider; kişi adı, başlık veya tutar gitmez.
 
-### 0.11.5 — Bildirim modülü erişim sözleşmesi
-
-_2026-11-20_
-
-- **Düzeltme:** Sekreterin bildirim modülüne mevcut erişimi modül sözleşmesinde açıkça bildirildi.
-
-Daha eski 24 herkese açık sürüm notu.
+Daha eski 25 herkese açık sürüm notu.

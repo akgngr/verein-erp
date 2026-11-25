@@ -13,7 +13,7 @@ Test kullanıcılarının hata ve önerilerini toplar.
 |---|---|
 | Anahtar | `feedback` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.7 |
+| Sürüm | 1.1.8 |
 | Sayfalar | `/geri-bildirim` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Geri bildirim | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | — | görüntüleme, oluşturma | görüntüleme, oluşturma |
 
 ## Sürüm notları
+
+### 1.1.8 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Tanıtım balonu tarayıcı başına bir kez gösterilir ve kendiliğinden kapanır; geri bildirim düğmesi açık diyalog/çekmece varken gizlenir, mobilde tek düğmedir.
 
 ### 1.1.7 — Kullanıcı silmede anonimleştirme
 
@@ -77,9 +83,4 @@ _2026-11-06_
 
 - **Yeni:** İş akışı tetikleyicisi: "Geri bildirim gönderildiğinde" (tür, öncelik; {{feedback.title}} vb.).
 
-### 1.0.0 — Geri bildirim modülü
-
-_2026-11-01_
-
-- **Yeni:** Sağ altta geri bildirim butonu: ilk açılışta kısa bir sesle kendini tanıtır; hata bildirimi veya öneri gönderilebilir, isteğe bağlı ekran görüntüsü eklenir. Sayfa adresi ve tarayıcı bilgisi otomatik eklenir.
-- **Yeni:** Geri bildirim listesi: herkes kendi kayıtlarını, yöneticiler tümünü görür; durum, öncelik ve cevap yönetimi. Ekran görüntüleri yalnızca yetkililere açıktır.
+Daha eski 1 herkese açık sürüm notu.
