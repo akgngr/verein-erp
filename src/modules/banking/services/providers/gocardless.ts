@@ -1,5 +1,7 @@
 import "server-only";
 
+import { createHash } from "node:crypto";
+
 import type { BankTransactionInput } from "@/modules/accounting/server";
 import { recordEgress } from "@/shared/egress/record-egress";
 
@@ -12,6 +14,15 @@ const HISTORY_DAYS = 90;
 type Token = { access: string; expiresAt: number };
 const tokenCache = new Map<string, Token>();
 
+/** Test yardımcısı: bellek içi belirteç önbelleğini temizler. */
+export function clearGoCardlessTokenCache(): void {
+  tokenCache.clear();
+}
+
+export function goCardlessCacheKey(secretId: string, secretKey: string): string {
+  return createHash("sha256").update(`${secretId}\0${secretKey}`).digest("hex");
+}
+
 /**
  * GoCardless Bank Account Data (eski adıyla Nordigen): AB'de lisanslı AISP, PSD2 üzerinden
  * Alman bankalarına salt okunur erişim. Kimlik bilgileri (secret id/key) yönetici ayarlarında
@@ -19,15 +30,20 @@ const tokenCache = new Map<string, Token>();
  */
 export class GoCardlessProvider implements BankProvider {
   readonly key = "GOCARDLESS";
+  private readonly cacheKey: string;
 
   constructor(
     private readonly secretId: string,
     private readonly secretKey: string,
-  ) {}
+  ) {
+    this.cacheKey = goCardlessCacheKey(secretId, secretKey);
+  }
 
-  private async token(): Promise<string> {
-    const cached = tokenCache.get(this.secretId);
-    if (cached && cached.expiresAt > Date.now() + 60_000) return cached.access;
+  private async token(forceRefresh = false): Promise<string> {
+    if (!forceRefresh) {
+      const cached = tokenCache.get(this.cacheKey);
+      if (cached && cached.expiresAt > Date.now() + 60_000) return cached.access;
+    }
     const payload = JSON.stringify({ secret_id: this.secretId, secret_key: this.secretKey });
     let response: Response;
     try {
@@ -48,17 +64,21 @@ export class GoCardlessProvider implements BankProvider {
         legalBasis: "CONTRACT",
       });
     }
-    if (response.status === 401 || response.status === 403) throw new BankProviderError("token rejected", "credentials"); // i18n-ignore (iç hata, loglanır)
+    if (response.status === 401 || response.status === 403) {
+      tokenCache.delete(this.cacheKey);
+      throw new BankProviderError("token rejected", "credentials"); // i18n-ignore (iç hata, loglanır)
+    }
+    if (response.status === 429) throw new BankProviderError("token 429", "rateLimit");
     if (!response.ok) throw new BankProviderError(`token ${response.status}`, "provider");
     const body = (await response.json()) as { access: string; access_expires: number };
-    tokenCache.set(this.secretId, { access: body.access, expiresAt: Date.now() + body.access_expires * 1000 });
+    tokenCache.set(this.cacheKey, { access: body.access, expiresAt: Date.now() + body.access_expires * 1000 });
     return body.access;
   }
 
-  private async call<T>(path: string, init: { method?: string; body?: unknown } = {}): Promise<T> {
+  private async call<T>(path: string, init: { method?: string; body?: unknown } = {}, retried = false): Promise<T> {
     const payload = init.body === undefined ? undefined : JSON.stringify(init.body);
     let response: Response;
-    const token = await this.token();
+    const token = await this.token(retried);
     try {
       response = await fetch(`${BASE}${path}`, {
         method: init.method ?? "GET",
@@ -76,6 +96,17 @@ export class GoCardlessProvider implements BankProvider {
         unit: "bytes",
         legalBasis: "CONTRACT",
       });
+    }
+    if (response.status === 401 && !retried) {
+      tokenCache.delete(this.cacheKey);
+      return this.call<T>(path, init, true);
+    }
+    if (response.status === 401 || response.status === 403) {
+      tokenCache.delete(this.cacheKey);
+      throw new BankProviderError(`${init.method ?? "GET"} ${path.split("?")[0]} → ${response.status}`, "credentials");
+    }
+    if (response.status === 429) {
+      throw new BankProviderError(`${init.method ?? "GET"} ${path.split("?")[0]} → 429`, "rateLimit");
     }
     if (!response.ok) throw new BankProviderError(`${init.method ?? "GET"} ${path.split("?")[0]} → ${response.status}`, "provider");
     return (response.status === 204 ? undefined : await response.json()) as T;

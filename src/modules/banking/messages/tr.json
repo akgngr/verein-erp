@@ -68,6 +68,9 @@
   "errors": {
     "credentials": "Sağlayıcı anahtarları reddedildi. Ayarları kontrol edin.",
     "provider": "Banka sağlayıcısına ulaşılamadı veya istek reddedildi. Daha sonra tekrar deneyin.",
+    "rateLimit": "Banka sağlayıcısı istek sınırına ulaştı. Lütfen kısa bir süre sonra tekrar deneyin.",
+    "invalidAccount": "Yalnızca aktif bir banka hesabı eşlenebilir.",
+    "appUrlRequired": "Banka bağlantısı için genel uygulama adresi (APP_URL) tanımlanmalıdır.",
     "notConfigured": "Sağlayıcı ayarlanmamış.",
     "mockDisabled": "Test sağlayıcısı bu ortamda kullanılamaz."
   },

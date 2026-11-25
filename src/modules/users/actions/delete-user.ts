@@ -25,6 +25,9 @@ export async function deleteUserAction(input: unknown): Promise<ActionResult> {
       const db = getDb();
       const target = await db.user.findUnique({ where: { id: input.id } });
       if (!target) throw new ActionError("users.errors.notFound");
+      if (user.role !== "ADMIN" && target.role === "ADMIN") {
+        throw new ActionError("users.errors.adminOnly");
+      }
       if (target.id === user.id) throw new ActionError("users.errors.selfDelete");
 
       if (target.role === "ADMIN" && target.isActive) {

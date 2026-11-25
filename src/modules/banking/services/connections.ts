@@ -2,7 +2,8 @@ import "server-only";
 
 import { randomBytes } from "node:crypto";
 
-import { importBankTransactions } from "@/modules/accounting/server";
+import { importBankTransactions, listAccountOptions } from "@/modules/accounting/server";
+import { ActionError } from "@/modules/auth/server";
 import { getDb } from "@/shared/db";
 
 import { getProvider } from "./settings";
@@ -39,8 +40,8 @@ export async function startConnection(input: { institutionId: string; institutio
   return { id: connection.id, link: consent.link };
 }
 
-/** Onay durumunu sağlayıcıdan okur; bağlandıysa hesapları kaydeder. */
-export async function refreshConnection(id: string) {
+/** Onay durumunu sağlayıcıdan okur; bağlandıysa hesapları kaydeder ve tek kullanımlık referansı tüketir. */
+export async function refreshConnection(id: string, options?: { consumeReference?: boolean }) {
   const db = getDb();
   const connection = await db.bankConnection.findUniqueOrThrow({ where: { id } });
   if (!connection.externalId) return connection.status;
@@ -53,15 +54,38 @@ export async function refreshConnection(id: string) {
       update: { iban: account.iban, name: account.name, currency: account.currency },
     });
   }
-  await db.bankConnection.update({ where: { id }, data: { status: consent.state, lastError: null } });
+  // Tek kullanımlık geri dönüş referansı bağlantı onaylandıktan veya sonlandıktan sonra döndürülür (replay engeli).
+  const shouldInvalidateRef = options?.consumeReference && consent.state !== "PENDING";
+  await db.bankConnection.update({
+    where: { id },
+    data: {
+      status: consent.state,
+      lastError: null,
+      ...(shouldInvalidateRef ? { reference: `used:${id}:${randomBytes(8).toString("hex")}` } : {}),
+    },
+  });
   return consent.state;
 }
 
 export async function findConnectionByReference(reference: string) {
-  return getDb().bankConnection.findUnique({ where: { reference }, select: { id: true } });
+  return getDb().bankConnection.findUnique({ where: { reference }, select: { id: true, status: true } });
+}
+
+export async function findPendingConnectionByReference(reference: string) {
+  if (!reference || reference.startsWith("used:")) return null;
+  const row = await getDb().bankConnection.findUnique({ where: { reference }, select: { id: true, status: true } });
+  if (!row || row.status !== "PENDING") return null;
+  return row;
 }
 
 export async function mapAccount(accountId: string, accountingAccountId: string | null) {
+  if (accountingAccountId !== null) {
+    const accounts = await listAccountOptions();
+    const target = accounts.find((acc) => acc.id === accountingAccountId);
+    if (!target || !target.isActive || target.type !== "BANK") {
+      throw new ActionError("banking.errors.invalidAccount");
+    }
+  }
   await getDb().bankConnectionAccount.update({ where: { id: accountId }, data: { accountingAccountId } });
 }
 

@@ -31,7 +31,7 @@ export async function createExternalGrantAction(input: unknown): Promise<ActionR
           actorUserId: user.id,
           actorUserLabel: buildUserLabel(user.name, user.email),
         });
-        revalidatePath(`/ayarlar/kullanicilar/${input.userId}`);
+        revalidatePath("/ayarlar/kullanicilar");
         return { id: created.id };
       } catch (error) {
         if (error instanceof Error && error.message === "exceedsMaxDuration") {
@@ -54,13 +54,21 @@ export async function revokeExternalGrantAction(input: unknown): Promise<ActionR
       userId: z.string().min(1),
     }),
     handler: async ({ input, user }) => {
-      const updated = await revokeExternalGrant({
-        grantId: input.grantId,
-        actorUserId: user.id,
-        actorUserLabel: buildUserLabel(user.name, user.email),
-      });
-      revalidatePath(`/ayarlar/kullanicilar/${input.userId}`);
-      return { id: updated.id };
+      try {
+        const updated = await revokeExternalGrant({
+          grantId: input.grantId,
+          expectedUserId: input.userId,
+          actorUserId: user.id,
+          actorUserLabel: buildUserLabel(user.name, user.email),
+        });
+        revalidatePath("/ayarlar/kullanicilar");
+        return { id: updated.id };
+      } catch (error) {
+        if (error instanceof Error && error.message === "notFound") {
+          throw new ActionError("users.errors.notFound");
+        }
+        throw error;
+      }
     },
   })(input);
 }

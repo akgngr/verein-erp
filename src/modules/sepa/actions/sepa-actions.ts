@@ -8,6 +8,7 @@ import { z } from "zod";
 import { ActionError, createAction } from "@/modules/auth/server";
 import { canRequestRenewal, requestMandateRenewal } from "@/modules/online-forms/server";
 import { listUsableModuleKeys } from "@/modules/system/automation";
+import { resolvePublicOrigin } from "@/shared/security/public-origin";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
@@ -125,11 +126,9 @@ export async function requestMandateRenewalAction(input: unknown): Promise<Actio
       const subject = (await candidates(input.source, input.param, await labels())).find((item) => item.sourceKey === input.sourceKey)?.subject;
       if (!subject) throw new ActionError("sepa.errors.renewalTarget");
       if (!canRequestRenewal(user.role, subject.kind)) throw new ActionError("sepa.errors.renewalForbidden");
-      const h = await headers();
-      const host = h.get("x-forwarded-host") ?? h.get("host");
-      if (!host) throw new ActionError("sepa.errors.renewalFailed");
-      const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-      const result = await requestMandateRenewal(subject, input.channel, actorOf(user), `${proto}://${host}`);
+      const origin = resolvePublicOrigin(await headers());
+      if (!origin) throw new ActionError("sepa.errors.renewalFailed");
+      const result = await requestMandateRenewal(subject, input.channel, actorOf(user), origin);
       if (!result.ok) throw new ActionError(result.error === "noAddress" ? "sepa.errors.renewalNoAddress" : "sepa.errors.renewalFailed");
       // Denetim: yalnız kimlikler ve kanal; adres veya ad yazılmaz.
       await audit({ action: "CREATE", entity: "OnlineFormRequest", entityId: result.id, after: { purpose: "sepaMandateRenewal", kind: subject.kind, channel: input.channel } });
