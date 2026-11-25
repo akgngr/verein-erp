@@ -49,8 +49,10 @@ test("members structural guards: transactional dues invariants, receipt audit, A
 
   const deleteMember = readFileSync("src/modules/members/actions/delete-member.ts", "utf8");
   assert.match(deleteMember, /sepaMandateReference:\s*null/);
-  assert.match(deleteMember, /portalSession\.updateMany/);
-  assert.match(deleteMember, /onlineFormRequest\.updateMany/);
+  assert.match(deleteMember, /revokePortalSessionsForMember\(tx,\s*member\.id/);
+  assert.match(deleteMember, /cancelPendingMemberForms\(tx,\s*member\.id\)/);
+  assert.match(readFileSync("src/modules/member-portal/services/cleanup.ts", "utf8"), /portalSession\.updateMany/);
+  assert.match(readFileSync("src/modules/online-forms/services/cleanup.ts", "utf8"), /onlineFormRequest\.updateMany/);
 
   const memberList = readFileSync("src/modules/members/views/member-list-view.tsx", "utf8");
   assert.match(memberList, /CorrectionProposalsPanel/);

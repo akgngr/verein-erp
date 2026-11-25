@@ -68,7 +68,7 @@ export class GoCardlessProvider implements BankProvider {
       tokenCache.delete(this.cacheKey);
       throw new BankProviderError("token rejected", "credentials"); // i18n-ignore (iç hata, loglanır)
     }
-    if (response.status === 429) throw new BankProviderError("token 429", "rateLimit");
+    if (response.status === 429) throw new BankProviderError("token 429", "rateLimit"); // i18n-ignore (iç hata, loglanır)
     if (!response.ok) throw new BankProviderError(`token ${response.status}`, "provider");
     const body = (await response.json()) as { access: string; access_expires: number };
     tokenCache.set(this.cacheKey, { access: body.access, expiresAt: Date.now() + body.access_expires * 1000 });

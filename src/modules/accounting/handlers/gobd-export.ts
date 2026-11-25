@@ -55,11 +55,12 @@ export async function gobdExportHandler(request: Request): Promise<Response> {
     db.accountingCategory.findMany({ orderBy: { name: "asc" } }),
     db.accountingInvoice.findMany({ where: { kind: { in: ["INVOICE", "CREDIT_NOTE"] }, status: { not: "DRAFT" }, issueDate: { gte: from, lte: to } }, orderBy: { number: "asc" } }),
     db.accountingPayable.findMany({ where: { status: { not: "DRAFT" }, issueDate: { gte: from, lte: to } }, orderBy: { issueDate: "asc" } }),
-    db.accountingCashClosing.findMany({ where: { closingDate: { gte: from, lte: to } }, orderBy: { closingDate: "asc" }, include: { account: { select: { name: true } } } }),
+    db.accountingCashClosing.findMany({ where: { closingDate: { gte: from, lte: to } }, orderBy: { closingDate: "asc" } }),
     db.accountingAsset.findMany({ where: { acquisitionDate: { lte: to } }, orderBy: { acquisitionDate: "asc" } }),
     db.accountingFlatRate.findMany({ where: { date: { gte: from, lte: to } }, orderBy: { date: "asc" } }),
     db.accountingReserve.findMany({ where: { OR: [{ year }, { releasedYear: year }] }, orderBy: { year: "asc" } }),
   ]);
+  const accountNameById = new Map(accounts.map((account) => [account.id, account.name]));
   const bookingIdList = bookings.map((b) => b.id);
   const journal = await db.accountingJournal.findMany({
     where: { bookingId: { in: [...bookingIdList, `YEAR:${year}`] } },
@@ -90,7 +91,7 @@ export async function gobdExportHandler(request: Request): Promise<Response> {
     {
       file: "kassenabschluesse.csv", name: "Kassenabschluesse", description: "Tägliche Kassenabschlüsse mit Zählprotokoll", primaryKey: "ID", // i18n-ignore
       columns: [A("ID", "Interne ID"), A("Konto", "Kassenkonto"), D("Abschlussdatum", "Datum"), N("Sollbestand", "Buchbestand EUR"), N("Istbestand", "Gezählter Bestand EUR"), N("Differenz", "Differenz EUR"), A("Notiz", "Notiz"), A("Bearbeiter", "Erfasst von")], // i18n-ignore
-      rows: cashClosings.map((row) => [row.id, row.account.name, day(row.closingDate), row.bookBalanceCents / 100, row.countedBalanceCents / 100, row.differenceCents / 100, row.note, row.createdByLabel]),
+      rows: cashClosings.map((row) => [row.id, accountNameById.get(row.accountId) ?? row.accountId, day(row.closingDate), row.bookBalanceCents / 100, row.countedBalanceCents / 100, row.differenceCents / 100, row.note, row.createdByLabel]),
     },
     {
       file: "anlagegueter.csv", name: "Anlagegueter", description: "Anlagenverzeichnis (AfA/GWG/Sammelposten)", primaryKey: "ID", // i18n-ignore

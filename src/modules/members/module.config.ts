@@ -26,7 +26,8 @@ export const moduleConfig: ModuleConfig = {
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
   access: [
     { module: "organization", operations: ["read"] },
-    { module: "online-forms", operations: ["read"] },
+    { module: "online-forms", operations: ["read", "write"] },
+    { module: "member-portal", operations: ["read", "write"] },
   ],
   // Kurulu ve yetkiliyse kullanılır (e-imza bağlantısı); yoksa düğme gizlenir.
   recommends: ["online-forms"],

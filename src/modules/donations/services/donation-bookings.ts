@@ -2,7 +2,13 @@ import "server-only";
 
 import type { Prisma } from "@prisma/client";
 
-import { createSourcedBooking, donationAccountKeyFor, getDonationBookingTargets, reverseSourcedBooking } from "@/modules/accounting/server";
+import {
+  createSourcedBooking,
+  donationAccountKeyFor,
+  getDonationBookingTargets,
+  nextVersionedSourcedBookingId,
+  reverseSourcedBooking,
+} from "@/modules/accounting/server";
 
 import { formatDonorNumber } from "./confirmation-numbers";
 import { ActionError } from "@/modules/auth/server";
@@ -29,20 +35,6 @@ export function donationBookingDescription(
   return kind === "income" ? `${base} (Einnahme)` : `${base} (Ausgabe)`;
 }
 
-async function nextVersionedSourceId(
-  tx: Prisma.TransactionClient,
-  sourceType: "DONATION" | "DONATION_WAIVER",
-  donationId: string,
-): Promise<string> {
-  const existingCount = await tx.accountingBooking.count({
-    where: {
-      sourceType,
-      OR: [{ sourceId: donationId }, { sourceId: { startsWith: `${donationId}:` } }],
-    },
-  });
-  return existingCount === 0 ? donationId : `${donationId}:${existingCount}`;
-}
-
 export async function createDonationBookings(
   tx: Prisma.TransactionClient,
   args: {
@@ -64,7 +56,7 @@ export async function createDonationBookings(
   const description = args.waivedReimbursement
     ? donationBookingDescription(args.donationNumber, args.donorNumber, "income")
     : `Spende ${args.donationNumber} – Spender Nr. ${formatDonorNumber(args.donorNumber)}`;
-  const incomeSourceId = await nextVersionedSourceId(tx, "DONATION", args.donationId);
+  const incomeSourceId = await nextVersionedSourcedBookingId(tx, "DONATION", args.donationId);
   const income = await createSourcedBooking({
     tx,
     actor: args.actor,
@@ -87,7 +79,7 @@ export async function createDonationBookings(
   if (!args.expenseCategoryId) {
     throw new ActionError("donations.errors.waiverExpenseRequired");
   }
-  const waiverSourceId = await nextVersionedSourceId(tx, "DONATION_WAIVER", args.donationId);
+  const waiverSourceId = await nextVersionedSourcedBookingId(tx, "DONATION_WAIVER", args.donationId);
   const expense = await createSourcedBooking({
     tx,
     actor: args.actor,

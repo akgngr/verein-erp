@@ -97,7 +97,7 @@ export const authConfig = {
       // API/SSE uçları HTML yönlendirmesi yerine 403 JSON döner (EventSource MIME hatası önlenir).
       if (sessionUser.mustChangePassword && path !== "/profil") {
         if (path.startsWith("/api/")) {
-          return NextResponse.json({ error: "password_change_required" }, { status: 403 });
+          return NextResponse.json({ error: "password_change_required" }, { status: 403 }); // i18n-ignore (API hata kodu)
         }
         return NextResponse.redirect(new URL("/profil", nextUrl));
       }

@@ -4,6 +4,7 @@ import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { deleteSessionAttendance } from "@/modules/progress/server";
 
 import { courseSessionsPermissions } from "../permissions";
 import { sessionDeleteSchema, sessionSchema, sessionSeriesSchema, sessionUpdateSchema, type SessionInput } from "../schemas/course";
@@ -82,7 +83,7 @@ export async function deleteSessionAction(input: unknown): Promise<ActionResult<
         if (inLockedPayout) {
           throw new ActionError("courses.errors.sessionInLockedPayout");
         }
-        await tx.progressAttendance.deleteMany({ where: { sessionId: existing.id } });
+        await deleteSessionAttendance(tx, existing.id);
         await tx.courseSession.delete({ where: { id: existing.id } });
       });
 

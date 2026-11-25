@@ -38,6 +38,7 @@ export const moduleConfig: ModuleConfig = {
     { module: "accounting", operations: ["read", "write"] },
     { module: "mail", operations: ["read", "write"] },
     { module: "organization", operations: ["read"] },
+    { module: "progress", operations: ["delete"] },
     { module: "students", operations: ["read"] },
     { module: "users", operations: ["read", "write"] },
   ],

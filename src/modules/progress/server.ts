@@ -4,4 +4,5 @@ import "server-only";
 export { progressPermissions } from "./permissions";
 export { getProgressStats } from "./queries/stats";
 
-export {getProgressAiStats} from "./queries/ai-stats";
+export { getProgressAiStats } from "./queries/ai-stats";
+export { deleteSessionAttendance } from "./services/cleanup";

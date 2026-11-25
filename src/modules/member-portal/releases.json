@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı.",
   "releases": [
     {
+      "version": "0.3.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Üye silmede portal oturumu iptal API'si",
+        "de": "Server-API zum Widerruf von Portalsitzungen beim Mitgliederlöschen"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Üye silme işlemi için aktif portal oturumlarını aynı işlemde iptal eden sunucu API'si eklendi (#578).",
+          "de": "Server-API zum transaktionalen Widerruf aktiver Portalsitzungen beim Löschen eines Mitglieds ergänzt (#578)."
+        }
+      ]
+    },
+    {
       "version": "0.3.1",
       "date": "2026-11-24",
       "title": {

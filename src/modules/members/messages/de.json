@@ -524,7 +524,8 @@
   },
   "access": {
     "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten.",
-    "online-forms": "Um von der Mitgliederseite E-Signatur-/Online-Formular-Links zu senden und signierte Dokumente anzuzeigen."
+    "online-forms": "Um von der Mitgliederseite E-Signatur-/Online-Formular-Links zu senden, signierte Dokumente anzuzeigen und beim Löschen offene Einladungen zu stornieren.",
+    "member-portal": "Widerruft aktive Mitgliederportal-Sitzungen, wenn ein Mitglied gelöscht wird."
   },
   "permissions": {
     "memberPayments": {

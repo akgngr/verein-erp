@@ -104,11 +104,12 @@ export async function createDonorAction(
         }
       }
 
+      const memberNameParts = memberCopy ? memberCopy.name.trim().split(/\s+/).filter(Boolean) : [];
       const resolvedFirstName = memberCopy
-        ? (memberCopy.firstName ?? memberCopy.name.split(/\s+/).slice(0, -1).join(" ")) || null
+        ? memberNameParts.slice(0, -1).join(" ") || null
         : input.firstName;
       const resolvedLastName = memberCopy
-        ? (memberCopy.lastName ?? memberCopy.name.split(/\s+/).slice(-1)[0]) || null
+        ? memberNameParts.at(-1) || null
         : input.lastName;
       const resolvedPostalCode = memberCopy ? memberCopy.postalCode : input.postalCode;
 

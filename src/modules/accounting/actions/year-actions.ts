@@ -80,7 +80,7 @@ export async function unlockYearAction(input: unknown): Promise<ActionResult> {
         throw new ActionError("accounting.errors.yearAlreadyOpen", undefined, { year: input.year });
       }
 
-      if (existing.lockedById && existing.lockedById === user.id && user.role !== "ADMIN") {
+      if (existing.lockedById && existing.lockedById === user.id && user.role !== "ADMIN") { // role-name-ok (tek yönetici acil kilit açma istisnası; diğer onaylayıcılar dört göz ilkesine tabidir)
         throw new ActionError("accounting.errors.unlockRequiresOtherApprover");
       }
 

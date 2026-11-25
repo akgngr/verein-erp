@@ -51,11 +51,11 @@ const CHILD_RENDER_ENV_ALLOWLIST = ["PATH", "NODE_ENV", "TZ", "HOME", "LANG", "L
 
 /** Alt PDF işleme yalnız temel çalışma değişkenlerini aktarır; veritabanı/anahtar sırları asla geçirilmez. */
 export function buildChildRenderEnv(source: NodeJS.ProcessEnv = process.env): NodeJS.ProcessEnv {
- const env: NodeJS.ProcessEnv = {};
+ const env: Record<string, string | undefined> = {};
  for (const key of CHILD_RENDER_ENV_ALLOWLIST) {
   if (source[key] !== undefined) env[key] = source[key];
  }
- return env;
+ return env as NodeJS.ProcessEnv;
 }
 
 /**

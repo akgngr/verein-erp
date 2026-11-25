@@ -27,6 +27,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | [Muhasebe](./accounting) | okuma, yazma | Kurs ücreti tahsilatlarını gelir fişi olarak yazar ve geri alır; kasa/banka hesaplarını ve gelir kategorilerini okur. Ödenen öğretmen hakedişlerini gider fişi olarak yazar. |
 | [E-posta Altyapısı](./mail) | okuma, yazma | Öğretmen davet e-postası gönderir. |
 | [Dernek Bilgileri](./organization) | okuma | Öğretmen hakediş PDF'inin antetinde dernek bilgilerini ve logosunu okur. |
+| [Öğrenci takibi](./progress) | silme | Bir kurs dersi silindiğinde o derse ait yetim yoklama kayıtlarını temizler. |
 | [Öğrenciler](./students) | okuma | Kursa kaydedilecek öğrencileri ve ödeme sorumlularını okur. |
 | [Kullanıcılar](./users) | okuma, yazma | Davet edilen öğretmen için Öğretmen rolünde kullanıcı hesabı açar; hesabı olan öğretmenin ad ve e-postasını kullanıcı kaydından okur. |
 

@@ -16,7 +16,7 @@ import { findPendingConnectionByReference, markError, refreshConnection } from "
 export async function bankCallbackHandler(request: NextRequest): Promise<NextResponse> {
   const origin = resolvePublicOrigin(request.headers);
   if (!origin) {
-    return NextResponse.json({ ok: false, error: "APP_URL is not configured" }, { status: 500 });
+    return NextResponse.json({ ok: false, error: "APP_URL is not configured" }, { status: 500 }); // i18n-ignore (sunucu yapılandırma hatası)
   }
   const back = new URL("/ayarlar/banka-baglantisi", origin);
   try {

@@ -124,9 +124,9 @@ describe("Pre-Live F5 (#579) — Courses, Progress & Students concurrency, integ
     const src = read("src/modules/courses/actions/fee-actions.ts");
     const txBlocks = src.match(/\$transaction\s*\(\s*async\s*\(\s*tx\s*\)/g) ?? [];
     assert.ok(txBlocks.length >= 3, "recordPayment, reversePayment, and waiveCharge must all use interactive $transaction");
-    assert.match(src, /tx\.courseCharge\.updateMany\(\{\s*where:\s*\{\s*id:\s*charge\.id,\s*status:\s*"OPEN"\s*\},\s*data:\s*\{\s*status:\s*"PAID"\s*\}/s);
-    assert.match(src, /tx\.coursePayment\.updateMany\(\{\s*where:\s*\{\s*id:\s*payment\.id,\s*reversedAt:\s*null\s*\}/s);
-    assert.match(src, /tx\.courseCharge\.updateMany\(\{\s*where:\s*\{\s*id:\s*charge\.id,\s*status:\s*"OPEN"\s*\},\s*data:\s*\{\s*status:\s*"WAIVED"/s);
+    assert.match(src, /tx\.courseCharge\.updateMany\(\{\s*where:\s*\{\s*id:\s*charge\.id,\s*status:\s*"OPEN"\s*\},\s*data:\s*\{\s*status:\s*"PAID"\s*\}/);
+    assert.match(src, /tx\.coursePayment\.updateMany\(\{\s*where:\s*\{\s*id:\s*payment\.id,\s*reversedAt:\s*null\s*\}/);
+    assert.match(src, /tx\.courseCharge\.updateMany\(\{\s*where:\s*\{\s*id:\s*charge\.id,\s*status:\s*"OPEN"\s*\},\s*data:\s*\{\s*status:\s*"WAIVED"/);
     assert.match(src, /claimed\.count !== 1/);
   });
 
@@ -140,9 +140,11 @@ describe("Pre-Live F5 (#579) — Courses, Progress & Students concurrency, integ
 
   test("session-actions.ts blocks deleting sessions locked in APPROVED/PAID payouts and cleans up ProgressAttendance", () => {
     const src = read("src/modules/courses/actions/session-actions.ts");
+    const progressCleanup = read("src/modules/progress/services/cleanup.ts");
     assert.match(src, /courses\.errors\.sessionInLockedPayout/);
     assert.match(src, /status:\s*\{\s*in:\s*\["APPROVED",\s*"PAID"\]\s*\}/);
-    assert.match(src, /tx\.progressAttendance\.deleteMany\(\{\s*where:\s*\{\s*sessionId:\s*existing\.id\s*\}\s*\}\)/);
+    assert.match(src, /deleteSessionAttendance\(tx,\s*existing\.id\)/);
+    assert.match(progressCleanup, /tx\.progressAttendance\.deleteMany\(\{\s*where:\s*\{\s*sessionId\s*\}\s*\}\)/);
   });
 
   test("PDF exports for teacher payouts and minor student progress reports write EXPORT audit logs without PII", () => {
