@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.6.2 |
+| Sürüm | 2.7.0 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -43,6 +43,14 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft` · `propose_dues_reminder_draft`
 
 ## Sürüm notları
+
+### 2.7.0 — Tek tıkla çıkış ve güvenilir gönderim
+
+_2026-11-25_
+
+- **Yeni:** E-postalarda List-Unsubscribe / List-Unsubscribe-Post başlıkları ve kişiye özel tek tıkla çıkış adresi; çıkış kaynağın kaydında toplu e-posta itirazını işaretler. Metinde {unsubscribeLink} yer tutucusu kullanılabilir.
+- **Düzeltme:** Gönderim sonuçları her 20 mesajda kaydedilir; ara hatadan sonra yeniden deneme gönderilmiş SMS/WhatsApp'ları tekrar göndermez.
+- **Düzeltme:** Sonradan gelen 'başarısız' teslim bildirimleri kampanya sayaçlarına yansır; programatik toplu e-posta worker kuyruğundan gönderilir.
 
 ### 2.6.2 — nav.json kategori ve alt modül tanımı
 
@@ -87,10 +95,4 @@ _2026-11-16_
 
 - **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
 
-### 2.4.5 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 19 herkese açık sürüm notu.
+Daha eski 20 herkese açık sürüm notu.

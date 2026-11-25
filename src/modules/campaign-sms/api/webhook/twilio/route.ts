@@ -1,4 +1,5 @@
 import { getChannelConfig, recordProviderStatus } from "@/modules/mailings/server";
+import { readWebhookBody } from "@/shared/campaigns/webhook-body";
 
 import { mapTwilioStatus, verifyTwilioSignature } from "../../../services/webhook";
 
@@ -17,7 +18,10 @@ function publicUrl(request: Request): string {
 export async function POST(request: Request) {
   const config = await getChannelConfig("sms");
   if (config.provider !== "twilio" || !config.apiKey) return new Response(null, { status: 404 });
-  const params = Object.fromEntries(new URLSearchParams(await request.text())) as Record<string, string>;
+  // #581: Gövde boyutu sınırlıdır (oturumsuz uç).
+  const raw = await readWebhookBody(request);
+  if (raw === null) return new Response(null, { status: 413 });
+  const params = Object.fromEntries(new URLSearchParams(raw)) as Record<string, string>;
   if (!verifyTwilioSignature(config.apiKey, publicUrl(request), params, request.headers.get("x-twilio-signature") ?? "")) {
     return new Response(null, { status: 403 });
   }

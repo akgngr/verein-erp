@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.7.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Tek tıkla çıkış ve güvenilir gönderim",
+        "de": "One-Click-Abmeldung und zuverlässiger Versand"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "E-postalarda List-Unsubscribe / List-Unsubscribe-Post başlıkları ve kişiye özel tek tıkla çıkış adresi; çıkış kaynağın kaydında toplu e-posta itirazını işaretler. Metinde {unsubscribeLink} yer tutucusu kullanılabilir.",
+          "de": "E-Mails enthalten List-Unsubscribe-/List-Unsubscribe-Post-Header und einen persönlichen One-Click-Abmeldelink; die Abmeldung setzt den Widerspruch im Quelldatensatz. Im Text steht der Platzhalter {unsubscribeLink} zur Verfügung."
+        },
+        {
+          "type": "fix",
+          "tr": "Gönderim sonuçları her 20 mesajda kaydedilir; ara hatadan sonra yeniden deneme gönderilmiş SMS/WhatsApp'ları tekrar göndermez.",
+          "de": "Versandergebnisse werden alle 20 Nachrichten gespeichert; nach einem Abbruch werden bereits gesendete SMS/WhatsApp nicht erneut verschickt."
+        },
+        {
+          "type": "fix",
+          "tr": "Sonradan gelen 'başarısız' teslim bildirimleri kampanya sayaçlarına yansır; programatik toplu e-posta worker kuyruğundan gönderilir.",
+          "de": "Nachträgliche Fehlermeldungen der Anbieter aktualisieren die Kampagnenzähler; programmatischer Massenversand läuft über die Worker-Warteschlange."
+        }
+      ]
+    },
+    {
       "version": "2.6.2",
       "date": "2026-11-24",
       "title": {

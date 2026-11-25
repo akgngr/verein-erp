@@ -77,14 +77,35 @@ export async function recordClick(token: string): Promise<boolean> {
 
 const RANK: Record<string, number> = { QUEUED: 0, SENT: 1, DELIVERED: 2, READ: 3, FAILED: 4 };
 
+/**
+ * #581: Kampanya sayaçları kalıcı gönderim durumlarından hesaplanır (worker'ın yerel sayıları veya webhook
+ * artırımları değil). Böylece gönderim sürerken gelen "başarısız" bildirimi, worker'ın son yazımıyla ezilmez;
+ * tekrar çağrı aynı sonucu verir.
+ */
+export async function recountCampaignDeliveries(campaignId: string): Promise<{ sent: number; failed: number }> {
+  const db = getDb();
+  const rows = await db.mailingDelivery.groupBy({ by: ["status"], where: { campaignId }, _count: { _all: true } });
+  const count = (statuses: string[]) => rows.filter((row) => statuses.includes(row.status)).reduce((sum, row) => sum + row._count._all, 0);
+  const totals = { sent: count(["SENT", "DELIVERED", "READ"]), failed: count(["FAILED"]) };
+  await db.mailingCampaign.update({ where: { id: campaignId }, data: { sentCount: totals.sent, failedCount: totals.failed } });
+  return totals;
+}
+
 /** Sağlayıcı bildirimi (SMS/WhatsApp). Durum geri gitmez (okundu → teslim edildi olmaz). */
 export async function recordProviderStatus(input: { channel: string; providerId: string; status: "DELIVERED" | "READ" | "FAILED"; at?: Date; error?: string }): Promise<boolean> {
   const db = getDb();
-  const row = await db.mailingDelivery.findFirst({ where: { channel: input.channel, providerId: input.providerId }, select: { id: true, status: true, deliveredAt: true, readAt: true } });
+  const row = await db.mailingDelivery.findFirst({ where: { channel: input.channel, providerId: input.providerId }, select: { id: true, campaignId: true, status: true, deliveredAt: true, readAt: true } });
   if (!row) return false;
   const at = input.at ?? new Date();
   if (input.status === "FAILED") {
-    if (row.status === "QUEUED" || row.status === "SENT") await db.mailingDelivery.update({ where: { id: row.id }, data: { status: "FAILED", error: input.error?.slice(0, 80) ?? "PROVIDER_FAILED" } });
+    // #581: Sonradan gelen başarısız bildirimi kampanya sayaçlarına yansır. Gönderim bitmişse sayaçlar kalıcı
+    // durumlardan yeniden hesaplanır; sürüyorsa worker bitişte aynı hesabı yapar.
+    await db.mailingDelivery.updateMany({
+      where: { id: row.id, status: { in: ["QUEUED", "SENT"] } },
+      data: { status: "FAILED", error: input.error?.slice(0, 80) ?? "PROVIDER_FAILED" },
+    });
+    const campaign = await db.mailingCampaign.findUnique({ where: { id: row.campaignId }, select: { status: true } });
+    if (campaign && campaign.status !== "SENDING") await recountCampaignDeliveries(row.campaignId);
     return true;
   }
   await db.mailingDelivery.update({

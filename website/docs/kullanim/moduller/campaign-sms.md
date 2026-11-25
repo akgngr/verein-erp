@@ -13,7 +13,7 @@ Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere
 |---|---|
 | Anahtar | `campaign-sms` |
 | Tür | Eklenti |
-| Sürüm | 1.1.2 |
+| Sürüm | 1.1.3 |
 | Gerektirir | [Toplu e-posta](./mailings) |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | SMS | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.3 — Webhook sertleştirme
+
+_2026-11-25_
+
+- **Güvenlik:** Twilio ve seven.io webhook gövdeleri boyutla sınırlıdır; uygulama sırrı (AUTH_SECRET) yoksa seven.io gizli adresi üretilmez (fail closed).
 
 ### 1.1.2 — TAX_ADVISOR rolü izin tanımı
 
