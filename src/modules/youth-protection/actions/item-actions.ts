@@ -1,5 +1,7 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
 
@@ -19,15 +21,38 @@ function parseDateOnly(value: string): Date {
 }
 
 /**
- * Oluşturma: yetki + şema createAction'da.
- * DSGVO Art. 10 / Veri minimizasyonu: denetim kaydına yalnızca kişi adı yazılır.
+ * #585: Denetim kaydına kişi adı YAZILMAZ (§ 72a Abs. 5 SGB VIII, DSGVO md. 10): adli sicil incelemesine
+ * ilişkin veriler kalıcı denetim izine taşınmaz. Yalnız kayıt kimliği, durum ve tarihler yazılır.
  */
+function auditView(record: { status: string; nextDueDate: Date; activityEndedAt: Date | null; memberId: string | null; userId: string | null }) {
+  return {
+    status: record.status,
+    nextDueDate: record.nextDueDate.toISOString().slice(0, 10),
+    activityEnded: Boolean(record.activityEndedAt),
+    linkedMember: Boolean(record.memberId),
+    linkedUser: Boolean(record.userId),
+  };
+}
+
+/** Bağlanan üye kaydı members public API'siyle doğrulanır (etkin/pasif üye). */
+async function assertMember(memberId: string | null): Promise<void> {
+  if (!memberId) return;
+  const { listMemberOptions } = await import("@/modules/members/server");
+  if ((await listMemberOptions({ ids: [memberId] })).length === 0) {
+    throw new ActionError("youth-protection.errors.memberNotFound", { memberId: ["youth-protection.errors.memberNotFound"] });
+  }
+}
+
+const LIST_PATH = "/youth-protection";
+
+/** Oluşturma: yetki + şema createAction'da. */
 export async function createYouthProtectionItemAction(input: unknown): Promise<ActionResult<{ id: string }>> {
   const run = createAction({
     permission: { definition: youthProtectionPermissions, action: "create" },
     schema: youthProtectionItemSchema,
     handler: async ({ input, audit }) => {
       const db = getDb();
+      await assertMember(input.memberId || null);
       const created = await db.youthProtectionRecord.create({
         data: {
           personName: input.personName,
@@ -45,8 +70,9 @@ export async function createYouthProtectionItemAction(input: unknown): Promise<A
         action: "CREATE",
         entity: "YouthProtectionRecord",
         entityId: created.id,
-        after: { personName: created.personName },
+        after: auditView(created),
       });
+      revalidatePath(LIST_PATH);
       return { id: created.id };
     },
   });
@@ -61,6 +87,7 @@ export async function updateYouthProtectionItemAction(input: unknown): Promise<A
       const db = getDb();
       const existing = await db.youthProtectionRecord.findUnique({ where: { id: input.id } });
       if (!existing) throw new ActionError("youth-protection.errors.notFound");
+      await assertMember(input.memberId || null);
 
       const updated = await db.youthProtectionRecord.update({
         where: { id: existing.id },
@@ -81,9 +108,10 @@ export async function updateYouthProtectionItemAction(input: unknown): Promise<A
         action: "UPDATE",
         entity: "YouthProtectionRecord",
         entityId: updated.id,
-        before: { personName: existing.personName },
-        after: { personName: updated.personName },
+        before: auditView(existing),
+        after: auditView(updated),
       });
+      revalidatePath(LIST_PATH);
       return { id: updated.id };
     },
   });
@@ -104,8 +132,9 @@ export async function deleteYouthProtectionItemAction(input: unknown): Promise<A
         action: "DELETE",
         entity: "YouthProtectionRecord",
         entityId: existing.id,
-        before: { personName: existing.personName },
+        before: auditView(existing),
       });
+      revalidatePath(LIST_PATH);
       return { id: existing.id };
     },
   });

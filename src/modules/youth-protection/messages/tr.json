@@ -72,7 +72,10 @@
     "save": "Kaydet",
     "cancel": "Vazgeç",
     "created": "İbraz kaydı oluşturuldu.",
-    "updated": "İbraz kaydı güncellendi."
+    "updated": "İbraz kaydı güncellendi.",
+    "member": "Üye (isteğe bağlı)",
+    "memberNone": "Üyeyle ilişkilendirme yok",
+    "memberHelp": "Kişi derneğin üyesiyse seçin; ad alanı boşsa üyenin adıyla doldurulur."
   },
   "letter": {
     "title": "Harç Muafiyet Belgesi Şablonu",
@@ -99,7 +102,8 @@
     "dueCount": "{count, plural, one {# eğitmen/gönüllünün adli sicil ibraz süresi doldu veya 3 ay içinde dolacak.} other {# eğitmen/gönüllünün adli sicil ibraz süresi doldu veya 3 ay içinde dolacak.}}"
   },
   "errors": {
-    "notFound": "İbraz kaydı bulunamadı."
+    "notFound": "İbraz kaydı bulunamadı.",
+    "memberNotFound": "Seçilen üye bulunamadı veya etkin değil."
   },
   "validation": {
     "personNameRequired": "Ad soyad alanı zorunludur.",
@@ -111,5 +115,9 @@
     "nextDueDateInvalid": "Geçerli bir gelecek ibraz tarihi seçiniz (YYYY-AA-GG).",
     "activityEndedAtInvalid": "Geçerli bir faaliyet bitiş tarihi seçiniz (YYYY-AA-GG).",
     "dateInvalid": "Geçersiz tarih formatı."
+  },
+  "access": {
+    "organization": "Harç muafiyeti yazısında kurum adı ve şehri okunur.",
+    "members": "Kayıt bir üyeyle ilişkilendirilirken üye listesi (ad, üye numarası) okunur ve seçilen üye doğrulanır."
   }
 }
