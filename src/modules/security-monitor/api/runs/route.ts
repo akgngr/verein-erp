@@ -1,47 +1,38 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
 
 import { createTaskExecutionRecord } from "@/modules/automation/automation";
 import { requirePermission } from "@/modules/auth/server";
+import { writeAudit } from "@/shared/audit/write-audit";
+import { buildUserLabel } from "@/shared/utils";
 
-import { securityMonitorPermissions } from "../../permissions";
 import { runSecurityTestsTask } from "../../automation";
+import { securityMonitorPermissions } from "../../permissions";
 import { getSecurityTestRuns } from "../../server";
+import { securityRoute } from "../../services/http";
+
+const listQuery = z.object({
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+  page: z.coerce.number().int().min(1).max(10_000).default(1),
+  testSuite: z.enum(["security"]).optional(),
+  status: z.enum(["passed", "failed", "error"]).optional(),
+  environment: z.enum(["development", "test", "production"]).optional(),
+});
 
 // GET /api/security-monitor/runs - List test runs
 export async function GET(request: Request) {
-  try {
+  return securityRoute(async () => {
     await requirePermission(securityMonitorPermissions, "view");
-
-    const { searchParams } = new URL(request.url);
-    const limit = Math.min(Math.max(Number(searchParams.get("limit") ?? 50) || 50, 1), 100);
-    const testSuite = searchParams.get("testSuite") || undefined;
-    const status = searchParams.get("status") || undefined;
-    const environment = searchParams.get("environment") || undefined;
-    const page = Math.max(Number(searchParams.get("page") ?? 1) || 1, 1);
-
-    const result = await getSecurityTestRuns({
-      limit,
-      testSuite,
-      status,
-      environment,
-      page,
-    });
-
-    return NextResponse.json(result);
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to fetch test runs" }, // i18n-ignore
-      { status: 400 },
-    );
-  }
+    const query = listQuery.parse(Object.fromEntries(new URL(request.url).searchParams));
+    return NextResponse.json(await getSecurityTestRuns(query));
+  });
 }
 
-// POST /api/security-monitor/runs - Queue security tests for the Automation worker.
+// POST /api/security-monitor/runs - Queue the runtime security checks for the Automation worker.
 export async function POST() {
-  try {
+  return securityRoute(async () => {
     const user = await requirePermission(securityMonitorPermissions, "create");
     const requestId = crypto.randomUUID();
-
     const execution = await createTaskExecutionRecord({
       task: runSecurityTestsTask,
       organizationId: "default",
@@ -49,17 +40,9 @@ export async function POST() {
       sourceModule: "security-monitor",
       correlationId: `security-monitor:${requestId}`,
       input: { requestId, testSuite: "security" },
-      context: { locale: "tr" },
+      context: { locale: process.env.DOCUMENT_LANGUAGE === "tr" ? "tr" : "de" },
     });
-
-    return NextResponse.json(
-      { executionId: execution.id, status: "queued" },
-      { status: 202 },
-    );
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to queue security tests" }, // i18n-ignore
-      { status: 400 },
-    );
-  }
+    await writeAudit({ userId: user.id, userLabel: buildUserLabel(user.name, user.email), action: "CREATE", entity: "SecurityTestRun", entityId: execution.id, after: { testSuite: "security" } });
+    return NextResponse.json({ executionId: execution.id, status: "queued" }, { status: 202 });
+  });
 }

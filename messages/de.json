@@ -3468,7 +3468,9 @@
     "errors": {
       "unknownRule": "Regel nicht gefunden.",
       "noTask": "Für diese Regel gibt es keinen Aufgabenvorschlag.",
-      "noFinding": "Kein aktueller Befund; bitte Seite neu laden."
+      "noFinding": "Kein aktueller Befund; bitte Seite neu laden.",
+      "tasksUnavailable": "Das Aufgabenmodul ist nicht aktiv; bitte zuerst in der Modulverwaltung aktivieren.",
+      "tasksForbidden": "Sie dürfen keine Aufgaben anlegen."
     },
     "ui": {
       "yearLabel": "Jahr",
@@ -3480,7 +3482,9 @@
       "downloadExport": "{format} herunterladen",
       "computedValue": "Berechneter Wert",
       "askAdvisorLink": "Steuerberatung verwalten"
-    }
+    },
+    "draftOnly": "Die Prüfregeln sind noch nicht rechtlich geprüft; sie erscheinen hier nach Freigabe durch die Verwaltung.",
+    "draftOnlyAdmin": "Alle Regeln sind Entwürfe (rechtliche Prüfung ausstehend). Mit der Vorschau sehen Sie die Ergebnisse; nach Prüfung und Freigabe werden sie allen angezeigt."
   },
   "courses": {
     "module": {
@@ -9040,6 +9044,16 @@
           }
         }
       }
+    },
+    "checks": {
+      "authSecret": "App-Geheimnis (AUTH_SECRET) mindestens 32 Zeichen",
+      "secretEncryption": "Gespeicherte Geheimnisse können verschlüsselt werden",
+      "appUrlHttps": "Öffentliche Adresse (APP_URL) gesetzt und in Produktion HTTPS",
+      "uploadsNotPublic": "Uploads liegen nicht im öffentlichen Ordner",
+      "auditAppendOnly": "Protokoll ist unveränderlich (Datenbank-Trigger)",
+      "migrations": "Keine fehlgeschlagene Datenbankmigration",
+      "productionMode": "Läuft im Produktionsmodus",
+      "RUNTIME_CHECKS_FAILED": "Prüfungen konnten nicht ausgeführt werden (siehe Serverprotokoll)"
     }
   },
   "sepa": {
@@ -10524,6 +10538,7 @@
       "71": "Leichter Schneefall",
       "73": "Mäßiger Schneefall",
       "75": "Starker Schneefall",
+      "77": "Schneegriesel",
       "80": "Leichter Regenschauer",
       "81": "Mäßiger Regenschauer",
       "82": "Heftiger Regenschauer",
@@ -10635,7 +10650,11 @@
       "save": "Speichern",
       "cancel": "Abbrechen",
       "created": "Eintrag angelegt.",
-      "updated": "Eintrag aktualisiert."
+      "updated": "Eintrag aktualisiert.",
+      "member": "Mitglied (optional)",
+      "memberNone": "Keine Verknüpfung mit einem Mitglied",
+      "memberHistorical": "Bisherige Mitgliedsverknüpfung (nicht mehr aktiv)",
+      "memberHelp": "Wählen Sie das Mitglied, falls die Person Vereinsmitglied ist; ein leeres Namensfeld wird mit dem Mitgliedsnamen gefüllt."
     },
     "letter": {
       "title": "Vorlage für Gebührenbefreiungsantrag",
@@ -10662,7 +10681,8 @@
       "dueCount": "{count, plural, one {Bei # Person ist die Einsichtnahme in das Führungszeugnis fällig oder läuft in 3 Monaten ab.} other {Bei # Personen ist die Einsichtnahme in das Führungszeugnis fällig oder läuft in 3 Monaten ab.}}"
     },
     "errors": {
-      "notFound": "Eintrag nicht gefunden."
+      "notFound": "Eintrag nicht gefunden.",
+      "memberNotFound": "Das gewählte Mitglied wurde nicht gefunden oder ist nicht aktiv."
     },
     "validation": {
       "personNameRequired": "Name ist erforderlich.",
@@ -10674,6 +10694,10 @@
       "nextDueDateInvalid": "Gültiges Fälligkeitsdatum auswählen (JJJJ-MM-TT).",
       "activityEndedAtInvalid": "Gültiges Tätigkeitsendedatum auswählen (JJJJ-MM-TT).",
       "dateInvalid": "Ungültiges Datumsformat."
+    },
+    "access": {
+      "organization": "Liest Name und Ort der Organisation für das Gebührenbefreiungsschreiben.",
+      "members": "Liest beim Verknüpfen eines Eintrags mit einem Mitglied die Mitgliederliste (Name, Mitgliedsnummer) und prüft das gewählte Mitglied."
     }
   }
 }

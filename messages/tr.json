@@ -3468,7 +3468,9 @@
     "errors": {
       "unknownRule": "Kural bulunamadı.",
       "noTask": "Bu kural için görev önerisi yok.",
-      "noFinding": "Güncel bir bulgu yok; sayfayı yenileyin."
+      "noFinding": "Güncel bir bulgu yok; sayfayı yenileyin.",
+      "tasksUnavailable": "Görevler modülü açık değil; önce Modül Yönetimi'nden etkinleştirin.",
+      "tasksForbidden": "Görev oluşturma yetkiniz yok."
     },
     "ui": {
       "yearLabel": "Yıl",
@@ -3480,7 +3482,9 @@
       "downloadExport": "{format} indir",
       "computedValue": "Hesaplanan değer",
       "askAdvisorLink": "Vergi danışmanı erişimi"
-    }
+    },
+    "draftOnly": "Kontrol kuralları henüz hukuki incelemeden geçmedi; yönetici onayladıktan sonra burada görünecek.",
+    "draftOnlyAdmin": "Tüm kurallar taslak durumunda (hukuki inceleme bekliyor). Önizleme ile sonuçları görebilirsiniz; kurallar incelenip onaylanınca herkese gösterilir."
   },
   "courses": {
     "module": {
@@ -9040,6 +9044,16 @@
           }
         }
       }
+    },
+    "checks": {
+      "authSecret": "Uygulama sırrı (AUTH_SECRET) en az 32 karakter",
+      "secretEncryption": "Kayıtlı sırlar şifrelenebiliyor",
+      "appUrlHttps": "Genel adres (APP_URL) tanımlı ve üretimde HTTPS",
+      "uploadsNotPublic": "Yüklemeler herkese açık klasörde değil",
+      "auditAppendOnly": "Denetim kaydı değiştirilemez (veritabanı tetikleyicileri)",
+      "migrations": "Başarısız veritabanı göçü yok",
+      "productionMode": "Üretim modunda çalışıyor",
+      "RUNTIME_CHECKS_FAILED": "Denetimler çalıştırılamadı (sunucu günlüğüne bakın)"
     }
   },
   "sepa": {
@@ -10524,6 +10538,7 @@
       "71": "Hafif Kar Yağışlı",
       "73": "Kar Yağışlı",
       "75": "Yoğun Kar Yağışlı",
+      "77": "Kar Taneleri",
       "80": "Hafif Sağanak",
       "81": "Sağanak Yağış",
       "82": "Şiddetli Sağanak",
@@ -10635,7 +10650,11 @@
       "save": "Kaydet",
       "cancel": "Vazgeç",
       "created": "İbraz kaydı oluşturuldu.",
-      "updated": "İbraz kaydı güncellendi."
+      "updated": "İbraz kaydı güncellendi.",
+      "member": "Üye (isteğe bağlı)",
+      "memberNone": "Üyeyle ilişkilendirme yok",
+      "memberHistorical": "Önceki üye bağlantısı (artık etkin değil)",
+      "memberHelp": "Kişi derneğin üyesiyse seçin; ad alanı boşsa üyenin adıyla doldurulur."
     },
     "letter": {
       "title": "Harç Muafiyet Belgesi Şablonu",
@@ -10662,7 +10681,8 @@
       "dueCount": "{count, plural, one {# eğitmen/gönüllünün adli sicil ibraz süresi doldu veya 3 ay içinde dolacak.} other {# eğitmen/gönüllünün adli sicil ibraz süresi doldu veya 3 ay içinde dolacak.}}"
     },
     "errors": {
-      "notFound": "İbraz kaydı bulunamadı."
+      "notFound": "İbraz kaydı bulunamadı.",
+      "memberNotFound": "Seçilen üye bulunamadı veya etkin değil."
     },
     "validation": {
       "personNameRequired": "Ad soyad alanı zorunludur.",
@@ -10674,6 +10694,10 @@
       "nextDueDateInvalid": "Geçerli bir gelecek ibraz tarihi seçiniz (YYYY-AA-GG).",
       "activityEndedAtInvalid": "Geçerli bir faaliyet bitiş tarihi seçiniz (YYYY-AA-GG).",
       "dateInvalid": "Geçersiz tarih formatı."
+    },
+    "access": {
+      "organization": "Harç muafiyeti yazısında kurum adı ve şehri okunur.",
+      "members": "Kayıt bir üyeyle ilişkilendirilirken üye listesi (ad, üye numarası) okunur ve seçilen üye doğrulanır."
     }
   }
 }

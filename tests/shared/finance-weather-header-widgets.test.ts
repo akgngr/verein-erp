@@ -26,8 +26,9 @@ test("header widgets reuse authorized server actions without background polling 
   const finance = read("src/modules/finance/widgets/rates-header.tsx");
   const weather = read("src/modules/weather/widgets/current-header.tsx");
   assert.match(finance, /fetchExchangeRatesAction/);
-  assert.match(weather, /searchCityWeatherAction/);
-  assert.match(weather, /Frankfurt am Main/);
+  // #585: Widget derneğin şehrini kullanır (kurum profili); sabit şehir yok.
+  assert.match(weather, /fetchOrganizationWeatherAction/);
+  assert.doesNotMatch(weather, /Frankfurt am Main/);
   for (const source of [finance, weather]) {
     assert.doesNotMatch(source, /setInterval|setTimeout|navigator\.geolocation|Math\.random|@heroui\/react/);
     assert.match(source, /motion-reduce:animate-none/);

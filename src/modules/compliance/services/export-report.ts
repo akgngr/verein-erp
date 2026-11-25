@@ -5,14 +5,23 @@ export const COMPLIANCE_DISCLAIMER = {
   de: "Interne Checkliste, keine Steuerberatung.",
 } as const;
 
-export function formatComputedValue(facts: Record<string, unknown>): string {
-  const keys = ["value", "count", "daysUntil", "amountEur", "ratio"] as const;
+const FACT_KEYS = ["value", "count", "daysUntil", "amountEur", "ratio"] as const;
+
+/** #585: Hesaplanan değer etiketleri dile göre (önceden Türkçe/Almanca metinde İngilizce "value: 0" görünüyordu). */
+const FACT_LABELS: Record<"tr" | "de", Record<(typeof FACT_KEYS)[number] | "yes" | "no", string>> = {
+  tr: { value: "Değer", count: "Adet", daysUntil: "Kalan gün", amountEur: "Tutar (€)", ratio: "Oran", yes: "evet", no: "hayır" },
+  de: { value: "Wert", count: "Anzahl", daysUntil: "Verbleibende Tage", amountEur: "Betrag (€)", ratio: "Quote", yes: "ja", no: "nein" },
+};
+
+export function formatComputedValue(facts: Record<string, unknown>, lang: "tr" | "de" = "de"): string {
+  const labels = FACT_LABELS[lang];
+  const number = new Intl.NumberFormat(lang === "de" ? "de-DE" : "tr-TR", { maximumFractionDigits: 2 });
   const parts: string[] = [];
-  for (const k of keys) {
+  for (const k of FACT_KEYS) {
     const v = facts[k];
-    if (typeof v === "number" || typeof v === "string" || typeof v === "boolean") {
-      parts.push(`${k}: ${String(v)}`);
-    }
+    if (typeof v === "number") parts.push(`${labels[k]}: ${number.format(v)}`);
+    else if (typeof v === "boolean") parts.push(`${labels[k]}: ${v ? labels.yes : labels.no}`);
+    else if (typeof v === "string") parts.push(`${labels[k]}: ${v}`);
   }
   return parts.length > 0 ? parts.join(", ") : "—";
 }
@@ -65,7 +74,7 @@ export function buildComplianceExportMarkdown(params: {
     }
     for (const f of row.findings) {
       const msg = f.message ? f.message[lang] : f.status;
-      const val = formatComputedValue(f.facts);
+      const val = formatComputedValue(f.facts, lang);
       lines.push(
         `| ${row.rule.title[lang]} | v${row.rule.version} | ${row.rule.effective.from} | ${f.status} | ${val} | ${norms} | ${msg} (${disclaimer}) |`,
       );

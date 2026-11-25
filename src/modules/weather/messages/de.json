@@ -73,7 +73,8 @@
     "95": "Gewitter",
     "96": "Gewitter mit leichtem Hagel",
     "99": "Gewitter mit starkem Hagel",
-    "fallback": "Wechselhaft"
+    "fallback": "Wechselhaft",
+    "77": "Schneegriesel"
   },
   "secretary": {
     "dailyForecast": "Heute {temp}°, {cond}.",
