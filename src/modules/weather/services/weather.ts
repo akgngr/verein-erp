@@ -52,6 +52,7 @@ export const WMO_CODES: Record<number, WeatherConditionInfo> = {
   71: { code: 71, tr: "Hafif Kar Yağışlı", de: "Leichter Schneefall", icon: "snow", isAdverse: true },
   73: { code: 73, tr: "Kar Yağışlı", de: "Mäßiger Schneefall", icon: "snow", isAdverse: true },
   75: { code: 75, tr: "Yoğun Kar Yağışlı", de: "Starker Schneefall", icon: "snow", isAdverse: true },
+  77: { code: 77, tr: "Kar Taneleri", de: "Schneegriesel", icon: "snow", isAdverse: true },
   80: { code: 80, tr: "Hafif Sağanak", de: "Leichter Regenschauer", icon: "rain", isAdverse: true },
   81: { code: 81, tr: "Sağanak Yağış", de: "Mäßiger Regenschauer", icon: "rain", isAdverse: true },
   82: { code: 82, tr: "Şiddetli Sağanak", de: "Heftiger Regenschauer", icon: "rain", isAdverse: true },
@@ -82,10 +83,24 @@ interface CacheEntry {
 }
 const weatherCache = new Map<string, CacheEntry>();
 
+/**
+ * #585: Önbellekler sınırlıdır (kullanıcı şehir aramasıyla sınırsız büyüyemez). Map ekleme sırasını korur;
+ * sınır aşılınca en eski kayıt atılır.
+ */
+export const WEATHER_CACHE_LIMIT = 200;
+export function boundedSet<K, V>(map: Map<K, V>, key: K, value: V, limit = WEATHER_CACHE_LIMIT): void {
+  map.delete(key);
+  map.set(key, value);
+  while (map.size > limit) {
+    const oldest = map.keys().next().value as K;
+    map.delete(oldest);
+  }
+}
+
 export function setCachedWeatherData(data: WeatherData): void {
   const roundedLat = Number(data.latitude.toFixed(2));
   const roundedLon = Number(data.longitude.toFixed(2));
-  weatherCache.set(`${roundedLat},${roundedLon}`, { data, timestamp: Date.now() });
+  boundedSet(weatherCache, `${roundedLat},${roundedLon}`, { data, timestamp: Date.now() });
 }
 
 export function clearWeatherCache(): void {
@@ -169,6 +184,39 @@ export async function searchCityCoordinates(
   } catch {
     return null;
   }
+}
+
+const geocodeCache = new Map<string, { name: string; lat: number; lon: number } | null>();
+
+/**
+ * #585: Derneğin şehri (kurum profili) → koordinatlar. Hazır listede yoksa bir kez çevrimiçi aranır ve sonuç
+ * (sınırlı) önbellekte tutulur. Şehir yoksa veya bulunamazsa varsayılan konum kullanılır. Önceden sayfa, kart ve
+ * başlık widget'ı her zaman Frankfurt'u gösteriyordu.
+ */
+export async function resolveOrganizationLocation(options: { allowNetwork?: boolean } = {}): Promise<{ name: string; lat: number; lon: number }> {
+  const fallback = { name: DEFAULT_COORDINATES.city, lat: DEFAULT_COORDINATES.latitude, lon: DEFAULT_COORDINATES.longitude };
+  let city: string | null = null;
+  try {
+    const { getOrganizationProfile } = await import("@/modules/organization/server");
+    city = (await getOrganizationProfile())?.city?.trim() || null;
+  } catch {
+    return fallback;
+  }
+  if (!city) return fallback;
+  const key = city.toLocaleLowerCase("de");
+  if (geocodeCache.has(key)) return geocodeCache.get(key) ?? fallback;
+  const preset = findCityCoordinates(city);
+  if (preset) return preset;
+  if (options.allowNetwork === false) return fallback;
+  const found = await searchCityCoordinates(city);
+  boundedSet(geocodeCache, key, found);
+  return found ?? fallback;
+}
+
+/** Derneğin şehri için hava durumu (sayfa, kart, başlık widget'ı). */
+export async function getOrganizationWeather(): Promise<WeatherData | null> {
+  const location = await resolveOrganizationLocation();
+  return getWeatherData(location.lat, location.lon, location.name);
 }
 
 export const DEFAULT_COORDINATES = {
@@ -282,7 +330,7 @@ export async function getWeatherData(
       updatedAt: new Date().toISOString(),
     };
 
-    weatherCache.set(cacheKey, { data: result, timestamp: now });
+    boundedSet(weatherCache, cacheKey, { data: result, timestamp: now });
     return result;
   } catch {
     // Ağ arızasında veya hatada null dön; sahte veri döndürme ve hatayı önbelleğe alma (#385)

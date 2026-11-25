@@ -1,13 +1,13 @@
 import { getTranslations } from "next-intl/server";
 
 import { PageHeader } from "@/shared/components/ui/page-header";
-import { getWeatherData } from "../services/weather";
+import { getOrganizationWeather } from "../services/weather";
 import { WeatherDetails } from "../components/weather-details";
 
 export async function WeatherView() {
   const [t, initialWeather] = await Promise.all([
     getTranslations("weather"),
-    getWeatherData(),
+    getOrganizationWeather(),
   ]);
 
   return (
