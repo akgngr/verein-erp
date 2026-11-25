@@ -4,6 +4,7 @@ import { getDb } from "@/shared/db";
 import {
   PERMISSION_ACTIONS,
   effectiveActions,
+  registerPermissionPolicyLoader,
   setActivePermissionPolicy,
   type PermissionAction,
   type PermissionDefinition,
@@ -60,6 +61,10 @@ export async function loadPermissionPolicy(force=false): Promise<PermissionPolic
   setActivePermissionPolicy(cache.policy);
   return cache.policy;
 }
+
+// #582: Arka plan çalışanı (automation worker) her görevden önce politikayı bu yükleyiciyle tazeler
+// (shared/permissions/define.ts `refreshActivePermissionPolicy`). Önbellek süresi web ile aynıdır.
+registerPermissionPolicyLoader(() => loadPermissionPolicy());
 
 export async function listRoleDirectory(): Promise<RoleInfo[]> {
   await loadPermissionPolicy();

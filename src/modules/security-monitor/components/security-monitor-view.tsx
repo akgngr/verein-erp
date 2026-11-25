@@ -36,7 +36,7 @@ interface Alert {
   status: string;
 }
 
-export function SecurityMonitorView() {
+export function SecurityMonitorView({ canRun = false }: { canRun?: boolean }) {
   const t = useTranslations("security-monitor.monitor");
   const [statistics, setStatistics] = useState<TestStatistics | null>(null);
   const [recentRuns, setRecentRuns] = useState<TestRun[]>([]);
@@ -171,14 +171,16 @@ export function SecurityMonitorView() {
           <ShieldCheck className="h-6 w-6 text-accent" />
           <h1 className="text-xl font-bold">{t("title")}</h1>
         </div>
-        <ActionButton
-          size="md"
-          isPending={running}
-          startIcon={<PlayCircle className="h-4 w-4" />}
-          onPress={() => void runTests()}
-        >
-          {t("runTests")}
-        </ActionButton>
+        {canRun ? (
+          <ActionButton
+            size="md"
+            isPending={running}
+            startIcon={<PlayCircle className="h-4 w-4" />}
+            onPress={() => void runTests()}
+          >
+            {t("runTests")}
+          </ActionButton>
+        ) : null}
       </div>
 
       {queueMessage ? (

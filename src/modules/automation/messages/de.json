@@ -43,7 +43,8 @@
     "cancel": "Abbrechen",
     "retry": "Erneut versuchen",
     "cancelled": "Aufgabe abgebrochen.",
-    "retried": "Aufgabe erneut eingereiht."
+    "retried": "Aufgabe erneut eingereiht.",
+    "detailsHidden": "Technische Details sind nur für Rollen sichtbar, die Automationen verwalten dürfen."
   },
   "access": {
     "mailings": "Zur Registrierung der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis.",

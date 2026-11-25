@@ -73,7 +73,7 @@ export interface InventoryAbilities {
   canDelete: boolean;
 }
 
-export type InventoryActionError = "forbidden" | "validation" | "notFound" | "unknown";
+export type InventoryActionError = "forbidden" | "assetForbidden" | "validation" | "notFound" | "unknown";
 
 export type InventoryActionResult = { ok: true } | { ok: false; error: InventoryActionError };
 

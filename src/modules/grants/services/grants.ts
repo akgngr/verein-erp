@@ -6,6 +6,8 @@ import { ActionError } from "@/modules/auth/server";
 import { listProjectBookings, type ProjectBookingRow } from "@/modules/accounting/server";
 import { getDb } from "@/shared/db";
 
+import { payoutReceivedChangeError } from "../lib/payout-guard";
+
 export type Actor = { id: string; label: string };
 export const STATUSES = ["PLANNED", "APPLIED", "APPROVED", "ACTIVE", "REPORTED", "CLOSED", "REJECTED"] as const;
 /** Bu oranı aşan kalem sapmaları raporda işaretlenir (çoğu ANBest-P: %20). */
@@ -78,10 +80,19 @@ export async function saveLines(grantId: string, lines: { label: string; planned
 }
 
 export async function addPayout(grantId: string, input: { requestedAt: string; amountCents: number; receivedAt: string | null; note: string | null }) {
-  await getDb().grantPayout.create({ data: { grantId, requestedAt: toDate(input.requestedAt), amountCents: input.amountCents, receivedAt: input.receivedAt ? toDate(input.receivedAt) : null, note: input.note } });
+  return getDb().grantPayout.create({ data: { grantId, requestedAt: toDate(input.requestedAt), amountCents: input.amountCents, receivedAt: input.receivedAt ? toDate(input.receivedAt) : null, note: input.note }, select: { id: true } });
 }
-export async function setPayoutReceived(id: string, receivedAt: string | null) {
-  await getDb().grantPayout.update({ where: { id }, data: { receivedAt: receivedAt ? toDate(receivedAt) : null } });
+/**
+ * Ödemenin alındı tarihini ayarlar. #582: Ödeme verilen hibeye ait olmalıdır (IDOR) ve alınmış bir ödemenin
+ * tarihi boşaltılamaz; aksi halde "alınmadı" yapılıp ardından silinerek GoBD silme koruması atlatılabilirdi.
+ */
+export async function setPayoutReceived(id: string, grantId: string, receivedAt: string | null) {
+  const db = getDb();
+  const existing = await db.grantPayout.findUnique({ where: { id }, select: { grantId: true, receivedAt: true } });
+  const error = payoutReceivedChangeError(existing, grantId, receivedAt);
+  if (error || !existing) throw new ActionError(error ?? "grants.errors.notFound");
+  await db.grantPayout.update({ where: { id }, data: { receivedAt: receivedAt ? toDate(receivedAt) : null } });
+  return { before: existing.receivedAt };
 }
 export async function deletePayout(id: string, grantId?: string) {
   const db = getDb();
@@ -109,7 +120,14 @@ export type GrantReport = {
   incomes: (ProjectBookingRow & { counted: number })[];
   missingReceipts: number;
   linked: boolean;
+  /** #582: Muhasebe görme yetkisi olmayan kullanıcıda fiş listeleri gizlenir; yalnız toplamlar görünür. */
+  bookingDetailsHidden?: boolean;
 };
+
+/** #582: Fiş ayrıntıları muhasebe verisidir; muhasebe yetkisi olmayan hibe görüntüleyicisinden çıkarılır. */
+export function redactBookingDetails(report: GrantReport): GrantReport {
+  return { ...report, vouchers: [], incomes: [], bookingDetailsHidden: true };
+}
 
 /**
  * Zahlenmäßiger Nachweis: projenin dönem fişleri kalemlere kategoriyle dağıtılır (eşlenmeyen → "Diğer"),

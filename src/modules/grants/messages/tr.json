@@ -98,7 +98,8 @@
     "amount": "Tutar",
     "receipt": "Belge",
     "narrative": "Faaliyet raporu (Sachbericht)",
-    "narrativePlaceholder": "Yapılan faaliyetler, ulaşılan hedefler, katılımcı sayıları, plandan sapmaların gerekçeleri …"
+    "narrativePlaceholder": "Yapılan faaliyetler, ulaşılan hedefler, katılımcı sayıları, plandan sapmaların gerekçeleri …",
+    "detailsHidden": "Fiş ayrıntıları muhasebe verisidir ve yalnız muhasebe görme yetkisiyle gösterilir. Yukarıdaki toplamlar tüm fişleri içerir."
   },
   "financing": {
     "approvedCents": "Onaylanan hibe",

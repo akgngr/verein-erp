@@ -70,6 +70,7 @@ export async function setScheduleEnabled(id: string, enabled: boolean) {
   });
 }
 
-export async function deleteSchedule(id: string) {
-  await getDb().automationSchedule.deleteMany({ where: { id } });
+/** Silinen kayıt sayısı (0: zaten yok). */
+export async function deleteSchedule(id: string): Promise<number> {
+  return (await getDb().automationSchedule.deleteMany({ where: { id } })).count;
 }

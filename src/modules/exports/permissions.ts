@@ -7,7 +7,9 @@ export const exportsPermissions = definePermissions("exports", {
   SECRETARY: ["view", "create", "delete"],
   TREASURER: ["view", "create", "delete"],
   AUDITOR: ["view", "create", "delete"],
-  TAX_ADVISOR: [],
+  // #582: Vergi danışmanı uyum raporunu oluşturabiliyor ama indiremiyordu (403). Dosyalar sahibine bağlı
+  // sorgulandığı için yalnız KENDİ dosyalarını görür/siler; `create` yok (YZ dışa aktarım araçları kapalı).
+  TAX_ADVISOR: ["view", "delete"],
   TEACHER: ["view", "create", "delete"],
   VIEWER: ["view", "create", "delete"],
 });

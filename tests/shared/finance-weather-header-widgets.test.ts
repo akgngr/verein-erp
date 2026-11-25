@@ -15,8 +15,10 @@ test("finance and weather register optional permission-scoped header widgets", (
     assert.doesNotMatch(declaration, /@heroui\/react|fetch\(|localStorage/);
     const config = read(`src/modules/${moduleId}/module.config.ts`);
     const releases = JSON.parse(read(`src/modules/${moduleId}/releases.json`)) as { releases: Array<{ version: string }> };
-    assert.equal(releases.releases[0]?.version, "0.2.0");
-    assert.match(config, /version: "0.2.0"/);
+    // Widget'lar 0.2.0 ile geldi; sonraki yamalar (ör. #582 sayfa yetkileri) sürümü ilerletebilir.
+    const configVersion = /version: "([^"]+)"/.exec(config)?.[1];
+    assert.equal(releases.releases[0]?.version, configVersion);
+    assert.ok(releases.releases.some((release) => release.version === "0.2.0"));
   }
 });
 

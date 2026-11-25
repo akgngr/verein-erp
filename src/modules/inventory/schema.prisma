@@ -14,9 +14,13 @@ model InventoryItem {
   trackAsAsset     Boolean   @default(false)
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
+  /// #582: Yumuşak silme; kayıt denetim ve AfA izlenebilirliği için korunur, listelerden kalkar.
+  deletedAt        DateTime?
+  deletedById      String?
 
   @@index([category])
   @@index([status])
   @@index([assignedMemberId])
+  @@index([deletedAt])
   @@map("inventory_items")
 }
