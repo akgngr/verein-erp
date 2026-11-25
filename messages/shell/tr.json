@@ -106,6 +106,7 @@
     "menuDuzeni": "Menü düzeni"
   },
   "sidebar": {
+    "brandShort": "Dernek ERP",
     "brand": "Dernek Yönetim",
     "collapse": "Menüyü daralt",
     "expand": "Menüyü genişlet",

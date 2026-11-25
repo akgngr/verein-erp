@@ -123,7 +123,6 @@ const USER_MENU_PLACEMENT = {
   collapsed: "right bottom",
   expanded: "top start",
 } as const;
-const BRAND = "Dernek ERP"; // i18n-ignore
 
 /** Sidebar'da sabit "Panel" öğesi (yetki gerektirmez). */
 const PANEL_ITEM: NavItem = {
@@ -696,10 +695,10 @@ function Brand({ collapsed = false }: { collapsed?: boolean }) {
       </div>
       <div className={collapsed ? "sr-only" : "flex flex-col min-w-0"}>
         <span className="text-[15px] font-semibold tracking-tight text-white truncate">
-          {BRAND}
+          {tSidebar("brandShort")}
         </span>
         <span className="text-[11px] font-medium text-[#a9bcae] leading-none truncate">
-          {tSidebar.has("brand") ? tSidebar("brand") : "Yönetim Sistemi"}
+          {tSidebar("brand")}
         </span>
       </div>
     </div>
@@ -907,12 +906,13 @@ function MobileSidebar({
   onSignOut?: () => Promise<void>;
 }) {
   const { mobileOpen, setMobileOpen } = useSidebar();
+  const tSidebar = useTranslations("sidebar");
   return (
     <Drawer>
       <Drawer.Backdrop isOpen={mobileOpen} onOpenChange={setMobileOpen}>
         <Drawer.Content placement="left">
           <Drawer.Dialog
-            aria-label={BRAND}
+            aria-label={tSidebar("brandShort")}
             className="sidebar-surface h-full max-h-dvh w-[min(288px,90vw)] rounded-none p-0"
           >
             {({ close }) => (
@@ -952,8 +952,8 @@ function MobileHeader({ widgetAccess }: { widgetAccess?: HeaderWidgetAccess }) {
       <SidebarTrigger />
       <Building2 className="h-4 w-4 text-accent" aria-hidden />
       <span className="truncate text-sm font-semibold text-foreground">
-        {BRAND}
-        {tSidebar.has("brand") ? ` · ${tSidebar("brand")}` : ""}
+        {tSidebar("brandShort")}
+        {` · ${tSidebar("brand")}`}
       </span>
       <div className="ml-auto flex min-w-0 shrink-0 items-center gap-2">
         {widgetAccess ? <HeaderWidgetSlot access={widgetAccess} mobile /> : null}

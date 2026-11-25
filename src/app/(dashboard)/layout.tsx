@@ -93,7 +93,9 @@ export default async function DashboardLayout({
                 dateLabel={dateLabel}
                 widgetAccess={widgetAccess}
               />
-              <main className="workspace-main flex-1 px-4 py-6 md:px-7 lg:py-8">
+              {/* #586: Alt boşluk (güvenli alan dahil): yüzen AI/geri bildirim düğmeleri son satırları,
+                sayfalamayı ve kaydet düğmelerini örtmez. */}
+              <main className="workspace-main flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] md:px-7 lg:pt-8 lg:pb-28">
                 {children}
               </main>
             </div>

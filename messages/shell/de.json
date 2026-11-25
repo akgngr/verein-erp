@@ -106,6 +106,7 @@
     "menuDuzeni": "Menüanordnung"
   },
   "sidebar": {
+    "brandShort": "Verein ERP",
     "brand": "Vereinsverwaltung",
     "collapse": "Menü einklappen",
     "expand": "Menü ausklappen",
