@@ -132,4 +132,11 @@ test("F1-5: donor schema permits creating PERSON from copyFromMemberId without m
   );
   assert.equal(donorActionsSrc.includes("id: donorCreateSchema.shape.type"), false);
   assert.equal(donorActionsSrc.includes("donorUpdateSchema.extend({ id: z.string().min(1) })"), true);
+
+  const donorFormSrc = await readFile(
+    path.resolve(process.cwd(), "src/modules/donations/components/donor-form.tsx"),
+    "utf8",
+  );
+  assert.match(donorFormSrc, /const editId = initial\?\.id \?\? values\.id;/);
+  assert.equal(donorFormSrc.includes('if (mode === "edit" && values.id)'), false);
 });

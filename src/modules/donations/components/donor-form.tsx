@@ -76,8 +76,10 @@ export function DonorForm({
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
-    if (mode === "edit" && values.id) {
-      const result = await updateDonorAction({ ...values, id: values.id });
+    if (mode === "edit") {
+      const editId = initial?.id ?? values.id;
+      if (!editId) return;
+      const result = await updateDonorAction({ ...values, id: editId });
       if (!result.ok) {
         setFormError(applyActionResult(result, form.setError));
         return;
@@ -86,7 +88,7 @@ export function DonorForm({
       if (closeDrawer) {
         closeDrawer();
       } else {
-        router.push(`/bagislar/bagiscilar/${values.id}`);
+        router.push(`/bagislar/bagiscilar/${editId}`);
         router.refresh();
       }
       return;
