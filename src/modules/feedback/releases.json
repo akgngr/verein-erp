@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.1.7",
+      "version": "1.1.8",
       "date": "2026-11-25",
       "title": {
         "tr": "Geri bildirim bağlantılarında protokol doğrulaması",
@@ -13,6 +13,26 @@
           "type": "security",
           "tr": "Geri bildirim URL alanlarında yalnızca güvenli http/https protokollerine izin veriliyor (#573).",
           "de": "Feedback-URLs lassen nun ausschließlich sichere http/https-Protokolle zu (#573)."
+        }
+      ]
+    },
+    {
+      "version": "1.1.7",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Kullanıcı silmede anonimleştirme",
+        "de": "Anonymisierung beim Löschen von Benutzern"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Kullanıcı silinince geri bildirimleri anonimleştirilir ve ekran görüntüleri silinir (DSGVO md. 17).",
+          "de": "Beim Löschen eines Benutzers werden seine Rückmeldungen anonymisiert und Screenshots gelöscht (DSGVO Art. 17)."
+        },
+        {
+          "type": "fix",
+          "tr": "Kaydı oluşturan kişi kendi ekran görüntüsünü görebilir.",
+          "de": "Meldende sehen ihren eigenen Screenshot."
         }
       ]
     },

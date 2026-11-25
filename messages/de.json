@@ -2118,7 +2118,8 @@
       "reportNotFound": "Bericht nicht gefunden.",
       "staleProposal": "Der Datensatz wurde geändert oder der Vorschlag ist abgelaufen. Bitte erstellen Sie einen neuen Vorschlag.",
       "cloudIntentRequired": "Beim Cloud-Anbieter sind nur feste Anfragen wie „Mitgliederstatistik 2026“, „Spendenübersicht 2026“ oder „Beitragsdatei 2026“ verfügbar. Wählen Sie für Freitext einen lokalen Anbieter.",
-      "cloudDisabled": "Die Cloud-Verarbeitung ist ausgeschaltet. Die Administration kann ein lokales Modell wählen oder Einstellungen → KI-Assistent → Cloud-Datenrichtlinie ändern."
+      "cloudDisabled": "Die Cloud-Verarbeitung ist ausgeschaltet. Die Administration kann ein lokales Modell wählen oder Einstellungen → KI-Assistent → Cloud-Datenrichtlinie ändern.",
+      "providerNotAllowed": "Dieser Anbieter ist durch die angewendete Datenschutz-Voreinstellung nicht erlaubt (Einstellungen → Datenschutz)."
     },
     "panel": {
       "title": "Assistent",
@@ -2554,6 +2555,16 @@
         "label": "Sicherheits- & Änderungsprotokoll",
         "description": "Unveränderliche Prüfspuren und Sicherheitsereignisse."
       }
+    },
+    "details": {
+      "open": "Details",
+      "title": "Änderungsdetails",
+      "before": "Vorher",
+      "after": "Nachher",
+      "none": "Keine Angaben"
+    },
+    "errors": {
+      "notFound": "Protokolleintrag nicht gefunden."
     }
   },
   "auth": {
@@ -2687,7 +2698,8 @@
       "cancel": "Abbrechen",
       "retry": "Erneut versuchen",
       "cancelled": "Aufgabe abgebrochen.",
-      "retried": "Aufgabe erneut eingereiht."
+      "retried": "Aufgabe erneut eingereiht.",
+      "detailsHidden": "Technische Details sind nur für Rollen sichtbar, die Automationen verwalten dürfen."
     },
     "access": {
       "mailings": "Zur Registrierung der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis.",
@@ -3393,7 +3405,7 @@
       }
     },
     "access": {
-      "mailings": "Um im Webhook die (verschlüsselten) Bot-Einstellungen zu lesen."
+      "mailings": "Liest im Webhook die (verschlüsselten) Bot-Einstellungen und schreibt die per /start bzw. /stop erteilte oder widerrufene Telegram-Einwilligung in den Datensatz der Person."
     },
     "replies": {
       "linked": "✅ Abo bestätigt. Zum Beenden /stop senden.",
@@ -3480,7 +3492,9 @@
     "errors": {
       "unknownRule": "Regel nicht gefunden.",
       "noTask": "Für diese Regel gibt es keinen Aufgabenvorschlag.",
-      "noFinding": "Kein aktueller Befund; bitte Seite neu laden."
+      "noFinding": "Kein aktueller Befund; bitte Seite neu laden.",
+      "tasksUnavailable": "Das Aufgabenmodul ist nicht aktiv; bitte zuerst in der Modulverwaltung aktivieren.",
+      "tasksForbidden": "Sie dürfen keine Aufgaben anlegen."
     },
     "ui": {
       "yearLabel": "Jahr",
@@ -3492,7 +3506,9 @@
       "downloadExport": "{format} herunterladen",
       "computedValue": "Berechneter Wert",
       "askAdvisorLink": "Steuerberatung verwalten"
-    }
+    },
+    "draftOnly": "Die Prüfregeln sind noch nicht rechtlich geprüft; sie erscheinen hier nach Freigabe durch die Verwaltung.",
+    "draftOnlyAdmin": "Alle Regeln sind Entwürfe (rechtliche Prüfung ausstehend). Mit der Vorschau sehen Sie die Ergebnisse; nach Prüfung und Freigabe werden sie allen angezeigt."
   },
   "courses": {
     "module": {
@@ -4070,7 +4086,10 @@
       "sourceMissing": "Quelldatensatz nicht gefunden oder Modul deaktiviert.",
       "notFound": "Eintrag nicht gefunden.",
       "summary": "Bitte mindestens 2 Zeichen eingeben.",
-      "title": "Der Titel muss mindestens 2 Zeichen lang sein."
+      "title": "Der Titel muss mindestens 2 Zeichen lang sein.",
+      "sourceForbidden": "Sie dürfen Kontakte aus dieser Quelle nicht sehen.",
+      "amount": "Der Betrag darf nicht negativ sein.",
+      "amountMax": "Der Betrag darf höchstens 20.000.000 € betragen."
     },
     "access": {
       "members": "Liest Name und Kontaktdaten der CRM-Kontakte aus dem Mitgliedsdatensatz (ohne Kopie).",
@@ -4106,7 +4125,8 @@
           }
         }
       }
-    }
+    },
+    "restricted": "Eingeschränkt (keine Berechtigung für das Quellmodul)"
   },
   "demo": {
     "module": {
@@ -5694,7 +5714,8 @@
       "amount": "Betrag",
       "receipt": "Beleg",
       "narrative": "Sachbericht",
-      "narrativePlaceholder": "Durchgeführte Maßnahmen, erreichte Ziele, Teilnehmendenzahlen, Begründung von Abweichungen …"
+      "narrativePlaceholder": "Durchgeführte Maßnahmen, erreichte Ziele, Teilnehmendenzahlen, Begründung von Abweichungen …",
+      "detailsHidden": "Belegdetails sind Buchhaltungsdaten und werden nur mit Leserecht für die Buchhaltung angezeigt. Die Summen oben enthalten alle Belege."
     },
     "financing": {
       "approvedCents": "Bewilligte Zuwendung",
@@ -5824,7 +5845,8 @@
       "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
       "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
       "notFound": "Der Inventareintrag wurde nicht gefunden. Möglicherweise wurde er gelöscht.",
-      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+      "assetForbidden": "Dieser Gegenstand wird in der Buchhaltung als Anlagegut (AfA) geführt. Für Änderungen an Name, Betrag, Datum, Ausmusterung oder AfA-Kennzeichen ist eine Schreibberechtigung in der Buchhaltung erforderlich."
     },
     "export": {
       "filePrefix": "inventar"
@@ -6370,7 +6392,8 @@
         "templateLanguage": "Vorlagensprache",
         "countryCode": "Standard-Ländervorwahl",
         "appSecret": "App Secret (Signatur der Benachrichtigungen)",
-        "verifyToken": "Verify-Token (identisch bei Meta eintragen, mind. 8 Zeichen)"
+        "verifyToken": "Verify-Token (identisch bei Meta eintragen, mind. 8 Zeichen)",
+        "utilityTemplateName": "Vorlage für Transaktionsnachrichten (Utility; Einzelnachrichten wie Signatur-Links, eine Variable '{{1}}' im Text)"
       },
       "telegram": {
         "botToken": "Bot-Token (BotFather)",
@@ -6479,6 +6502,14 @@
       "columnsHelp": "Zum Befüllen auf eine Spalte im Arbeitsbereich klicken, dann links einen Baustein wählen. Mobil werden Spalten untereinander angezeigt.",
       "designSettings": "Allgemeines Design",
       "selectHint": "Zum Bearbeiten auf einen Block im Arbeitsbereich klicken."
+    },
+    "unsubscribe": {
+      "title": "Newsletter abbestellen",
+      "confirm": "Möchten Sie keine Rundschreiben per E-Mail mehr erhalten?",
+      "button": "Abbestellen",
+      "done": "Sie wurden abgemeldet und erhalten keine Rundschreiben per E-Mail mehr.",
+      "unknown": "Dieser Abmeldelink ist ungültig.",
+      "unsupported": "Die Abmeldung konnte nicht automatisch gespeichert werden. Bitte wenden Sie sich an den Verein."
     }
   },
   "meetings": {
@@ -8561,7 +8592,9 @@
         "label": "Vereinsstammdaten",
         "description": "Registernummer, Steuernummer, Bankverbindungen und Briefkopf-Logo."
       }
-    }
+    },
+    "yes": "Ja",
+    "no": "Nein"
   },
   "progress": {
     "module": {
@@ -9051,6 +9084,16 @@
           }
         }
       }
+    },
+    "checks": {
+      "authSecret": "App-Geheimnis (AUTH_SECRET) mindestens 32 Zeichen",
+      "secretEncryption": "Gespeicherte Geheimnisse können verschlüsselt werden",
+      "appUrlHttps": "Öffentliche Adresse (APP_URL) gesetzt und in Produktion HTTPS",
+      "uploadsNotPublic": "Uploads liegen nicht im öffentlichen Ordner",
+      "auditAppendOnly": "Protokoll ist unveränderlich (Datenbank-Trigger)",
+      "migrations": "Keine fehlgeschlagene Datenbankmigration",
+      "productionMode": "Läuft im Produktionsmodus",
+      "RUNTIME_CHECKS_FAILED": "Prüfungen konnten nicht ausgeführt werden (siehe Serverprotokoll)"
     }
   },
   "sepa": {
@@ -9567,7 +9610,9 @@
       "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden).",
       "users": "Prüft das Vorhandensein eines Administratorkontos im Modul- und Workflow-Gesundheitscockpit.",
       "ai": "Liest den Status konfigurierter KI-Anbieter für Datenschutz-Voreinstellungen und den monatlichen Datenausgangsbericht.",
-      "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer."
+      "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer.",
+      "automation": "Liest im Modul-Gesundheitscockpit fehlgeschlagene Hintergrundaufgaben und den Worker-Heartbeat (keine Ein-/Ausgabedaten).",
+      "notifications": "Liest im Modul-Gesundheitscockpit, welche Benachrichtigungskanäle aktiv sind (keine Geheimnisse oder Einstellungen)."
     },
     "gate": {
       "manage": "Zur Modulverwaltung",
@@ -9668,7 +9713,9 @@
         "smallBusinessOff": "Regelbesteuerung",
         "presetOn": "Kategorien und Konten werden angelegt",
         "presetOff": "nein",
-        "note": "Nicht ausgewählte optionale Module werden deaktiviert (Daten bleiben erhalten)."
+        "note": "Daten nicht ausgewählter Module werden nicht gelöscht; deaktiviert wird nur, was Sie unten bestätigen.",
+        "willDisable": "Derzeit aktive, nicht ausgewählte Module: {modules}.",
+        "confirmDisable": "Diese Module deaktivieren (ohne Bestätigung bleiben sie aktiv)"
       },
       "back": "Zurück",
       "next": "Weiter",
@@ -9681,7 +9728,10 @@
         "profile": "Organisationsdaten erfassen",
         "accountingSettings": "Buchhaltungseinstellungen",
         "modulesPage": "Modulverwaltung",
-        "dashboard": "Zum Dashboard"
+        "dashboard": "Zum Dashboard",
+        "kept": "Aktiv gelassen, da nicht bestätigt: {modules}",
+        "mapped": "Leere Standardzuordnungen in den Buchhaltungseinstellungen (Kasse/Bank, Spenden- und Beitragskategorie) wurden ergänzt.",
+        "mappingFailed": "Die Buchhaltungs-Standardzuordnung war nicht möglich; bitte unter Buchhaltung → Einstellungen ergänzen."
       },
       "errors": {
         "accountingOff": "Für die Buchhaltungsvorbereitung muss das Modul Buchhaltung ausgewählt sein."
@@ -9822,7 +9872,11 @@
             "right": "Kopfzeile · rechts"
           }
         },
-        "resetSuccess": "Standardeinstellungen wiederhergestellt."
+        "resetSuccess": "Standardeinstellungen wiederhergestellt.",
+        "policy": {
+          "label": "Für alle erlaubt",
+          "toggle": "Widget {title} für alle Benutzer erlauben oder sperren"
+        }
       }
     },
     "readiness": {
@@ -9923,7 +9977,15 @@
       "apply": "Bestätigen und anwenden",
       "applying": "Wird angewendet…",
       "noChanges": "Das Profil ist bereits aktiv; keine Änderungen.",
-      "readOnly": "Zur Änderung sind Systemadministratorrechte erforderlich."
+      "readOnly": "Zur Änderung sind Systemadministratorrechte erforderlich.",
+      "blocked": "Voreinstellung nicht angewendet: Einige Moduländerungen sind wegen Abhängigkeiten oder fehlender Zugriffsfreigabe blockiert.",
+      "blockersTitle": "Vor dem Anwenden zu lösen",
+      "blockers": {
+        "requires": "{module} würde aktiviert, aber erforderliche Module bleiben deaktiviert: {modules}.",
+        "missing": "Für {module} erforderliche Module fehlen oder sind zu alt: {modules}.",
+        "approval": "Der Zugriff von {module} ist nicht freigegeben; bitte zuerst in der Modulverwaltung freigeben.",
+        "dependents": "{module} würde deaktiviert, aber abhängige Module bleiben aktiv: {modules}."
+      }
     },
     "egressUi": {
       "title": "Monatlicher Datenausgangsbericht",
@@ -10517,6 +10579,7 @@
       "71": "Leichter Schneefall",
       "73": "Mäßiger Schneefall",
       "75": "Starker Schneefall",
+      "77": "Schneegriesel",
       "80": "Leichter Regenschauer",
       "81": "Mäßiger Regenschauer",
       "82": "Heftiger Regenschauer",
@@ -10628,7 +10691,11 @@
       "save": "Speichern",
       "cancel": "Abbrechen",
       "created": "Eintrag angelegt.",
-      "updated": "Eintrag aktualisiert."
+      "updated": "Eintrag aktualisiert.",
+      "member": "Mitglied (optional)",
+      "memberNone": "Keine Verknüpfung mit einem Mitglied",
+      "memberHistorical": "Bisherige Mitgliedsverknüpfung (nicht mehr aktiv)",
+      "memberHelp": "Wählen Sie das Mitglied, falls die Person Vereinsmitglied ist; ein leeres Namensfeld wird mit dem Mitgliedsnamen gefüllt."
     },
     "letter": {
       "title": "Vorlage für Gebührenbefreiungsantrag",
@@ -10655,7 +10722,8 @@
       "dueCount": "{count, plural, one {Bei # Person ist die Einsichtnahme in das Führungszeugnis fällig oder läuft in 3 Monaten ab.} other {Bei # Personen ist die Einsichtnahme in das Führungszeugnis fällig oder läuft in 3 Monaten ab.}}"
     },
     "errors": {
-      "notFound": "Eintrag nicht gefunden."
+      "notFound": "Eintrag nicht gefunden.",
+      "memberNotFound": "Das gewählte Mitglied wurde nicht gefunden oder ist nicht aktiv."
     },
     "validation": {
       "personNameRequired": "Name ist erforderlich.",
@@ -10667,6 +10735,10 @@
       "nextDueDateInvalid": "Gültiges Fälligkeitsdatum auswählen (JJJJ-MM-TT).",
       "activityEndedAtInvalid": "Gültiges Tätigkeitsendedatum auswählen (JJJJ-MM-TT).",
       "dateInvalid": "Ungültiges Datumsformat."
+    },
+    "access": {
+      "organization": "Liest Name und Ort der Organisation für das Gebührenbefreiungsschreiben.",
+      "members": "Liest beim Verknüpfen eines Eintrags mit einem Mitglied die Mitgliederliste (Name, Mitgliedsnummer) und prüft das gewählte Mitglied."
     }
   }
 }

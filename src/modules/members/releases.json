@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.15.8",
+      "version": "1.15.9",
       "date": "2026-11-25",
       "title": {
         "tr": "Aidat korumaları, DSGVO dışa aktarım, silme temizliği ve düzeltme talebi paneli",
@@ -13,6 +13,21 @@
           "type": "fix",
           "tr": "Aidat fazla ödeme/işlem içi koruma, makbuz PDF tutarı ve denetim kaydı, mükerrer üye uyarısı, tam DSGVO dışa aktarımı, toplu içe aktarma tekilleştirme, silmede SEPA/portal temizliği ve üye düzeltme talebi onay paneli eklendi (#578, #577).",
           "de": "Überzahlungs-/Transaktionsschutz, Quittungs-PDF-Betrag & Audit, Duplikatwarnung, vollständiger DSGVO-Export, Import-Deduplizierung, SEPA-/Portal-Bereinigung beim Löschen und Korrekturantrags-Panel ergänzt (#578, #577)."
+        }
+      ]
+    },
+    {
+      "version": "1.15.8",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Kanal rızası eşitlemesi",
+        "de": "Synchronisierung der Kanaleinwilligung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Telegram /start ve /stop ile tek tıkla e-posta çıkışı üyenin rızasını ve toplu e-posta itirazını günceller.",
+          "de": "Telegram /start und /stop sowie die One-Click-Abmeldung aktualisieren Einwilligungen und den Widerspruch gegen Massenmails."
         }
       ]
     },

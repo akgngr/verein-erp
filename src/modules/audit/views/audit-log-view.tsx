@@ -7,7 +7,7 @@ import type { RawSearchParams } from "@/shared/list-params";
 import { parseListParams } from "@/shared/list-params";
 
 import { AuditLogTable } from "../components/audit-log-table";
-import { listAuditLogs } from "../queries/list-audit-logs";
+import { listAuditFilterValues, listAuditLogs } from "../queries/list-audit-logs";
 import { auditPermissions } from "../permissions";
 
 export async function AuditLogView({
@@ -27,10 +27,10 @@ export async function AuditLogView({
     sortableFields: ["createdAt"],
     defaultSort: "createdAt",
     defaultDir: "desc",
-    filterKeys: ["action", "entity"],
+    filterKeys: ["action", "entity", "from", "to"],
   });
 
-  const { rows, total } = await listAuditLogs(params);
+  const [{ rows, total }, filterValues] = await Promise.all([listAuditLogs(params), listAuditFilterValues()]);
 
   return (
     <div>
@@ -46,6 +46,7 @@ export async function AuditLogView({
         sort={params.sort}
         dir={params.dir}
         q={params.q}
+        filterValues={filterValues}
       />
     </div>
   );

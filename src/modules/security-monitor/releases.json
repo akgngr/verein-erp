@@ -2,6 +2,41 @@
   "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.4.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Süreç içi güvenlik denetimi",
+        "de": "Prozessinterne Sicherheitsprüfung"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "'Testleri çalıştır' artık alt süreçte test paketi başlatmaz (her zaman hata veriyordu); çalışan kurulumun güvenlik ayarları süreç içinde denetlenir: uygulama sırrı, sır şifreleme, HTTPS adres, yükleme klasörü, değiştirilemez denetim kaydı, veritabanı göçleri (yalnızca çözülmemiş hatalar), üretim modu.",
+          "de": "„Tests ausführen“ startet keine Testsuite mehr in einem Unterprozess (schlug immer fehl); stattdessen werden die Sicherheitseinstellungen der laufenden Installation geprüft: App-Geheimnis, Verschlüsselung, HTTPS-Adresse, Upload-Ordner, unveränderliches Protokoll, Migrationen (nur ungelöste Fehler), Produktionsmodus."
+        },
+        {
+          "type": "security",
+          "tr": "API'ler Zod ile doğrulanır; 401/403/400/404/500 ayrımı yapılır, ham hata mesajı dönmez; çalıştırma ve uyarı işlemleri denetim kaydı bırakır. Kullanılmayan zamanlama API'si kaldırıldı (zamanlama otomasyondadır).",
+          "de": "APIs werden mit Zod geprüft und liefern 401/403/400/404/500 ohne rohe Fehlermeldungen; Ausführungen und Warnungsaktionen werden protokolliert. Die ungenutzte Zeitplan-API wurde entfernt (Zeitpläne laufen über die Automatisierung)."
+        }
+      ]
+    },
+    {
+      "version": "1.3.7",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Sayfa yetkisi",
+        "de": "Seitenberechtigung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Sayfa sunucuda yetki ister; 'Testleri çalıştır' yalnız oluşturma iznine sahip rollere görünür.",
+          "de": "Die Seite prüft die Berechtigung serverseitig; „Tests ausführen“ ist nur für Rollen mit Anlegerecht sichtbar."
+        }
+      ]
+    },
+    {
       "version": "1.3.6",
       "date": "2026-11-23",
       "title": {

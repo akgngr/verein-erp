@@ -13,7 +13,7 @@ Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı
 |---|---|
 | Anahtar | `member-portal` |
 | Tür | Eklenti |
-| Sürüm | 0.3.2 |
+| Sürüm | 0.3.3 |
 
 ## Diğer modüllere erişim
 
@@ -41,11 +41,17 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
-### 0.3.2 — Üye silmede portal oturumu iptal API'si
+### 0.3.3 — Üye silmede portal oturumu iptal API'si
 
 _2026-11-25_
 
 - **Güvenlik:** Üye silme işlemi için aktif portal oturumlarını aynı işlemde iptal eden sunucu API'si eklendi (#578).
+
+### 0.3.2 — İşlem günlüğünde ödemeler
+
+_2026-11-25_
+
+- **Düzeltme:** İşlem günlüğü ve Art. 15 dışa aktarımı yönetimin kaydettiği ödemeleri de içerir.
 
 ### 0.3.1 — Portal CSP nonce, SameSite=Strict oturum ve Secure __Host- çerezleri
 

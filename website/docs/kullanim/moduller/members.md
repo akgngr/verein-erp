@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.15.8 |
+| Sürüm | 1.15.9 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -46,11 +46,17 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
-### 1.15.8 — Aidat korumaları, DSGVO dışa aktarım, silme temizliği ve düzeltme talebi paneli
+### 1.15.9 — Aidat korumaları, DSGVO dışa aktarım, silme temizliği ve düzeltme talebi paneli
 
 _2026-11-25_
 
 - **Düzeltme:** Aidat fazla ödeme/işlem içi koruma, makbuz PDF tutarı ve denetim kaydı, mükerrer üye uyarısı, tam DSGVO dışa aktarımı, toplu içe aktarma tekilleştirme, silmede SEPA/portal temizliği ve üye düzeltme talebi onay paneli eklendi (#578, #577).
+
+### 1.15.8 — Kanal rızası eşitlemesi
+
+_2026-11-25_
+
+- **Güvenlik:** Telegram /start ve /stop ile tek tıkla e-posta çıkışı üyenin rızasını ve toplu e-posta itirazını günceller.
 
 ### 1.15.7 — nav.json kategori ve alt modül tanımı
 
@@ -88,10 +94,4 @@ _2026-11-19_
 
 - **Düzeltme:** E-postaya göre üye eşleştirmesi arka plan işlerinden de güvenle kullanılabilir.
 
-### 1.15.1 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 33 herkese açık sürüm notu.
+Daha eski 34 herkese açık sürüm notu.

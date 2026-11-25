@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Webhook doğrulama, şablon değişkeni, işlem şablonu",
+        "de": "Webhook-Prüfung, Vorlagenvariable, Transaktionsvorlage"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Doğrulama belirteci UTF-8 bayt uzunluğuyla karşılaştırılır (çok baytlı belirteçte 500 hatası giderildi); gövde okunurken sınır uygulanır.",
+          "de": "Das Verify-Token wird nach UTF-8-Bytelänge verglichen (500-Fehler bei Mehrbyte-Tokens behoben); der Body wird beim Lesen begrenzt."
+        },
+        {
+          "type": "fix",
+          "tr": "Şablon değişkenindeki sekme, satır sonu ve art arda boşluklar temizlenir (Meta hata 132018).",
+          "de": "Tabs, Zeilenumbrüche und Mehrfachleerzeichen in der Vorlagenvariable werden bereinigt (Meta-Fehler 132018)."
+        },
+        {
+          "type": "feature",
+          "tr": "E-imza bağlantısı gibi işlem mesajları ayrı 'utility' şablonuyla gider; pazarlama şablonu kullanılmaz.",
+          "de": "Transaktionsnachrichten wie Signatur-Links nutzen eine eigene Utility-Vorlage statt der Marketing-Vorlage."
+        }
+      ]
+    },
+    {
       "version": "1.1.2",
       "date": "2026-11-23",
       "title": {

@@ -17,8 +17,9 @@ type Model = { name: string; owner: string; fields: Set<string> };
 function readModels(): Model[] {
   const models: Model[] = [];
   for (const moduleKey of fs.readdirSync("src/modules")) {
-    const file = path.join("src/modules", moduleKey, "schema.prisma");
-    if (!fs.existsSync(file)) continue;
+    // #585: sync-schemas ile aynı iki konum (bazı modüller şemayı prisma/schema.prisma altında tutar).
+    const file = [path.join("src/modules", moduleKey, "schema.prisma"), path.join("src/modules", moduleKey, "prisma", "schema.prisma")].find((candidate) => fs.existsSync(candidate));
+    if (!file) continue;
     const source = fs.readFileSync(file, "utf8");
     for (const match of source.matchAll(/^model (\w+) \{([\s\S]*?)^\}/gm)) {
       models.push({ name: match[1], owner: moduleKey, fields: new Set([...match[2].matchAll(/^\s+(\w+)\s+\S/gm)].map((m) => m[1])) });

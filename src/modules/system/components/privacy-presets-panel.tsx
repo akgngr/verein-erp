@@ -124,6 +124,18 @@ export function PrivacyPresetsPanel({ idPrefix = "system-privacy-presets", canMa
               <p className="text-sm text-warning" role="status">{t("selfHostedWarning")}</p>
             )}
           </div>
+          {preview.blockers?.length ? (
+            <div className="rounded-xl border border-warning bg-warning/5 p-4 sm:p-6 space-y-2" role="alert">
+              <h2 className="text-lg font-semibold">{t("blockersTitle")}</h2>
+              <ul className="list-disc space-y-1 pl-5 text-sm">
+                {preview.blockers.map((blocker) => (
+                  <li key={`${blocker.moduleKey}-${blocker.reason}`}>
+                    {t(`blockers.${blocker.reason}`, { module: blocker.moduleKey, modules: blocker.modules.join(", ") })}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
           {canManage ? (
             <div className="rounded-xl border border-border bg-surface p-4 sm:p-6 space-y-3">
               <label htmlFor={`${idPrefix}-confirm`} className="flex items-start gap-3 text-sm text-foreground">
@@ -131,13 +143,13 @@ export function PrivacyPresetsPanel({ idPrefix = "system-privacy-presets", canMa
                   id={`${idPrefix}-confirm`}
                   type="checkbox"
                   checked={approved}
-                  disabled={saving || !preview.hasChanges}
+                  disabled={saving || !preview.hasChanges || Boolean(preview.blockers?.length)}
                   onChange={(event) => setApproved(event.target.checked)}
                   className="mt-1 h-4 w-4"
                 />
                 <span>{t("approval")}</span>
               </label>
-              <Button onPress={() => void apply()} isDisabled={!approved || saving || !preview.hasChanges}>
+              <Button onPress={() => void apply()} isDisabled={!approved || saving || !preview.hasChanges || Boolean(preview.blockers?.length)}>
                 {saving ? t("applying") : t("apply")}
               </Button>
               {!preview.hasChanges && <p className="text-sm text-secondary">{t("noChanges")}</p>}

@@ -13,7 +13,7 @@ Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gön
 |---|---|
 | Anahtar | `mail` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.5.4 |
+| Sürüm | 1.5.5 |
 | Sayfalar | `/mail`, `/mail/gelen-kutusu`, `/mail/kayitlar` |
 
 ## Diğer modüllere erişim
@@ -39,11 +39,17 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
-### 1.5.4 — E-posta eki MIME ve CSP sandbox sertleştirmesi
+### 1.5.5 — E-posta eki MIME ve CSP sandbox sertleştirmesi
 
 _2026-11-25_
 
 - **Güvenlik:** Satır içi önizlenen e-posta ekleri güvenli MIME beyaz listesi ve CSP sandbox başlıkları ile sınırlandı (#573).
+
+### 1.5.4 — Liste başlıkları ve dizin
+
+_2026-11-25_
+
+- **İyileştirme:** E-posta iletisi izinli List-Unsubscribe başlıklarını taşıyabilir; mail_logs (modül, referans) dizini eklendi.
 
 ### 1.5.3 — TAX_ADVISOR rolü izin tanımı
 
@@ -84,10 +90,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.4.1 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 11 herkese açık sürüm notu.
+Daha eski 12 herkese açık sürüm notu.

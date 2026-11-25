@@ -1,3 +1,10 @@
+/** #585: Yazdırma penceresine düz metin olarak yazılır; kişi/kurum adındaki HTML çalıştırılmaz (XSS). */
+export function escapeLetterHtml(text: string): string {
+  return text.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char] as string);
+}
+
+export type FeeExemptionLetterOrganization = { name: string | null; city: string | null };
+
 export type FeeExemptionLetterParams = {
   personName: string;
   birthDate?: string;

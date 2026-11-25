@@ -10,6 +10,7 @@ import { membersPermissions } from "./permissions";
 const STATUSES = ["ACTIVE", "PASSIVE", "RESIGNED", "DECEASED"];
 const TYPES = ["ASIL", "ONURSAL", "FAHRI", "DESTEKCI"];
 const DUES = ["OPEN", "NONE"];
+const MESSAGING_CHANNELS = ["sms", "whatsapp", "telegram"];
 
 /**
  * Üyeler: durum, tür, şehir, üyelik yılı ve aidat durumuna göre segmentlenir; "Toplu e-posta istemiyor"
@@ -69,6 +70,21 @@ export const recipients = defineRecipients("members", [
         const fullName = `${row.firstName} ${row.lastName}`.trim();
         return { id: row.id, email: row.email, phone: row.phone, consents: Object.fromEntries(row.messagingConsents.map((channel) => [channel, true])), name: fullName, optOut: row.bulkMailOptOut, vars: { firstName: row.firstName, lastName: row.lastName, fullName, membershipNumber: row.membershipNumber, city: row.city ?? "" } };
       });
+    },
+    // #581: Kanal eklentisi (Telegram /start, /stop) üyenin mesajlaşma rızasını günceller.
+    // "email": toplu e-posta itirazı (bulkMailOptOut, DSGVO md. 21); tek tıkla çıkış bunu işaretler.
+    setConsent: async (recordId, channel, granted) => {
+      if (channel !== "email" && !MESSAGING_CHANNELS.includes(channel)) return false;
+      const db = getDb();
+      const member = await db.member.findFirst({ where: { id: recordId, deletedAt: null }, select: { messagingConsents: true } });
+      if (!member) return false;
+      if (channel === "email") {
+        await db.member.update({ where: { id: recordId }, data: { bulkMailOptOut: !granted } });
+        return true;
+      }
+      const next = granted ? [...new Set([...member.messagingConsents, channel])] : member.messagingConsents.filter((item) => item !== channel);
+      await db.member.update({ where: { id: recordId }, data: { messagingConsents: next } });
+      return true;
     },
   },
 ]);

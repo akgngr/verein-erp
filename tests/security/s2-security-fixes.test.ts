@@ -151,14 +151,14 @@ test("S2-5: events.onlineUrl and feedback.pageUrl reject javascript: and externa
   assert.equal(feedbackCreateSchema.safeParse({ ...baseFeedback, pageUrl: "" }).success, true);
 });
 
-test("S2-6: youth-protection print handlers never interpolate letterText into document.write", async () => {
+test("S2-6: youth-protection print handlers never interpolate unescaped letterText into document.write", async () => {
   for (const rel of [
     "src/modules/youth-protection/components/fee-exemption-letter-modal.tsx",
     "src/modules/youth-protection/components/fee-exemption-letter-drawer-content.tsx",
   ]) {
     const src = await readFile(path.resolve(process.cwd(), rel), "utf8");
-    assert.equal(src.includes("${letterText}"), false, `${rel} must not interpolate letterText into HTML`);
-    assert.equal(src.includes("body.textContent = letterText"), true, `${rel} must assign letterText via textContent`);
+    assert.equal(src.includes("${letterText}"), false, `${rel} must not interpolate unescaped letterText into HTML`);
+    assert.equal(src.includes("${escapeLetterHtml(letterText)}"), true, `${rel} must escape letterText`);
   }
 });
 

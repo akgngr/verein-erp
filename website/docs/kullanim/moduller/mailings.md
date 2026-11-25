@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.6.3 |
+| Sürüm | 2.7.1 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -44,11 +44,19 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
-### 2.6.3 — Kanonik APP_URL kampanya bağlantıları
+### 2.7.1 — Kanonik APP_URL kampanya bağlantıları
 
 _2026-11-25_
 
 - **Güvenlik:** Kampanya abonelik iptali ve bağlantı üretiminde kanonik APP_URL kökü kullanıldı (#574).
+
+### 2.7.0 — Tek tıkla çıkış ve güvenilir gönderim
+
+_2026-11-25_
+
+- **Yeni:** E-postalarda List-Unsubscribe / List-Unsubscribe-Post başlıkları ve kişiye özel tek tıkla çıkış adresi; çıkış kaynağın kaydında toplu e-posta itirazını işaretler. Metinde {unsubscribeLink} yer tutucusu kullanılabilir.
+- **Düzeltme:** Gönderim sonuçları her 20 mesajda kaydedilir; ara hatadan sonra yeniden deneme gönderilmiş SMS/WhatsApp'ları tekrar göndermez.
+- **Düzeltme:** Sonradan gelen 'başarısız' teslim bildirimleri kampanya sayaçlarına yansır; programatik toplu e-posta worker kuyruğundan gönderilir.
 
 ### 2.6.2 — nav.json kategori ve alt modül tanımı
 
@@ -87,10 +95,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 2.4.6 — Asistan önerileri bulutta
-
-_2026-11-16_
-
-- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
-
-Daha eski 20 herkese açık sürüm notu.
+Daha eski 21 herkese açık sürüm notu.

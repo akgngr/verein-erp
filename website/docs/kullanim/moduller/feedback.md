@@ -13,7 +13,7 @@ Test kullanıcılarının hata ve önerilerini toplar.
 |---|---|
 | Anahtar | `feedback` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.7 |
+| Sürüm | 1.1.8 |
 | Sayfalar | `/geri-bildirim` |
 
 ## Diğer modüllere erişim
@@ -34,11 +34,18 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
-### 1.1.7 — Geri bildirim bağlantılarında protokol doğrulaması
+### 1.1.8 — Geri bildirim bağlantılarında protokol doğrulaması
 
 _2026-11-25_
 
 - **Güvenlik:** Geri bildirim URL alanlarında yalnızca güvenli http/https protokollerine izin veriliyor (#573).
+
+### 1.1.7 — Kullanıcı silmede anonimleştirme
+
+_2026-11-25_
+
+- **Düzeltme:** Kullanıcı silinince geri bildirimleri anonimleştirilir ve ekran görüntüleri silinir (DSGVO md. 17).
+- **Düzeltme:** Kaydı oluşturan kişi kendi ekran görüntüsünü görebilir.
 
 ### 1.1.6 — nav.json kategori ve alt modül tanımı
 
@@ -76,9 +83,4 @@ _2026-11-06_
 
 - **Yeni:** İş akışı tetikleyicisi: "Geri bildirim gönderildiğinde" (tür, öncelik; {{feedback.title}} vb.).
 
-### 1.0.0 — Geri bildirim modülü
-
-_2026-11-01_
-
-- **Yeni:** Sağ altta geri bildirim butonu: ilk açılışta kısa bir sesle kendini tanıtır; hata bildirimi veya öneri gönderilebilir, isteğe bağlı ekran görüntüsü eklenir. Sayfa adresi ve tarayıcı bilgisi otomatik eklenir.
-- **Yeni:** Geri bildirim listesi: herkes kendi kayıtlarını, yöneticiler tümünü görür; durum, öncelik ve cevap yönetimi. Ekran görüntüleri yalnızca yetkililere açıktır.
+Daha eski 1 herkese açık sürüm notu.

@@ -7,6 +7,7 @@ import { getDb } from "@/shared/db";
 
 import { automationTasks, findAutomationTask } from "../tasks/registry";
 import { assertTaskModulesUsable } from "./execution-control";
+import { defaultAutomationLocale } from "./automation-locale";
 import { createTaskExecutionRecord } from "./execution-store";
 
 const SCHEDULE_BATCH = 20;
@@ -65,7 +66,7 @@ export async function runDueSchedules(now = new Date()): Promise<number> {
         sourceModule: taskModuleKey(task.key),
         correlationId: `schedule:${schedule.id}`,
         input: task.schedule.input({ scheduleId: schedule.id, slotAt }) as Prisma.InputJsonValue,
-        context: { locale: "de", scheduleId: schedule.id },
+        context: { locale: defaultAutomationLocale(), scheduleId: schedule.id },
         idempotencyKey: `schedule:${schedule.id}:${slotAt.toISOString()}`,
       });
       executionId = execution.id;

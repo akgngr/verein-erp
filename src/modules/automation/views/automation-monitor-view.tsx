@@ -44,6 +44,17 @@ export async function AutomationMonitorView() {
   ]);
   const fmt = (date: Date) =>
     format.dateTime(date, { dateStyle: "short", timeStyle: "short" });
+  // #582: Ham hata metni (istisna mesajı, SMTP yanıtı) kişisel veri veya iç ayrıntı içerebilir; yalnız
+  // yürütmeyi yönetebilen (`update`) roller görür. Diğerleri çevrilmiş hata kodunu görür.
+  const explainCode = (code: unknown) =>
+    typeof code === "string" && terr.has(code as never)
+      ? terr(code as never)
+      : t("detailsHidden");
+  const logText = (log: { level: string; message: string; details: unknown }) => {
+    if (canUpdate || log.level !== "ERROR") return log.message;
+    const details = log.details && typeof log.details === "object" ? (log.details as Record<string, unknown>) : {};
+    return explainCode(details.errorCode);
+  };
   const failed = executions.filter((item) => item.status === "FAILED").length;
   const running = executions.filter((item) => item.status === "RUNNING").length;
   const completed = executions.filter(
@@ -200,7 +211,9 @@ export async function AutomationMonitorView() {
                         <li key={log.id} className="text-sm text-danger-700">
                           <span className="font-medium">{log.subject}</span>
                           <p className="mt-0.5 break-words">
-                            {log.error || t("unknownError")}
+                            {canUpdate
+                              ? log.error || t("unknownError")
+                              : t("detailsHidden")}
                           </p>
                           <p className="text-xs text-danger-600">
                             {format.dateTime(log.createdAt, {
@@ -242,7 +255,7 @@ export async function AutomationMonitorView() {
                             })}
                           </span>
                           <span className="min-w-0 break-words">
-                            {log.message}
+                            {logText(log)}
                           </span>
                         </li>
                       ))}

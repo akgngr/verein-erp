@@ -18,6 +18,7 @@ import {
 
 import { findAutomationEvent, findAutomationTask } from "../tasks/registry";
 import { insertTaskExecution } from "./execution-store";
+import { automationLocaleFrom, defaultAutomationLocale, type AutomationLocale } from "./automation-locale";
 import { recordAutomationLog } from "./log-store";
 
 export const WORKFLOW_ADVANCE_EVENT = "automation.workflow.advance";
@@ -65,6 +66,8 @@ export async function createWorkflowRun(tx: Tx, args: {
   requestedById: string | null;
   trigger: unknown;
   idempotencyKey: string | null;
+  /** Alt görevlerin dili; verilmezse belge dili (#582). */
+  locale?: AutomationLocale;
 }) {
   if (JSON.stringify(args.trigger ?? {}).length > WORKFLOW_LIMITS.maxPayloadBytes) {
     throw new Error("WORKFLOW_PAYLOAD_TOO_LARGE");
@@ -81,7 +84,7 @@ export async function createWorkflowRun(tx: Tx, args: {
       correlationId: `workflow:${args.workflowId}`,
       idempotencyKey: args.idempotencyKey,
       input: json(args.trigger),
-      context: { versionId: args.versionId, workflowName: args.workflowName.slice(0, 120) },
+      context: { versionId: args.versionId, workflowName: args.workflowName.slice(0, 120), locale: args.locale ?? defaultAutomationLocale() },
       maxAttempts: 1,
       startedAt: new Date(),
     },
@@ -241,7 +244,7 @@ export async function advanceWorkflowRun(runId: string, now = new Date()): Promi
             correlationId: run.correlationId,
             idempotencyKey: `workflow:${runId}:${node.id}`,
             input: json(parsedInput.data),
-            context: { locale: "de", workflowRunId: runId, workflowNodeId: node.id },
+            context: { locale: automationLocaleFrom(run.context), workflowRunId: runId, workflowNodeId: node.id },
           });
           steps.set(node.id, await tx.automationStepRun.create({
             data: { ...base, taskVersion: task.version, status: "RUNNING", startedAt: now, input: json(parsedInput.data), childExecutionId: child.id },

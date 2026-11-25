@@ -2118,7 +2118,8 @@
       "reportNotFound": "Rapor bulunamadı.",
       "staleProposal": "Kayıt değişti veya önerinin süresi doldu. Lütfen yeni bir öneri oluşturun.",
       "cloudIntentRequired": "Bulut sağlayıcıda yalnızca “Üye sayısı 2026”, “Bağış özeti 2026” veya “Aidat dosyası 2026” gibi hazır istekler kullanılabilir. Serbest metin için yerel sağlayıcıyı seçin.",
-      "cloudDisabled": "Bulut işleme kapalı. Yönetici yerel bir model seçebilir veya Ayarlar → AI asistanı → Bulut veri politikası'nı değiştirebilir."
+      "cloudDisabled": "Bulut işleme kapalı. Yönetici yerel bir model seçebilir veya Ayarlar → AI asistanı → Bulut veri politikası'nı değiştirebilir.",
+      "providerNotAllowed": "Bu sağlayıcı, uygulanan gizlilik ön ayarı tarafından izin verilmiyor (Ayarlar → Gizlilik)."
     },
     "panel": {
       "title": "Asistan",
@@ -2554,6 +2555,16 @@
         "label": "Güvenlik & Değişiklik Günlüğü",
         "description": "Değiştirilemez sistemsel denetim izleri ve güvenlik kayıtları."
       }
+    },
+    "details": {
+      "open": "Ayrıntılar",
+      "title": "Değişiklik ayrıntısı",
+      "before": "Önce",
+      "after": "Sonra",
+      "none": "Kayıt yok"
+    },
+    "errors": {
+      "notFound": "Denetim kaydı bulunamadı."
     }
   },
   "auth": {
@@ -2687,7 +2698,8 @@
       "cancel": "İptal et",
       "retry": "Yeniden dene",
       "cancelled": "Görev iptal edildi.",
-      "retried": "Görev yeniden kuyruğa alındı."
+      "retried": "Görev yeniden kuyruğa alındı.",
+      "detailsHidden": "Teknik ayrıntılar yalnız otomasyonu yönetebilen rollere gösterilir."
     },
     "access": {
       "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için.",
@@ -3393,7 +3405,7 @@
       }
     },
     "access": {
-      "mailings": "Webhook'ta bot ayarlarını (şifreli) okumak için."
+      "mailings": "Webhook'ta bot ayarlarını (şifreli) okumak ve /start, /stop ile verilen/geri alınan Telegram rızasını kişinin kaydına yazmak için."
     },
     "replies": {
       "linked": "✅ Abonelik onaylandı. Ayrılmak için /stop yazın.",
@@ -3480,7 +3492,9 @@
     "errors": {
       "unknownRule": "Kural bulunamadı.",
       "noTask": "Bu kural için görev önerisi yok.",
-      "noFinding": "Güncel bir bulgu yok; sayfayı yenileyin."
+      "noFinding": "Güncel bir bulgu yok; sayfayı yenileyin.",
+      "tasksUnavailable": "Görevler modülü açık değil; önce Modül Yönetimi'nden etkinleştirin.",
+      "tasksForbidden": "Görev oluşturma yetkiniz yok."
     },
     "ui": {
       "yearLabel": "Yıl",
@@ -3492,7 +3506,9 @@
       "downloadExport": "{format} indir",
       "computedValue": "Hesaplanan değer",
       "askAdvisorLink": "Vergi danışmanı erişimi"
-    }
+    },
+    "draftOnly": "Kontrol kuralları henüz hukuki incelemeden geçmedi; yönetici onayladıktan sonra burada görünecek.",
+    "draftOnlyAdmin": "Tüm kurallar taslak durumunda (hukuki inceleme bekliyor). Önizleme ile sonuçları görebilirsiniz; kurallar incelenip onaylanınca herkese gösterilir."
   },
   "courses": {
     "module": {
@@ -4070,7 +4086,10 @@
       "sourceMissing": "Kaynak kayıt bulunamadı veya modül kapalı.",
       "notFound": "Kayıt bulunamadı.",
       "summary": "En az 2 karakter girin.",
-      "title": "Başlık en az 2 karakter olmalıdır."
+      "title": "Başlık en az 2 karakter olmalıdır.",
+      "sourceForbidden": "Bu kaynaktaki kişileri görme yetkiniz yok.",
+      "amount": "Tutar negatif olamaz.",
+      "amountMax": "Tutar en çok 20.000.000 € olabilir."
     },
     "access": {
       "members": "CRM kişilerinin adını ve iletişim bilgisini üye kaydından okur (kopyalamaz).",
@@ -4106,7 +4125,8 @@
           }
         }
       }
-    }
+    },
+    "restricted": "Kısıtlı (kaynak modülü görme yetkiniz yok)"
   },
   "demo": {
     "module": {
@@ -5694,7 +5714,8 @@
       "amount": "Tutar",
       "receipt": "Belge",
       "narrative": "Faaliyet raporu (Sachbericht)",
-      "narrativePlaceholder": "Yapılan faaliyetler, ulaşılan hedefler, katılımcı sayıları, plandan sapmaların gerekçeleri …"
+      "narrativePlaceholder": "Yapılan faaliyetler, ulaşılan hedefler, katılımcı sayıları, plandan sapmaların gerekçeleri …",
+      "detailsHidden": "Fiş ayrıntıları muhasebe verisidir ve yalnız muhasebe görme yetkisiyle gösterilir. Yukarıdaki toplamlar tüm fişleri içerir."
     },
     "financing": {
       "approvedCents": "Onaylanan hibe",
@@ -5824,7 +5845,8 @@
       "forbidden": "Bu işlem için yetkiniz yok.",
       "validation": "Girilen bilgiler geçersiz. Lütfen formu kontrol edin.",
       "notFound": "Demirbaş kaydı bulunamadı. Silinmiş olabilir.",
-      "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+      "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
+      "assetForbidden": "Bu eşya muhasebede demirbaş (AfA) olarak izleniyor. Ad, bedel, tarih, hurda durumu veya izleme işaretini değiştirmek için muhasebe yazma yetkisi gerekir."
     },
     "export": {
       "filePrefix": "envanter"
@@ -6370,7 +6392,8 @@
         "templateLanguage": "Şablon dili",
         "countryCode": "Varsayılan ülke kodu",
         "appSecret": "App Secret (bildirim imzası)",
-        "verifyToken": "Doğrulama belirteci (Meta'ya da aynısını girin, en az 8 karakter)"
+        "verifyToken": "Doğrulama belirteci (Meta'ya da aynısını girin, en az 8 karakter)",
+        "utilityTemplateName": "İşlem mesajı şablonu (Utility; e-imza bağlantısı gibi tek kişiye mesajlar, gövdede tek değişken '{{1}}')"
       },
       "telegram": {
         "botToken": "Bot anahtarı (BotFather)",
@@ -6479,6 +6502,14 @@
       "columnsHelp": "İçerik eklemek için tuvalde bir sütuna tıklayın, sonra soldan bileşen seçin. Mobilde sütunlar alt alta dizilir.",
       "designSettings": "Genel tasarım",
       "selectHint": "Bir bloğu düzenlemek için tuvalde üzerine tıklayın."
+    },
+    "unsubscribe": {
+      "title": "Bültenden çık",
+      "confirm": "Artık e-posta ile toplu duyuru almak istemiyor musunuz?",
+      "button": "Aboneliği bitir",
+      "done": "Aboneliğiniz bitirildi; artık e-posta ile toplu duyuru almayacaksınız.",
+      "unknown": "Bu çıkış bağlantısı geçersiz.",
+      "unsupported": "Çıkış otomatik kaydedilemedi. Lütfen derneğe başvurun."
     }
   },
   "meetings": {
@@ -8561,7 +8592,9 @@
         "label": "Dernek Ana Bilgileri",
         "description": "Resmi dernek sicil no, vergi no, banka hesapları ve antet logosu."
       }
-    }
+    },
+    "yes": "Evet",
+    "no": "Hayır"
   },
   "progress": {
     "module": {
@@ -9051,6 +9084,16 @@
           }
         }
       }
+    },
+    "checks": {
+      "authSecret": "Uygulama sırrı (AUTH_SECRET) en az 32 karakter",
+      "secretEncryption": "Kayıtlı sırlar şifrelenebiliyor",
+      "appUrlHttps": "Genel adres (APP_URL) tanımlı ve üretimde HTTPS",
+      "uploadsNotPublic": "Yüklemeler herkese açık klasörde değil",
+      "auditAppendOnly": "Denetim kaydı değiştirilemez (veritabanı tetikleyicileri)",
+      "migrations": "Başarısız veritabanı göçü yok",
+      "productionMode": "Üretim modunda çalışıyor",
+      "RUNTIME_CHECKS_FAILED": "Denetimler çalıştırılamadı (sunucu günlüğüne bakın)"
     }
   },
   "sepa": {
@@ -9567,7 +9610,9 @@
       "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır).",
       "users": "Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir.",
       "ai": "Gizlilik ön ayarları ve aylık veri çıkışı raporu için yapılandırılmış yapay zekâ sağlayıcılarının durumu okunur.",
-      "widgets": "Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder."
+      "widgets": "Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder.",
+      "automation": "Modül sağlık kokpitinde başarısız arka plan işleri ve worker kalp atışı okunur (girdi/sonuç verisi okunmaz).",
+      "notifications": "Modül sağlık kokpitinde hangi bildirim kanallarının etkin olduğu okunur (sır ve ayar okunmaz)."
     },
     "gate": {
       "manage": "Modül yönetimine git",
@@ -9668,7 +9713,9 @@
         "smallBusinessOff": "normal KDV",
         "presetOn": "kategoriler ve hesaplar eklenecek",
         "presetOff": "yok",
-        "note": "Listede olmayan isteğe bağlı modüller kapatılır (veriler silinmez)."
+        "note": "Seçilmeyen modüllerin verileri silinmez; kapatma yalnız aşağıda onaylarsanız yapılır.",
+        "willDisable": "Şu an açık olan ve seçmediğiniz modüller: {modules}.",
+        "confirmDisable": "Bu modülleri kapat (onaylamazsanız açık kalırlar)"
       },
       "back": "Geri",
       "next": "İleri",
@@ -9681,7 +9728,10 @@
         "profile": "Kurum bilgilerini gir",
         "accountingSettings": "Muhasebe ayarları",
         "modulesPage": "Modül Yönetimi",
-        "dashboard": "Panele dön"
+        "dashboard": "Panele dön",
+        "kept": "Onaylanmadığı için açık bırakılan modüller: {modules}",
+        "mapped": "Muhasebe ayarlarındaki boş varsayılanlar (nakit/banka hesabı, bağış ve aidat kategorisi) dolduruldu.",
+        "mappingFailed": "Muhasebe varsayılanları otomatik eşlenemedi; Muhasebe → Ayarlar sayfasından tamamlayın."
       },
       "errors": {
         "accountingOff": "Muhasebe hazırlığı için Muhasebe modülü seçili olmalı."
@@ -9822,7 +9872,11 @@
             "right": "Üst çubuk · sağ"
           }
         },
-        "resetSuccess": "Varsayılan ayarlar geri yüklendi."
+        "resetSuccess": "Varsayılan ayarlar geri yüklendi.",
+        "policy": {
+          "label": "Herkese açık",
+          "toggle": "{title} widget'ını tüm kullanıcılar için aç/kapat"
+        }
       }
     },
     "readiness": {
@@ -9923,7 +9977,15 @@
       "apply": "Onayla ve uygula",
       "applying": "Uygulanıyor…",
       "noChanges": "Bu profil zaten geçerli; değişiklik yok.",
-      "readOnly": "Bu ayarları değiştirmek için sistem yöneticisi izni gerekir."
+      "readOnly": "Bu ayarları değiştirmek için sistem yöneticisi izni gerekir.",
+      "blocked": "Ön ayar uygulanamadı: bazı modül değişiklikleri bağımlılık veya erişim izni nedeniyle engelleniyor.",
+      "blockersTitle": "Uygulamadan önce çözülmesi gerekenler",
+      "blockers": {
+        "requires": "{module} açılacak ama zorunlu bağımlılıkları kapalı kalıyor: {modules}.",
+        "missing": "{module} için gerekli modül kurulu değil veya sürümü yetersiz: {modules}.",
+        "approval": "{module} modülünün erişim izni onaylı değil; önce Modül Yönetimi'nden onaylayın.",
+        "dependents": "{module} kapanacak ama ona bağlı modüller açık kalıyor: {modules}."
+      }
     },
     "egressUi": {
       "title": "Aylık veri çıkışı raporu",
@@ -10517,6 +10579,7 @@
       "71": "Hafif Kar Yağışlı",
       "73": "Kar Yağışlı",
       "75": "Yoğun Kar Yağışlı",
+      "77": "Kar Taneleri",
       "80": "Hafif Sağanak",
       "81": "Sağanak Yağış",
       "82": "Şiddetli Sağanak",
@@ -10628,7 +10691,11 @@
       "save": "Kaydet",
       "cancel": "Vazgeç",
       "created": "İbraz kaydı oluşturuldu.",
-      "updated": "İbraz kaydı güncellendi."
+      "updated": "İbraz kaydı güncellendi.",
+      "member": "Üye (isteğe bağlı)",
+      "memberNone": "Üyeyle ilişkilendirme yok",
+      "memberHistorical": "Önceki üye bağlantısı (artık etkin değil)",
+      "memberHelp": "Kişi derneğin üyesiyse seçin; ad alanı boşsa üyenin adıyla doldurulur."
     },
     "letter": {
       "title": "Harç Muafiyet Belgesi Şablonu",
@@ -10655,7 +10722,8 @@
       "dueCount": "{count, plural, one {# eğitmen/gönüllünün adli sicil ibraz süresi doldu veya 3 ay içinde dolacak.} other {# eğitmen/gönüllünün adli sicil ibraz süresi doldu veya 3 ay içinde dolacak.}}"
     },
     "errors": {
-      "notFound": "İbraz kaydı bulunamadı."
+      "notFound": "İbraz kaydı bulunamadı.",
+      "memberNotFound": "Seçilen üye bulunamadı veya etkin değil."
     },
     "validation": {
       "personNameRequired": "Ad soyad alanı zorunludur.",
@@ -10667,6 +10735,10 @@
       "nextDueDateInvalid": "Geçerli bir gelecek ibraz tarihi seçiniz (YYYY-AA-GG).",
       "activityEndedAtInvalid": "Geçerli bir faaliyet bitiş tarihi seçiniz (YYYY-AA-GG).",
       "dateInvalid": "Geçersiz tarih formatı."
+    },
+    "access": {
+      "organization": "Harç muafiyeti yazısında kurum adı ve şehri okunur.",
+      "members": "Kayıt bir üyeyle ilişkilendirilirken üye listesi (ad, üye numarası) okunur ve seçilen üye doğrulanır."
     }
   }
 }

@@ -65,5 +65,7 @@
       "label": "Vereinsstammdaten",
       "description": "Registernummer, Steuernummer, Bankverbindungen und Briefkopf-Logo."
     }
-  }
+  },
+  "yes": "Ja",
+  "no": "Nein"
 }

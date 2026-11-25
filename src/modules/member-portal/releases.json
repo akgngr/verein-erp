@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı.",
   "releases": [
     {
-      "version": "0.3.2",
+      "version": "0.3.3",
       "date": "2026-11-25",
       "title": {
         "tr": "Üye silmede portal oturumu iptal API'si",
@@ -13,6 +13,21 @@
           "type": "security",
           "tr": "Üye silme işlemi için aktif portal oturumlarını aynı işlemde iptal eden sunucu API'si eklendi (#578).",
           "de": "Server-API zum transaktionalen Widerruf aktiver Portalsitzungen beim Löschen eines Mitglieds ergänzt (#578)."
+        }
+      ]
+    },
+    {
+      "version": "0.3.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "İşlem günlüğünde ödemeler",
+        "de": "Zahlungen im Verarbeitungsprotokoll"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "İşlem günlüğü ve Art. 15 dışa aktarımı yönetimin kaydettiği ödemeleri de içerir.",
+          "de": "Verarbeitungsprotokoll und Art.-15-Export enthalten auch vom Vorstand erfasste Zahlungen."
         }
       ]
     },

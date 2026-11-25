@@ -1,13 +1,18 @@
 import "server-only";
 
+import { ActionError } from "@/modules/auth/server";
 import { listProviderStatus } from "@/modules/ai/server";
 import { allModules } from "@/registry";
+import { isAccessApproved } from "@/shared/modules/module-access";
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 
+import { getAccessRecords } from "./module-access-store";
 import { getEffectiveModuleStates, setModuleEnabled } from "./module-state-store";
+import { PRIVACY_AI_ALLOWED_SETTING_KEY } from "./privacy-policy";
 import {
   computePrivacyPresetDiff,
+  findPresetBlockers,
   PRIVACY_PRESET_IDS,
   PRIVACY_PRESETS,
   type AiProviderKey,
@@ -18,7 +23,7 @@ import {
 export * from "./privacy-presets-core";
 
 export const PRIVACY_PRESET_SETTING_KEY = "privacy.preset";
-export const PRIVACY_AI_ALLOWED_SETTING_KEY = "privacy.ai_allowed_providers";
+export { PRIVACY_AI_ALLOWED_SETTING_KEY } from "./privacy-policy";
 
 const PROTECTED_MODULE_KEYS = new Set(
   allModules.filter((mod) => mod.isProtected || mod.category === "CORE").map((mod) => mod.key),
@@ -50,10 +55,11 @@ async function getConfiguredAiProviders(): Promise<AiProviderKey[]> {
  * Generates a preview diff for applying a privacy preset without mutating any state.
  */
 export async function previewPrivacyPreset(presetId: PrivacyPresetId): Promise<PrivacyPresetPreview> {
-  const [currentPresetId, effectiveStates, configuredAiProviders] = await Promise.all([
+  const [currentPresetId, effectiveStates, configuredAiProviders, accessRecords] = await Promise.all([
     getActivePrivacyPreset(),
     getEffectiveModuleStates(),
     getConfiguredAiProviders(),
+    getAccessRecords(),
   ]);
 
   const currentModuleStates: Record<string, boolean> = {};
@@ -61,12 +67,23 @@ export async function previewPrivacyPreset(presetId: PrivacyPresetId): Promise<P
     currentModuleStates[mod.key] = effectiveStates[mod.key] ?? false;
   }
 
-  return computePrivacyPresetDiff({
+  const diff = computePrivacyPresetDiff({
     presetId,
     currentPresetId,
     currentModuleStates,
     configuredAiProviders,
   });
+  const blockers = findPresetBlockers({
+    moduleChanges: diff.moduleChanges,
+    modules: allModules,
+    currentEnabled: (key) => currentModuleStates[key] ?? false,
+    protectedKeys: PROTECTED_MODULE_KEYS,
+    accessApproved: (key) => {
+      const mod = allModules.find((item) => item.key === key);
+      return Boolean(mod && isAccessApproved(mod, accessRecords[key]));
+    },
+  });
+  return { ...diff, blockers };
 }
 
 export type ApplyPrivacyPresetResult = {
@@ -85,6 +102,8 @@ export async function applyPrivacyPreset(
 ): Promise<ApplyPrivacyPresetResult> {
   const diff = await previewPrivacyPreset(presetId);
   const preset = PRIVACY_PRESETS[presetId];
+  // #583: Bağımlılığı eksik, izni onaysız veya bağımlısı açık kalacak bir modül değişikliği yarım uygulanmaz.
+  if (diff.blockers?.length) throw new ActionError("system.privacyUi.blocked");
 
   for (const change of diff.moduleChanges) {
     if (!change.changed) continue;

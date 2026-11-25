@@ -90,7 +90,8 @@
     "forbidden": "Bu işlem için yetkiniz yok.",
     "validation": "Girilen bilgiler geçersiz. Lütfen formu kontrol edin.",
     "notFound": "Demirbaş kaydı bulunamadı. Silinmiş olabilir.",
-    "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+    "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
+    "assetForbidden": "Bu eşya muhasebede demirbaş (AfA) olarak izleniyor. Ad, bedel, tarih, hurda durumu veya izleme işaretini değiştirmek için muhasebe yazma yetkisi gerekir."
   },
   "export": {
     "filePrefix": "envanter"

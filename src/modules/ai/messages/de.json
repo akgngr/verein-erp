@@ -40,7 +40,8 @@
     "reportNotFound": "Bericht nicht gefunden.",
     "staleProposal": "Der Datensatz wurde geändert oder der Vorschlag ist abgelaufen. Bitte erstellen Sie einen neuen Vorschlag.",
     "cloudIntentRequired": "Beim Cloud-Anbieter sind nur feste Anfragen wie „Mitgliederstatistik 2026“, „Spendenübersicht 2026“ oder „Beitragsdatei 2026“ verfügbar. Wählen Sie für Freitext einen lokalen Anbieter.",
-    "cloudDisabled": "Die Cloud-Verarbeitung ist ausgeschaltet. Die Administration kann ein lokales Modell wählen oder Einstellungen → KI-Assistent → Cloud-Datenrichtlinie ändern."
+    "cloudDisabled": "Die Cloud-Verarbeitung ist ausgeschaltet. Die Administration kann ein lokales Modell wählen oder Einstellungen → KI-Assistent → Cloud-Datenrichtlinie ändern.",
+    "providerNotAllowed": "Dieser Anbieter ist durch die angewendete Datenschutz-Voreinstellung nicht erlaubt (Einstellungen → Datenschutz)."
   },
   "panel": {
     "title": "Assistent",

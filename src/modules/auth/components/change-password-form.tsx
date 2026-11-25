@@ -38,6 +38,7 @@ export function ChangePasswordForm() {
     form.reset();
     notify.success(t("updated"));
     // Tam gezinme ile taze JWT oturum çerezi anında uygulanır ve /profil kilidi kalkar.
+    // eslint-disable-next-line @next/next/no-location-assign-relative-destination
     window.location.assign("/");
   });
 

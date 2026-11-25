@@ -7,16 +7,18 @@ import { useMemo, useState } from "react";
 import { Button, Dialog, Input, Label, TextArea, TextField } from "@/shared/components/kit";
 import { notify } from "@/shared/components/ui/notify";
 
-import { buildFeeExemptionLetterText } from "../services/fee-exemption-letter";
+import { buildFeeExemptionLetterText, escapeLetterHtml, type FeeExemptionLetterOrganization } from "../services/fee-exemption-letter";
 
 export function FeeExemptionLetterModal({
   isOpen,
   onOpenChange,
   initialPersonName,
+  organization,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   initialPersonName?: string;
+  organization?: FeeExemptionLetterOrganization;
 }) {
   const t = useTranslations("youth-protection.letter");
   const [personName, setPersonName] = useState(initialPersonName ?? "");
@@ -31,8 +33,11 @@ export function FeeExemptionLetterModal({
       birthDate: birthDate || undefined,
       address: address || undefined,
       role: role || undefined,
+      // #585: Kurum adı ve şehri kurum profilinden (önceden sabit "Unser Verein e.V." / "Berlin").
+      organizationName: organization?.name ?? undefined,
+      organizationCity: organization?.city ?? undefined,
     });
-  }, [personName, birthDate, address, role, t]);
+  }, [personName, birthDate, address, role, t, organization]);
 
   const handleCopy = async () => {
     try {
@@ -51,16 +56,26 @@ export function FeeExemptionLetterModal({
       notify.error(t("printPopupBlocked"));
       return;
     }
-    const doc = printWindow.document;
-    doc.open();
-    doc.write("<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body></body></html>");
-    doc.close();
-    doc.title = t("title");
-    const style = doc.createElement("style");
-    style.textContent =
-      "body { font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.5; margin: 40mm 25mm 25mm 25mm; color: #000; white-space: pre-wrap; }";
-    doc.head.appendChild(style);
-    doc.body.textContent = letterText;
+    printWindow.document.write(`
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>${escapeLetterHtml(t("title"))}</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              font-size: 11pt;
+              line-height: 1.5;
+              margin: 40mm 25mm 25mm 25mm;
+              color: #000;
+              white-space: pre-wrap;
+            }
+          </style>
+        </head>
+        <body>${escapeLetterHtml(letterText)}</body>
+      </html>
+    `);
+    printWindow.document.close();
     printWindow.focus();
     printWindow.print();
     printWindow.close();

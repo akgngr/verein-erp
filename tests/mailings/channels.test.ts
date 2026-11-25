@@ -38,13 +38,16 @@ describe("Campaign channels", () => {
     assert.equal(email.noAddress, 1);
   });
 
-  test("Telegram only reaches subscribers and honours an explicit refusal", () => {
+  // #581: Kaynaklar geri alınan rızayı `undefined` verir; yalnız açık rıza (true) gönderime izin verir.
+  test("Telegram only reaches linked subscribers with explicit consent", () => {
     const list = [
       person({ id: "a", telegramChatId: "111" }),
       person({ id: "b" }),
       person({ id: "c", telegramChatId: "333", consents: { telegram: false } }),
+      person({ id: "d", telegramChatId: "444", consents: { telegram: true } }),
+      person({ id: "e", consents: { telegram: true } }),
     ];
-    assert.deepEqual(splitForChannel(channel("telegram"), list).eligible.map((row) => row.id), ["a"]);
+    assert.deepEqual(splitForChannel(channel("telegram"), list).eligible.map((row) => row.id), ["d"]);
   });
 
   test("channels validate their settings before sending", async () => {

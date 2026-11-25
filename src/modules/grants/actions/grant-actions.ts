@@ -37,13 +37,21 @@ const grantSchema = z.object({
 }).refine((value) => value.periodStart <= value.periodEnd, { message: "grants.errors.period", path: ["periodEnd"] });
 
 export async function saveGrantAction(input: unknown): Promise<ActionResult<{ id: string }>> {
+  // #582: Yeni hibe "create", mevcut hibe "update" yetkisi ister.
+  const isCreate = !(input && typeof input === "object" && "id" in input && (input as { id?: unknown }).id);
   return createAction({
-    permission: { definition: grantsPermissions, action: "update" },
+    permission: { definition: grantsPermissions, action: isCreate ? "create" : "update" },
     schema: grantSchema,
     handler: async ({ input, user, audit }) => {
       const { id: grantId, ...data } = input;
+      if (isCreate !== !grantId) throw new ActionError("grants.errors.notFound");
       const saved = await saveGrant(grantId, data, { id: user.id, label: buildUserLabel(user.name, user.email) });
-      await audit({ action: grantId ? "UPDATE" : "CREATE", entity: "Grant", entityId: saved.id });
+      await audit({
+        action: grantId ? "UPDATE" : "CREATE",
+        entity: "Grant",
+        entityId: saved.id,
+        after: { status: data.status, approvedCents: data.approvedCents, periodStart: data.periodStart, periodEnd: data.periodEnd, projectId: data.projectId },
+      });
       done(saved.id);
       return saved;
     },
@@ -67,8 +75,9 @@ export async function saveLinesAction(input: unknown): Promise<ActionResult<null
   return createAction({
     permission: { definition: grantsPermissions, action: "update" },
     schema: z.object({ grantId: id, lines: z.array(z.object({ label: z.string().trim().min(1, "grants.errors.lineLabel").max(200), plannedCents: cents, categoryIds: z.array(id).max(50) })).max(100) }),
-    handler: async ({ input }) => {
+    handler: async ({ input, audit }) => {
       await saveLines(input.grantId, input.lines);
+      await audit({ action: "UPDATE", entity: "GrantBudget", entityId: input.grantId, after: { lines: input.lines.length, plannedCents: input.lines.reduce((sum, line) => sum + line.plannedCents, 0) } });
       done(input.grantId);
       return null;
     },
@@ -79,9 +88,10 @@ export async function addPayoutAction(input: unknown): Promise<ActionResult<null
   return createAction({
     permission: { definition: grantsPermissions, action: "update" },
     schema: z.object({ grantId: id, requestedAt: date, amountCents: cents.min(1, "grants.errors.amount"), receivedAt: date.nullable(), note: text(500) }),
-    handler: async ({ input }) => {
+    handler: async ({ input, audit }) => {
       const { grantId, ...data } = input;
-      await addPayout(grantId, data);
+      const payout = await addPayout(grantId, data);
+      await audit({ action: "CREATE", entity: "GrantPayout", entityId: payout.id, after: { grantId, amountCents: data.amountCents, requestedAt: data.requestedAt, receivedAt: data.receivedAt } });
       done(grantId);
       return null;
     },
@@ -92,8 +102,9 @@ export async function setPayoutReceivedAction(input: unknown): Promise<ActionRes
   return createAction({
     permission: { definition: grantsPermissions, action: "update" },
     schema: z.object({ grantId: id, id, receivedAt: date.nullable() }),
-    handler: async ({ input }) => {
-      await setPayoutReceived(input.id, input.receivedAt);
+    handler: async ({ input, audit }) => {
+      const { before } = await setPayoutReceived(input.id, input.grantId, input.receivedAt);
+      await audit({ action: "UPDATE", entity: "GrantPayout", entityId: input.id, before: { grantId: input.grantId, receivedAt: before }, after: { receivedAt: input.receivedAt } });
       done(input.grantId);
       return null;
     },
@@ -104,8 +115,9 @@ export async function deletePayoutAction(input: unknown): Promise<ActionResult<n
   return createAction({
     permission: { definition: grantsPermissions, action: "update" },
     schema: z.object({ grantId: id, id }),
-    handler: async ({ input }) => {
+    handler: async ({ input, audit }) => {
       await deletePayout(input.id, input.grantId);
+      await audit({ action: "DELETE", entity: "GrantPayout", entityId: input.id, before: { grantId: input.grantId } });
       done(input.grantId);
       return null;
     },

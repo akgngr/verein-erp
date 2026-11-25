@@ -94,12 +94,15 @@ export async function createFeedbackHandler(request: Request): Promise<Response>
   }
 }
 
-/** GET /api/feedback/[id]/screenshot — yalnızca yöneticiler (approve). */
+/**
+ * GET /api/feedback/[id]/screenshot — yöneticiler (approve) ve kaydı oluşturan kişi (#583: önceden kendi
+ * ekran görüntüsünde 403 alıyordu). Başkasının kaydı için 404 döner (varlığı sızdırılmaz).
+ */
 export async function feedbackScreenshotHandler(_request: Request, id: string): Promise<Response> {
   const auth = await authorize("view");
   if ("error" in auth) return auth.error as Response;
-  if (!can(auth.user.role, feedbackPermissions, "approve")) return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
-  const item = await getDb().feedbackItem.findUnique({ where: { id }, select: { screenshotPath: true, screenshotName: true, screenshotMime: true } });
-  if (!item?.screenshotPath) return NextResponse.json({ ok: false, error: await translateMessage("feedback.errors.notFound") }, { status: 404 });
+  const item = await getDb().feedbackItem.findUnique({ where: { id }, select: { reporterId: true, screenshotPath: true, screenshotName: true, screenshotMime: true } });
+  const allowed = Boolean(item) && (can(auth.user.role, feedbackPermissions, "approve") || item?.reporterId === auth.user.id);
+  if (!allowed || !item?.screenshotPath) return NextResponse.json({ ok: false, error: await translateMessage("feedback.errors.notFound") }, { status: 404 });
   return buildDownloadResponse({ stream: openReadStream(item.screenshotPath), originalName: item.screenshotName ?? "screenshot.png", mimeType: item.screenshotMime ?? "image/png", inline: true });
 }

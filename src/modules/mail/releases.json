@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.5.4",
+      "version": "1.5.5",
       "date": "2026-11-25",
       "title": {
         "tr": "E-posta eki MIME ve CSP sandbox sertleştirmesi",
@@ -13,6 +13,21 @@
           "type": "security",
           "tr": "Satır içi önizlenen e-posta ekleri güvenli MIME beyaz listesi ve CSP sandbox başlıkları ile sınırlandı (#573).",
           "de": "Inline-Anzeige von E-Mail-Anhängen auf sichere MIME-Typen beschränkt und mit CSP-Sandbox abgesichert (#573)."
+        }
+      ]
+    },
+    {
+      "version": "1.5.4",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Liste başlıkları ve dizin",
+        "de": "Listen-Header und Index"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "E-posta iletisi izinli List-Unsubscribe başlıklarını taşıyabilir; mail_logs (modül, referans) dizini eklendi.",
+          "de": "Nachrichten können die erlaubten List-Unsubscribe-Header tragen; Index (Modul, Referenz) auf mail_logs ergänzt."
         }
       ]
     },

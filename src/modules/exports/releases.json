@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "2.2.5",
+      "version": "2.2.6",
       "date": "2026-11-25",
       "title": {
         "tr": "Dışa aktarım alt süreç ortam izolasyonu",
@@ -13,6 +13,26 @@
           "type": "security",
           "tr": "Alt süreç oluşturma ortamında hassas ortam değişkenlerinin sızmasını önleyen beyaz liste uygulandı (#573).",
           "de": "Allowlist für Kindprozess-Umgebungsvariablen zur Vermeidung von Secret-Lecks umgesetzt (#573)."
+        }
+      ]
+    },
+    {
+      "version": "2.2.5",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Vergi danışmanı rapor indirmesi",
+        "de": "Download für Steuerberater"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Vergi danışmanı (TAX_ADVISOR) oluşturduğu uyum raporunu artık indirebilir (önceden HTTP 403).",
+          "de": "Steuerberater (TAX_ADVISOR) können selbst erstellte Compliance-Berichte nun herunterladen (zuvor HTTP 403)."
+        },
+        {
+          "type": "security",
+          "tr": "CSV formül enjeksiyonu koruması ortak yardımcıya taşındı; envanter dışa aktarımı da kullanır.",
+          "de": "Der Schutz vor CSV-Formelinjektion liegt nun in einem gemeinsamen Helfer, den auch der Inventarexport nutzt."
         }
       ]
     },

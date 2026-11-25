@@ -19,7 +19,9 @@ export async function CrmView() {
     if (error instanceof ForbiddenError) return <AccessDenied />;
     throw error;
   }
-  const [parties, deals, followUps, stats] = await Promise.all([listParties({}), listDeals(), listOpenFollowUps(), pipelineStats()]);
+  // #582: Kişi adı/iletişimi yalnız kaynak modülü görebilen rollere çözülür.
+  const viewer = { role: user.role, restrictedLabel: t("restricted") };
+  const [parties, deals, followUps, stats] = await Promise.all([listParties({}, viewer), listDeals(viewer), listOpenFollowUps(viewer), pipelineStats()]);
   return (
     <div>
       <PageHeader title={t("title")} description={t("description")} />

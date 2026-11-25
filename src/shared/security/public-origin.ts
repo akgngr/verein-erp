@@ -30,18 +30,18 @@ function normalizeConfiguredAppUrl(raw: string | undefined): string | null {
  */
 export function resolvePublicOrigin(
   headersLike?: HeadersLike | null,
-  options?: { env?: { APP_URL?: string; NODE_ENV?: string } },
+  options?: { env?: { APP_URL?: string; AUTH_URL?: string; NODE_ENV?: string } },
 ): string | null {
-  const configured = normalizeConfiguredAppUrl(options?.env?.APP_URL ?? process.env.APP_URL);
+  const configured = normalizeConfiguredAppUrl(
+    options?.env?.APP_URL ?? process.env.APP_URL ?? options?.env?.AUTH_URL ?? process.env.AUTH_URL,
+  );
   if (configured) return configured;
 
   const nodeEnv = options?.env?.NODE_ENV ?? process.env.NODE_ENV ?? "development";
-  if (nodeEnv === "production") {
-    return null;
-  }
-
   const rawHost = headersLike?.get("host")?.trim() ?? "";
-  if (!rawHost) return "http://localhost:3000";
+  if (!rawHost) {
+    return nodeEnv === "production" ? null : "http://localhost:3000";
+  }
 
   const match = LOCAL_HOST_RE.exec(rawHost);
   if (!match) return null;

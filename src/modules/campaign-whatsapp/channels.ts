@@ -10,6 +10,20 @@ import { channelFetch, defineChannels, normalizePhone, type ChannelSendResult } 
 const GRAPH = "https://graph.facebook.com/v21.0";
 const MAX_LENGTH = 1024; // şablon değişkeni üst sınırı
 
+/**
+ * #581: Meta şablon değişkeni satır sonu, sekme ve art arda 4'ten fazla boşluk kabul etmez (hata 132018).
+ * Tüm boşluk dizileri tek boşluğa indirilir ve kırpılır.
+ */
+export function sanitizeTemplateParam(text: string): string {
+  return text.replace(/\s+/g, " ").trim().slice(0, MAX_LENGTH);
+}
+
+/** #581: İşlem mesajları (e-imza bağlantısı vb.) ayrı "utility" şablonuyla gider; pazarlama şablonu kullanılmaz. */
+export function templateFor(config: Record<string, string>, purpose: "marketing" | "transactional" | undefined): string | null {
+  if (purpose === "transactional") return config.utilityTemplateName || null;
+  return config.templateName || null;
+}
+
 export const channels = defineChannels("campaign-whatsapp", [
   {
     key: "whatsapp",
@@ -19,6 +33,7 @@ export const channels = defineChannels("campaign-whatsapp", [
       { key: "phoneNumberId" },
       { key: "accessToken", secret: true },
       { key: "templateName" },
+      { key: "utilityTemplateName" },
       { key: "templateLanguage", defaultValue: "de" },
       { key: "countryCode", defaultValue: "49" },
       // Teslim/okundu bildirimleri (Meta webhook): imza anahtarı ve doğrulama belirteci.
@@ -30,19 +45,24 @@ export const channels = defineChannels("campaign-whatsapp", [
     enrich: async (list, config) => list.map((recipient) => ({ ...recipient, phone: normalizePhone(recipient.phone, config.countryCode || "49") })),
     address: (recipient) => normalizePhone(recipient.phone),
     allowed: (recipient) => recipient.consents?.whatsapp === true,
-    isConfigured: async (config) => Boolean(/^\d{5,20}$/.test(config.phoneNumberId ?? "") && config.accessToken && config.templateName),
+    isConfigured: async (config, purpose) => Boolean(/^\d{5,20}$/.test(config.phoneNumberId ?? "") && config.accessToken && templateFor(config, purpose)),
     sendBatch: async (messages, config) => {
       const results: ChannelSendResult[] = [];
       for (const message of messages) {
+        const template = templateFor(config, message.purpose);
+        if (!template) {
+          results.push({ ok: false, error: "WHATSAPP_TEMPLATE_MISSING" });
+          continue;
+        }
         try {
           const payload = JSON.stringify({
             messaging_product: "whatsapp",
             to: message.to.replace(/^\+/, ""),
             type: "template",
             template: {
-              name: config.templateName,
+              name: template,
               language: { code: config.templateLanguage || "de" },
-              components: [{ type: "body", parameters: [{ type: "text", text: message.text.replace(/\s*\n\s*/g, " ").slice(0, MAX_LENGTH) }] }],
+              components: [{ type: "body", parameters: [{ type: "text", text: sanitizeTemplateParam(message.text) }] }],
             },
           });
           const response = await channelFetch(
