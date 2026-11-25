@@ -1,3 +1,5 @@
+// #587: Geliştirici aracı; `turbopackIgnore` yorumları bu dosyadaki dinamik yolların derleme anında
+// izlenmesini (src/modules klasörünün standalone pakete kopyalanmasını) engeller. Davranış değişmez.
 import fs from "node:fs";
 import path from "node:path";
 import { revalidatePath } from "next/cache";
@@ -7,8 +9,8 @@ import { getModuleStates } from "./module-state-config";
 export { getModuleStates } from "./module-state-config";
 
 const ROOT_DIR = process.cwd();
-const CONFIG_FILE = path.join(ROOT_DIR, "src", "config", "modules-state.json");
-const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
+const CONFIG_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "config", "modules-state.json");
+const MODULES_DIR = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "modules");
 
 export function isModuleActive(key: string): boolean {
   const states = getModuleStates();
@@ -57,7 +59,7 @@ export async function setModuleActive(key: string, isActive: boolean): Promise<v
  * Çekirdek (CORE) veya Resmi (OFFICIAL) modüller silinemez.
  */
 export async function deleteModuleExtension(key: string): Promise<{ success: boolean; error?: string }> {
-  const targetDir = path.join(MODULES_DIR, key);
+  const targetDir = path.join(/* turbopackIgnore: true */ MODULES_DIR, key);
 
   if (!fs.existsSync(targetDir)) {
     return { success: false, error: "Modül klasörü bulunamadı." };

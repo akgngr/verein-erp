@@ -40,3 +40,16 @@ describe("Modül npm bağımlılıkları", () => {
     assert.equal(rangesCompatible("^1.5.4", "1.5.4"), true);
   });
 });
+
+// #587: Dependabot'un yükselttiği uyumlu aralık `pnpm module:deps` ile geri düşürülmez.
+test("installedSatisfies: newer compatible installed range satisfies an older module range", async () => {
+  const { installedSatisfies } = await import("@/shared/modules/module-deps");
+  assert.equal(installedSatisfies("^1.12.0", "^1.3.0"), true);
+  assert.equal(installedSatisfies("^3.35.0", "^3.32.2"), true);
+  assert.equal(installedSatisfies("^1.3.0", "^1.3.0"), true);
+  // The module needs a newer minimum than what is installed.
+  assert.equal(installedSatisfies("^1.3.0", "^1.12.0"), false);
+  // Different major versions are never interchangeable.
+  assert.equal(installedSatisfies("^2.0.0", "^1.3.0"), false);
+  assert.equal(installedSatisfies("not-a-range", "^1.3.0"), false);
+});

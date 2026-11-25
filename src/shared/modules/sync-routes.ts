@@ -1,18 +1,20 @@
+// #587: Geliştirici aracı; `turbopackIgnore` yorumları bu dosyadaki dinamik yolların derleme anında
+// izlenmesini (src/modules klasörünün standalone pakete kopyalanmasını) engeller. Davranış değişmez.
 import fs from "node:fs";
 import path from "node:path";
 
 const ROOT_DIR = process.cwd();
-const APP_DIR = path.join(ROOT_DIR, "src", "app");
+const APP_DIR = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "app");
 /**
  * Üretilen köprülerin TEK yeri (rota grupları URL'ye eklenmez):
  * - sayfalar: src/app/(dashboard)/(modules)/<rota>/…/page.tsx → /<rota>/…
  * - API:      src/app/api/(modules)/<modül>/…/route.ts        → /api/<modül>/…
  * Bu klasörler her senkronda baştan kurulur; elle dosya konmaz.
  */
-export const GENERATED_PAGES_DIR = path.join(APP_DIR, "(dashboard)", "(modules)");
-export const GENERATED_API_DIR = path.join(APP_DIR, "api", "(modules)");
+export const GENERATED_PAGES_DIR = path.join(/* turbopackIgnore: true */ APP_DIR, "(dashboard)", "(modules)");
+export const GENERATED_API_DIR = path.join(/* turbopackIgnore: true */ APP_DIR, "api", "(modules)");
 /** Oturumsuz sayfalar: src/app/(public)/(modules)/<yol>/page.tsx → /<yol> (proxy.ts matcher'da muaf tutulmalı). */
-export const GENERATED_PUBLIC_DIR = path.join(APP_DIR, "(public)", "(modules)");
+export const GENERATED_PUBLIC_DIR = path.join(/* turbopackIgnore: true */ APP_DIR, "(public)", "(modules)");
 
 export const AUTO_ROUTE_BANNER =
   "// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).";
@@ -58,11 +60,11 @@ export interface SyncRoutesResult {
  */
 export function syncModuleRoutes(options?: SyncModuleRoutesOptions): SyncRoutesResult {
   const rootDir = options?.rootDir ?? ROOT_DIR;
-  const modulesDir = path.join(rootDir, "src", "modules");
-  const appDir = path.join(rootDir, "src", "app");
-  const generatedPagesDir = path.join(appDir, "(dashboard)", "(modules)");
-  const generatedApiDir = path.join(appDir, "api", "(modules)");
-  const generatedPublicDir = path.join(appDir, "(public)", "(modules)");
+  const modulesDir = path.join(/* turbopackIgnore: true */ rootDir, "src", "modules");
+  const appDir = path.join(/* turbopackIgnore: true */ rootDir, "src", "app");
+  const generatedPagesDir = path.join(/* turbopackIgnore: true */ appDir, "(dashboard)", "(modules)");
+  const generatedApiDir = path.join(/* turbopackIgnore: true */ appDir, "api", "(modules)");
+  const generatedPublicDir = path.join(/* turbopackIgnore: true */ appDir, "(public)", "(modules)");
 
   const result: SyncRoutesResult = { syncedRoutes: [], rebuilt: false, cleanedRoutes: [] };
   if (!fs.existsSync(modulesDir)) return result;
@@ -74,34 +76,34 @@ export function syncModuleRoutes(options?: SyncModuleRoutesOptions): SyncRoutesR
   for (const entry of fs.readdirSync(modulesDir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     const moduleName = entry.name;
-    const moduleDir = path.join(modulesDir, moduleName);
-    const configPath = path.join(moduleDir, "module.config.ts");
+    const moduleDir = path.join(/* turbopackIgnore: true */ modulesDir, moduleName);
+    const configPath = path.join(/* turbopackIgnore: true */ moduleDir, "module.config.ts");
     const configText = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf8") : "";
     // Çekirdek modüller her zaman açıktır; diğerlerinin köprüleri erişim kapısından geçer
     // (modül pasif ya da başka modüllere erişimi onaylanmamışsa sayfa/API kapalı).
     const gated = !/category:\s*["']CORE["']/.test(configText);
 
-    for (const subPath of findFiles(path.join(moduleDir, MODULE_API_DIR), "route.ts")) {
+    for (const subPath of findFiles(path.join(/* turbopackIgnore: true */ moduleDir, MODULE_API_DIR), "route.ts")) {
       const source = `src/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route.ts`;
-      apis.set(path.join(moduleName, subPath, "route.ts"), apiBridge(source, `@/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route`, gated ? moduleName : null, rootDir));
+      apis.set(path.join(/* turbopackIgnore: true */ moduleName, subPath, "route.ts"), apiBridge(source, `@/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route`, gated ? moduleName : null, rootDir));
       result.syncedRoutes.push(`${moduleName} -> /api/${moduleName}/${subPath}`);
     }
 
-    for (const subPath of findFiles(path.join(moduleDir, MODULE_PUBLIC_DIR), "page.tsx")) {
+    for (const subPath of findFiles(path.join(/* turbopackIgnore: true */ moduleDir, MODULE_PUBLIC_DIR), "page.tsx")) {
       const source = `src/modules/${moduleName}/${MODULE_PUBLIC_DIR}/${subPath}/page.tsx`;
-      publicPages.set(path.join(subPath, "page.tsx"), pageBridge(source, `@/modules/${moduleName}/${MODULE_PUBLIC_DIR}/${subPath}/page`, gated ? moduleName : null, rootDir));
+      publicPages.set(path.join(/* turbopackIgnore: true */ subPath, "page.tsx"), pageBridge(source, `@/modules/${moduleName}/${MODULE_PUBLIC_DIR}/${subPath}/page`, gated ? moduleName : null, rootDir));
       result.syncedRoutes.push(`${moduleName} -> /${subPath} (public)`);
     }
 
-    if (!fs.existsSync(path.join(moduleDir, "page.tsx"))) continue;
+    if (!fs.existsSync(path.join(/* turbopackIgnore: true */ moduleDir, "page.tsx"))) continue;
     const routeSegment = (configText && resolveRouteSegment(configText)) || moduleName;
 
-    pages.set(path.join(routeSegment, "page.tsx"), pageBridge(`src/modules/${moduleName}/page.tsx`, `@/modules/${moduleName}/page`, gated ? moduleName : null, rootDir));
+    pages.set(path.join(/* turbopackIgnore: true */ routeSegment, "page.tsx"), pageBridge(`src/modules/${moduleName}/page.tsx`, `@/modules/${moduleName}/page`, gated ? moduleName : null, rootDir));
     result.syncedRoutes.push(`${moduleName} -> /${routeSegment}`);
 
-    for (const subPath of findFiles(path.join(moduleDir, MODULE_SUBPAGES_DIR), "page.tsx")) {
+    for (const subPath of findFiles(path.join(/* turbopackIgnore: true */ moduleDir, MODULE_SUBPAGES_DIR), "page.tsx")) {
       pages.set(
-        path.join(routeSegment, subPath, "page.tsx"),
+        path.join(/* turbopackIgnore: true */ routeSegment, subPath, "page.tsx"),
         pageBridge(
           `src/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page.tsx`,
           `@/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page`,
@@ -149,7 +151,7 @@ const SEGMENT_CONFIG_KEYS = [
 ];
 
 export function segmentConfig(sourceRelPath: string, rootDir: string = ROOT_DIR): string {
-  const sourcePath = path.join(rootDir, sourceRelPath);
+  const sourcePath = path.join(/* turbopackIgnore: true */ rootDir, sourceRelPath);
   if (!fs.existsSync(sourcePath)) return "";
   const pattern = new RegExp(`^export const (${SEGMENT_CONFIG_KEYS.join("|")})\\s*=\\s*[^;\\n]+;?$`, "gm");
   const lines = fs.readFileSync(sourcePath, "utf8").match(pattern) ?? [];
@@ -182,7 +184,7 @@ const HTTP_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"
 
 /** Kaynak route.ts'in dışa aktardığı HTTP yöntemleri (fonksiyon, const ya da destructuring). */
 export function exportedMethods(sourceRelPath: string, rootDir: string = ROOT_DIR): string[] {
-  const sourcePath = path.join(rootDir, sourceRelPath);
+  const sourcePath = path.join(/* turbopackIgnore: true */ rootDir, sourceRelPath);
   if (!fs.existsSync(sourcePath)) return [];
   const text = fs.readFileSync(sourcePath, "utf8");
   const found = new Set<string>();
@@ -216,7 +218,7 @@ ${segmentConfig(source, rootDir)}`;
 
 /** Bir dizindeki, adı `fileName` olan dosyaların göreli klasör yollarını döndürür. */
 function findFiles(baseDir: string, fileName: string, relDir = ""): string[] {
-  const currentDir = path.join(baseDir, relDir);
+  const currentDir = path.join(/* turbopackIgnore: true */ baseDir, relDir);
   if (!fs.existsSync(currentDir)) return [];
   let found: string[] = [];
   for (const entry of fs.readdirSync(currentDir, { withFileTypes: true })) {
@@ -233,12 +235,12 @@ function findFiles(baseDir: string, fileName: string, relDir = ""): string[] {
 /** Klasördeki tüm dosyaları göreli yol → içerik olarak okur. */
 function readTree(dir: string, relDir = ""): Map<string, string> {
   const files = new Map<string, string>();
-  const current = path.join(dir, relDir);
+  const current = path.join(/* turbopackIgnore: true */ dir, relDir);
   if (!fs.existsSync(current)) return files;
   for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
-    const relPath = path.join(relDir, entry.name);
+    const relPath = path.join(/* turbopackIgnore: true */ relDir, entry.name);
     if (entry.isDirectory()) for (const [key, value] of readTree(dir, relPath)) files.set(key, value);
-    else files.set(relPath, fs.readFileSync(path.join(dir, relPath), "utf8"));
+    else files.set(relPath, fs.readFileSync(path.join(/* turbopackIgnore: true */ dir, relPath), "utf8"));
   }
   return files;
 }
@@ -258,8 +260,8 @@ function rebuildDir(targetDir: string, files: Map<string, string>): boolean {
   const tempDir = `${targetDir}.tmp-${process.pid}`;
   fs.rmSync(tempDir, { recursive: true, force: true });
   for (const [relPath, content] of files) {
-    fs.mkdirSync(path.dirname(path.join(tempDir, relPath)), { recursive: true });
-    fs.writeFileSync(path.join(tempDir, relPath), content, "utf8");
+    fs.mkdirSync(path.dirname(path.join(/* turbopackIgnore: true */ tempDir, relPath)), { recursive: true });
+    fs.writeFileSync(path.join(/* turbopackIgnore: true */ tempDir, relPath), content, "utf8");
   }
   fs.rmSync(targetDir, { recursive: true, force: true });
   if (files.size > 0) {
@@ -283,11 +285,11 @@ function removeLegacyBridges(
   generatedPagesDir: string = GENERATED_PAGES_DIR,
   generatedApiDir: string = GENERATED_API_DIR,
 ): void {
-  const generated = [generatedPagesDir, generatedApiDir, path.join(appDir, "(public)", "(modules)")];
+  const generated = [generatedPagesDir, generatedApiDir, path.join(/* turbopackIgnore: true */ appDir, "(public)", "(modules)")];
   const walk = (dir: string): void => {
     if (!fs.existsSync(dir) || generated.some((root) => dir === root || dir.startsWith(`${root}.tmp-`))) return;
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
-      const fullPath = path.join(dir, entry.name);
+      const fullPath = path.join(/* turbopackIgnore: true */ dir, entry.name);
       if (entry.isDirectory()) {
         walk(fullPath);
         if (fs.existsSync(fullPath) && fs.readdirSync(fullPath).length === 0) fs.rmdirSync(fullPath);

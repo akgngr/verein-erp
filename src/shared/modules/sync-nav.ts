@@ -1,3 +1,5 @@
+// #587: Geliştirici aracı; `turbopackIgnore` yorumları bu dosyadaki dinamik yolların derleme anında
+// izlenmesini (src/modules klasörünün standalone pakete kopyalanmasını) engeller. Davranış değişmez.
 import fs from "node:fs";
 import path from "node:path";
 
@@ -13,8 +15,8 @@ export type ModuleNavJson = {
  * Modüller arası sıfır bağımlılık ve zero-touch kuralını korur.
  */
 export function syncModuleNavDefaults(rootDir = process.cwd()): { count: number } {
-  const modulesDir = path.join(rootDir, "src/modules");
-  const outPath = path.join(rootDir, "src/shared/navigation/nav-defaults.generated.ts");
+  const modulesDir = path.join(/* turbopackIgnore: true */ rootDir, "src/modules");
+  const outPath = path.join(/* turbopackIgnore: true */ rootDir, "src/shared/navigation/nav-defaults.generated.ts");
 
   const entries: Record<string, ModuleNavJson> = {};
   if (fs.existsSync(modulesDir)) {
@@ -25,7 +27,7 @@ export function syncModuleNavDefaults(rootDir = process.cwd()): { count: number 
       .sort();
 
     for (const key of dirs) {
-      const navPath = path.join(modulesDir, key, "nav.json");
+      const navPath = path.join(/* turbopackIgnore: true */ modulesDir, key, "nav.json");
       if (!fs.existsSync(navPath)) continue;
       const parsed = JSON.parse(fs.readFileSync(navPath, "utf8")) as ModuleNavJson;
       entries[key] = {

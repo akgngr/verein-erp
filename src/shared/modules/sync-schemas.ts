@@ -1,9 +1,11 @@
+// #587: Geliştirici aracı; `turbopackIgnore` yorumları bu dosyadaki dinamik yolların derleme anında
+// izlenmesini (src/modules klasörünün standalone pakete kopyalanmasını) engeller. Davranış değişmez.
 import fs from "node:fs";
 import path from "node:path";
 
 const ROOT_DIR = process.cwd();
-const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
-const PRISMA_SCHEMA_DIR = path.join(ROOT_DIR, "prisma", "schema");
+const MODULES_DIR = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "modules");
+const PRISMA_SCHEMA_DIR = path.join(/* turbopackIgnore: true */ ROOT_DIR, "prisma", "schema");
 
 /**
  * Otomatik Prisma Şema Senkronizasyonu:
@@ -32,22 +34,22 @@ export function syncModuleSchemas(): { synced: string[]; removed: string[] } {
     
     // Hem prisma/schema.prisma hem de doğrudan schema.prisma desteklenir
     const candidatePaths = [
-      path.join(MODULES_DIR, moduleName, "prisma", "schema.prisma"),
-      path.join(MODULES_DIR, moduleName, "schema.prisma"),
+      path.join(/* turbopackIgnore: true */ MODULES_DIR, moduleName, "prisma", "schema.prisma"),
+      path.join(/* turbopackIgnore: true */ MODULES_DIR, moduleName, "schema.prisma"),
     ];
     const moduleSchemaPath = candidatePaths.find((p) => fs.existsSync(p));
 
     if (moduleSchemaPath) {
       activeModuleNames.add(moduleName);
-      const targetSchemaPath = path.join(PRISMA_SCHEMA_DIR, `${moduleName}.prisma`);
+      const targetSchemaPath = path.join(/* turbopackIgnore: true */ PRISMA_SCHEMA_DIR, `${moduleName}.prisma`);
 
       let needsLink = true;
       try {
         const stats = fs.lstatSync(targetSchemaPath);
         if (stats.isSymbolicLink()) {
           const currentTarget = fs.readlinkSync(targetSchemaPath);
-          const resolvedCurrent = path.resolve(PRISMA_SCHEMA_DIR, currentTarget);
-          if (resolvedCurrent === path.resolve(moduleSchemaPath)) {
+          const resolvedCurrent = path.resolve(/* turbopackIgnore: true */ PRISMA_SCHEMA_DIR, currentTarget);
+          if (resolvedCurrent === path.resolve(/* turbopackIgnore: true */ moduleSchemaPath)) {
             needsLink = false;
           } else {
             fs.unlinkSync(targetSchemaPath);
@@ -83,7 +85,7 @@ export function syncModuleSchemas(): { synced: string[]; removed: string[] } {
     if (file.endsWith(".prisma")) {
       const moduleName = file.replace(/\.prisma$/, "");
       if (!activeModuleNames.has(moduleName)) {
-        const filePath = path.join(PRISMA_SCHEMA_DIR, file);
+        const filePath = path.join(/* turbopackIgnore: true */ PRISMA_SCHEMA_DIR, file);
         try {
           fs.unlinkSync(filePath);
           removed.push(file);

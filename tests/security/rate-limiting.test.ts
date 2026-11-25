@@ -34,7 +34,8 @@ describe("Rate Limiting Koruması", () => {
     assert.equal(state.lockedUntil, null);
   });
 
-  test("denetim kaydı hassas parola alanlarını saklamaz", async () => {
+  // #587: Veritabanı gerektirir; DATABASE_URL yoksa diğer DB testleri gibi atlanır.
+  test("denetim kaydı hassas parola alanlarını saklamaz", { skip: !process.env.DATABASE_URL || !process.env.AUTH_SECRET }, async () => {
     const db = getDb();
     const entityId = randomUUID();
 
