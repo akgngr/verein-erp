@@ -53,26 +53,16 @@ export function FeeExemptionLetterDrawerContent({
       notify.error(t("printPopupBlocked"));
       return;
     }
-    printWindow.document.write(`
-      <!DOCTYPE html>
-      <html>
-        <head>
-          <title>${t("title")}</title>
-          <style>
-            body {
-              font-family: Arial, sans-serif;
-              font-size: 11pt;
-              line-height: 1.5;
-              margin: 35mm 25mm 25mm 25mm;
-              color: #000;
-              white-space: pre-wrap;
-            }
-          </style>
-        </head>
-        <body>${letterText}</body>
-      </html>
-    `);
-    printWindow.document.close();
+    const doc = printWindow.document;
+    doc.open();
+    doc.write("<!DOCTYPE html><html><head><meta charset=\"utf-8\"></head><body></body></html>");
+    doc.close();
+    doc.title = t("title");
+    const style = doc.createElement("style");
+    style.textContent =
+      "body { font-family: Arial, sans-serif; font-size: 11pt; line-height: 1.5; margin: 35mm 25mm 25mm 25mm; color: #000; white-space: pre-wrap; }";
+    doc.head.appendChild(style);
+    doc.body.textContent = letterText;
     printWindow.focus();
     printWindow.print();
     printWindow.close();

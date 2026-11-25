@@ -51,5 +51,5 @@ export async function downloadAttachmentHandler(request: Request): Promise<Respo
   const id = new URL(request.url).searchParams.get("id") ?? "";
   const file = await getAttachmentFile(id);
   if (!file) return NextResponse.json({ ok: false, error: await translateMessage("mail.inbox.errors.notFound") }, { status: 404 });
-  return buildDownloadResponse({ stream: openReadStream(file.storagePath), originalName: file.fileName, mimeType: file.mimeType, inline: true });
+  return buildDownloadResponse({ stream: openReadStream(file.storagePath), originalName: file.fileName, mimeType: file.mimeType, inline: false });
 }

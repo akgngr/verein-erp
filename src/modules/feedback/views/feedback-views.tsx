@@ -196,12 +196,12 @@ export async function FeedbackDetailView({ id }: { id: string }) {
           </p>
           <p className="break-all">
             {t("fields.page")}:{" "}
-            {item.pageUrl ? (
+            {item.pageUrl && /^\/(?!\/)[^\\\r\n\u0000-\u001f]*$/.test(item.pageUrl) ? (
               <Link className="text-accent hover:underline" href={item.pageUrl}>
                 {item.pageUrl}
               </Link>
             ) : (
-              "—"
+              item.pageUrl || "—"
             )}
           </p>
           <p>
