@@ -5,13 +5,13 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
-import { resetWidgetPreferencesAction, saveWidgetPreferencesAction, type WidgetSettingsRow } from "@/modules/widgets/ui";
+import { resetWidgetPreferencesAction, saveWidgetPreferencesAction, setWidgetPolicyAction, type WidgetSettingsRow } from "@/modules/widgets/ui";
 import { Button, Switch } from "@/shared/components/kit";
 
 type Row = WidgetSettingsRow & { title: string };
 const ordered = (rows: Row[]) => [...rows].sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));
 
-export function WidgetSettingsForm({ initialRows }: { initialRows: Row[] }) {
+export function WidgetSettingsForm({ initialRows, canManagePolicy = false }: { initialRows: Row[]; canManagePolicy?: boolean }) {
   const t = useTranslations("system.ui.widgetSettings");
   const router = useRouter();
   const pendingRef = useRef(false);
@@ -35,6 +35,26 @@ export function WidgetSettingsForm({ initialRows }: { initialRows: Row[] }) {
       router.refresh();
     } catch {
       setRows(previous);
+      setMessage("failed");
+    } finally {
+      pendingRef.current = false;
+      setPending(false);
+    }
+  }
+
+  /** #583: Yönetici bir widget'ı herkes için kapatır/açar (zorunlu widget'lar hariç; sunucu da reddeder). */
+  async function setPolicy(row: Row, disabled: boolean) {
+    if (pendingRef.current) return;
+    pendingRef.current = true;
+    setPending(true);
+    setMessage(null);
+    try {
+      const result = await setWidgetPolicyAction({ widgetId: row.id, disabled });
+      if (!result.ok) throw new Error();
+      setRows((current) => current.map((item) => (item.id === row.id ? { ...item, adminDisabled: disabled } : item)));
+      setMessage("saved");
+      router.refresh();
+    } catch {
       setMessage("failed");
     } finally {
       pendingRef.current = false;
@@ -74,6 +94,12 @@ export function WidgetSettingsForm({ initialRows }: { initialRows: Row[] }) {
               <Switch isSelected={row.enabled} isDisabled={pending || locked} onChange={(enabled) => void persist(rows.map((item) => item.id === row.id ? { ...item, enabled } : item))}>
                 <span className="sr-only">{t("toggle", { title: row.title })}</span>
               </Switch>
+              {canManagePolicy && !row.mandatory ? (
+                <Switch isSelected={!row.adminDisabled} isDisabled={pending} onChange={(allowed) => void setPolicy(row, !allowed)}>
+                  <span className="text-xs text-ink-600">{t("policy.label")}</span>
+                  <span className="sr-only">{t("policy.toggle", { title: row.title })}</span>
+                </Switch>
+              ) : null}
               <div className="flex gap-1">
                 <Button variant="tertiary" size="sm" isIconOnly aria-label={t("moveUp", { title: row.title })} isDisabled={pending || index === 0 || ordered(rows)[index - 1].slot !== row.slot} onPress={() => move(row.id, -1)}><ArrowUp className="size-4" aria-hidden /></Button>
                 <Button variant="tertiary" size="sm" isIconOnly aria-label={t("moveDown", { title: row.title })} isDisabled={pending || index === rows.length - 1 || ordered(rows)[index + 1].slot !== row.slot} onPress={() => move(row.id, 1)}><ArrowDown className="size-4" aria-hidden /></Button>

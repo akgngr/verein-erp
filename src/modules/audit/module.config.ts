@@ -6,7 +6,7 @@ import { auditPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "audit",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.4",
+  version: "1.1.0",
   label: "Denetim Kayıtları",
   description:
     "Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları.",

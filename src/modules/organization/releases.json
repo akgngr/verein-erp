@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.0.9",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Profil kaydı ve görünüm",
+        "de": "Profil speichern und Ansicht"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Profil art arda kaydedilebilir ve logo değişikliğinden sonra 'kayıt değişti' hatası vermez; son düzenleyen her kayıtta güncellenir.",
+          "de": "Das Profil kann mehrfach hintereinander gespeichert werden und meldet nach einer Logoänderung keinen Konflikt mehr; der letzte Bearbeiter wird bei jeder Änderung aktualisiert."
+        },
+        {
+          "type": "improvement",
+          "tr": "Salt okunur görünüm Gemeinnützigkeit alanlarını (belge türü, amaçlar, aidat indirilebilirliği) gösterir.",
+          "de": "Die Leseansicht zeigt die Gemeinnützigkeitsfelder (Bescheidart, Zwecke, Abziehbarkeit der Beiträge)."
+        }
+      ]
+    },
+    {
       "version": "1.0.8",
       "date": "2026-11-23",
       "title": {

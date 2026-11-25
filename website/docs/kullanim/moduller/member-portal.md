@@ -13,7 +13,7 @@ Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı
 |---|---|
 | Anahtar | `member-portal` |
 | Tür | Eklenti |
-| Sürüm | 0.3.1 |
+| Sürüm | 0.3.2 |
 
 ## Diğer modüllere erişim
 
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Üye Portalı Yönetimi | görüntüleme, düzenleme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 0.3.2 — İşlem günlüğünde ödemeler
+
+_2026-11-25_
+
+- **Düzeltme:** İşlem günlüğü ve Art. 15 dışa aktarımı yönetimin kaydettiği ödemeleri de içerir.
 
 ### 0.3.1 — Portal CSP nonce, SameSite=Strict oturum ve Secure __Host- çerezleri
 

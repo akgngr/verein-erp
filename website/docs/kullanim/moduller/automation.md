@@ -13,7 +13,7 @@ Kalıcı arka plan görevleri ve iş akışları.
 |---|---|
 | Anahtar | `automation` |
 | Tür | Eklenti |
-| Sürüm | 0.10.17 |
+| Sürüm | 0.10.18 |
 | Sayfalar | `/automation`, `/automation/workflows` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Otomasyon | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | — | görüntüleme |
 
 ## Sürüm notları
+
+### 0.10.18 — Sağlık kokpiti için durum özeti
+
+_2026-11-25_
+
+- **İyileştirme:** Modül sağlık kokpiti için kaynak modül başına başarısız/çalışan iş özeti (girdi/sonuç verisi olmadan).
 
 ### 0.10.17 — Çalışan izin politikası, denetim kaydı, dil
 
@@ -81,10 +87,4 @@ _2026-11-17_
 
 - **İyileştirme:** Eylem butonları ve bildirimler ortak ActionButton/notify adapter katmanına taşındı; ilgili ekran artık bu kullanımda HeroUI Button/Toast implementasyonuna doğrudan bağlı değil.
 
-### 0.10.7 — Çalışma durumu rozeti ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Rozet görünümü ortak StatusChip pattern'ine taşındı; modül artık bu kullanımda HeroUI Chip implementasyonuna doğrudan bağlı değil.
-
-Daha eski 29 herkese açık sürüm notu.
+Daha eski 30 herkese açık sürüm notu.

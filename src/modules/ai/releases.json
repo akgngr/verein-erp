@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.15.11",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Gizlilik ön ayarı sağlayıcı politikası",
+        "de": "Anbieterrichtlinie der Datenschutz-Voreinstellung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Uygulanan gizlilik ön ayarının izin vermediği sağlayıcı seçilemez ve kullanılmaz (örn. 'Yalnız yerel' ön ayarında bulut sağlayıcı kapalıdır).",
+          "de": "Von der angewendeten Datenschutz-Voreinstellung nicht erlaubte Anbieter können weder gewählt noch genutzt werden (z. B. kein Cloud-Anbieter bei „Nur lokal“)."
+        }
+      ]
+    },
+    {
       "version": "1.15.10",
       "date": "2026-11-23",
       "title": {

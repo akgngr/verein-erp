@@ -6,6 +6,7 @@ import { z } from "zod";
 import type { ActionResult } from "@/shared/types/action";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { getAllowedAiProviders, isAiProviderAllowed } from "@/modules/system/automation";
 
 import { aiPermissions } from "../permissions";
 import { deleteAllConversations } from "../services/history";
@@ -61,6 +62,8 @@ export async function setAiProviderAction(input: unknown): Promise<ActionResult>
     schema: z.object({ provider: z.enum(AI_PROVIDER_IDS) }),
     handler: async ({ input, audit }) => {
       if (!(await isProviderReady(input.provider))) throw new ActionError("ai.errors.providerNotReady");
+      // #583: Gizlilik ön ayarı bu sağlayıcıya izin vermiyorsa seçilemez (örn. "Yalnız yerel").
+      if (!isAiProviderAllowed(await getAllowedAiProviders(), input.provider)) throw new ActionError("ai.errors.providerNotAllowed");
       const previous = await getActiveProvider();
       await setActiveProvider(input.provider);
       await audit({ action: "AI_PROVIDER_CHANGED", entity: "AiSettings", entityId: "singleton", before: { provider: previous }, after: { provider: input.provider } });

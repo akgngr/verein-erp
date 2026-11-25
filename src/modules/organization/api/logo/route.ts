@@ -19,6 +19,6 @@ export async function POST(request: Request): Promise<Response> {
   return uploadOrganizationLogoHandler(request);
 }
 
-export async function DELETE(): Promise<Response> {
-  return deleteOrganizationLogoHandler();
+export async function DELETE(request: Request): Promise<Response> {
+  return deleteOrganizationLogoHandler(request);
 }
