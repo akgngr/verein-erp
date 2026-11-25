@@ -93,6 +93,23 @@ const eslintConfig = [
     },
   },
   {
+    // Her yerde: next/link <Link> ile /api/ rotalarına bağlantı yasaktır (RSC prefetch export/PDF tetikler — #577).
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "JSXOpeningElement[name.name='Link'] > JSXAttribute[name.name='href'][value.value=/^\\/api\\//]",
+          message: "Do not use Next.js <Link> for /api/ routes (causes automatic prefetch of export/PDF endpoints). Use <a download> or <LinkButton download>.",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='Link'] > JSXAttribute[name.name='href'] > JSXExpressionContainer > TemplateLiteral[quasis.0.value.raw=/^\\/api\\//]",
+          message: "Do not use Next.js <Link> for /api/ routes (causes automatic prefetch of export/PDF endpoints). Use <a download> or <LinkButton download>.",
+        },
+      ],
+    },
+  },
+  {
     // modüller: src/app'i import edemez (3.1)
     files: ["src/modules/**/*.{ts,tsx}"],
     rules: {
@@ -101,16 +118,24 @@ const eslintConfig = [
       "no-restricted-syntax": [
         "error",
         {
-          selector: "ImportDeclaration[source.value=\'@heroui/react\']",
+          selector: "ImportDeclaration[source.value='@heroui/react']",
           message: "ERP UI platform: modules must import shared UI patterns instead of @heroui/react (W6).",
         },
         {
-          selector: "ExportNamedDeclaration[source.value=\'@heroui/react\']",
+          selector: "ExportNamedDeclaration[source.value='@heroui/react']",
           message: "ERP UI platform: do not re-export @heroui/react from modules (W6).",
         },
         {
-          selector: "ExportAllDeclaration[source.value=\'@heroui/react\']",
+          selector: "ExportAllDeclaration[source.value='@heroui/react']",
           message: "ERP UI platform: do not re-export @heroui/react from modules (W6).",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='Link'] > JSXAttribute[name.name='href'][value.value=/^\\/api\\//]",
+          message: "Do not use Next.js <Link> for /api/ routes (causes automatic prefetch of export/PDF endpoints). Use <a download> or <LinkButton download>.",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='Link'] > JSXAttribute[name.name='href'] > JSXExpressionContainer > TemplateLiteral[quasis.0.value.raw=/^\\/api\\//]",
+          message: "Do not use Next.js <Link> for /api/ routes (causes automatic prefetch of export/PDF endpoints). Use <a download> or <LinkButton download>.",
         },
       ],
       "no-restricted-imports": [

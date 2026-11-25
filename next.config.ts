@@ -73,10 +73,9 @@ const nextConfig: NextConfig = {
   // Prisma sorgu motorunun standalone çıktıya dahil edilmesi için
   outputFileTracingIncludes: {
     "/**": ["./node_modules/.prisma/client/**", "./node_modules/@prisma/client/**"],
-    // KARAR (Faz 2, 9. bölüm): tutanak PDF fontları rota çıktısına ayrıca dahil
-    // edilir; @react-pdf/renderer dosyayı process.cwd() üzerinden okur.
-    "/api/meetings/[id]/minutes-pdf": ["./src/modules/meetings/assets/fonts/**"],
-    "/api/progress/report": ["./src/shared/pdf/fonts/**"],
+    // KARAR (#577): tüm PDF API rotaları ortak NotoSans fontlarını process.cwd() üzerinden
+    // okur; standalone çıktıya /api/** altında dahil edilir.
+    "/api/**": ["./src/shared/pdf/fonts/**"],
     // Evrak OCR (docs/specs/DOCUMENTS_AI.md): tesseract.js çalışanı, WASM çekirdeği ve dil paketleri
     // çalışma anında dosya sisteminden yüklenir; standalone çıktıya açıkça dahil edilir.
     "/api/documents/analyze": OCR_RUNTIME_FILES,
