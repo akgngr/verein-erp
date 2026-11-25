@@ -27,12 +27,16 @@ export const authConfig = {
           email: string | null;
           role: string;
           mustChangePassword: boolean;
+          sessionVersion: string;
         }>;
         token.id = authorizedUser.id;
         token.name = authorizedUser.name;
         token.email = authorizedUser.email;
         token.role = authorizedUser.role;
         token.mustChangePassword = authorizedUser.mustChangePassword;
+        if (authorizedUser.sessionVersion) {
+          token.sessionVersion = authorizedUser.sessionVersion;
+        }
       }
       // Parola değişikliği sonrası token'ın tazelenmesi (unstable_update ile tetiklenir).
       if (trigger === "update" && session?.user) {
@@ -40,11 +44,15 @@ export const authConfig = {
           name: string | null;
           email: string | null;
           mustChangePassword: boolean;
+          sessionVersion: string;
         }>;
         if (updatedUser.name) token.name = updatedUser.name;
         if (updatedUser.email) token.email = updatedUser.email;
         if (typeof updatedUser.mustChangePassword === "boolean") {
           token.mustChangePassword = updatedUser.mustChangePassword;
+        }
+        if (updatedUser.sessionVersion) {
+          token.sessionVersion = updatedUser.sessionVersion;
         }
       }
       return token;
@@ -57,10 +65,12 @@ export const authConfig = {
         id: string;
         role: string;
         mustChangePassword: boolean;
+        sessionVersion: string;
       }>;
       session.user.id = claims.id ?? "";
       if (claims.role) session.user.role = claims.role;
       session.user.mustChangePassword = claims.mustChangePassword ?? true;
+      (session.user as { sessionVersion?: string }).sessionVersion = claims.sessionVersion;
       return session;
     },
     authorized({ auth, request }) {
@@ -84,7 +94,11 @@ export const authConfig = {
       }
 
       // Parolasını değiştirmesi gereken kullanıcı yalnızca /profil'e gidebilir.
+      // API/SSE uçları HTML yönlendirmesi yerine 403 JSON döner (EventSource MIME hatası önlenir).
       if (sessionUser.mustChangePassword && path !== "/profil") {
+        if (path.startsWith("/api/")) {
+          return NextResponse.json({ error: "password_change_required" }, { status: 403 });
+        }
         return NextResponse.redirect(new URL("/profil", nextUrl));
       }
 

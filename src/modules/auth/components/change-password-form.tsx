@@ -4,7 +4,6 @@ import { notify } from "@/shared/components/ui/notify";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -23,11 +22,10 @@ import {
 export function ChangePasswordForm() {
   const t = useTranslations("auth.profile");
   const tValidation = useTranslations("validation");
-  const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<ChangePasswordInput>({
     resolver: zodResolver(changePasswordSchema),
-    defaultValues: { currentPassword: "", newPassword: "" },
+    defaultValues: { currentPassword: "", newPassword: "", confirmPassword: "" },
   });
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -39,8 +37,8 @@ export function ChangePasswordForm() {
     }
     form.reset();
     notify.success(t("updated"));
-    router.push("/");
-    router.refresh();
+    // Tam gezinme ile taze JWT oturum çerezi anında uygulanır ve /profil kilidi kalkar.
+    window.location.assign("/");
   });
 
   return (
@@ -56,8 +54,16 @@ export function ChangePasswordForm() {
         name="newPassword"
         label={t("newPassword")}
         control={form.control}
+        autoComplete="new-password"
         isRequired
         description={tValidation("passwordHint")}
+      />
+      <FormPasswordInput
+        name="confirmPassword"
+        label={t("confirmPassword")}
+        control={form.control}
+        autoComplete="new-password"
+        isRequired
       />
       <FormErrorSummary message={formError} />
       <SubmitButton isSubmitting={form.formState.isSubmitting}>

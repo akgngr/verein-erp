@@ -3,7 +3,7 @@
 import { getDb } from "@/shared/db";
 import { hashPassword, verifyPassword } from "@/shared/security/password";
 
-import { unstable_update } from "../auth";
+import { signIn } from "../auth";
 import { ActionError } from "../errors";
 import { changePasswordSchema } from "../schemas/change-password";
 import { createAction } from "../server";
@@ -11,10 +11,12 @@ import { createAction } from "../server";
 /**
  * /profil: kullanıcı mevcut parolası + yeni parola ile kendi parolasını değiştirir.
  * Başarılı olunca mustChangePassword = false yapılır, PASSWORD_CHANGE denetim
- * kaydı yazılır ve JWT içindeki bilgi unstable_update ile tazelenir.
+ * kaydı yazılır ve yeni parola özetiyle taze bir JWT çerezi üretilir (diğer
+ * cihazlardaki eski oturumlar sessionVersion uyuşmazlığıyla anında düşer).
  */
 export async function changePasswordAction(input: unknown) {
   const run = createAction({
+    allowPasswordChangePending: true,
     schema: changePasswordSchema,
     handler: async ({ input, user, audit }) => {
       const db = getDb();
@@ -30,6 +32,12 @@ export async function changePasswordAction(input: unknown) {
         });
       }
 
+      if (input.newPassword === input.currentPassword) {
+        throw new ActionError("auth.errors.samePassword", {
+          newPassword: ["auth.errors.samePassword"],
+        });
+      }
+
       const passwordHash = await hashPassword(input.newPassword);
       await db.user.update({
         where: { id: user.id },
@@ -39,9 +47,13 @@ export async function changePasswordAction(input: unknown) {
       // changes alanına parola değerleri ASLA yazılmaz (write-audit temizler).
       await audit({ action: "PASSWORD_CHANGE", entity: "User", entityId: user.id });
 
-      // JWT/middleware içindeki mustChangePassword bilgisini tazele.
-      await unstable_update({
-        user: { name: user.name, email: user.email, mustChangePassword: false },
+      // Taze JWT çerezi üret: mustChangePassword = false ve yeni sessionVersion
+      // tarayıcıya kesin Set-Cookie olarak yazılır (unstable_update'in Next 16'da
+      // çerezi yenileyememesi nedeniyle /profil kilidi böylece tamamen kalkar).
+      await signIn("credentials", {
+        email: dbUser.email,
+        password: input.newPassword,
+        redirect: false,
       });
 
       return undefined;

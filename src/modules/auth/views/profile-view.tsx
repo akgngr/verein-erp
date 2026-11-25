@@ -7,7 +7,7 @@ import { ProfileContent } from "../components/profile-content";
 
 /** /profil — sunucu tarafı: oturum verisini tazeleyip client içeriğe aktarır. */
 export async function ProfileView() {
-  const user = await requireUser();
+  const user = await requireUser({ allowPasswordChangePending: true });
   const profile = await getProfileView(user.id);
   const t = await getTranslations("auth.profile");
 

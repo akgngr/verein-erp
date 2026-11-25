@@ -5,6 +5,7 @@ import { z } from "zod";
 
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
+import { getEnv } from "@/shared/env";
 import { can, type PermissionAction, type PermissionDefinition } from "@/shared/permissions/define";
 import {
   canExternalReviewerAccessResource,
@@ -20,6 +21,7 @@ import {
   ForbiddenError,
   UnauthorizedError,
 } from "./errors";
+import { isSessionVersionValid } from "./services/session-version";
 import type { SessionUser } from "./types";
 import { getMessageTranslator } from "@/shared/i18n/translate-message";
 
@@ -33,6 +35,11 @@ export { handlers, auth, signIn, signOut, unstable_update } from "./auth";
 // olduğu için doğrudan client import edilemez).
 export { signOutAction } from "./actions/logout";
 export { setLocaleAction } from "./actions/set-locale";
+
+export type RequireUserOptions = {
+  /** Yalnızca /profil, parola değiştirme ve dil/çıkış akışları için true. */
+  allowPasswordChangePending?: boolean;
+};
 
 /**
  * Rol/izin politikasını (veritabanı) yükler; can(...) bu istekte yöneticinin ayarlarını görür.
@@ -55,13 +62,19 @@ async function hasValidTimeBoxedAccess(
     : hasActiveExternalGrant(grants, now);
 }
 
-/** Mevcut oturum kullanıcısını veritabanından tazeleyerek döner; pasif veya süresi dolmuş harici kullanıcı null döner. */
+/** Mevcut oturum kullanıcısını veritabanından tazeleyerek döner; pasif, parolası değişmiş veya süresi dolmuş kullanıcı null döner. */
 export async function getCurrentUser(): Promise<SessionUser | null> {
   const session = await auth();
   if (!session?.user?.id) return null;
 
   const dbUser = await getDb().user.findUnique({ where: { id: session.user.id } });
   if (!dbUser || !dbUser.isActive) return null;
+
+  const tokenSv = (session.user as { sessionVersion?: string }).sessionVersion;
+  if (!isSessionVersionValid(tokenSv, dbUser.passwordHash, getEnv().AUTH_SECRET)) {
+    return null;
+  }
+
   if (!(await hasValidTimeBoxedAccess(dbUser))) return null;
   await loadPolicy();
 
@@ -76,9 +89,10 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 
 /**
  * Oturumu doğrular ve kullanıcıyı VERİTABANINDAN yeniden okur.
- * Kullanıcı pasife alınmışsa veya harici erişim süresi dolmuşsa JWT süresi dolmadan etkisiz hale gelir (6. bölüm, md. 6).
+ * Kullanıcı pasife alınmışsa, parolası değişmişse veya harici erişim süresi dolmuşsa
+ * JWT süresi dolmadan etkisiz hale gelir (6. bölüm, md. 6).
  */
-export async function requireUser(): Promise<SessionUser> {
+export async function requireUser(options?: RequireUserOptions): Promise<SessionUser> {
   const session = await auth();
   if (!session?.user?.id) throw new UnauthorizedError();
 
@@ -86,9 +100,20 @@ export async function requireUser(): Promise<SessionUser> {
   if (!dbUser || !dbUser.isActive) {
     throw new UnauthorizedError("auth.errors.sessionInvalid");
   }
+
+  const tokenSv = (session.user as { sessionVersion?: string }).sessionVersion;
+  if (!isSessionVersionValid(tokenSv, dbUser.passwordHash, getEnv().AUTH_SECRET)) {
+    throw new UnauthorizedError("auth.errors.sessionInvalid");
+  }
+
   if (!(await hasValidTimeBoxedAccess(dbUser))) {
     throw new UnauthorizedError("auth.errors.sessionInvalid");
   }
+
+  if (dbUser.mustChangePassword && !options?.allowPasswordChangePending) {
+    throw new ForbiddenError("auth.mustChangePasswordBanner");
+  }
+
   await loadPolicy();
 
   return {
@@ -161,6 +186,8 @@ export type ActionAuditFn = (args: {
 export type ActionConfig<I, T> = {
   /** Belirtilmezse yalnızca geçerli oturum istenir. */
   permission?: { definition: PermissionDefinition; action: PermissionAction };
+  /** Yalnızca zorunlu parola değişimi sırasında izin verilen aksiyonlar için true. */
+  allowPasswordChangePending?: boolean;
   schema: z.ZodType<I>;
   handler: (ctx: { input: I; user: SessionUser; audit: ActionAuditFn }) => Promise<T>;
 };
@@ -182,7 +209,7 @@ export function createAction<I, T>(
     try {
       const user = config.permission
         ? await requirePermission(config.permission.definition, config.permission.action)
-        : await requireUser();
+        : await requireUser({ allowPasswordChangePending: config.allowPasswordChangePending });
 
       const parsed = config.schema.safeParse(rawInput);
       if (!parsed.success) {
