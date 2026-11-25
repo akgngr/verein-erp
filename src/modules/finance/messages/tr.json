@@ -47,5 +47,13 @@
     "trackedCurrenciesDesc": "Dashboard kartında ve özet tablolarda gösterilecek öncelikli para birimleri.",
     "saveButton": "Ayarları Kaydet",
     "savedSuccess": "Ayarlar başarıyla kaydedildi!"
+  },
+  "widget": {
+    "rates": "Döviz kurları",
+    "title": "Döviz kurları",
+    "unavailable": "Kurlar alınamadı",
+    "refresh": "Yenile",
+    "more": "Finansı aç",
+    "base": "1 EUR"
   }
 }

@@ -78,5 +78,15 @@
   "secretary": {
     "dailyForecast": "Heute {temp}°, {cond}.",
     "outdoorWarning": "Berücksichtigen Sie die Wetterbedingungen für Aktivitäten im Freien oder Termine."
+  },
+  "widget": {
+    "current": "Wetter",
+    "title": "Wetter",
+    "unavailable": "Wetter nicht verfügbar",
+    "feels": "Gefühlt",
+    "wind": "Wind",
+    "humidity": "Feuchte",
+    "refresh": "Aktualisieren",
+    "more": "Wetter öffnen"
   }
 }
