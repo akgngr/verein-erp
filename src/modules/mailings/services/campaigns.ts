@@ -10,7 +10,7 @@ import { isMailConfigured, sendMail } from "@/modules/mail/automation";
 import { createWorkflow, enqueueTask, publishWorkflow, saveWorkflowDraft, setWorkflowEnabled, startWorkflow } from "@/modules/automation/automation";
 import { splitForChannel, type CampaignChannel, type ChannelConfig } from "@/shared/campaigns/channel";
 import { canEncryptSecrets, openSecret, sealSecret } from "@/shared/security/secret-box";
-import { injectTracking, newTrackingToken } from "./tracking";
+import { injectTracking, newTrackingToken, recountCampaignDeliveries } from "./tracking";
 import { campaignFinishedEvent, sendCampaignTask } from "../automation";
 import { loadPermissionPolicy, getUserById } from "@/modules/users/automation";
 import { listUsableModuleKeys } from "@/modules/system/automation";
@@ -399,8 +399,9 @@ async function processCampaignAttempt(campaignId: string, context: TaskExecution
     select: { address: true, token: true, recipientKey: true },
   })).map((row) => [row.address, row]));
   const track = channel.key === "email" && campaign.tracking && Boolean(campaign.trackingBaseUrl);
-  // #581: Tek tıkla çıkış yalnız kaynağa bağlı alıcıda (rıza kaynağın kaydına yazılabilir) ve genel adres varsa.
-  const publicBase = campaign.trackingBaseUrl ?? process.env.APP_URL ?? null;
+  // #581: Tek tıkla çıkış yalnız itirazı kaydına yazabilen kaynakta (`setConsent`) ve genel adres varsa sunulur;
+  // aksi halde çalışmayan bir çıkış bağlantısı vaat edilmez.
+  const publicBase = source?.setConsent ? (campaign.trackingBaseUrl ?? process.env.APP_URL ?? null) : null;
 
   const messages = pending.map((row) => {
     // HTML gövde (editör) worker'da da kişiselleştirilir; değerler HTML'de kaçışlanır.
@@ -422,8 +423,6 @@ async function processCampaignAttempt(campaignId: string, context: TaskExecution
 
   // #581: Sonuçlar her parçadan hemen sonra kaydedilir. Önceden tüm gönderim bitince tek işlemde
   // yazılıyordu; ara hatada yeniden deneme zaten gönderilmiş SMS/WhatsApp'ları ikinci kez gönderebiliyordu.
-  let sentNow = 0;
-  let failed = 0;
   for (const chunk of chunked(messages, SEND_CHUNK_SIZE)) {
     if (context.signal?.aborted) throw new Error("TASK_ABORTED");
     let results: Awaited<ReturnType<CampaignChannel["sendBatch"]>>;
@@ -446,24 +445,29 @@ async function processCampaignAttempt(campaignId: string, context: TaskExecution
           : { status: "FAILED", error: (result?.error ?? "SEND_FAILED").slice(0, 80) },
       });
     }));
-    sentNow += results.filter((result) => result.ok).length;
-    failed += results.filter((result) => !result.ok).length;
   }
-  const sent = alreadySent + sentNow;
+  // Önceki denemede gönderilip kaydı yazılamamış e-postalar (gönderim günlüğünde başarılı) teslim edildi sayılır.
+  if (alreadySent > 0) {
+    const queued = await db.mailingDelivery.findMany({ where: { campaignId: campaign.id, status: "QUEUED" }, select: { id: true, address: true } });
+    const done = queued.filter((row) => delivered.has(normalize(row.address))).map((row) => row.id);
+    if (done.length) await db.mailingDelivery.updateMany({ where: { id: { in: done } }, data: { status: channel.key === "email" ? "DELIVERED" : "SENT" } });
+  }
+  // #581: Toplamlar kalıcı gönderim durumlarından; durum önce yazılır, sonra yeniden sayılır. Böylece bu arada
+  // gelen "başarısız" webhook'u (gönderim bittiyse kendisi de yeniden sayar) son yazımla ezilmez.
+  const interim = await recountCampaignDeliveries(campaign.id);
   await db.mailingCampaign.update({
     where: { id: campaign.id },
     data: {
       recipientCount: eligible.length,
       skippedNoEmail: noEmail,
       skippedOptOut: optOut,
-      sentCount: sent,
-      failedCount: failed,
-      status: sent === 0 && failed > 0 ? "FAILED" : "DONE",
+      status: interim.sent === 0 && interim.failed > 0 ? "FAILED" : "DONE",
       finishedAt: new Date(),
     },
   });
-  await emitAutomationEvent(campaignFinishedEvent, { campaignId: campaign.id, sent, failed }).catch(() => false);
-  return { recipients: eligible.length, sent, failed, skippedNoEmail: noEmail, skippedOptOut: optOut };
+  const { sent, failed: failedTotal } = await recountCampaignDeliveries(campaign.id);
+  await emitAutomationEvent(campaignFinishedEvent, { campaignId: campaign.id, sent, failed: failedTotal }).catch(() => false);
+  return { recipients: eligible.length, sent, failed: failedTotal, skippedNoEmail: noEmail, skippedOptOut: optOut };
 }
 
 

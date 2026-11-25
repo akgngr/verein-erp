@@ -76,12 +76,15 @@ export async function handleUpdate(
   if (!match) return "unknown";
   const link = await db.campaignTelegramLink.findUnique({ where: { token: match[1] }, select: { id: true, recipientKey: true } });
   if (!link) return "unknown";
+  // Rıza, belirteç tüketilmeden ÖNCE yazılır: yazım başarısız olursa belirteç ve bağlantı değişmez, aynı
+  // /start (Telegram webhook yeniden denemesi veya kişi) tekrar denenebilir. Rıza yazılıp bağlama başarısız
+  // olursa sohbet kimliği olmadığından yine gönderim yapılmaz.
+  await consent(link.recipientKey, true);
   // Eşzamanlı iki /start: yalnız belirteç hâlâ aynıysa güncellenir (kazanan tek).
   const updated = await db.campaignTelegramLink.updateMany({
     where: { id: link.id, token: match[1] },
     data: { chatId: String(chatId), linkedAt: new Date(), token: newToken() },
   });
   if (!updated.count) return "unknown";
-  await consent(link.recipientKey, true);
   return "linked";
 }

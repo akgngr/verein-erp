@@ -49,3 +49,9 @@ test("recipient keys keep record ids that contain colons", () => {
   assert.deepEqual(parseRecipientKey("events:attendees:e1:a2"), { moduleKey: "events", sourceKey: "attendees", recordId: "e1:a2" });
   assert.equal(parseRecipientKey("members:members"), null);
 });
+
+test("unsubscribe links are only offered by sources that can record the opt-out", async () => {
+  const { moduleRecipientRegistry } = await import("@/recipient-registry");
+  const supporting = moduleRecipientRegistry.flatMap((entry) => entry.sources.filter((source) => source.setConsent).map((source) => `${entry.moduleKey}:${source.key}`));
+  assert.deepEqual(supporting, ["members:members"]);
+});
