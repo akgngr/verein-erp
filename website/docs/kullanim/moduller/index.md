@@ -19,8 +19,8 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Dosyalarım](./moduller/exports) | Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır. | 2.2.4 |
 | [E-posta Altyapısı](./moduller/mail) | Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları. | 1.5.3 |
 | [Kimlik Doğrulama](./moduller/auth) | Kullanıcı girişi, oturum yönetimi ve parola güvenliği. | 1.1.1 |
-| [Kullanıcılar](./moduller/users) | Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri. | 1.4.0 |
-| [Modül Yönetimi](./moduller/system) | Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi. | 1.18.4 |
+| [Kullanıcılar](./moduller/users) | Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri. | 1.4.1 |
+| [Modül Yönetimi](./moduller/system) | Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi. | 1.18.5 |
 | [Widget Platformu](./moduller/widgets) | Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde toplar. | 0.3.1 |
 
 ## Resmî modüller

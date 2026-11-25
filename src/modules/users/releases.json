@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.1",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Menü grubu ikon alanı kalıcılığı",
+        "de": "Persistenz des Menügruppen-Symbols"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "groupSchema içine icon alanı eklenerek özel grup ikonlarının veritabanında saklanması sağlandı.",
+          "de": "Das Feld icon wurde in groupSchema ergänzt, damit benutzerdefinierte Gruppensymbole gespeichert bleiben."
+        }
+      ]
+    },
+    {
       "version": "1.4.0",
       "date": "2026-11-24",
       "title": {
