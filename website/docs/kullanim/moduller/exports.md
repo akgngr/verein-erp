@@ -13,7 +13,7 @@ Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır.
 |---|---|
 | Anahtar | `exports` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 2.2.5 |
+| Sürüm | 2.2.6 |
 | Sayfalar | `/dosyalar` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_file` · `export_dataset` · `propose_dataset_export`
 
 ## Sürüm notları
+
+### 2.2.6 — Art. 15 anahtarı
+
+_2026-11-25_
+
+- **Güvenlik:** Art. 15 dışa aktarım şifrelemesinde sabit yedek anahtar kaldırıldı (anahtar yoksa fail closed).
 
 ### 2.2.5 — Vergi danışmanı rapor indirmesi
 
@@ -86,10 +92,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 2.1.9 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-Daha eski 14 herkese açık sürüm notu.
+Daha eski 15 herkese açık sürüm notu.
