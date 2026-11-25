@@ -23,6 +23,11 @@
           "type": "feature",
           "tr": "Kayıt bir üyeyle ilişkilendirilebilir. Kurum ve üye verisini okumak için yönetici erişim onayı bir kez yenilenmelidir.",
           "de": "Einträge können mit einem Mitglied verknüpft werden. Für das Lesen von Organisations- und Mitgliedsdaten muss die Zugriffsfreigabe einmalig erneuert werden."
+        },
+        {
+          "type": "fix",
+          "tr": "Ayrılmış veya silinmiş bir üyeye bağlı kayıt güncellenebilir; eski bağlantı formda gösterilir ve kaldırılabilir.",
+          "de": "Einträge, die mit einem ausgetretenen oder gelöschten Mitglied verknüpft sind, bleiben bearbeitbar; die bisherige Verknüpfung wird im Formular angezeigt und kann entfernt werden."
         }
       ]
     },

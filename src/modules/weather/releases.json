@@ -16,8 +16,8 @@
         },
         {
           "type": "improvement",
-          "tr": "Kar kodları (WMO 71–77, 85–86) kar simgesiyle gösterilir; hava ve konum önbellekleri sınırlıdır.",
-          "de": "Schneecodes (WMO 71–77, 85–86) erhalten ein Schneesymbol; Wetter- und Ortscaches sind begrenzt."
+          "tr": "Kar kodları (WMO 71–77, 85–86) kar simgesiyle gösterilir; hava ve konum önbellekleri sınırlıdır. Bulunamayan şehir aramaları 10 dakika sonra yeniden denenir.",
+          "de": "Schneecodes (WMO 71–77, 85–86) erhalten ein Schneesymbol; Wetter- und Ortscaches sind begrenzt. Fehlgeschlagene Ortssuchen werden nach 10 Minuten erneut versucht."
         }
       ]
     },

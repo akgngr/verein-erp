@@ -45,7 +45,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-25_
 
 - **Düzeltme:** Sayfa, kart ve başlık widget'ı derneğin şehrini (kurum profili) kullanır; önceden her zaman Frankfurt gösteriliyordu. Günlük özet aynı konumu kullanır.
-- **İyileştirme:** Kar kodları (WMO 71–77, 85–86) kar simgesiyle gösterilir; hava ve konum önbellekleri sınırlıdır.
+- **İyileştirme:** Kar kodları (WMO 71–77, 85–86) kar simgesiyle gösterilir; hava ve konum önbellekleri sınırlıdır. Bulunamayan şehir aramaları 10 dakika sonra yeniden denenir.
 
 ### 0.2.0 — Hafif hava durumu header widget'ı
 

@@ -87,7 +87,9 @@ export async function updateYouthProtectionItemAction(input: unknown): Promise<A
       const db = getDb();
       const existing = await db.youthProtectionRecord.findUnique({ where: { id: input.id } });
       if (!existing) throw new ActionError("youth-protection.errors.notFound");
-      await assertMember(input.memberId || null);
+      // Yalnızca yeni atanan üye doğrulanır; ayrılmış/silinmiş bir üyeye mevcut bağlantı güncellemeyi engellemez.
+      const memberId = input.memberId || null;
+      if (memberId !== existing.memberId) await assertMember(memberId);
 
       const updated = await db.youthProtectionRecord.update({
         where: { id: existing.id },

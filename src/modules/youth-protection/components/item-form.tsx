@@ -83,6 +83,16 @@ export function YouthProtectionItemForm({ item, memberOptions = [] }: { item?: Y
     if (member && !form.getValues("personName")) form.setValue("personName", member.label, { shouldDirty: true });
   }, [selectedMemberId, memberOptions, form]);
 
+  // Mevcut bağlantı artık seçilebilir üyeler arasında değilse (ayrılmış/silinmiş üye) korunur ve kaldırılabilir.
+  const linkedMemberId = item?.memberId ?? null;
+  const memberSelectOptions: FormSelectOption[] = [
+    { value: "", label: t("memberNone") },
+    ...(linkedMemberId && !memberOptions.some((option) => option.id === linkedMemberId)
+      ? [{ value: linkedMemberId, label: t("memberHistorical") }]
+      : []),
+    ...memberOptions.map((member) => ({ value: member.id, label: `${member.label} (${member.membershipNumber})` })),
+  ];
+
   const statusOptions: FormSelectOption[] = [
     { value: "CLEARED", label: t("status_CLEARED") },
     { value: "EXCLUDED", label: t("status_EXCLUDED") },
@@ -155,12 +165,12 @@ export function YouthProtectionItemForm({ item, memberOptions = [] }: { item?: Y
           />
         </div>
 
-        {memberOptions.length > 0 ? (
+        {memberSelectOptions.length > 1 ? (
           <FormSelect
             name="memberId"
             label={t("member")}
             control={form.control}
-            options={[{ value: "", label: t("memberNone") }, ...memberOptions.map((member) => ({ value: member.id, label: `${member.label} (${member.membershipNumber})` }))]}
+            options={memberSelectOptions}
             description={t("memberHelp")}
           />
         ) : null}

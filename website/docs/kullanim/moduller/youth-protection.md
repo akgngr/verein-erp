@@ -42,6 +42,7 @@ _2026-11-25_
 - **Güvenlik:** Denetim kaydına kişi adı yazılmaz (§ 72a Abs. 5 SGB VIII, DSGVO md. 10); yazdırılan harç muafiyeti yazısında HTML kaçışlanır.
 - **Düzeltme:** Yazı kurum adı ve şehrini kurum profilinden alır; satır eylemiyle açılan yazı her seferinde doğru kişiyi gösterir; durum filtresi çalışır; liste kayıttan sonra yenilenir.
 - **Yeni:** Kayıt bir üyeyle ilişkilendirilebilir. Kurum ve üye verisini okumak için yönetici erişim onayı bir kez yenilenmelidir.
+- **Düzeltme:** Ayrılmış veya silinmiş bir üyeye bağlı kayıt güncellenebilir; eski bağlantı formda gösterilir ve kaldırılabilir.
 
 ### 0.1.2 — nav.json kategori ve alt modül tanımı
 

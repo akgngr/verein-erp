@@ -117,7 +117,25 @@ export async function searchCityCoordinates(
   }
 }
 
-const geocodeCache = new Map<string, { name: string; lat: number; lon: number } | null>();
+type GeocodeHit = { name: string; lat: number; lon: number };
+const geocodeCache = new Map<string, { value: GeocodeHit | null; expiresAt: number }>();
+/** Bulunamayan/başarısız aramalar kısa süre önbellekte kalır; ağ geri gelince yeniden denenir. */
+export const GEOCODE_MISS_TTL_MS = 10 * 60 * 1000;
+
+/** #585: Coğrafi kodlama önbelleği (pozitif sonuçlar süresiz, negatifler GEOCODE_MISS_TTL_MS kadar). */
+export function readGeocodeCache(key: string, now = Date.now()): { hit: boolean; value: GeocodeHit | null } {
+  const entry = geocodeCache.get(key);
+  if (!entry) return { hit: false, value: null };
+  if (entry.expiresAt <= now) {
+    geocodeCache.delete(key);
+    return { hit: false, value: null };
+  }
+  return { hit: true, value: entry.value };
+}
+
+export function writeGeocodeCache(key: string, value: GeocodeHit | null, now = Date.now()): void {
+  boundedSet(geocodeCache, key, { value, expiresAt: value ? Number.POSITIVE_INFINITY : now + GEOCODE_MISS_TTL_MS });
+}
 
 /**
  * #585: Derneğin şehri (kurum profili) → koordinatlar. Hazır listede yoksa bir kez çevrimiçi aranır ve sonuç
@@ -135,12 +153,13 @@ export async function resolveOrganizationLocation(options: { allowNetwork?: bool
   }
   if (!city) return fallback;
   const key = city.toLocaleLowerCase("de");
-  if (geocodeCache.has(key)) return geocodeCache.get(key) ?? fallback;
+  const cached = readGeocodeCache(key);
+  if (cached.hit) return cached.value ?? fallback;
   const preset = findCityCoordinates(city);
   if (preset) return preset;
   if (options.allowNetwork === false) return fallback;
   const found = await searchCityCoordinates(city);
-  boundedSet(geocodeCache, key, found);
+  writeGeocodeCache(key, found);
   return found ?? fallback;
 }
 

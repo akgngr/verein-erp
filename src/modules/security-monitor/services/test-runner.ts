@@ -31,7 +31,7 @@ async function probeDatabase(): Promise<Pick<RuntimeSnapshot, "auditTriggers" | 
     SELECT t.tgname FROM pg_trigger t JOIN pg_class c ON c.oid = t.tgrelid
     WHERE c.relname = 'AuditLog' AND NOT t.tgisinternal`;
   const failed = await db.$queryRaw<Array<{ count: bigint }>>`
-    SELECT COUNT(*)::bigint AS count FROM "_prisma_migrations" WHERE finished_at IS NULL OR rolled_back_at IS NOT NULL`;
+    SELECT COUNT(*)::bigint AS count FROM "_prisma_migrations" WHERE finished_at IS NULL AND rolled_back_at IS NULL`;
   return { auditTriggers: triggers.map((row) => row.tgname), failedMigrations: Number(failed[0]?.count ?? 0) };
 }
 

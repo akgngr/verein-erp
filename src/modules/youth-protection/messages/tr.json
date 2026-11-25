@@ -75,6 +75,7 @@
     "updated": "İbraz kaydı güncellendi.",
     "member": "Üye (isteğe bağlı)",
     "memberNone": "Üyeyle ilişkilendirme yok",
+    "memberHistorical": "Önceki üye bağlantısı (artık etkin değil)",
     "memberHelp": "Kişi derneğin üyesiyse seçin; ad alanı boşsa üyenin adıyla doldurulur."
   },
   "letter": {

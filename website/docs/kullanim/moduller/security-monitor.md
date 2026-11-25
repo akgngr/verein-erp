@@ -39,7 +39,7 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 _2026-11-25_
 
-- **Düzeltme:** 'Testleri çalıştır' artık alt süreçte test paketi başlatmaz (her zaman hata veriyordu); çalışan kurulumun güvenlik ayarları süreç içinde denetlenir: uygulama sırrı, sır şifreleme, HTTPS adres, yükleme klasörü, değiştirilemez denetim kaydı, veritabanı göçleri, üretim modu.
+- **Düzeltme:** 'Testleri çalıştır' artık alt süreçte test paketi başlatmaz (her zaman hata veriyordu); çalışan kurulumun güvenlik ayarları süreç içinde denetlenir: uygulama sırrı, sır şifreleme, HTTPS adres, yükleme klasörü, değiştirilemez denetim kaydı, veritabanı göçleri (yalnızca çözülmemiş hatalar), üretim modu.
 - **Güvenlik:** API'ler Zod ile doğrulanır; 401/403/400/404/500 ayrımı yapılır, ham hata mesajı dönmez; çalıştırma ve uyarı işlemleri denetim kaydı bırakır. Kullanılmayan zamanlama API'si kaldırıldı (zamanlama otomasyondadır).
 
 ### 1.3.7 — Sayfa yetkisi

@@ -75,6 +75,7 @@
     "updated": "Eintrag aktualisiert.",
     "member": "Mitglied (optional)",
     "memberNone": "Keine Verknüpfung mit einem Mitglied",
+    "memberHistorical": "Bisherige Mitgliedsverknüpfung (nicht mehr aktiv)",
     "memberHelp": "Wählen Sie das Mitglied, falls die Person Vereinsmitglied ist; ein leeres Namensfeld wird mit dem Mitgliedsnamen gefüllt."
   },
   "letter": {

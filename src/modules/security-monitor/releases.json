@@ -11,8 +11,8 @@
       "changes": [
         {
           "type": "fix",
-          "tr": "'Testleri çalıştır' artık alt süreçte test paketi başlatmaz (her zaman hata veriyordu); çalışan kurulumun güvenlik ayarları süreç içinde denetlenir: uygulama sırrı, sır şifreleme, HTTPS adres, yükleme klasörü, değiştirilemez denetim kaydı, veritabanı göçleri, üretim modu.",
-          "de": "„Tests ausführen“ startet keine Testsuite mehr in einem Unterprozess (schlug immer fehl); stattdessen werden die Sicherheitseinstellungen der laufenden Installation geprüft: App-Geheimnis, Verschlüsselung, HTTPS-Adresse, Upload-Ordner, unveränderliches Protokoll, Migrationen, Produktionsmodus."
+          "tr": "'Testleri çalıştır' artık alt süreçte test paketi başlatmaz (her zaman hata veriyordu); çalışan kurulumun güvenlik ayarları süreç içinde denetlenir: uygulama sırrı, sır şifreleme, HTTPS adres, yükleme klasörü, değiştirilemez denetim kaydı, veritabanı göçleri (yalnızca çözülmemiş hatalar), üretim modu.",
+          "de": "„Tests ausführen“ startet keine Testsuite mehr in einem Unterprozess (schlug immer fehl); stattdessen werden die Sicherheitseinstellungen der laufenden Installation geprüft: App-Geheimnis, Verschlüsselung, HTTPS-Adresse, Upload-Ordner, unveränderliches Protokoll, Migrationen (nur ungelöste Fehler), Produktionsmodus."
         },
         {
           "type": "security",
