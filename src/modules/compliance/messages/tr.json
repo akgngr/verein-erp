@@ -65,7 +65,9 @@
   "errors": {
     "unknownRule": "Kural bulunamadı.",
     "noTask": "Bu kural için görev önerisi yok.",
-    "noFinding": "Güncel bir bulgu yok; sayfayı yenileyin."
+    "noFinding": "Güncel bir bulgu yok; sayfayı yenileyin.",
+    "tasksUnavailable": "Görevler modülü açık değil; önce Modül Yönetimi'nden etkinleştirin.",
+    "tasksForbidden": "Görev oluşturma yetkiniz yok."
   },
   "ui": {
     "yearLabel": "Yıl",
@@ -77,5 +79,7 @@
     "downloadExport": "{format} indir",
     "computedValue": "Hesaplanan değer",
     "askAdvisorLink": "Vergi danışmanı erişimi"
-  }
+  },
+  "draftOnly": "Kontrol kuralları henüz hukuki incelemeden geçmedi; yönetici onayladıktan sonra burada görünecek.",
+  "draftOnlyAdmin": "Tüm kurallar taslak durumunda (hukuki inceleme bekliyor). Önizleme ile sonuçları görebilirsiniz; kurallar incelenip onaylanınca herkese gösterilir."
 }

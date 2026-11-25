@@ -65,7 +65,9 @@
   "errors": {
     "unknownRule": "Regel nicht gefunden.",
     "noTask": "Für diese Regel gibt es keinen Aufgabenvorschlag.",
-    "noFinding": "Kein aktueller Befund; bitte Seite neu laden."
+    "noFinding": "Kein aktueller Befund; bitte Seite neu laden.",
+    "tasksUnavailable": "Das Aufgabenmodul ist nicht aktiv; bitte zuerst in der Modulverwaltung aktivieren.",
+    "tasksForbidden": "Sie dürfen keine Aufgaben anlegen."
   },
   "ui": {
     "yearLabel": "Jahr",
@@ -77,5 +79,7 @@
     "downloadExport": "{format} herunterladen",
     "computedValue": "Berechneter Wert",
     "askAdvisorLink": "Steuerberatung verwalten"
-  }
+  },
+  "draftOnly": "Die Prüfregeln sind noch nicht rechtlich geprüft; sie erscheinen hier nach Freigabe durch die Verwaltung.",
+  "draftOnlyAdmin": "Alle Regeln sind Entwürfe (rechtliche Prüfung ausstehend). Mit der Vorschau sehen Sie die Ergebnisse; nach Prüfung und Freigabe werden sie allen angezeigt."
 }

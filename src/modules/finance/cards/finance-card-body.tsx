@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowDownRight, ArrowUpRight, Coins } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { Coins } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 
 import {
   SUPPORTED_CURRENCIES,
@@ -17,6 +17,7 @@ export function FinanceCardBody({
   initialRates: RatesData;
 }) {
   const t = useTranslations("finance");
+  const locale = useLocale();
   const [rates] = useState<RatesData>(initialRates);
   const [convertAmount, setConvertAmount] = useState<number>(100);
 
@@ -38,8 +39,6 @@ export function FinanceCardBody({
         {DISPLAY_CURRENCIES.map((code) => {
           const info = SUPPORTED_CURRENCIES[code];
           const rate = rates.rates[code] ?? 1;
-          const prev = rates.previousRates?.[code] ?? rate;
-          const isUp = rate >= prev;
 
           return (
             <div
@@ -55,7 +54,7 @@ export function FinanceCardBody({
                     {code}
                   </span>
                   <span className="block text-[10px] text-ink-400 truncate">
-                    {info?.nameTr ?? code}
+                    {(info ? (locale === "de" ? info.nameDe : info.nameTr) : code)}
                   </span>
                 </div>
               </div>
@@ -63,18 +62,6 @@ export function FinanceCardBody({
               <div className="text-right">
                 <span className="block text-xs font-mono font-bold text-ink-900 dark:text-white">
                   {rate.toFixed(code === "TRY" || code === "JPY" ? 2 : 4)}
-                </span>
-                <span
-                  className={`inline-flex items-center text-[10px] font-semibold ${
-                    isUp ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
-                  }`}
-                >
-                  {isUp ? (
-                    <ArrowUpRight className="size-3 mr-0.5" aria-hidden="true" />
-                  ) : (
-                    <ArrowDownRight className="size-3 mr-0.5" aria-hidden="true" />
-                  )}
-                  {rate >= prev ? "+0.2%" : "-0.1%"}
                 </span>
               </div>
             </div>
@@ -91,7 +78,7 @@ export function FinanceCardBody({
             max={1000000}
             value={convertAmount}
             onChange={(e) => setConvertAmount(Number(e.target.value) || 0)}
-            className="w-16 rounded-md bg-white dark:bg-ink-900 border border-ink-200 dark:border-white/10 px-1.5 py-0.5 text-center text-xs font-mono font-semibold focus:outline-none focus:ring-1 focus:ring-emerald-500"
+            className="w-16 rounded-md bg-white dark:bg-white/10 border border-ink-200 dark:border-white/10 px-1.5 py-0.5 text-center text-xs font-mono font-semibold text-ink-900 dark:text-white focus:outline-none focus:ring-1 focus:ring-emerald-500"
           />
           <span className="font-semibold text-ink-700 dark:text-ink-300">EUR =</span>
         </div>

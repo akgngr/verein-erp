@@ -9,12 +9,14 @@ import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-
 import { Button, Input, Label, TextArea, TextField } from "@/shared/components/kit";
 import { notify } from "@/shared/components/ui/notify";
 
-import { buildFeeExemptionLetterText } from "../services/fee-exemption-letter";
+import { buildFeeExemptionLetterText, escapeLetterHtml, type FeeExemptionLetterOrganization } from "../services/fee-exemption-letter";
 
 export function FeeExemptionLetterDrawerContent({
   initialPersonName,
+  organization,
 }: {
   initialPersonName?: string;
+  organization?: FeeExemptionLetterOrganization;
 }) {
   const t = useTranslations("youth-protection.letter");
   const router = useRouter();
@@ -33,8 +35,11 @@ export function FeeExemptionLetterDrawerContent({
       birthDate: birthDate || undefined,
       address: address || undefined,
       role: role || undefined,
+      // #585: Kurum adı ve şehri kurum profilinden (önceden sabit "Unser Verein e.V." / "Berlin").
+      organizationName: organization?.name ?? undefined,
+      organizationCity: organization?.city ?? undefined,
     });
-  }, [personName, birthDate, address, role, t]);
+  }, [personName, birthDate, address, role, t, organization]);
 
   const handleCopy = async () => {
     try {
@@ -57,7 +62,7 @@ export function FeeExemptionLetterDrawerContent({
       <!DOCTYPE html>
       <html>
         <head>
-          <title>${t("title")}</title>
+          <title>${escapeLetterHtml(t("title"))}</title>
           <style>
             body {
               font-family: Arial, sans-serif;
@@ -69,7 +74,7 @@ export function FeeExemptionLetterDrawerContent({
             }
           </style>
         </head>
-        <body>${letterText}</body>
+        <body>${escapeLetterHtml(letterText)}</body>
       </html>
     `);
     printWindow.document.close();

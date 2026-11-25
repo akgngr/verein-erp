@@ -39,14 +39,17 @@ test("buildComplianceExportMarkdown includes StBerG disclaimer in TR and DE and 
 
   const mdDe = buildComplianceExportMarkdown({ year: 2026, lang: "de", rows: sampleRows, preview: false });
   assert.ok(mdDe.includes(COMPLIANCE_DISCLAIMER.de));
-  assert.ok(mdDe.includes("46000"));
+  // #585: Hesaplanan değer dile göre etiketlenir ve biçimlenir.
+  assert.ok(mdDe.includes("Wert: 46.000"));
   assert.ok(mdDe.includes("https://www.gesetze-im-internet.de/ao_1977/__64.html"));
   assert.ok(mdDe.includes("v2"));
 
   const mdTr = buildComplianceExportMarkdown({ year: 2026, lang: "tr", rows: sampleRows, preview: true });
   assert.ok(mdTr.includes(COMPLIANCE_DISCLAIMER.tr));
   assert.ok(mdTr.includes("Önizleme"));
-  assert.equal(formatComputedValue({ value: 123, count: 4 }), "value: 123, count: 4");
+  assert.equal(formatComputedValue({ value: 123, count: 4 }, "tr"), "Değer: 123, Adet: 4");
+  assert.equal(formatComputedValue({ value: 1234.5, count: 4 }, "de"), "Wert: 1.234,5, Anzahl: 4");
+  assert.doesNotMatch(mdTr, /value: /);
 });
 
 test("cockpit UI components include year switcher, preview toggle, legal source links, and export action", () => {
