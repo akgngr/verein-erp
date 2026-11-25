@@ -28,7 +28,7 @@ export default function CurrentWeatherHeaderWidget() {
 
   const refresh = useCallback(async (active: () => boolean) => {
     try {
-      // #585: Derneğin şehri (kurum profili); önceden sabit "Frankfurt am Main".
+      // #585: Derneğin şehri (kurum profili); önceden sabit bir şehir kullanılıyordu.
       const result = await fetchOrganizationWeatherAction();
       if (!active()) return;
       if (result.ok && result.data) {
