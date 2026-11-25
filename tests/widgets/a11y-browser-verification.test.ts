@@ -70,7 +70,8 @@ describe("Widget Platform WP6 — Accessibility & Semantic HTML", () => {
     assert.match(drawerSrc, /<Bell[\s\S]*?aria-hidden/);
 
     // Badge is aria-hidden so screen readers do not stammer disconnected numbers
-    assert.match(drawerSrc, /<span aria-hidden className="absolute -right-1 -top-1/);
+    // #586: Rozet düğmenin içinde konumlanır (başlıkta kesilmesin); konum sınıfı değil aria-hidden denetlenir.
+    assert.match(drawerSrc, /<span aria-hidden className="[^"]*\babsolute\b[^"]*">/);
 
     // Sheet / Drawer accessibility
     assert.match(drawerSrc, /<Sheet[\s\S]*?placement="right" aria-label=\{labels\.heading\}>/);

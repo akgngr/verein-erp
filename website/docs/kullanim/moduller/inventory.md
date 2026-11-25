@@ -13,7 +13,7 @@ Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.
 |---|---|
 | Anahtar | `inventory` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.0 |
+| Sürüm | 1.2.1 |
 | Sayfalar | `/inventory`, `/inventory/kategoriler` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_inventory_overview` · `list_inventory_items` · `propose_delete_inventory_item` · `propose_inventory_item` · `propose_inventory_status`
 
 ## Sürüm notları
+
+### 1.2.1 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Satın alma tarihi yerel biçimde (GG.AA.YYYY) ve takvimle seçilir.
 
 ### 1.2.0 — AfA yetkisi, CSV güvenliği, yumuşak silme
 
@@ -86,10 +92,4 @@ _2026-11-16_
 
 - **İyileştirme:** Form/ayrıntı çekmecesi mobilde alttan açılır (masaüstünde sağdan).
 
-### 1.1.6 — Asistan önerileri bulutta
-
-_2026-11-16_
-
-- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
-
-Daha eski 7 herkese açık sürüm notu.
+Daha eski 8 herkese açık sürüm notu.

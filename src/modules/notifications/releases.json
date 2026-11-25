@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.15.3",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Bildirim tercihlerinde türler okunur adla, duyuru alıcılarında roller çevrilmiş adla gösterilir; zil rozeti mobil başlıkta kesilmez.",
+          "de": "Benachrichtigungsarten erscheinen mit lesbarem Namen, Rollen in Mitteilungen übersetzt; das Glockenabzeichen wird im mobilen Kopfbereich nicht mehr abgeschnitten."
+        }
+      ]
+    },
+    {
       "version": "0.15.2",
       "date": "2026-11-25",
       "title": {

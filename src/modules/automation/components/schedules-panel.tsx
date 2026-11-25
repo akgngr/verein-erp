@@ -38,6 +38,13 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
   const [pending, startTransition] = useTransition();
   const [taskKey, setTaskKey] = useState(tasks[0]?.key ?? "");
   const [hours, setHours] = useState("24");
+  // #586: Görev anahtarı (ör. "meetings.vote_purge") yerine okunur ad; çevirisi olmayan yeni görevlerde anahtar.
+  const taskLabel = (key: string) => (t.has(`taskLabels.${key}`) ? t(`taskLabels.${key}`) : key);
+  const interval = (minutes: number) => {
+    if (minutes < 60) return t("everyMinutes", { minutes });
+    if (minutes % 1440 === 0) return t("everyDays", { days: minutes / 1440 });
+    return t("every", { hours: Math.round((minutes / 60) * 10) / 10 });
+  };
 
   const run = (
     promise: () => Promise<{ ok: boolean; error?: string }>,
@@ -73,9 +80,9 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
                   <Select.Item
                     key={task.key}
                     id={task.key}
-                    textValue={String(task.key)}
+                    textValue={taskLabel(task.key)}
                   >
-                    <Label>{task.key}</Label>
+                    <Label>{taskLabel(task.key)}</Label>
                   </Select.Item>
                 ))}
           </Select>
@@ -126,12 +133,9 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
               className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-ink-200 bg-surface p-4"
             >
               <div className="min-w-0">
-                <p className="font-semibold">{schedule.taskKey}</p>
+                <p className="font-semibold">{taskLabel(schedule.taskKey)}</p>
                 <p className="text-sm text-ink-500">
-                  {t("every", {
-                    hours:
-                      Math.round((schedule.intervalMinutes / 60) * 10) / 10,
-                  })}{" "}
+                  {interval(schedule.intervalMinutes)}{" "}
                   · {t("next", { date: schedule.nextRun })}
                   {schedule.lastRun
                     ? ` · ${t("last", { date: schedule.lastRun })}`
@@ -143,7 +147,7 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
                   <Switch
                     isSelected={schedule.enabled}
                     isDisabled={pending}
-                    aria-label={t("enabled")}
+                    aria-label={`${t("enabled")}: ${taskLabel(schedule.taskKey)}`}
                     onChange={(enabled) =>
                       run(
                         () =>
@@ -158,7 +162,7 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
                   <Button
                     isIconOnly
                     size="sm"
-                    aria-label={t("delete")}
+                    aria-label={`${t("delete")}: ${taskLabel(schedule.taskKey)}`}
                     isDisabled={pending}
                     onPress={() =>
                       run(

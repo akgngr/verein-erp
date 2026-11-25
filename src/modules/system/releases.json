@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.19.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ayarlar genel bakışında her kart kendi açıklamasını gösterir; aynı modül açıklaması artık altı kartta tekrarlanmaz.",
+          "de": "In der Einstellungsübersicht hat jede Karte eine eigene Beschreibung; dieselbe Modulbeschreibung wiederholt sich nicht mehr auf sechs Karten."
+        }
+      ]
+    },
+    {
       "version": "1.19.1",
       "date": "2026-11-25",
       "title": {

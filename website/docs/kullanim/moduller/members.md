@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.15.9 |
+| Sürüm | 1.15.10 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.15.10 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Aidat ödemeleri başlığı Türkçe arayüzde büyük harfe çevrilmez ("MİTGLİEDSBEİTRÄGE" hatası).
 
 ### 1.15.9 — Portal ve form için SEPA API'si
 
@@ -87,10 +93,4 @@ _2026-11-19_
 
 - **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
 
-### 1.15.2 — Arka plan işleri için üye eşleştirme
-
-_2026-11-19_
-
-- **Düzeltme:** E-postaya göre üye eşleştirmesi arka plan işlerinden de güvenle kullanılabilir.
-
-Daha eski 34 herkese açık sürüm notu.
+Daha eski 35 herkese açık sürüm notu.

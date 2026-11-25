@@ -65,10 +65,41 @@
     "deleted": "Zamanlama silindi.",
     "empty": "Henüz zamanlanmış görev yok.",
     "every": "Her {hours} saatte",
+    "everyMinutes": "Her {minutes} dakikada",
+    "everyDays": "Her {days} günde",
     "next": "Sonraki: {date}",
     "last": "Son: {date}",
     "enabled": "Etkin",
-    "delete": "Sil"
+    "delete": "Sil",
+    "taskLabels": {
+      "ai": {
+        "cleanup_history": "AI geçmişini temizle"
+      },
+      "calendar": {
+        "sync_external": "Harici takvimleri eşitle"
+      },
+      "exports": {
+        "cleanup_files": "Süresi dolan dışa aktarım dosyalarını sil"
+      },
+      "meetings": {
+        "vote_purge": "Eski oy kayıtlarını temizle"
+      },
+      "notifications": {
+        "purge": "Eski bildirimleri temizle",
+        "dispatch": "Bekleyen bildirimleri gönder"
+      },
+      "secretary": {
+        "daily_briefing": "Sekreter günlük özeti",
+        "follow_up_reminders": "Takip hatırlatmaları",
+        "migrate_notifications": "Sekreter bildirimlerini taşı"
+      },
+      "security-monitor": {
+        "run_tests": "Güvenlik denetimini çalıştır"
+      },
+      "youth-protection": {
+        "statutory_purge": "Yasal saklama süresi dolan kayıtları sil"
+      }
+    }
   },
   "errors": {
     "notCancellable": "Bu görev artık iptal edilemez.",

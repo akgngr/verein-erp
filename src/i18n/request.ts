@@ -1,7 +1,8 @@
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { getRequestConfig } from "next-intl/server";
 
-import { DEFAULT_LOCALE, toLocale, type Locale } from "./config";
+import { DEFAULT_LOCALE, type Locale } from "./config";
+import { resolveRequestLocale } from "./negotiate";
 
 /**
  * next-intl request config — server tarafında hangi mesaj dosyasının
@@ -9,7 +10,8 @@ import { DEFAULT_LOCALE, toLocale, type Locale } from "./config";
  *
  * KARAR (Verein pivotu): URL'de dil öneki YOKTUR (rota değişikliği gerektirmediği için).
  * Bu, next-intl'in "non-routing-based" modudur; proxy.ts Auth.js koruması yeterli.
- * Dil kaynağı NEXT_LOCALE çerezidir; çerez yoksa DEFAULT_LOCALE ("tr") kullanılır.
+ * Dil kaynağı NEXT_LOCALE çerezidir; çerez yoksa tarayıcının Accept-Language başlığı (#586), o da
+ * eşleşmezse DEFAULT_LOCALE ("tr") kullanılır.
  * Çerezi next/headers ile doğrudan okuyoruz (requestLocale parametresi non-routing
  * modunda tanımsız geliyor; middleware stripte yok).
  *
@@ -18,9 +20,8 @@ import { DEFAULT_LOCALE, toLocale, type Locale } from "./config";
  * eşleşmelidir.
  */
 export default getRequestConfig(async () => {
-  const cookieStore = await cookies();
-  const cookieValue = cookieStore.get("NEXT_LOCALE")?.value;
-  const locale: Locale = toLocale(cookieValue) ?? DEFAULT_LOCALE;
+  const [cookieStore, headerStore] = await Promise.all([cookies(), headers()]);
+  const locale: Locale = resolveRequestLocale(cookieStore.get("NEXT_LOCALE")?.value, headerStore.get("accept-language"));
 
   const messages = (await import(`../../messages/${locale}.json`)).default;
 

@@ -35,6 +35,7 @@ import {
 } from "react";
 
 import { announceSidePanel } from "@/shared/components/side-panel-events";
+import { useOverlayOpen } from "@/shared/hooks/use-overlay-open";
 import { cn } from "@/shared/utils";
 
 import { AiExportJob } from "./export-job";
@@ -224,6 +225,7 @@ export function AiChatPanel({
       : t("proposal.legacy");
   const router = useRouter();
   const [open, setOpen] = useState(initialState.open);
+  const overlayOpen = useOverlayOpen();
   const [width, setWidth] = useState(initialState.width);
   const [conversationId, setConversationId] = useState<string | null>(
     initialState.conversationId,
@@ -514,45 +516,73 @@ export function AiChatPanel({
       <div className="relative flex min-w-0 flex-1 flex-col">
         {children}
         {!open ? (
-          // Yüzen giriş çubuğu: içerik alanının altında ortada; gönderince sohbet sütunu açılır.
-          <div className="pointer-events-none sticky bottom-4 z-30 flex justify-center px-4">
-            <form
-              className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-[1.75rem] border border-ink-200 bg-background/95 p-2 pl-3 shadow-lg backdrop-blur transition-colors focus-within:border-accent"
-              onSubmit={(event) => {
-                event.preventDefault();
-                if (!draft.trim()) return setOpen(true);
-                setOpen(true);
-                if (consented && provider) void send();
-              }}
+          // #586: Yüzen giriş. Mobilde ve sağlayıcı yapılandırılmamışken yalnızca küçük bir düğme; açık bir
+          // diyalog/çekmece varken gizlenir (kaydet düğmelerini ve uyarıları örtmesin).
+          // Sarmalayıcı yok: yapışkan (sticky) çubuk sütunun doğrudan çocuğu olmalı.
+          <>
+            <button
+              type="button"
+              hidden={overlayOpen}
+              aria-label={t("open")}
+              title={t("open")}
+              onClick={() => setOpen(true)}
+              className="fixed bottom-4 left-4 z-30 flex h-11 w-11 items-center justify-center rounded-full border border-ink-200 bg-background text-accent shadow-lg transition-colors hover:bg-ink-100 md:hidden"
             >
-              <button
-                type="button"
-                aria-label={t("open")}
-                title={t("open")}
-                onClick={() => setOpen(true)}
-                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-ink-100 hover:text-foreground"
-              >
-                <Sparkles className="h-5 w-5" aria-hidden />
-              </button>
-              <input
-                aria-label={t("input")}
-                placeholder={t("barPlaceholder")}
-                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-ink-400"
-                value={draft}
-                onChange={(event) => setDraft(event.target.value)}
-              />
-              <Button
-                type="submit"
-                isIconOnly
-                aria-label={t("send")}
-                isDisabled={!draft.trim()}
-                variant={actionVariant("primary", "solid")}
-                className="h-9 w-9 min-w-9 rounded-full"
-              >
-                <ArrowUp className="h-5 w-5" aria-hidden />
-              </Button>
-            </form>
-          </div>
+              <Sparkles className="h-5 w-5" aria-hidden />
+            </button>
+            {provider ? (
+              <div hidden={overlayOpen} className="pointer-events-none sticky bottom-4 z-30 hidden justify-center px-4 md:flex print:hidden">
+                <form
+                  className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-[1.75rem] border border-ink-200 bg-background/95 p-2 pl-3 shadow-lg backdrop-blur transition-colors focus-within:border-accent"
+                  onSubmit={(event) => {
+                    event.preventDefault();
+                    if (!draft.trim()) return setOpen(true);
+                    setOpen(true);
+                    if (consented && provider) void send();
+                  }}
+                >
+                  <button
+                    type="button"
+                    aria-label={t("open")}
+                    title={t("open")}
+                    onClick={() => setOpen(true)}
+                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-ink-100 hover:text-foreground"
+                  >
+                    <Sparkles className="h-5 w-5" aria-hidden />
+                  </button>
+                  <input
+                    aria-label={t("input")}
+                    placeholder={t("barPlaceholder")}
+                    className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-ink-400"
+                    value={draft}
+                    onChange={(event) => setDraft(event.target.value)}
+                  />
+                  <Button
+                    type="submit"
+                    isIconOnly
+                    aria-label={t("send")}
+                    isDisabled={!draft.trim()}
+                    variant={actionVariant("primary", "solid")}
+                    className="h-9 w-9 min-w-9 rounded-full"
+                  >
+                    <ArrowUp className="h-5 w-5" aria-hidden />
+                  </Button>
+                </form>
+              </div>
+            ) : (
+              <div hidden={overlayOpen} className="pointer-events-none sticky bottom-4 z-30 hidden justify-center px-4 md:flex print:hidden">
+                <button
+                  type="button"
+                  aria-label={t("open")}
+                  title={t("open")}
+                  onClick={() => setOpen(true)}
+                  className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full border border-ink-200 bg-background/95 text-ink-500 shadow-md backdrop-blur transition-colors hover:bg-ink-100 hover:text-foreground"
+                >
+                  <Sparkles className="h-5 w-5" aria-hidden />
+                </button>
+              </div>
+            )}
+          </>
         ) : null}
       </div>
 

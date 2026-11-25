@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.8",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Tanıtım balonu tarayıcı başına bir kez gösterilir ve kendiliğinden kapanır; geri bildirim düğmesi açık diyalog/çekmece varken gizlenir, mobilde tek düğmedir.",
+          "de": "Die Begrüßungsblase erscheint einmal pro Browser und schließt sich selbst; die Feedback-Schaltfläche blendet sich bei geöffneten Dialogen aus und ist mobil nur eine Schaltfläche."
+        }
+      ]
+    },
+    {
       "version": "1.1.7",
       "date": "2026-11-25",
       "title": {

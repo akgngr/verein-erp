@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.2.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Vade, tahsilat ve tahsil edildi tarihleri yerel biçimde (GG.AA.YYYY) ve takvimle seçilir.",
+          "de": "Fälligkeits-, Einzugs- und Eingangsdatum nutzen das lokale Format (TT.MM.JJJJ) mit Kalender."
+        }
+      ]
+    },
+    {
       "version": "1.2.1",
       "date": "2026-11-23",
       "title": {

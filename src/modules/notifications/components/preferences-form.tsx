@@ -20,6 +20,8 @@ const DEFAULT_SETTINGS: NotificationSettingsInput = {
 /** User-scoped preferences, with every write confirmed by backend before UI success. */
 export function NotificationPreferencesForm() {
   const t = useTranslations("notifications");
+  // #586: Tür anahtarı (ör. "meetings.invited") yerine okunur ad; çevirisi olmayan yeni türlerde anahtar gösterilir.
+  const typeLabel = (typeKey: string) => (t.has(`ui.typeLabels.${typeKey}`) ? t(`ui.typeLabels.${typeKey}`) : typeKey);
   const [types, setTypes] = useState<PreferenceView[]>([]);
   const [settings, setSettings] = useState<NotificationSettingsInput>(DEFAULT_SETTINGS);
   const [loading, setLoading] = useState(true);
@@ -85,11 +87,11 @@ export function NotificationPreferencesForm() {
               {CHANNELS.map(channel => <th key={channel} scope="col" className="p-2">{t(`ui.channel.${channel}`)}</th>)}
             </tr></thead>
             <tbody>{types.map(row => <tr className="border-b border-ink-200/60" key={row.typeKey}>
-              <th scope="row" className="p-2 font-medium">{row.typeKey}</th>
+              <th scope="row" className="p-2 font-medium">{typeLabel(row.typeKey)}</th>
               <td className="p-2"><input type="checkbox" checked disabled aria-label={t("ui.inApp")} /></td>
               {CHANNELS.map(channel => <td className="p-2" key={channel}>
                 <input type="checkbox" checked={row.channels[channel] ?? false} disabled={pending}
-                  aria-label={`${row.typeKey} — ${t(`ui.channel.${channel}`)}`}
+                  aria-label={`${typeLabel(row.typeKey)} — ${t(`ui.channel.${channel}`)}`}
                   onChange={event => void change(row.typeKey, channel, event.target.checked)} />
               </td>)}
             </tr>)}</tbody>
