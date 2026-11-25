@@ -115,6 +115,10 @@
     "unlicensed": {
       "title": "Dieses Modul erfordert eine Lizenz",
       "description": "Diese Funktion ist nur mit einer gültigen Enterprise-Lizenz verfügbar. Admins können sie unter Einstellungen → Lizenz hinterlegen."
+    },
+    "public": {
+      "title": "Diese Seite ist derzeit nicht verfügbar",
+      "description": "Die gesuchte Seite ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Verein."
     }
   },
   "releases": {

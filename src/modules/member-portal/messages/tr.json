@@ -145,5 +145,10 @@
     "signerNameLabel": "İmzalayan adı soyadı",
     "signButton": "Belgeyi imzala",
     "useEmailLink": "Bekleyen formları e-postanızdaki bağlantıdan açıp belgeleri okuyarak imzalayın; imzalı belge PDF olarak saklanır."
+  },
+  "consentConfirm": {
+    "title": "İletişim izni onayı",
+    "text": "Bu kanaldan bilgilendirme almak için izninizi onaylıyor musunuz?",
+    "button": "Onaylıyorum"
   }
 }

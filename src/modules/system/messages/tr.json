@@ -115,6 +115,10 @@
     "unlicensed": {
       "title": "Bu modül lisans gerektiriyor",
       "description": "Bu özellik yalnız geçerli bir Enterprise lisansıyla kullanılabilir. Yönetici Ayarlar → Lisans'tan lisans girebilir."
+    },
+    "public": {
+      "title": "Bu sayfa şu anda kullanılamıyor",
+      "description": "Aradığınız sayfa geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin veya dernekle iletişime geçin."
     }
   },
   "releases": {

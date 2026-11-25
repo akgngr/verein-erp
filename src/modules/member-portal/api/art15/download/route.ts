@@ -10,6 +10,7 @@ import {
   PORTAL_SESSION_COOKIE,
 } from "../../../services/auth-core";
 import { downloadPortalArt15Export } from "../../../services/rights";
+import { isPortalActionLimited } from "../../../services/portal-guard";
 
 export async function GET(request: Request): Promise<Response> {
   if (!isPortalEnabled()) {
@@ -20,6 +21,9 @@ export async function GET(request: Request): Promise<Response> {
   const session = await getActivePortalSession(cookieStore.get(PORTAL_SESSION_COOKIE)?.value);
   if (!session) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+  if (await isPortalActionLimited("art15-download", session.subjectRef)) {
+    return NextResponse.json({ ok: false, error: "rateLimited" }, { status: 429 });
   }
 
   if (!isPortalStepUpActive(session)) {

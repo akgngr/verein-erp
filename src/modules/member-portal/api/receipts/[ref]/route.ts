@@ -16,6 +16,7 @@ import {
 } from "../../../services/auth-core";
 import { verifyReceiptRef } from "../../../services/receipt-ref";
 import { parseSubjectRef } from "../../../services/subject-ref";
+import { isPortalActionLimited } from "../../../services/portal-guard";
 
 
 export async function GET(
@@ -31,6 +32,9 @@ export async function GET(
   const session = await getActivePortalSession(cookieStore.get(PORTAL_SESSION_COOKIE)?.value);
   if (!session) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+  if (await isPortalActionLimited("receipts", session.subjectRef)) {
+    return NextResponse.json({ ok: false, error: "rateLimited" }, { status: 429 });
   }
 
   if (!isPortalStepUpActive(session)) {

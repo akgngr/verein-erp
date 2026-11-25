@@ -11,13 +11,14 @@ type ReceiptRefPayload = {
   e: number;
 };
 
+/**
+ * #580: Sabit yedek sır kaldırıldı (fail closed). Önceden hiçbir sır yokken bilinen bir değerle imzalıyordu;
+ * makbuz bağlantıları taklit edilebilirdi. PORTAL_RECEIPT_SECRET (yoksa AUTH_SECRET) en az 16 karakter olmalı.
+ */
 function getSigningSecret(): string {
-  return (
-    process.env.PORTAL_RECEIPT_SECRET ||
-    process.env.AUTH_SECRET ||
-    process.env.NEXTAUTH_SECRET ||
-    "verein-erp-dev-portal-receipt-secret"
-  );
+  const secret = process.env.PORTAL_RECEIPT_SECRET || process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "";
+  if (secret.length < 16) throw new Error("PORTAL_RECEIPT_SECRET_MISSING");
+  return secret;
 }
 
 function signPayload(payloadB64: string): string {

@@ -145,5 +145,10 @@
     "signerNameLabel": "Name des Unterzeichners",
     "signButton": "Dokument unterzeichnen",
     "useEmailLink": "Bitte öffnen Sie offene Formulare über den Link in Ihrer E-Mail, lesen Sie die Dokumente und unterschreiben Sie dort; das unterschriebene Dokument wird als PDF gespeichert."
+  },
+  "consentConfirm": {
+    "title": "Einwilligung bestätigen",
+    "text": "Möchten Sie Ihre Einwilligung für Mitteilungen über diesen Kanal bestätigen?",
+    "button": "Bestätigen"
   }
 }

@@ -10,6 +10,7 @@ import {
   PORTAL_SESSION_COOKIE,
 } from "../../services/auth-core";
 import { requestPortalArt15Export } from "../../services/rights";
+import { isPortalActionLimited } from "../../services/portal-guard";
 
 export async function POST(): Promise<NextResponse> {
   if (!isPortalEnabled()) {
@@ -20,6 +21,9 @@ export async function POST(): Promise<NextResponse> {
   const session = await getActivePortalSession(cookieStore.get(PORTAL_SESSION_COOKIE)?.value);
   if (!session) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+  if (await isPortalActionLimited("art15", session.subjectRef)) {
+    return NextResponse.json({ ok: false, error: "rateLimited" }, { status: 429 });
   }
 
   if (!isPortalStepUpActive(session)) {
