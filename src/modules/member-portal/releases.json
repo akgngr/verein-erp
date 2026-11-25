@@ -23,6 +23,11 @@
           "type": "fix",
           "tr": "Portal içi imza, tam akış bağlanana kadar kapalı; bekleyen formlar e-postadaki bağlantıyla (belge, imza, kanıt, PDF) imzalanır.",
           "de": "Die Signatur im Portal ist bis zur Anbindung des vollständigen Ablaufs deaktiviert; offene Formulare werden über den E-Mail-Link (Dokument, Signatur, Nachweis, PDF) unterschrieben."
+        },
+        {
+          "type": "fix",
+          "tr": "Ek doğrulama isteği sınıra takılırsa bekleyen bağlantı geçerli kalır ve üyeye yeniden deneme mesajı gösterilir.",
+          "de": "Wird eine Bestätigungsanfrage durch das Limit gebremst, bleibt der ausstehende Link gültig und das Mitglied erhält einen Hinweis zum erneuten Versuch."
         }
       ]
     },

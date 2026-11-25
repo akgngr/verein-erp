@@ -42,3 +42,12 @@ test("receipt and Art. 15 secrets fail closed without a configured key", async (
     }
   }
 });
+
+test("signed member forms with bank details include the SEPA authorization", async () => {
+  const { showsSepaConsent } = await import("@/modules/online-forms/lib/evidence-consents");
+  assert.equal(showsSepaConsent({ guardian: {} }), true);
+  assert.equal(showsSepaConsent({ member: { sepaMandate: true } }), true);
+  assert.equal(showsSepaConsent({ member: { iban: "DE89 3704 0044 0532 0130 00" } }), true);
+  assert.equal(showsSepaConsent({ member: { sepaMandate: false, iban: "" } }), false);
+  assert.equal(showsSepaConsent({}), false);
+});

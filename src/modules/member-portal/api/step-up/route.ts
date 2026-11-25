@@ -31,8 +31,10 @@ export async function POST(req: NextRequest) {
   const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "unknown";
   const result = await requestPortalStepUpLink({ subjectRef: session.subjectRef, ip, rawNonce, origin: req.nextUrl.origin, locale: parsed.data.locale });
   if (!result.ok) return NextResponse.json({ ok: false, error: "unavailable" }, { status: 409 });
+  // Sınıra takıldıysa bağlantı oluşturulmadı: bekleyen bağlantının nonce çerezi korunur, istemci yeniden dener.
+  if (result.rateLimited) return NextResponse.json({ ok: false, error: "rateLimited" }, { status: 429 });
 
-  const res = NextResponse.json({ ok: true, rateLimited: Boolean(result.rateLimited) });
+  const res = NextResponse.json({ ok: true });
   res.cookies.set(PORTAL_NONCE_COOKIE, rawNonce, { httpOnly: true, sameSite: "lax", secure: true, path: "/", maxAge: 15 * 60 });
   return res;
 }

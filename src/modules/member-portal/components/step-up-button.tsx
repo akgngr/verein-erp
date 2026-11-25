@@ -9,7 +9,7 @@ import { Button } from "@/shared/components/kit";
 export function PortalStepUpButton() {
   const t = useTranslations("member-portal.shell");
   const locale = useLocale();
-  const [state, setState] = useState<"idle" | "busy" | "sent" | "failed">("idle");
+  const [state, setState] = useState<"idle" | "busy" | "sent" | "failed" | "rateLimited">("idle");
 
   async function request() {
     setState("busy");
@@ -19,7 +19,7 @@ export function PortalStepUpButton() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ locale: locale === "de" ? "de" : "tr" }),
       });
-      setState(res.ok ? "sent" : "failed");
+      setState(res.ok ? "sent" : res.status === 429 ? "rateLimited" : "failed");
     } catch {
       setState("failed");
     }
@@ -32,6 +32,7 @@ export function PortalStepUpButton() {
         {t("stepUpRequest")}
       </Button>
       {state === "failed" ? <p className="text-xs text-danger-600" role="alert">{t("stepUpFailed")}</p> : null}
+      {state === "rateLimited" ? <p className="text-xs text-danger-600" role="alert">{t("stepUpRateLimited")}</p> : null}
     </div>
   );
 }

@@ -23,6 +23,11 @@
           "type": "improvement",
           "tr": "Belge silme onayı uygulamanın onay penceresiyle.",
           "de": "Die Löschbestätigung für Dokumente nutzt den App-Dialog."
+        },
+        {
+          "type": "fix",
+          "tr": "Banka bilgisi veya SEPA onayı içeren üye formlarında imzalı kanıt PDF'i SEPA yetki metnini ve onay durumunu içerir.",
+          "de": "Bei Mitgliedsformularen mit Bankdaten oder SEPA-Zustimmung enthält das signierte Nachweis-PDF den Mandatstext und den Zustimmungsstatus."
         }
       ]
     },

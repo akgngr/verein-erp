@@ -48,6 +48,7 @@ _2026-11-25_
 - **Yeni:** Üye formlarında SEPA yetki yenileme için IBAN, BIC, hesap sahibi ve yetki onayı; onaylanınca üye kaydındaki yetki güncellenir.
 - **Güvenlik:** IBAN Mod-97 ile doğrulanır; herkese açık form gönderimi hız sınırlıdır; açılma zamanı GET'te değil tarayıcıda form gösterilince kaydedilir; portal içi imza (belgesiz/kanıtsız) kapatıldı.
 - **İyileştirme:** Belge silme onayı uygulamanın onay penceresiyle.
+- **Düzeltme:** Banka bilgisi veya SEPA onayı içeren üye formlarında imzalı kanıt PDF'i SEPA yetki metnini ve onay durumunu içerir.
 
 ### 1.3.3 — nav.json kategori ve alt modül tanımı
 

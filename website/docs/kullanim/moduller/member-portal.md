@@ -48,6 +48,7 @@ _2026-11-25_
 - **Düzeltme:** Portal öznesi tek biçimde ('member:&lt;id>'); önceden her gerçek oturumda rıza, düzeltme, makbuz, Art. 15, etkinlik ve imza işlemleri başarısız oluyordu. Giriş bağlantısı tam e-posta eşleşmesiyle bulunur; ana veride gerçek maskeli IBAN gösterilir.
 - **Güvenlik:** E-postayla ek doğrulama (step-up) eklendi; doğrulamasız geçiş anahtarı yolu kapatıldı. Rıza onayı yalnız sayfadaki düğmeyle (POST) yapılır; tüm portal uçlarında hız sınırı; __Host- çerezleri doğru silinir; makbuz imza anahtarında sabit yedek değer kaldırıldı.
 - **Düzeltme:** Portal içi imza, tam akış bağlanana kadar kapalı; bekleyen formlar e-postadaki bağlantıyla (belge, imza, kanıt, PDF) imzalanır.
+- **Düzeltme:** Ek doğrulama isteği sınıra takılırsa bekleyen bağlantı geçerli kalır ve üyeye yeniden deneme mesajı gösterilir.
 
 ### 0.3.2 — İşlem günlüğünde ödemeler
 
