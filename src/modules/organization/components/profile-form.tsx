@@ -106,6 +106,7 @@ export function ProfileForm({ profile }: { profile: OrganizationProfileData }) {
       <LogoUploader
         logoVersion={profile.logoVersion}
         logoOriginalName={profile.logoOriginalName}
+        getProfileVersion={() => form.getValues("updatedAt")}
         onProfileUpdated={(updatedAt) => form.setValue("updatedAt", updatedAt)}
       />
       <Card className={"shadow-sm border border-ink-200/80"}>
