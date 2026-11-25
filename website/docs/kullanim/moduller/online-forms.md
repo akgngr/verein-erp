@@ -13,7 +13,7 @@ e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve 
 |---|---|
 | Anahtar | `online-forms` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.3 |
+| Sürüm | 1.4.0 |
 | Sayfalar | `/online-formlar` |
 | Gerektirir | [Toplu e-posta](./mailings) |
 | Önerir | [Üyeler](./members), [Öğrenciler](./students) |
@@ -40,6 +40,15 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | e-Sign | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.4.0 — Üye SEPA yenileme, IBAN doğrulama, güvenlik
+
+_2026-11-25_
+
+- **Yeni:** Üye formlarında SEPA yetki yenileme için IBAN, BIC, hesap sahibi ve yetki onayı; onaylanınca üye kaydındaki yetki güncellenir.
+- **Güvenlik:** IBAN Mod-97 ile doğrulanır; herkese açık form gönderimi hız sınırlıdır; açılma zamanı GET'te değil tarayıcıda form gösterilince kaydedilir; portal içi imza (belgesiz/kanıtsız) kapatıldı.
+- **İyileştirme:** Belge silme onayı uygulamanın onay penceresiyle.
+- **Düzeltme:** Banka bilgisi veya SEPA onayı içeren üye formlarında imzalı kanıt PDF'i SEPA yetki metnini ve onay durumunu içerir.
 
 ### 1.3.3 — nav.json kategori ve alt modül tanımı
 
@@ -83,10 +92,4 @@ _2026-11-17_
 
 - **İyileştirme:** Gün/ay/yıl doğum tarihi seçimleri ortak SelectField adapterına taşındı; doğrudan HeroUI Select/ListBox/Label bağımlılığı kaldırıldı.
 
-### 1.2.2 — İmza temizleme eylemi ortak buton katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Buton görünümü ve etkileşim semantiği ortak ActionButton pattern'ine taşındı; modül bu kullanımda HeroUI Button implementasyonuna doğrudan bağlı değil.
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.

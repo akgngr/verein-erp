@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.15.8 |
+| Sürüm | 1.15.9 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.15.9 — Portal ve form için SEPA API'si
+
+_2026-11-25_
+
+- **İyileştirme:** Maskeli IBAN ve SEPA yetkisi kaydı üye portalı ve çevrimiçi formlar için public API'den sunulur.
 
 ### 1.15.8 — Kanal rızası eşitlemesi
 
@@ -87,10 +93,4 @@ _2026-11-19_
 
 - **Düzeltme:** E-postaya göre üye eşleştirmesi arka plan işlerinden de güvenle kullanılabilir.
 
-### 1.15.1 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 33 herkese açık sürüm notu.
+Daha eski 34 herkese açık sürüm notu.

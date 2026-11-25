@@ -16,11 +16,11 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Bildirimler](./moduller/notifications) | Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar. | 0.15.2 |
 | [Denetim Kayıtları](./moduller/audit) | Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları. | 1.1.0 |
 | [Dernek Bilgileri](./moduller/organization) | Dernek ana verileri, resmi iletişim ve antet logosu. | 1.0.9 |
-| [Dosyalarım](./moduller/exports) | Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır. | 2.2.5 |
+| [Dosyalarım](./moduller/exports) | Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır. | 2.2.6 |
 | [E-posta Altyapısı](./moduller/mail) | Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları. | 1.5.4 |
 | [Kimlik Doğrulama](./moduller/auth) | Kullanıcı girişi, oturum yönetimi ve parola güvenliği. | 1.1.1 |
 | [Kullanıcılar](./moduller/users) | Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri. | 1.4.2 |
-| [Modül Yönetimi](./moduller/system) | Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi. | 1.19.0 |
+| [Modül Yönetimi](./moduller/system) | Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi. | 1.19.1 |
 | [Widget Platformu](./moduller/widgets) | Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde toplar. | 0.3.2 |
 
 ## Resmî modüller
@@ -31,7 +31,7 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Banka bağlantısı](./moduller/banking) | Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketleri muhasebeye aktarır. | 1.1.8 |
 | [CRM](./moduller/crm) | Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı ve takipler. | 1.0.11 |
 | [Demo veri](./moduller/demo) | Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler. | 1.0.4 |
-| [e-Sign](./moduller/online-forms) | e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve imzalı PDF belgeleri. | 1.3.3 |
+| [e-Sign](./moduller/online-forms) | e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve imzalı PDF belgeleri. | 1.4.0 |
 | [Envanter ve Demirbaş](./moduller/inventory) | Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi. | 1.2.0 |
 | [Etkinlikler](./moduller/events) | Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi. | 1.2.13 |
 | [Evrak Kayıt](./moduller/documents) | Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi. | 1.10.3 |
@@ -46,7 +46,7 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Takvim](./moduller/calendar) | Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde. | 1.3.16 |
 | [Toplantılar](./moduller/meetings) | Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar. | 1.4.2 |
 | [Toplu e-posta](./moduller/mailings) | Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta. | 2.7.0 |
-| [Üyeler](./moduller/members) | Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi. | 1.15.8 |
+| [Üyeler](./moduller/members) | Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi. | 1.15.9 |
 
 ## Eklentiler
 
@@ -64,6 +64,6 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [SMS](./moduller/campaign-sms) | Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere gider. | 1.1.3 |
 | [Telegram](./moduller/campaign-telegram) | Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone olur; /stop ile ayrılır. | 1.1.0 |
 | [Uyum kontrolü](./moduller/compliance) | Kamu yararı (Gemeinnützigkeit) için iç kontrol listesi: süreler ve sınırlar. Vergi danışmanlığı değildir. | 0.3.0 |
-| [Üye Portalı](./moduller/member-portal) | Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı. | 0.3.2 |
+| [Üye Portalı](./moduller/member-portal) | Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı. | 0.4.0 |
 | [WhatsApp](./moduller/campaign-whatsapp) | Kampanyalar için WhatsApp kanalı (Meta Cloud API, onaylı şablonla). Yalnız WhatsApp izni verenlere gider. | 1.2.0 |
 | [Yapay zekâ asistanı](./moduller/ai) | Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan. | 1.15.11 |

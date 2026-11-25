@@ -5,7 +5,7 @@ import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { CheckCircle2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
-import { useMemo, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 
 import {
   BUNDESLAENDER,
@@ -16,7 +16,7 @@ import {
 import { useHydrated } from "@/shared/hooks/use-hydrated";
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
-import { submitOnlineFormAction } from "../actions/public-actions";
+import { markOnlineFormOpenedAction, submitOnlineFormAction } from "../actions/public-actions";
 import type { PublicForm as Form } from "../services/requests";
 import { BirthDateSelect } from "./birth-date-select";
 import { SignaturePad } from "./signature-pad";
@@ -32,6 +32,10 @@ export function PublicOnlineForm({
   token: string;
   form: Form;
 }) {
+  // #580: Açılma zamanı yalnız gerçek tarayıcıda (JS çalıştıktan sonra) kaydedilir; GET artık yazmaz.
+  useEffect(() => {
+    void markOnlineFormOpenedAction(token).catch(() => undefined);
+  }, [token]);
   const t = useTranslations("online-forms.public");
   const translate = useTranslateMessage();
   const locale = useLocale();
@@ -82,6 +86,11 @@ export function PublicOnlineForm({
       messagingConsents: form.member.messagingConsents,
       bulkMailOptOut: form.member.bulkMailOptOut,
       photoConsent: form.member.photoConsent,
+      // #580: SEPA yetki yenileme için banka alanları (IBAN ön doldurulmaz; yeniden girilir).
+      iban: "",
+      bic: "",
+      accountHolder: "",
+      sepaMandate: false,
     },
   );
   const [student, setStudent] = useState<Values | null>(
@@ -347,6 +356,20 @@ export function PublicOnlineForm({
               {field("member", member, setMember, "profession")}
             </div>
             {address("member", member, setMember, "name")}
+            <h3 className="pt-2 text-sm font-semibold">{t("sections.bank")}</h3>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {field("member", member, setMember, "iban")}
+              {field("member", member, setMember, "bic")}
+              {field("member", member, setMember, "accountHolder")}
+            </div>
+            <Checkbox
+              isSelected={Boolean(member.sepaMandate)}
+              onChange={(value) => setMember({ ...member, sepaMandate: value })}
+            >
+              <Label>
+                <span className="text-sm">{t("sepaMandate", { org: form.orgName })}</span>
+              </Label>
+            </Checkbox>
           </>,
         )}
       {student &&

@@ -7,6 +7,7 @@ import { z } from "zod";
 import { getActivePortalSession } from "../../services/auth";
 import { isPortalEnabled, PORTAL_SESSION_COOKIE } from "../../services/auth-core";
 import { signPortalPendingForm } from "../../services/rights";
+import { isPortalActionLimited } from "../../services/portal-guard";
 
 const SIGN_SCHEMA = z.object({
   requestId: z.string().min(1),
@@ -22,6 +23,9 @@ export async function POST(request: Request): Promise<NextResponse> {
   const session = await getActivePortalSession(cookieStore.get(PORTAL_SESSION_COOKIE)?.value);
   if (!session) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+  if (await isPortalActionLimited("signing", session.subjectRef)) {
+    return NextResponse.json({ ok: false, error: "rateLimited" }, { status: 429 });
   }
 
   let body: unknown;
@@ -42,7 +46,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     parsed.data.signerName,
   );
   if (!result.ok) {
-    const status = result.reason === "licenseRequired" ? 403 : 400;
+    // #580: Portal içi imza kapalı; e-postadaki form bağlantısı kullanılır (410 Gone).
+    const status = result.reason === "licenseRequired" ? 403 : result.reason === "useEmailLink" ? 410 : 400;
     return NextResponse.json({ ok: false, error: result.reason }, { status });
   }
 

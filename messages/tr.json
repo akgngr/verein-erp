@@ -7240,7 +7240,11 @@
         "houseNumber": "Kapı No",
         "postalCode": "Posta Kodu",
         "city": "Şehir"
-      }
+      },
+      "stepUpRequest": "E-postayla doğrula",
+      "stepUpSent": "Doğrulama bağlantısı e-posta adresinize gönderildi (15 dakika geçerli).",
+      "stepUpFailed": "Bağlantı gönderilemedi; lütfen daha sonra tekrar deneyin.",
+      "stepUpRateLimited": "Kısa süre içinde çok fazla istek yapıldı. Önceki bağlantı hâlâ geçerli; birkaç dakika sonra tekrar deneyin."
     },
     "corrections": {
       "title": "Veri Düzeltme Talebi",
@@ -7278,7 +7282,7 @@
     "receipts": {
       "title": "Makbuzlar (Aidat ve Bağış)",
       "subtitle": "PDF indirme için ek doğrulama (Step-up) ve kısa ömürlü imzalı referans gerekir.",
-      "stepUpHint": "Makbuzları indirmek için önce geçiş anahtarı ile ek doğrulama yapın.",
+      "stepUpHint": "Makbuzları indirmek için önce e-postayla ek doğrulama yapın (üstteki düğme).",
       "downloadButton": "PDF İndir",
       "empty": "Henüz indirilebilir makbuz bulunmuyor.",
       "kinds": {
@@ -7289,7 +7293,7 @@
     "art15": {
       "title": "DSGVO Md. 15 Veri Dışa Aktarımı",
       "subtitle": "Kişisel verilerinizin şifreli kopyasını talep edin (7 gün geçerli, aynı anda en fazla 1 açık talep).",
-      "stepUpHint": "Md. 15 dışa aktarımı için önce geçiş anahtarı ile ek doğrulama yapın.",
+      "stepUpHint": "Md. 15 dışa aktarımı için önce e-postayla ek doğrulama yapın (üstteki düğme).",
       "requestButton": "Şifreli dışa aktarım talep et",
       "createdNotice": "Şifreli Md. 15 dosyanız hazırlandı (7 gün geçerli).",
       "errorNotice": "Zaten açık bir Md. 15 talebiniz var veya ek doğrulama gerekiyor.",
@@ -7327,7 +7331,13 @@
       "subtitle": "Bekleyen çevrimiçi formları portal üzerinden imzalayın.",
       "empty": "İmzalanacak bekleyen belge yok.",
       "signerNameLabel": "İmzalayan adı soyadı",
-      "signButton": "Belgeyi imzala"
+      "signButton": "Belgeyi imzala",
+      "useEmailLink": "Bekleyen formları e-postanızdaki bağlantıdan açıp belgeleri okuyarak imzalayın; imzalı belge PDF olarak saklanır."
+    },
+    "consentConfirm": {
+      "title": "İletişim izni onayı",
+      "text": "Bu kanaldan bilgilendirme almak için izninizi onaylıyor musunuz?",
+      "button": "Onaylıyorum"
     }
   },
   "members": {
@@ -8271,7 +8281,8 @@
       "noEncryption": "İmzaları şifrelemek için anahtar ayarlı değil (AUTH_SECRET).",
       "invalid": "Lütfen işaretli alanları kontrol edin.",
       "linkInvalid": "Bağlantı geçersiz, süresi dolmuş veya zaten kullanılmış.",
-      "textsChanged": "Form metinleri bu arada güncellendi. Lütfen sayfayı yenileyip metni okuyarak yeniden imzalayın."
+      "textsChanged": "Form metinleri bu arada güncellendi. Lütfen sayfayı yenileyip metni okuyarak yeniden imzalayın.",
+      "rateLimited": "Çok fazla deneme yapıldı; lütfen biraz bekleyip tekrar deneyin."
     },
     "validation": {
       "tooLong": "Çok uzun.",
@@ -8283,7 +8294,9 @@
       "bic": "Geçerli bir BIC girin.",
       "signerName": "Adınızı ve soyadınızı yazın.",
       "signature": "Lütfen imza alanına imzanızı atın.",
-      "privacy": "Datenschutz onayı zorunludur."
+      "privacy": "Datenschutz onayı zorunludur.",
+      "ibanRequired": "SEPA yetkisi için IBAN girin.",
+      "accountHolderRequired": "SEPA yetkisi için hesap sahibini girin."
     },
     "public": {
       "title": "Kayıt formu",
@@ -9571,6 +9584,10 @@
       "unlicensed": {
         "title": "Bu modül lisans gerektiriyor",
         "description": "Bu özellik yalnız geçerli bir Enterprise lisansıyla kullanılabilir. Yönetici Ayarlar → Lisans'tan lisans girebilir."
+      },
+      "public": {
+        "title": "Bu sayfa şu anda kullanılamıyor",
+        "description": "Aradığınız sayfa geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin veya dernekle iletişime geçin."
       }
     },
     "releases": {
@@ -9878,7 +9895,8 @@
         "accessGrantsPending": "Bu modülün talep ettiği erişim izinleri yönetici onayı bekliyor.",
         "failedJobsDetected": "Arka plan iş kuyruğunda başarısız görevler tespit edildi.",
         "notificationsNoChannel": "Bildirim modülü için aktif bir dağıtım kanalı (E-posta, Telegram vb.) yapılandırılmamış.",
-        "generalIssue": "Modül yapılandırması veya iş akışında dikkat edilmesi gereken durumlar var."
+        "generalIssue": "Modül yapılandırması veya iş akışında dikkat edilmesi gereken durumlar var.",
+        "portalDisabledByEnv": "Üye portalı modülü açık, ancak sunucuda PORTAL_ENABLED=true ayarlı değil; /portal ziyaretçilere kapalı (404)."
       }
     },
     "privacyUi": {
