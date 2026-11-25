@@ -117,9 +117,9 @@ async function issueOne(args: {
           }
 
           // 3) PDF verisi + render + depolama (transaction içinde; rollback güvenli).
-          const issuer = await getDb().donationsSettings.findUnique({ where: { id: "singleton" } });
-          void issuer;
           const pdfData = await confirmationIssuerSnapshotToPdf({
+            confirmationNumber,
+            issueDate,
             recipient: args.recipient,
             issuer: snapshot.issuer,
             lang: "de",
@@ -263,10 +263,15 @@ export async function issueCollectiveDonationConfirmation(
   }
 
   // Grup kuralı (§ 1): tek bildirim = tek alıcı + tek içerik + tek takvim yılı +
-  // tek vazgeçim değeri; dönem bir takvim yılı içinde.
+  // tek vazgeçim değeri; dönem bir takvim yılı içinde ve her bağış [periodFrom, periodTo] aralığında.
   const year = args.periodFrom.getUTCFullYear();
   if (args.periodTo.getUTCFullYear() !== year) {
     throw new IssueError("donations.errors.periodSingleYear");
+  }
+  const fromDay = args.periodFrom.toISOString().slice(0, 10);
+  const toDay = args.periodTo.toISOString().slice(0, 10);
+  if (fromDay > toDay) {
+    throw new IssueError("donations.errors.periodOrderInvalid");
   }
   const waivedValues = new Set(donations.map((donation) => donation.waivedReimbursement));
   if (waivedValues.size > 1) {
@@ -279,7 +284,8 @@ export async function issueCollectiveDonationConfirmation(
     if (donation.reversedAt) {
       throw new IssueError("donations.errors.donationReversed", { number: donation.donationNumber });
     }
-    if (donation.receivedAt.getUTCFullYear() !== year) {
+    const donationDay = donation.receivedAt.toISOString().slice(0, 10);
+    if (donationDay < fromDay || donationDay > toDay) {
       throw new IssueError("donations.errors.donationOutsidePeriod", { number: donation.donationNumber });
     }
     if (donation.waivedReimbursement) {

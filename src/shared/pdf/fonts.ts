@@ -33,5 +33,8 @@ export function registerSharedPdfFonts(): void {
       },
     ],
   });
+  // Disable @react-pdf/renderer's English hyphenation rules which split German/Turkish words
+  // mid-syllable without visible hyphens (e.g. "Kö|rperschaftsteuergesetzes", "StNr. 00|7").
+  Font.registerHyphenationCallback((word) => [word]);
   registered = true;
 }

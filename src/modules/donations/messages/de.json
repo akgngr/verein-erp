@@ -132,6 +132,8 @@
       "note": "Notiz",
       "fromMember": "Aus Mitglied anlegen",
       "fromMemberHint": "Name und Adresse des Mitglieds werden einmalig kopiert; keine Live-Verknüpfung.",
+      "duplicateWarning": "Ein ähnlicher Spender ist bereits vorhanden ({number}). Wenn Sie dennoch einen neuen Spender anlegen möchten, bestätigen Sie unten.",
+      "confirmCreateDuplicate": "Trotzdem speichern",
       "save": "Speichern",
       "cancel": "Abbrechen",
       "toastSaved": "Spender/in gespeichert: {number}"
@@ -364,6 +366,7 @@
     "reversedDonation": "Für eine stornierte Spende kann keine Bestätigung ausgestellt werden.",
     "someDonationsMissing": "Einige der ausgewählten Spenden wurden nicht gefunden.",
     "periodSingleYear": "Der Zeitraum einer Sammelbestätigung muss innerhalb eines Kalenderjahres liegen.",
+    "periodOrderInvalid": "Das Startdatum des Zeitraums darf nicht nach dem Enddatum liegen.",
     "donationReversed": "{number} ist storniert.",
     "donationOutsidePeriod": "{number} liegt außerhalb des Zeitraums.",
     "noFeePayments": "Für dieses Mitglied und Jahr gibt es keine bestätigbaren Zahlungen.",

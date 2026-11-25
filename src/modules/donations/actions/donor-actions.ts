@@ -1,5 +1,7 @@
 "use server";
 
+import { z } from "zod";
+
 import { getMessageTranslator } from "@/shared/i18n/translate-message";
 
 import { getDb } from "@/shared/db";
@@ -19,6 +21,68 @@ import { anonymizeDonor } from "../services/anonymize-donor";
  * audit'te ASLA ad/adres — yalnız bağışçı numarası (§ 11 md. 13).
  */
 
+async function findDuplicateDonor(input: {
+  type: "PERSON" | "ORGANIZATION";
+  email: string | null;
+  lastName: string | null;
+  organizationName: string | null;
+  postalCode: string | null;
+}): Promise<{ donorNumber: string; reason: "email" | "namePostal" | "orgPostal" } | null> {
+  const db = getDb();
+  if (input.email) {
+    const byEmail = await db.donor.findFirst({
+      where: { email: { equals: input.email, mode: "insensitive" }, isAnonymized: false },
+      select: { donorNumber: true },
+    });
+    if (byEmail) return { donorNumber: formatDonorNumber(byEmail.donorNumber), reason: "email" };
+  }
+  if (input.type === "PERSON" && input.lastName && input.postalCode) {
+    const byName = await db.donor.findFirst({
+      where: {
+        lastName: { equals: input.lastName, mode: "insensitive" },
+        postalCode: input.postalCode,
+        isAnonymized: false,
+      },
+      select: { donorNumber: true },
+    });
+    if (byName) return { donorNumber: formatDonorNumber(byName.donorNumber), reason: "namePostal" };
+  }
+  if (input.type === "ORGANIZATION" && input.organizationName && input.postalCode) {
+    const byOrg = await db.donor.findFirst({
+      where: {
+        organizationName: { equals: input.organizationName, mode: "insensitive" },
+        postalCode: input.postalCode,
+        isAnonymized: false,
+      },
+      select: { donorNumber: true },
+    });
+    if (byOrg) return { donorNumber: formatDonorNumber(byOrg.donorNumber), reason: "orgPostal" };
+  }
+  return null;
+}
+
+export async function checkDonorDuplicateAction(
+  input: unknown,
+): Promise<ActionResult<{ duplicate: { donorNumber: string; reason: "email" | "namePostal" | "orgPostal" } | null }>> {
+  const run = createAction({
+    permission: { definition: donationsPermissions, action: "create" },
+    schema: donorCreateSchema,
+    handler: async ({ input }) => {
+      const duplicate = await findDuplicateDonor({
+        type: input.type,
+        email: input.email,
+        lastName: input.lastName,
+        organizationName: input.organizationName,
+        postalCode: input.postalCode,
+      });
+      return { duplicate };
+    },
+  });
+  return run(input) as Promise<
+    ActionResult<{ duplicate: { donorNumber: string; reason: "email" | "namePostal" | "orgPostal" } | null }>
+  >;
+}
+
 export async function createDonorAction(
   input: unknown,
 ): Promise<ActionResult<{ id: string; donorNumber: string }>> {
@@ -29,36 +93,33 @@ export async function createDonorAction(
       const db = getDb();
       const createdByLabel = buildUserLabel(user.name, user.email);
 
-      // Yinelenen uyarısı (§ 11 md. 2): aynı e-posta veya soyad+PLZ — bilgi amaçlı
-      // döner (engellemez; KARAR: onay akışı UI'da, sunucu engel koymaz).
-      const duplicateWarning = await (async () => {
-        if (input.email) {
-          const byEmail = await db.donor.findFirst({
-            where: { email: input.email, isAnonymized: false },
-            select: { donorNumber: true },
-          });
-          if (byEmail) return `Bu e-posta başka bağışçıda kayıtlı (SP-${String(byEmail.donorNumber).padStart(4, "0")}).`;
-        }
-        if (input.lastName && input.postalCode) {
-          const byName = await db.donor.findFirst({
-            where: { lastName: input.lastName, postalCode: input.postalCode, isAnonymized: false },
-            select: { donorNumber: true },
-          });
-          if (byName) return `Aynı soyad + posta kodu başka bağışçıda kayıtlı (SP-${String(byName.donorNumber).padStart(4, "0")}).`;
-        }
-        return null;
-      })();
-
-      // "Üyeden bağışçı oluştur" (§ 11 md. 2): veri BİR KEZ kopyalanır.
+      // "Üyeden bağışçı oluştur" (§ 11 md. 2): veri BİR KEZ kopyalanır (ID veya üye numarası).
       let memberCopy: Awaited<ReturnType<typeof getMemberAddressBlock>> = null;
       if (input.copyFromMemberId) {
         memberCopy = await getMemberAddressBlock(input.copyFromMemberId);
         if (!memberCopy) {
           throw new ActionError("donations.errors.memberAddressMissing", {
-            copyFromMemberId: ["Üye adresi tam değil."],
+            copyFromMemberId: ["donations.errors.memberAddressMissing"],
           });
         }
       }
+
+      const resolvedFirstName = memberCopy
+        ? (memberCopy.firstName ?? memberCopy.name.split(/\s+/).slice(0, -1).join(" ")) || null
+        : input.firstName;
+      const resolvedLastName = memberCopy
+        ? (memberCopy.lastName ?? memberCopy.name.split(/\s+/).slice(-1)[0]) || null
+        : input.lastName;
+      const resolvedPostalCode = memberCopy ? memberCopy.postalCode : input.postalCode;
+
+      const duplicate = await findDuplicateDonor({
+        type: input.type,
+        email: input.email,
+        lastName: resolvedLastName,
+        organizationName: input.organizationName,
+        postalCode: resolvedPostalCode,
+      });
+      const duplicateWarning = duplicate ? duplicate.donorNumber : null;
 
       const created = await runWithDonationsNumberRetry(() =>
         db.$transaction(async (tx) => {
@@ -67,13 +128,11 @@ export async function createDonorAction(
             data: {
               donorNumber: sequence,
               type: input.type,
-              firstName: memberCopy ? memberCopy.name.split(" ")[0] : input.firstName,
-              lastName: memberCopy
-                ? memberCopy.name.split(" ").slice(1).join(" ") || null
-                : input.lastName,
+              firstName: resolvedFirstName,
+              lastName: resolvedLastName,
               organizationName: input.organizationName,
               street: memberCopy ? memberCopy.street : input.street,
-              postalCode: memberCopy ? memberCopy.postalCode : input.postalCode,
+              postalCode: resolvedPostalCode,
               city: memberCopy ? memberCopy.city : input.city,
               country: memberCopy ? memberCopy.country : (input.country ?? "Deutschland"),
               email: input.email,
@@ -110,7 +169,7 @@ export async function createDonorAction(
 export async function updateDonorAction(input: unknown): Promise<ActionResult> {
   const run = createAction({
     permission: { definition: donationsPermissions, action: "update" },
-    schema: donorUpdateSchema.extend({ id: donorCreateSchema.shape.type }),
+    schema: donorUpdateSchema.extend({ id: z.string().min(1) }),
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const existing = await db.donor.findUnique({ where: { id: input.id } });

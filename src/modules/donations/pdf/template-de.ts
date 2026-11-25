@@ -43,6 +43,12 @@ export const LABEL_WAIVER = "Es handelt sich um den Verzicht auf Erstattung von 
 export const WAIVER_YES = "Ja";
 export const WAIVER_NO = "Nein";
 
+import {
+  formatNonBreakingTaxNumber,
+  normalizeCharitablePurposes,
+  normalizeTaxOfficeName,
+} from "@/shared/pdf/format";
+
 /** Muafiyet paragrafı (§ 13 md. 6) — belge türüne göre. */
 export function exemptionParagraph(args: {
   exemptionDocumentType: "EXEMPTION_NOTICE" | "TAX_ASSESSMENT_ANNEX" | "SPECIAL_ASSESSMENT_60A";
@@ -52,11 +58,18 @@ export function exemptionParagraph(args: {
   noticeDate: string; // dd.MM.yyyy
   period: string | null; // "2022 bis 2024"
 }): string {
+  const office = normalizeTaxOfficeName(args.taxOffice);
+  const stnr = formatNonBreakingTaxNumber(args.taxNumber);
+  const purposes = normalizeCharitablePurposes(args.purposes);
   if (args.exemptionDocumentType === "SPECIAL_ASSESSMENT_60A") {
+    const rawTrimmed = args.purposes.trim();
+    const purposeClause = /^f[öo]rderung\s+/i.test(rawTrimmed)
+      ? `folgende gemeinnützige Zwecke: ${rawTrimmed}`
+      : rawTrimmed;
     return (
       `Die Einhaltung der satzungsmäßigen Voraussetzungen nach den §§ 51, 59, 60 und 61 AO ` +
-      `wurde vom Finanzamt ${args.taxOffice}, StNr. ${args.taxNumber}, mit Bescheid vom ${args.noticeDate} ` +
-      `nach § 60a AO gesondert festgestellt. Wir fördern nach unserer Satzung ${args.purposes}.`
+      `wurde vom Finanzamt ${office}, ${stnr}, mit Bescheid vom ${args.noticeDate} ` +
+      `nach § 60a AO gesondert festgestellt. Wir fördern nach unserer Satzung ${purposeClause}.`
     );
   }
   const authority =
@@ -64,8 +77,8 @@ export function exemptionParagraph(args: {
       ? "nach der Anlage zum Körperschaftsteuerbescheid des Finanzamtes"
       : "nach dem Freistellungsbescheid des Finanzamtes";
   return (
-    `Wir sind wegen Förderung ${args.purposes} ${authority} ${args.taxOffice}, ` +
-    `StNr. ${args.taxNumber}, vom ${args.noticeDate}` +
+    `Wir sind wegen Förderung ${purposes} ${authority} ${office}, ` +
+    `${stnr}, vom ${args.noticeDate}` +
     (args.period ? ` für den letzten Veranlagungszeitraum ${args.period}` : "") +
     ` nach § 5 Abs. 1 Nr. 9 des Körperschaftsteuergesetzes von der Körperschaftsteuer ` +
     `und nach § 3 Nr. 6 des Gewerbesteuergesetzes von der Gewerbesteuer befreit.`
@@ -74,9 +87,9 @@ export function exemptionParagraph(args: {
 
 /** Kullanım cümlesi (§ 13 md. 7) — tekil/çoğul. */
 export const USAGE_SINGLE = (purposes: string) =>
-  `Es wird bestätigt, dass die Zuwendung nur zur Förderung ${purposes} verwendet wird.`;
+  `Es wird bestätigt, dass die Zuwendung nur zur Förderung ${normalizeCharitablePurposes(purposes)} verwendet wird.`;
 export const USAGE_COLLECTIVE = (purposes: string) =>
-  `Es wird bestätigt, dass die Zuwendungen nur zur Förderung ${purposes} verwendet werden.`;
+  `Es wird bestätigt, dass die Zuwendungen nur zur Förderung ${normalizeCharitablePurposes(purposes)} verwendet werden.`;
 
 /** Sammelbestätigung ek cümlesi (§ 13 md. 8). */
 export const COLLECTIVE_NO_OTHER_CONFIRMATIONS =

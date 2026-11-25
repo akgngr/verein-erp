@@ -29,6 +29,20 @@ export function donationBookingDescription(
   return kind === "income" ? `${base} (Einnahme)` : `${base} (Ausgabe)`;
 }
 
+async function nextVersionedSourceId(
+  tx: Prisma.TransactionClient,
+  sourceType: "DONATION" | "DONATION_WAIVER",
+  donationId: string,
+): Promise<string> {
+  const existingCount = await tx.accountingBooking.count({
+    where: {
+      sourceType,
+      OR: [{ sourceId: donationId }, { sourceId: { startsWith: `${donationId}:` } }],
+    },
+  });
+  return existingCount === 0 ? donationId : `${donationId}:${existingCount}`;
+}
+
 export async function createDonationBookings(
   tx: Prisma.TransactionClient,
   args: {
@@ -47,13 +61,16 @@ export async function createDonationBookings(
   const accountKey = donationAccountKeyFor(args.method);
   const accountId = accountKey === "cashAccountId" ? targets.cashAccountId : targets.bankAccountId;
 
-  const description = `Spende ${args.donationNumber} – Spender Nr. ${formatDonorNumber(args.donorNumber)}`;
+  const description = args.waivedReimbursement
+    ? donationBookingDescription(args.donationNumber, args.donorNumber, "income")
+    : `Spende ${args.donationNumber} – Spender Nr. ${formatDonorNumber(args.donorNumber)}`;
+  const incomeSourceId = await nextVersionedSourceId(tx, "DONATION", args.donationId);
   const income = await createSourcedBooking({
     tx,
     actor: args.actor,
     type: "INCOME",
     sourceType: "DONATION",
-    sourceId: args.donationId,
+    sourceId: incomeSourceId,
     bookingDate: args.receivedAt,
     accountId,
     categoryId: targets.donationCategoryId,
@@ -70,12 +87,13 @@ export async function createDonationBookings(
   if (!args.expenseCategoryId) {
     throw new ActionError("donations.errors.waiverExpenseRequired");
   }
+  const waiverSourceId = await nextVersionedSourceId(tx, "DONATION_WAIVER", args.donationId);
   const expense = await createSourcedBooking({
     tx,
     actor: args.actor,
     type: "EXPENSE",
     sourceType: "DONATION_WAIVER",
-    sourceId: args.donationId,
+    sourceId: waiverSourceId,
     bookingDate: args.receivedAt,
     accountId: targets.bankAccountId,
     categoryId: args.expenseCategoryId,

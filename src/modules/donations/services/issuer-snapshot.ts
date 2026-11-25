@@ -12,6 +12,8 @@ import type { AnlageItemRow } from "../pdf/confirmation-document";
  * batch md. 3: "renders one multi-page PDF from the stored snapshots").
  */
 export async function confirmationIssuerSnapshotToPdf(args: {
+  confirmationNumber: string;
+  issueDate: Date;
   recipient: RecipientSnapshot;
   issuer: Record<string, unknown>;
   lang: "de";
@@ -39,7 +41,7 @@ export async function confirmationIssuerSnapshotToPdf(args: {
 
   return {
     organization,
-    confirmationNumber: null, // satır oluştuktan sonra handler numarayı ekler
+    confirmationNumber: args.confirmationNumber,
     isPreview: false,
     kind: args.kind,
     content: args.content,
@@ -52,7 +54,7 @@ export async function confirmationIssuerSnapshotToPdf(args: {
     membershipFeesDeductible: Boolean(issuer.membershipFeesDeductible),
     items: args.items,
     issuedPlace: String(issuer.city ?? ""),
-    issueDate: new Date(),
+    issueDate: args.issueDate,
     attachment: args.kind === "COLLECTIVE",
     // PDF gövdesi snapshot alanlarını doğrudan okur (§ 13 md. 6/7).
     issuerSnapshotData: issuer,

@@ -40,27 +40,39 @@ export async function issueConfirmationAction(
   const run = createAction({
     permission: { definition: donationsPermissions, action: "approve" },
     schema: issueConfirmationSchema,
-    handler: async ({ input, user }) => {
+    handler: async ({ input, user, audit }) => {
       const label = buildUserLabel(user.name, user.email);
       const actor = { id: user.id, label };
       try {
+        let result: { id: string; confirmationNumber: string };
         if (input.content === "DONATION" && input.kind === "SINGLE") {
-          return await issueSingleDonationConfirmation(actor, input.donationId);
-        }
-        if (input.content === "DONATION" && input.kind === "COLLECTIVE") {
+          result = await issueSingleDonationConfirmation(actor, input.donationId);
+        } else if (input.content === "DONATION" && input.kind === "COLLECTIVE") {
           const from = input.periodFrom;
           const to = input.periodTo;
-          return await issueCollectiveDonationConfirmation(actor, {
+          result = await issueCollectiveDonationConfirmation(actor, {
             donorId: input.donorId,
             periodFrom: new Date(`${from}T00:00:00Z`),
             periodTo: new Date(`${to}T00:00:00Z`),
             donationIds: input.donationIds,
           });
+        } else {
+          result = await issueMembershipFeeConfirmation(actor, {
+            memberId: input.memberId,
+            year: input.year,
+          });
         }
-        return await issueMembershipFeeConfirmation(actor, {
-          memberId: input.memberId,
-          year: input.year,
+        await audit({
+          action: "ISSUE",
+          entity: "ZuwendungConfirmation",
+          entityId: result.id,
+          after: {
+            confirmationNumber: result.confirmationNumber,
+            content: input.content,
+            kind: input.kind,
+          },
         });
+        return result;
       } catch (error) {
         throw toActionError(error);
       }
@@ -128,9 +140,23 @@ export async function issueBatchAction(
   const run = createAction({
     permission: { definition: donationsPermissions, action: "approve" },
     schema: issueBatchSchema,
-    handler: async ({ input, user }) => {
+    handler: async ({ input, user, audit }) => {
       const actor = { id: user.id, label: buildUserLabel(user.name, user.email) };
-      return issueBatchConfirmations(actor, input);
+      const results = await issueBatchConfirmations(actor, input);
+      const issuedNumbers = results.filter((r) => r.ok && r.confirmationNumber).map((r) => r.confirmationNumber!);
+      await audit({
+        action: "ISSUE_BATCH",
+        entity: "ZuwendungConfirmation",
+        entityId: undefined,
+        after: {
+          year: input.year,
+          content: input.content,
+          requestedCount: input.recipientIds.length,
+          issuedCount: issuedNumbers.length,
+          failedCount: results.length - issuedNumbers.length,
+        },
+      });
+      return results;
     },
   });
 
@@ -149,7 +175,7 @@ export async function reissueConfirmationAction(
   const run = createAction({
     permission: { definition: donationsPermissions, action: "approve" },
     schema: reissueConfirmationSchema,
-    handler: async ({ input, user }) => {
+    handler: async ({ input, user, audit }) => {
       const db = getDb();
       const previous = await db.zuwendungConfirmation.findUnique({
         where: { id: input.id },
@@ -164,23 +190,32 @@ export async function reissueConfirmationAction(
 
       const actor = { id: user.id, label: buildUserLabel(user.name, user.email) };
       try {
+        let result: { id: string; confirmationNumber: string };
         if (previous.content === "MEMBERSHIP_FEE") {
-          return await issueMembershipFeeConfirmation(actor, {
+          result = await issueMembershipFeeConfirmation(actor, {
             memberId: previous.memberId ?? "",
             year: previous.periodFrom.getUTCFullYear(),
             replacesId: previous.id,
           });
+        } else if (previous.kind === "SINGLE") {
+          result = await issueSingleDonationConfirmation(actor, previous.items[0]?.sourceId ?? "", previous.id);
+        } else {
+          result = await issueCollectiveDonationConfirmation(actor, {
+            donorId: previous.donorId ?? "",
+            periodFrom: previous.periodFrom,
+            periodTo: previous.periodTo,
+            donationIds: previous.items.map((item) => item.sourceId),
+            replacesId: previous.id,
+          });
         }
-        if (previous.kind === "SINGLE") {
-          return await issueSingleDonationConfirmation(actor, previous.items[0]?.sourceId ?? "", previous.id);
-        }
-        return await issueCollectiveDonationConfirmation(actor, {
-          donorId: previous.donorId ?? "",
-          periodFrom: previous.periodFrom,
-          periodTo: previous.periodTo,
-          donationIds: previous.items.map((item) => item.sourceId),
-          replacesId: previous.id,
+        await audit({
+          action: "REISSUE",
+          entity: "ZuwendungConfirmation",
+          entityId: result.id,
+          before: { replacedId: previous.id, replacedNumber: previous.confirmationNumber },
+          after: { confirmationNumber: result.confirmationNumber },
         });
+        return result;
       } catch (error) {
         throw toActionError(error);
       }
