@@ -14,6 +14,7 @@ import { buildUserLabel } from "@/shared/utils";
 
 import { sepaPermissions } from "../permissions";
 import { DEFAULT_MAX_RETURNS, RETURN_CODE_LIST } from "../lib/mandate-health";
+import { isValidCollectionDate } from "../lib/pain008";
 import { mandateHealth } from "../services/health";
 import { cancelRun, candidates, createRun, creditorProblems, markCollected, markReturned, previewRun } from "../services/runs";
 
@@ -47,7 +48,7 @@ export async function createRunAction(input: unknown): Promise<ActionResult<{ id
       const problems = await creditorProblems();
       if (problems.includes("ownIban")) throw new ActionError("sepa.errors.ownIban");
       if (problems.includes("creditorId")) throw new ActionError("sepa.errors.creditorId");
-      if (input.collectionDate < new Date().toISOString().slice(0, 10)) throw new ActionError("sepa.errors.pastDate");
+      if (!isValidCollectionDate(input.collectionDate)) throw new ActionError("sepa.errors.invalidCollectionDate");
       const run = await createRun(input.source, input.param, input.collectionDate, input.sourceKeys, actorOf(user), await labels(), input.maxReturns);
       if (!run) throw new ActionError("sepa.errors.nothingToCollect");
       await audit({ action: "CREATE", entity: "SepaDebitRun", entityId: run.id, after: { number: run.number } });
@@ -82,7 +83,7 @@ export async function markReturnedAction(input: unknown): Promise<ActionResult<n
     }).refine((value) => value.code !== null || value.reason.length >= 2, { message: "sepa.errors.reason", path: ["reason"] }),
     handler: async ({ input, user, audit }) => {
       const reason = input.reason || input.code!;
-      if (!(await markReturned(input.itemId, { reason, code: input.code, feeCents: input.feeCents }, actorOf(user)))) throw new ActionError("sepa.errors.notCollected");
+      if (!(await markReturned(input.runId, input.itemId, { reason, code: input.code, feeCents: input.feeCents }, actorOf(user)))) throw new ActionError("sepa.errors.notCollected");
       // Denetim kaydı yalnız kod ve ücret tutar; serbest metin (kişi bilgisi içerebilir) yazılmaz.
       await audit({ action: "UPDATE", entity: "SepaDebitItem", entityId: input.itemId, after: { returned: true, code: input.code, feeCents: input.feeCents } });
       revalidatePath(`/muhasebe/sepa/${input.runId}`);

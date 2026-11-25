@@ -192,28 +192,10 @@ export async function updateDueAction(input: unknown): Promise<ActionResult> {
     handler: async ({ input, audit }) => {
       const db = getDb();
 
-      const due = await db.memberDue.findFirst({
-        where: { id: input.id },
-        include: { member: { select: { membershipNumber: true } } },
-      });
-      if (!due) throw new ActionError("members.errors.duesNotFound");
-
-      const paidAggregate = await db.memberPayment.aggregate({
-        where: { memberId: due.memberId, dueYear: due.year, voidedAt: null },
-        _sum: { amount: true },
-      });
-      const paidCents = Number(paidAggregate._sum.amount?.mul(100).toFixed(0) ?? 0);
-
       const cents = toCents(input.amount);
       if (cents === null || cents <= 0) {
         throw new ActionError("members.errors.amountInvalid", {
           amount: ["members.validation.amountInvalid"],
-        });
-      }
-      // İş emri: tutar ödenenin altına düşürülemez.
-      if (cents < paidCents) {
-        throw new ActionError("members.errors.duesBelowPaid", {
-          amount: ["members.validation.amountBelowPaid"],
         });
       }
 
@@ -224,16 +206,35 @@ export async function updateDueAction(input: unknown): Promise<ActionResult> {
         });
       }
 
-      // Muafiyet: ödemesi olan satır muaf yapılamaz (para gerçekten alındı).
-      if (input.waived && paidCents > 0) {
-        throw new ActionError("members.errors.duesWaiveWithPayments", {
-          waived: ["members.validation.waiveHasPayments"],
+      const due = await db.$transaction(async (tx) => {
+        const existing = await tx.memberDue.findFirst({
+          where: { id: input.id },
+          include: { member: { select: { membershipNumber: true } } },
         });
-      }
+        if (!existing) throw new ActionError("members.errors.duesNotFound");
 
-      await db.$transaction(async (tx) => {
+        const paidAggregate = await tx.memberPayment.aggregate({
+          where: { memberId: existing.memberId, dueYear: existing.year, voidedAt: null },
+          _sum: { amount: true },
+        });
+        const paidCents = Number(paidAggregate._sum.amount?.mul(100).toFixed(0) ?? 0);
+
+        // İş emri: tutar ödenenin altına düşürülemez.
+        if (cents < paidCents) {
+          throw new ActionError("members.errors.duesBelowPaid", {
+            amount: ["members.validation.amountBelowPaid"],
+          });
+        }
+
+        // Muafiyet: ödemesi olan satır muaf yapılamaz (para gerçekten alındı).
+        if (input.waived && paidCents > 0) {
+          throw new ActionError("members.errors.duesWaiveWithPayments", {
+            waived: ["members.validation.waiveHasPayments"],
+          });
+        }
+
         await tx.memberDue.update({
-          where: { id: due.id },
+          where: { id: existing.id },
           data: {
             amountDue: centsToDecimalString(cents),
             dueDate,
@@ -243,7 +244,8 @@ export async function updateDueAction(input: unknown): Promise<ActionResult> {
             status: input.waived ? "WAIVED" : "OPEN",
           },
         });
-        await recalculateDueStatus(tx, due.memberId, due.year);
+        await recalculateDueStatus(tx, existing.memberId, existing.year);
+        return existing;
       });
 
       await audit({
@@ -279,21 +281,24 @@ export async function deleteDueAction(input: unknown): Promise<ActionResult> {
     handler: async ({ input, audit }) => {
       const db = getDb();
 
-      const due = await db.memberDue.findFirst({
-        where: { id: input.id },
-        include: { member: { select: { membershipNumber: true } } },
-      });
-      if (!due) throw new ActionError("members.errors.duesNotFound");
+      const due = await db.$transaction(async (tx) => {
+        const existing = await tx.memberDue.findFirst({
+          where: { id: input.id },
+          include: { member: { select: { membershipNumber: true } } },
+        });
+        if (!existing) throw new ActionError("members.errors.duesNotFound");
 
-      const paymentCount = await db.memberPayment.count({
-        where: { memberId: due.memberId, dueYear: due.year, voidedAt: null },
-      });
-      // İş emri: ödemesi olan satır silinmez (önce ödemeler iptal edilmeli).
-      if (paymentCount > 0) {
-        throw new ActionError("members.errors.dueHasPayments");
-      }
+        const paymentCount = await tx.memberPayment.count({
+          where: { memberId: existing.memberId, dueYear: existing.year, voidedAt: null },
+        });
+        // İş emri: ödemesi olan satır silinmez (önce ödemeler iptal edilmeli).
+        if (paymentCount > 0) {
+          throw new ActionError("members.errors.dueHasPayments");
+        }
 
-      await db.memberDue.delete({ where: { id: due.id } });
+        await tx.memberDue.delete({ where: { id: existing.id } });
+        return existing;
+      });
 
       await audit({
         action: "DUE_DELETE",

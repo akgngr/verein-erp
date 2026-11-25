@@ -24,13 +24,31 @@ export async function deleteMemberAction(input: unknown): Promise<ActionResult> 
       if (!member) throw new ActionError("members.errors.memberNotFound");
 
       const deletedAt = new Date();
-      await db.member.update({
-        where: { id: member.id },
-        data: {
-          deletedAt,
-          deletedById: user.id,
-          deletedByLabel: buildUserLabel(user.name, user.email),
-        },
+      const deletedByLabel = buildUserLabel(user.name, user.email);
+      await db.$transaction(async (tx) => {
+        await tx.member.update({
+          where: { id: member.id },
+          data: {
+            deletedAt,
+            deletedById: user.id,
+            deletedByLabel,
+            // Release unique SEPA mandate reference and clear mandate credentials on soft-delete (#578).
+            sepaMandateReference: null,
+            sepaIban: null,
+            sepaBic: null,
+            sepaAccountHolder: null,
+            sepaMandateDate: null,
+          },
+        });
+        // Revoke active member portal sessions and cancel pending online form invitations.
+        await tx.portalSession.updateMany({
+          where: { subjectRef: `member:${member.id}`, revokedAt: null },
+          data: { revokedAt: deletedAt },
+        });
+        await tx.onlineFormRequest.updateMany({
+          where: { kind: "MEMBER", subjectId: member.id, status: "PENDING" },
+          data: { status: "CANCELLED" },
+        });
       });
 
       await audit({

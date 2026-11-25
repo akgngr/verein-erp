@@ -29,6 +29,8 @@
     "noMandate": "SEPA yetkisi yok",
     "invalidIban": "IBAN geçersiz",
     "alreadyInRun": "Açık bir tahsilatta zaten var",
+    "futureSignatureDate": "Yetki imza tarihi gelecekte",
+    "missingDebtorName": "Borçlu / hesap sahibi adı geçersiz veya boş",
     "dormant": "Yetki 36 aydır kullanılmadı",
     "renewAfterReturn": "İade sonrası yeni yetki gerekli",
     "pausedAfterReturns": "Tekrarlayan iadeler nedeniyle duraklatıldı"
@@ -82,6 +84,8 @@
     "date": "Geçerli bir tarih girin.",
     "year": "Geçerli bir yıl girin.",
     "pastDate": "Tahsilat tarihi geçmişte olamaz.",
+    "invalidCollectionDate": "Tahsilat tarihi en az 1 TARGET2 banka iş günü sonrası (hafta sonu ve TARGET2 tatilleri hariç) olmalıdır.",
+    "invalidName": "Alacaklı veya borçlu adı SEPA karakter kümesinde boş olamaz.",
     "nothingToCollect": "Tahsil edilecek kalem yok.",
     "notOpen": "Tahsilat açık değil.",
     "notCollected": "Kalem tahsil edilmiş değil.",

@@ -21,6 +21,8 @@ import {
 } from "../constants";
 import { berlinMonthRange } from "../utils";
 import { MemberDateFilter } from "../components/list-filters";
+import { CorrectionProposalsPanel } from "../components/correction-proposals-panel";
+import { listPendingMemberCorrectionProposals } from "../services/portal-self-service";
 import { MemberCreateView } from "./member-create-view";
 import { MemberEditView } from "./member-edit-view";
 import { MemberTable } from "../components/member-table";
@@ -48,12 +50,16 @@ export async function MemberListView({
     filterKeys: ["status", "type", "from", "to"],
   });
 
-  const [list, stats] = await Promise.all([listMembers(params), getMemberStats()]);
-  const t = await getTranslations("members");
-
   const canCreate = can(user.role, membersPermissions, "create");
   const canUpdate = can(user.role, membersPermissions, "update");
   const canDelete = can(user.role, membersPermissions, "delete");
+
+  const [list, stats, pendingProposals] = await Promise.all([
+    listMembers(params),
+    getMemberStats(),
+    canUpdate ? listPendingMemberCorrectionProposals() : Promise.resolve([]),
+  ]);
+  const t = await getTranslations("members");
 
   const month = berlinMonthRange();
   const monthFrom = month.start.toISOString().slice(0, 10);
@@ -74,6 +80,19 @@ export async function MemberListView({
       />
 
       <StatsCards stats={stats} monthFrom={monthFrom} monthTo={monthTo} />
+
+      {canUpdate && pendingProposals.length > 0 ? (
+        <CorrectionProposalsPanel
+          proposals={pendingProposals.map((item) => ({
+            id: item.id,
+            field: item.field,
+            previousValue: item.previousValue,
+            proposedValue: item.proposedValue,
+            createdAt: item.createdAt.toISOString(),
+            member: item.member,
+          }))}
+        />
+      ) : null}
 
       <MemberTable
         rows={list.rows}
