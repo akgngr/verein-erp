@@ -16,9 +16,12 @@ import { SurfaceCard } from "@/shared/components/ui/surface-card";
 export function LogoUploader({
   logoVersion,
   logoOriginalName,
+  onProfileUpdated,
 }: {
   logoVersion: string | null;
   logoOriginalName: string | null;
+  /** #583: Logo değişince profilin yeni updatedAt değeri (açık formun eşzamanlılık belirteci). */
+  onProfileUpdated?: (updatedAt: string) => void;
 }) {
   const t = useTranslations("organization");
   const router = useRouter();
@@ -41,12 +44,14 @@ export function LogoUploader({
         ok: boolean;
         error?: string;
         logoVersion?: string;
+        updatedAt?: string;
       } | null;
       if (!res.ok || !json?.ok) {
         notify(json?.error ?? t("logoError"), "danger");
         return;
       }
       setVersion(json.logoVersion ?? null);
+      if (json.updatedAt) onProfileUpdated?.(json.updatedAt);
       notify(t("logoUploadedToast"), "success");
       router.refresh();
     } finally {
@@ -62,12 +67,14 @@ export function LogoUploader({
       const json = (await res.json().catch(() => null)) as {
         ok: boolean;
         error?: string;
+        updatedAt?: string;
       } | null;
       if (!res.ok || !json?.ok) {
         notify(json?.error ?? t("logoError"), "danger");
         return;
       }
       setVersion(null);
+      if (json.updatedAt) onProfileUpdated?.(json.updatedAt);
       notify(t("logoRemovedToast"), "success");
       router.refresh();
     } finally {

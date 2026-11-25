@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.15.1 |
+| Sürüm | 0.15.2 |
 | Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular`, `/ayarlar/bildirimler/aboneler` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.15.2 — Etkin kanal listesi
+
+_2026-11-25_
+
+- **İyileştirme:** Sağlık kokpiti etkin bildirim kanallarını public API ile okur (sır ve ayar döndürülmez).
 
 ### 0.15.1 — TAX_ADVISOR rolü izin tanımı
 
@@ -83,12 +89,4 @@ _2026-11-21_
 - **Yeni:** public/sw.js ile anlık bildirim gösterimi, güvenli aynı kökenli bağlantı yönlendirmesi ve pushsubscriptionchange desteği sağlandı.
 - **İyileştirme:** iOS cihazlarda PWA ana ekrana ekleme rehberi ve desteklenmeyen tarayıcılarda zarif geri çekilme sağlandı.
 
-### 0.9.0 — SMS kanalı ve iş akışında bildirim
-
-_2026-11-20_
-
-- **Yeni:** Yönetici isterse SMS kanalını (seven.io veya Twilio) açabilir; kullanıcı numarasını kodla doğrular. Varsayılan kapalıdır.
-- **Yeni:** Otomasyonlarda yeni adım: 'Bildirim gönder' — herkese veya seçilen rollere kurum içi bildirim.
-- **Güvenlik:** SMS anahtarı veritabanında şifreli, numara şifreli; doğrulama kodu yalnız hash, 15 dakika, sınırlı deneme. SMS'e yalnız genel metin ve bağlantı gider.
-
-Daha eski 8 herkese açık sürüm notu.
+Daha eski 9 herkese açık sürüm notu.

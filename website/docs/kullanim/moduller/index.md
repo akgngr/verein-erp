@@ -13,15 +13,15 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 
 | Modül | Açıklama | Sürüm |
 |---|---|---|
-| [Bildirimler](./moduller/notifications) | Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar. | 0.15.1 |
-| [Denetim Kayıtları](./moduller/audit) | Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları. | 1.0.4 |
-| [Dernek Bilgileri](./moduller/organization) | Dernek ana verileri, resmi iletişim ve antet logosu. | 1.0.8 |
+| [Bildirimler](./moduller/notifications) | Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar. | 0.15.2 |
+| [Denetim Kayıtları](./moduller/audit) | Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları. | 1.1.0 |
+| [Dernek Bilgileri](./moduller/organization) | Dernek ana verileri, resmi iletişim ve antet logosu. | 1.0.9 |
 | [Dosyalarım](./moduller/exports) | Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır. | 2.2.4 |
 | [E-posta Altyapısı](./moduller/mail) | Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları. | 1.5.3 |
 | [Kimlik Doğrulama](./moduller/auth) | Kullanıcı girişi, oturum yönetimi ve parola güvenliği. | 1.1.1 |
 | [Kullanıcılar](./moduller/users) | Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri. | 1.4.1 |
-| [Modül Yönetimi](./moduller/system) | Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi. | 1.18.5 |
-| [Widget Platformu](./moduller/widgets) | Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde toplar. | 0.3.1 |
+| [Modül Yönetimi](./moduller/system) | Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi. | 1.19.0 |
+| [Widget Platformu](./moduller/widgets) | Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde toplar. | 0.3.2 |
 
 ## Resmî modüller
 
@@ -35,7 +35,7 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Envanter ve Demirbaş](./moduller/inventory) | Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi. | 1.1.12 |
 | [Etkinlikler](./moduller/events) | Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi. | 1.2.12 |
 | [Evrak Kayıt](./moduller/documents) | Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi. | 1.10.3 |
-| [Geri bildirim](./moduller/feedback) | Test kullanıcılarının hata ve önerilerini toplar. | 1.1.6 |
+| [Geri bildirim](./moduller/feedback) | Test kullanıcılarının hata ve önerilerini toplar. | 1.1.7 |
 | [Hibeler](./moduller/grants) | Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kullanım raporu). | 1.0.11 |
 | [Kurslar](./moduller/courses) | Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı. | 1.4.15 |
 | [Muhasebe](./moduller/accounting) | Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura ve bütçe yönetimi. | 1.27.3 |
@@ -58,12 +58,12 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Google Takvim](./moduller/calendar-google) | Google Takvim hesabını takvime salt okunur bağlar (OAuth; yönetici kendi Google Cloud uygulamasını girer). | 1.0.1 |
 | [Görevler](./moduller/tasks) | Görev ve iş takibi yönetimi. | 1.3.13 |
 | [Hava Durumu](./moduller/weather) | Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri (Dış API: api.open-meteo.com). | 0.2.0 |
-| [Otomasyon](./moduller/automation) | Kalıcı arka plan görevleri ve iş akışları. | 0.10.16 |
+| [Otomasyon](./moduller/automation) | Kalıcı arka plan görevleri ve iş akışları. | 0.10.17 |
 | [Outlook Takvim](./moduller/calendar-outlook) | Microsoft 365 / Outlook takvimini salt okunur bağlar (OAuth; yönetici kendi Azure uygulamasını girer). | 1.0.1 |
 | [Sekreter](./moduller/secretary) | Kişisel sekreter: sabah özeti ve onaylı öneriler. | 0.13.3 |
 | [SMS](./moduller/campaign-sms) | Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere gider. | 1.1.2 |
 | [Telegram](./moduller/campaign-telegram) | Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone olur; /stop ile ayrılır. | 1.0.2 |
 | [Uyum kontrolü](./moduller/compliance) | Kamu yararı (Gemeinnützigkeit) için iç kontrol listesi: süreler ve sınırlar. Vergi danışmanlığı değildir. | 0.2.1 |
-| [Üye Portalı](./moduller/member-portal) | Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı. | 0.3.1 |
+| [Üye Portalı](./moduller/member-portal) | Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı. | 0.3.2 |
 | [WhatsApp](./moduller/campaign-whatsapp) | Kampanyalar için WhatsApp kanalı (Meta Cloud API, onaylı şablonla). Yalnız WhatsApp izni verenlere gider. | 1.1.2 |
-| [Yapay zekâ asistanı](./moduller/ai) | Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan. | 1.15.10 |
+| [Yapay zekâ asistanı](./moduller/ai) | Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan. | 1.15.11 |

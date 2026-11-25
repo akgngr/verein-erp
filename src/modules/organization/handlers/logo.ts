@@ -135,15 +135,12 @@ export async function uploadOrganizationLogoHandler(request: Request): Promise<R
       logoUpdatedAt: now,
     };
 
-    if (existing) {
-      await db.organizationProfile.update({ where: { id: "singleton" }, data });
-    } else {
-      // KARAR: profil satırı yoksa fallback adla oluşturulur; form daha sonra
-      // gerçek adla güncellenir (getOrganizationProfile aynı fallback'i kullanır).
-      await db.organizationProfile.create({
-        data: { id: "singleton", name: getEnv().ORGANIZATION_NAME, ...data },
-      });
-    }
+    const editor = { updatedById: user.id, updatedByLabel: buildUserLabel(user.name, user.email) };
+    // KARAR: profil satırı yoksa fallback adla oluşturulur; form daha sonra
+    // gerçek adla güncellenir (getOrganizationProfile aynı fallback'i kullanır).
+    const saved = existing
+      ? await db.organizationProfile.update({ where: { id: "singleton" }, data: { ...data, ...editor }, select: { updatedAt: true } })
+      : await db.organizationProfile.create({ data: { id: "singleton", name: getEnv().ORGANIZATION_NAME, ...data, ...editor }, select: { updatedAt: true } });
 
     // Eski logo dosyası yalnızca yeni kayıt başarılı olduktan sonra silinir.
     if (existing?.logoPath && existing.logoPath !== storagePath) {
@@ -163,10 +160,12 @@ export async function uploadOrganizationLogoHandler(request: Request): Promise<R
       },
     });
 
+    // #583: Profilin yeni updatedAt değeri döner; açık form eşzamanlılık belirtecini günceller.
     return NextResponse.json({
       ok: true,
       logoVersion: String(now.getTime()),
       logoOriginalName: validation.file.originalName,
+      updatedAt: saved.updatedAt.toISOString(),
     });
   } catch (error) {
     await deleteLogoFile(storagePath);
@@ -194,9 +193,10 @@ export async function deleteOrganizationLogoHandler(): Promise<Response> {
     return NextResponse.json({ ok: false, error: await translateMessage("organization.errors.logoMissing") }, { status: 404 });
   }
 
-  await db.organizationProfile.update({
+  const saved = await db.organizationProfile.update({
     where: { id: "singleton" },
-    data: { logoPath: null, logoMime: null, logoOriginalName: null, logoUpdatedAt: null },
+    data: { logoPath: null, logoMime: null, logoOriginalName: null, logoUpdatedAt: null, updatedById: user.id, updatedByLabel: buildUserLabel(user.name, user.email) },
+    select: { updatedAt: true },
   });
   await deleteLogoFile(existing.logoPath);
 
@@ -210,5 +210,5 @@ export async function deleteOrganizationLogoHandler(): Promise<Response> {
     after: null,
   });
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, updatedAt: saved.updatedAt.toISOString() });
 }

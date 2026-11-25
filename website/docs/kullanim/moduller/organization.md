@@ -13,7 +13,7 @@ Dernek ana verileri, resmi iletişim ve antet logosu.
 |---|---|
 | Anahtar | `organization` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.8 |
+| Sürüm | 1.0.9 |
 | Sayfalar | `/ayarlar/dernek` |
 
 ## Varsayılan yetkiler
@@ -31,6 +31,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_organization_info`
 
 ## Sürüm notları
+
+### 1.0.9 — Profil kaydı ve görünüm
+
+_2026-11-25_
+
+- **Düzeltme:** Profil art arda kaydedilebilir ve logo değişikliğinden sonra 'kayıt değişti' hatası vermez; son düzenleyen her kayıtta güncellenir.
+- **İyileştirme:** Salt okunur görünüm Gemeinnützigkeit alanlarını (belge türü, amaçlar, aidat indirilebilirliği) gösterir.
 
 ### 1.0.8 — TAX_ADVISOR rolü izin tanımı
 

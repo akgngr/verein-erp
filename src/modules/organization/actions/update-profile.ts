@@ -19,13 +19,15 @@ import { toProfileDbData } from "../queries/get-profile";
  * (ad, adres, sicil, vergi) before/after değerleriyle yazılır — bunlar kişisel
  * veri değildir; kimlikNo gibi özel alanlar bu modelde hiç yoktur.
  */
-export async function updateOrganizationProfileAction(input: unknown): Promise<ActionResult> {
+export async function updateOrganizationProfileAction(input: unknown): Promise<ActionResult<{ updatedAt: string }>> {
   const run = createAction({
     permission: { definition: organizationPermissions, action: "update" },
     schema: organizationUpdateSchema,
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const data = toProfileDbData(input);
+      // #583: Son düzenleyen her kayıtta güncellenir (önceden yalnız ilk oluşturmada yazılıyordu).
+      const editor = { updatedById: user.id, updatedByLabel: buildUserLabel(user.name, user.email) };
 
       const existing = await db.organizationProfile.findUnique({ where: { id: "singleton" } });
 
@@ -35,17 +37,11 @@ export async function updateOrganizationProfileAction(input: unknown): Promise<A
         if (input.updatedAt && input.updatedAt !== existing.updatedAt.toISOString()) {
           throw new ActionError("common.errors.staleRecord");
         }
-        await db.organizationProfile.update({ where: { id: "singleton" }, data });
-      } else {
-        await db.organizationProfile.create({
-          data: {
-            id: "singleton",
-            ...data,
-            updatedById: user.id,
-            updatedByLabel: buildUserLabel(user.name, user.email),
-          },
-        });
       }
+      // #583: Yeni updatedAt istemciye döner; form ikinci kayıtta sayfa yenilemeden güncel sürümü gönderir.
+      const saved = existing
+        ? await db.organizationProfile.update({ where: { id: "singleton" }, data: { ...data, ...editor }, select: { updatedAt: true } })
+        : await db.organizationProfile.create({ data: { id: "singleton", ...data, ...editor }, select: { updatedAt: true } });
 
       const changed = Object.keys(data).filter(
         (key) =>
@@ -86,9 +82,9 @@ export async function updateOrganizationProfileAction(input: unknown): Promise<A
         },
       });
 
-      return undefined;
+      return { updatedAt: saved.updatedAt.toISOString() };
     },
   });
 
-  return run(input) as Promise<ActionResult>;
+  return run(input);
 }

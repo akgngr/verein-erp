@@ -9,6 +9,7 @@ import { systemPermissions } from "@/shared/permissions/system";
 
 import { SetupWizard } from "../components/setup-wizard";
 import { getAccessRecords } from "../services/module-access-store";
+import { getEffectiveModuleStates } from "../services/module-state-store";
 import { getSetupState, MODULE_PRESETS, ORGANIZATION_TYPES, PRESET_MANAGED_MODULES } from "../services/setup";
 
 /** Kurulum sihirbazı (/ayarlar/kurulum): kurum türüne göre modül ve muhasebe hazır ayarları. */
@@ -21,12 +22,17 @@ export async function SetupView() {
   }
   const t = await getTranslations("system.setup");
   const tNav = await getTranslations();
-  const [state, records] = await Promise.all([getSetupState(), getAccessRecords()]);
+  const [state, records, states] = await Promise.all([getSetupState(), getAccessRecords(), getEffectiveModuleStates()]);
   const modules = PRESET_MANAGED_MODULES.map((key) => allModules.find((module) => module.key === key))
     .filter((module): module is (typeof allModules)[number] => Boolean(module))
     .map((module) => {
       const navKey = `${module.key}.nav.${module.nav?.[0]?.labelKey ?? ""}`;
-      return { key: module.key, label: tNav.has(navKey) ? tNav(navKey) : module.label, needsApproval: !isAccessApproved(module, records[module.key]) };
+      return {
+        key: module.key,
+        label: tNav.has(navKey) ? tNav(navKey) : module.label,
+        needsApproval: !isAccessApproved(module, records[module.key]),
+        enabled: states[module.key] === true,
+      };
     });
   return (
     <div className="flex flex-col gap-4">

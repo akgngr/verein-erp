@@ -83,13 +83,13 @@ export async function requestPortalArt15Export(subjectRef: string): Promise<
     return { ok: false, reason: "alreadyOpen" };
   }
 
-  const [masterData, corrections, consents, processingLog] = await Promise.all([
+  const [masterData, corrections, consents] = await Promise.all([
     getPortalMasterData(subjectRef),
     listPortalCorrections(subjectRef),
     listPortalConsents(subjectRef),
-    listSubjectAuditLogsForPortal({ subjectRef, memberId: parsed.id }),
   ]);
   if (!masterData) return { ok: false, reason: "notFound" };
+  const processingLog = await listSubjectAuditLogsForPortal({ subjectRef, memberId: parsed.id, memberNumber: masterData.memberNumber });
 
   const { fileId, expiresAt } = await createEncryptedArt15ExportForPortal({
     ownerId: subjectRef,
@@ -148,7 +148,8 @@ export async function downloadPortalArt15Export(subjectRef: string, requestId: s
 export async function listPortalProcessingLog(subjectRef: string) {
   const parsed = parseSubjectRef(subjectRef);
   if (!parsed || parsed.kind !== "member") return [];
-  return listSubjectAuditLogsForPortal({ subjectRef, memberId: parsed.id });
+  const masterData = await getPortalMasterData(subjectRef);
+  return listSubjectAuditLogsForPortal({ subjectRef, memberId: parsed.id, memberNumber: masterData?.memberNumber ?? null });
 }
 
 export async function listPortalBusinessFeatures(subjectRef: string) {

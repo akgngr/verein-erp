@@ -94,6 +94,8 @@ export function ProfileForm({ profile }: { profile: OrganizationProfileData }) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
+    // #583: Yeni sürüm belirteciyle formu sıfırla; ikinci kayıt sayfa yenilemeden "staleRecord" vermez.
+    form.reset({ ...values, updatedAt: result.data.updatedAt });
     notify.success(t("savedToast"));
     router.refresh();
   });
@@ -104,6 +106,7 @@ export function ProfileForm({ profile }: { profile: OrganizationProfileData }) {
       <LogoUploader
         logoVersion={profile.logoVersion}
         logoOriginalName={profile.logoOriginalName}
+        onProfileUpdated={(updatedAt) => form.setValue("updatedAt", updatedAt)}
       />
       <Card className={"shadow-sm border border-ink-200/80"}>
         <Card.Content className={["gap-4 p-6"].filter(Boolean).join(" ")}>

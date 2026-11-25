@@ -111,5 +111,15 @@
       "label": "Güvenlik & Değişiklik Günlüğü",
       "description": "Değiştirilemez sistemsel denetim izleri ve güvenlik kayıtları."
     }
+  },
+  "details": {
+    "open": "Ayrıntılar",
+    "title": "Değişiklik ayrıntısı",
+    "before": "Önce",
+    "after": "Sonra",
+    "none": "Kayıt yok"
+  },
+  "errors": {
+    "notFound": "Denetim kaydı bulunamadı."
   }
 }

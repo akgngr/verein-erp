@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.3.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Yönetici widget politikası",
+        "de": "Widget-Richtlinie für Administratoren"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Widget ayarlarında yöneticiler isteğe bağlı widget'ları tüm kullanıcılar için açıp kapatabilir.",
+          "de": "In den Widget-Einstellungen können Administratoren optionale Widgets für alle Benutzer erlauben oder sperren."
+        }
+      ]
+    },
+    {
       "version": "0.3.1",
       "date": "2026-11-23",
       "title": {
