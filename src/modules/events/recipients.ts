@@ -25,7 +25,7 @@ export const recipients = defineRecipients("events", [
         key: "event",
         options: [],
         loadOptions: async () => (await getDb().event.findMany({
-          where: { status: { not: "CANCELLED" } },
+          where: { deletedAt: null, status: { not: "CANCELLED" } },
           select: { startDate: true, title: true },
           orderBy: { startDate: "desc" },
           take: 60,
@@ -38,7 +38,7 @@ export const recipients = defineRecipients("events", [
       const labels = new Set((filter.event ?? []).slice(0, 60));
       if (!labels.size) return [];
       const statuses = (filter.status ?? []).filter((value) => STATUSES.includes(value));
-      const events = (await getDb().event.findMany({ select: { id: true, startDate: true, title: true }, orderBy: { startDate: "desc" }, take: 300 }))
+      const events = (await getDb().event.findMany({ where: { deletedAt: null }, select: { id: true, startDate: true, title: true }, orderBy: { startDate: "desc" }, take: 300 }))
         .filter((row) => labels.has(eventLabel(row)));
       const attendees = await getDb().eventAttendee.findMany({
         where: { eventId: { in: events.map((row) => row.id) }, ...(statuses.length ? { status: { in: statuses } } : {}) },

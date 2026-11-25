@@ -1,7 +1,8 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Input, Label, Spinner, StatusChip, TextField, Button } from "@/shared/components/kit";
+import { ComboBox, Description, Input, Label, Spinner, StatusChip, TextField, Button } from "@/shared/components/kit";
+import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -21,16 +22,33 @@ import {
 } from "../actions/event-actions";
 import { formatDateTimeTr } from "../helpers/event-helpers";
 
+export type AttendeeMemberOption = { id: string; label: string; membershipNumber: string };
+
 interface AttendeeListProps {
   eventId: string;
   capacity: number | null;
   attendees: EventAttendeeItem[];
+  /** #584: Üye seçici seçenekleri (üyeler modülü kapalıysa boş). */
+  memberOptions?: AttendeeMemberOption[];
+  /** events.update yoksa liste salt okunurdur. */
+  canManage?: boolean;
+}
+
+const memberLabel = (option: AttendeeMemberOption) => `${option.label} (${option.membershipNumber})`;
+
+/** "Ad Soyad" → ad ve soyad; soyad son kelime kabul edilir (yönetici formda düzeltebilir). */
+function splitName(fullName: string): { firstName: string; lastName: string } {
+  const parts = fullName.trim().split(/\s+/);
+  if (parts.length < 2) return { firstName: parts[0] ?? "", lastName: "" };
+  return { firstName: parts.slice(0, -1).join(" "), lastName: parts[parts.length - 1] };
 }
 
 export function AttendeeList({
   eventId,
   capacity,
   attendees,
+  memberOptions = [],
+  canManage = false,
 }: AttendeeListProps) {
   const tAttendeeStatus = useTranslations("events.attendeeStatus");
   const tA = useTranslations("events.attendees");
@@ -42,6 +60,24 @@ export function AttendeeList({
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [notes, setNotes] = useState("");
+  const [memberId, setMemberId] = useState("");
+  const [memberSearch, setMemberSearch] = useState("");
+  const registeredMemberIds = new Set(
+    attendees.filter((a) => a.status !== "CANCELLED" && a.memberId).map((a) => a.memberId as string),
+  );
+  const availableMembers = memberOptions.filter((option) => !registeredMemberIds.has(option.id));
+  const selectedMember = availableMembers.find((option) => option.id === memberId);
+  const memberDisplayed = selectedMember ? memberLabel(selectedMember) : memberSearch;
+
+  const selectMember = (id: string) => {
+    setMemberId(id);
+    const option = availableMembers.find((item) => item.id === id);
+    if (option) {
+      const name = splitName(option.label);
+      setFirstName(name.firstName);
+      setLastName(name.lastName);
+    }
+  };
   const [loading, setLoading] = useState(false);
   const [statusLoadingId, setStatusLoadingId] = useState<string | null>(null);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
@@ -60,6 +96,7 @@ export function AttendeeList({
     try {
       const res = await addAttendeeAction({
         eventId,
+        memberId: memberId || null,
         firstName,
         lastName,
         email: email || null,
@@ -68,8 +105,9 @@ export function AttendeeList({
         notes: notes || null,
       });
 
-      if (!res.success) {
-        setErrorMsg(res.error ?? tA("addFailed"));
+      if (!res.ok) {
+        const fieldMessages = Object.values(res.fieldErrors ?? {}).flat();
+        setErrorMsg(fieldMessages.length ? fieldMessages.join(" ") : res.error || tA("addFailed"));
         return;
       }
 
@@ -80,6 +118,8 @@ export function AttendeeList({
       setEmail("");
       setPhone("");
       setNotes("");
+      setMemberId("");
+      setMemberSearch("");
       setIsAdding(false);
       router.refresh();
     } finally {
@@ -97,11 +137,11 @@ export function AttendeeList({
         attendeeId,
         status: newStatus,
       });
-      if (res.success) {
+      if (res.ok) {
         notify.success(tA("statusUpdatedToast"));
         router.refresh();
       } else {
-        notify.error(res.error ?? tA("statusFailed"));
+        notify.error(res.error || tA("statusFailed"));
       }
     } finally {
       setStatusLoadingId(null);
@@ -110,8 +150,8 @@ export function AttendeeList({
 
   const handleDeleteConfirm = async () => {
     if (!deletingAttendee) return;
-    const res = await deleteAttendeeAction(deletingAttendee.id);
-    if (res.success) {
+    const res = await deleteAttendeeAction({ attendeeId: deletingAttendee.id });
+    if (res.ok) {
       notify.success(
         tA("removedToast", {
           name: `${deletingAttendee.firstName} ${deletingAttendee.lastName}`,
@@ -119,7 +159,7 @@ export function AttendeeList({
       setDeletingAttendee(null);
       router.refresh();
     } else {
-      notify.error(res.error ?? tA("removeFailed"));
+      notify.error(res.error || tA("removeFailed"));
     }
   };
 
@@ -133,7 +173,7 @@ export function AttendeeList({
           <p className="text-xs text-ink-500">{tA("subtitle")}</p>
         </div>
 
-        {!isAdding && (
+        {canManage && !isAdding && (
           <Button
             size="sm"
             onPress={() => setIsAdding(true)}
@@ -146,7 +186,7 @@ export function AttendeeList({
         )}
       </div>
 
-      {isAdding && (
+      {canManage && isAdding && (
         <form
           onSubmit={handleAddSubmit}
           className="p-4 rounded-lg border border-ink-200 bg-surface-secondary/40 flex flex-col gap-3"
@@ -168,6 +208,46 @@ export function AttendeeList({
             <div className="p-2.5 rounded-lg bg-danger-50 text-danger-600 text-xs">
               {errorMsg}
             </div>
+          )}
+
+          {memberOptions.length > 0 && (
+            <ComboBox
+              id={`events-attendee-member-${eventId}`}
+              allowsCustomValue={false}
+              defaultItems={availableMembers}
+              value={selectedMember?.id ?? null}
+              inputValue={memberDisplayed}
+              onInputChange={(next) => {
+                setMemberSearch(next);
+                if (selectedMember && next !== memberLabel(selectedMember)) setMemberId("");
+              }}
+              onChange={(key) => selectMember(key === null ? "" : String(key))}
+              className="w-full"
+            >
+              <Label>{tA("memberPicker")}</Label>
+              <ComboBox.InputGroup>
+                <Input className="h-9 text-sm" />
+                {memberDisplayed ? (
+                  <FieldClearButton
+                    onPress={() => {
+                      setMemberSearch("");
+                      setMemberId("");
+                    }}
+                  />
+                ) : null}
+                <ComboBox.Trigger />
+              </ComboBox.InputGroup>
+              <Description>{tA("memberPickerHint")}</Description>
+              <ComboBox.Popover>
+                <ComboBox.List<AttendeeMemberOption>>
+                  {(option) => (
+                    <ComboBox.Item id={option.id} textValue={memberLabel(option)}>
+                      <Label>{memberLabel(option)}</Label>
+                    </ComboBox.Item>
+                  )}
+                </ComboBox.List>
+              </ComboBox.Popover>
+            </ComboBox>
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
@@ -332,7 +412,8 @@ export function AttendeeList({
                       <div className="relative inline-block w-full">
                         <select
                           value={attendee.status}
-                          disabled={statusLoadingId === attendee.id}
+                          disabled={!canManage || statusLoadingId === attendee.id}
+                          aria-label={tA("colStatus")}
                           onChange={(e) =>
                             handleStatusChange(
                               attendee.id,
@@ -352,15 +433,17 @@ export function AttendeeList({
                     </td>
 
                     <td className="py-3 px-4 text-right">
-                      <Button
-                        size="sm"
-                        isIconOnly
-                        aria-label={tA("removeTitle")}
-                        onPress={() => setDeletingAttendee(attendee)}
-                        variant={actionVariant("danger", "light")}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </Button>
+                      {canManage ? (
+                        <Button
+                          size="sm"
+                          isIconOnly
+                          aria-label={tA("removeTitle")}
+                          onPress={() => setDeletingAttendee(attendee)}
+                          variant={actionVariant("danger", "light")}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      ) : null}
                     </td>
                   </tr>
                 );

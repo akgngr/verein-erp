@@ -2,6 +2,41 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.13",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Doğrulama, saat dilimi, yetki ve denetim düzeltmeleri",
+        "de": "Korrekturen bei Validierung, Zeitzone, Berechtigung und Protokoll"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Bitiş başlangıçtan önce olamaz; güncellemede gönderilmeyen alanlar varsayılanla ezilmez; uzunluk sınırları eklendi.",
+          "de": "Das Ende darf nicht vor dem Beginn liegen; nicht gesendete Felder werden beim Bearbeiten nicht mehr mit Standardwerten überschrieben; Längenbegrenzungen ergänzt."
+        },
+        {
+          "type": "fix",
+          "tr": "Saatler Europe/Berlin olarak girilir ve gösterilir; sunucu saat dilimine bağlı kayma giderildi.",
+          "de": "Uhrzeiten werden als Europe/Berlin eingegeben und angezeigt; die Verschiebung durch die Server-Zeitzone ist behoben."
+        },
+        {
+          "type": "fix",
+          "tr": "Etkinlik ve katılımcı işlemleri denetim kaydına yazılır; etkinlik silme artık yumuşak silmedir.",
+          "de": "Veranstaltungs- und Teilnehmeraktionen werden protokolliert; Löschen ist jetzt ein weiches Löschen."
+        },
+        {
+          "type": "fix",
+          "tr": "Kontenjan ve aynı üyenin ikinci kaydı eşzamanlı isteklerde de engellenir; katılımcı formuna üye seçici eklendi.",
+          "de": "Kapazität und Doppelanmeldungen desselben Mitglieds werden auch bei gleichzeitigen Anfragen verhindert; Mitgliederauswahl im Teilnehmerformular ergänzt."
+        },
+        {
+          "type": "fix",
+          "tr": "Etkinlik sayfaları görüntüleme yetkisi ister; oluşturma, düzenleme ve katılımcı yönetimi yetkiye göre gösterilir.",
+          "de": "Veranstaltungsseiten erfordern die Ansichtsberechtigung; Anlegen, Bearbeiten und Teilnehmerverwaltung werden nach Berechtigung angezeigt."
+        }
+      ]
+    },
+    {
       "version": "1.2.12",
       "date": "2026-11-24",
       "title": {

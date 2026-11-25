@@ -23,6 +23,7 @@ export async function buildEventsWorkbook(): Promise<EventExportFile> {
   const t = await getTranslations("events")
 
   const events = await getDb().event.findMany({
+    where: { deletedAt: null },
     orderBy: { startDate: "asc" },
     include: { attendees: { select: { status: true } } },
   })
