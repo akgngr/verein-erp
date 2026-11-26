@@ -15,9 +15,9 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { IMPORT_MAX_FILE_MB } from "../constants";
 import { membersPermissions } from "../permissions";
-import { allocateMembershipNumber } from "../services/membership-number";
+import { allocateMembershipNumber, membershipNumberYear } from "../services/membership-number";
 import { ImportParseError, parseImportWorkbook } from "../services/import-parser";
-import { berlinYear, parseDateOnly } from "../utils";
+import { parseDateOnly } from "../utils";
 import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
@@ -197,7 +197,6 @@ export async function importMembersHandler(request: Request): Promise<Response> 
 
   // --- Commit: 50'şer satırlık partilerle yazılır (büyük dosyalarda 5s TX zaman aşımını önler — #578) ---
   const userLabel = buildUserLabel(user.name, user.email);
-  const registrationYear = berlinYear(new Date());
   const BATCH_SIZE = 50;
   let imported = 0;
 
@@ -207,10 +206,12 @@ export async function importMembersHandler(request: Request): Promise<Response> 
       async (tx) => {
         let count = 0;
         for (const row of batch) {
-          const { sequence, membershipNumber } = await allocateMembershipNumber(tx, registrationYear);
+          // #605: numaradaki yıl satırın üyelik başlangıç yılı (joinDate).
+          const numberYear = membershipNumberYear(parseDateOnly(row.data.joinDate)!);
+          const { sequence, membershipNumber } = await allocateMembershipNumber(tx, numberYear);
           await tx.member.create({
             data: {
-              year: registrationYear,
+              year: numberYear,
               sequence,
               membershipNumber,
               type: row.data.type,
@@ -248,7 +249,7 @@ export async function importMembersHandler(request: Request): Promise<Response> 
     entity: "Member",
     entityId: null,
     // Gizlilik: audit'e yalnızca sayılar yazılır (kişisel veri yok).
-    after: { total: parsedFile.total, valid: validRows.length, imported, registrationYear },
+    after: { total: parsedFile.total, valid: validRows.length, imported, numberYearBasis: "joinDate" },
   });
 
   return NextResponse.json({

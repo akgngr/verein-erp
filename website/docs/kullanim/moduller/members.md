@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.15.11 |
+| Sürüm | 1.16.0 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -45,6 +45,14 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.16.0 — Katılım tarihi esaslı sayılar, doğum günleri ve yıldönümleri
+
+_2026-11-26_
+
+- **Düzeltme:** "Bu ay yeni" sayısı üyelik başlangıcına (katılım tarihi) göre hesaplanır; toplu içe aktarma veya geç kayıt sayıyı artık şişirmez.
+- **İyileştirme:** Yeni üyelik numaralarındaki yıl katılım yılıdır (ör. 1998'de katılan üye UYE-1998-…). Mevcut numaralar değişmez.
+- **Yeni:** Panelde yeni kart: önümüzdeki 30 gündeki doğum günleri ve 10/25/40/50/60. üyelik yılları (yalnız etkin/pasif üyeler; üye düzenleme yetkisi olanlar görür).
 
 ### 1.15.11 — Aidat korumaları, DSGVO dışa aktarım, silme temizliği ve düzeltme talebi paneli
 
@@ -88,10 +96,4 @@ _2026-11-23_
 
 - **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
-### 1.15.4 — GoBD silme koruması
-
-_2026-11-23_
-
-- **Güvenlik:** Aidat tahakkuk ilişkisi (MemberDue.member) onDelete: Restrict olarak güncellendi.
-
-Daha eski 36 herkese açık sürüm notu.
+Daha eski 37 herkese açık sürüm notu.

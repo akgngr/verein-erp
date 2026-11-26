@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.16.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Katılım tarihi esaslı sayılar, doğum günleri ve yıldönümleri",
+        "de": "Zahlen nach Eintrittsdatum, Geburtstage und Jubiläen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "\"Bu ay yeni\" sayısı üyelik başlangıcına (katılım tarihi) göre hesaplanır; toplu içe aktarma veya geç kayıt sayıyı artık şişirmez.",
+          "de": "„Neu in diesem Monat“ zählt nach dem Eintrittsdatum; Importe oder spätes Erfassen verfälschen die Zahl nicht mehr."
+        },
+        {
+          "type": "improvement",
+          "tr": "Yeni üyelik numaralarındaki yıl katılım yılıdır (ör. 1998'de katılan üye UYE-1998-…). Mevcut numaralar değişmez.",
+          "de": "Das Jahr in neuen Mitgliedsnummern ist das Eintrittsjahr (z. B. UYE-1998-… bei Eintritt 1998). Bestehende Nummern bleiben unverändert."
+        },
+        {
+          "type": "feature",
+          "tr": "Panelde yeni kart: önümüzdeki 30 gündeki doğum günleri ve 10/25/40/50/60. üyelik yılları (yalnız etkin/pasif üyeler; üye düzenleme yetkisi olanlar görür).",
+          "de": "Neue Dashboard-Karte: Geburtstage und Mitgliedsjubiläen (10/25/40/50/60 Jahre) der nächsten 30 Tage (nur aktive/passive Mitglieder; sichtbar für Rollen mit Bearbeitungsrecht)."
+        }
+      ]
+    },
+    {
       "version": "1.15.11",
       "date": "2026-11-25",
       "title": {
