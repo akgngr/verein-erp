@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Şifre sıfırlama ve oturum yönetimi",
+        "de": "Passwort zurücksetzen und Sitzungsverwaltung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kendi kendine şifre sıfırlama: tek kullanımlık, 30 dakika geçerli e-posta bağlantısı; adresin kayıtlı olup olmadığı yanıt veya süreden anlaşılmaz; IP ve adres başına sınır.",
+          "de": "Passwort selbst zurücksetzen: einmaliger, 30 Minuten gültiger E-Mail-Link; ob eine Adresse registriert ist, ist weder an der Antwort noch an der Dauer erkennbar; Limits pro IP und Adresse."
+        },
+        {
+          "type": "feature",
+          "tr": "Yönetici, kullanıcı listesinden bir kullanıcının tüm oturumlarını sonlandırabilir (kayıp cihaz).",
+          "de": "Administratoren können in der Benutzerliste alle Sitzungen eines Benutzers beenden (z. B. verlorenes Gerät)."
+        },
+        {
+          "type": "security",
+          "tr": "Davet ve sıfırlama bağlantıları amaç bazlıdır, birbirinin yerine kullanılamaz; şifre belirlenince bekleyen tüm bağlantılar geçersiz olur ve kilit kalkar.",
+          "de": "Einladungs- und Rücksetzlinks sind zweckgebunden und nicht austauschbar; mit dem neuen Passwort werden alle offenen Links ungültig und die Sperre aufgehoben."
+        }
+      ]
+    },
+    {
       "version": "1.4.4",
       "date": "2026-11-26",
       "title": {

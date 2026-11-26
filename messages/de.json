@@ -2607,7 +2607,7 @@
     },
     "appTitle": "Vereinsverwaltung",
     "loginSubtitle": "Melden Sie sich an, um fortzufahren",
-    "passiveNotice": "Ihre Sitzung wurde beendet. Ihr Konto wurde möglicherweise deaktiviert; bitte wenden Sie sich an Ihren Administrator.",
+    "passiveNotice": "Ihre Sitzung wurde beendet (z. B. Passwortänderung, Abmeldung auf allen Geräten oder deaktiviertes Konto). Bitte melden Sie sich erneut an; bei Problemen wenden Sie sich an Ihren Administrator.",
     "profile": {
       "title": "Profil",
       "description": "Ihre Kontodaten und Passwortänderung.",
@@ -2622,7 +2622,14 @@
       "submit": "Passwort aktualisieren",
       "updated": "Ihr Passwort wurde aktualisiert.",
       "details": "Meine Profildaten",
-      "detailsHint": "Kontakt-, Adress-, Zahlungs- und Rechnungsdaten. Nur Sie und berechtigte Verantwortliche können sie sehen."
+      "detailsHint": "Kontakt-, Adress-, Zahlungs- und Rechnungsdaten. Nur Sie und berechtigte Verantwortliche können sie sehen.",
+      "sessions": {
+        "title": "Sitzungen",
+        "hint": "Melden Sie sich auf allen anderen Geräten und Browsern ab (z. B. verlorenes Handy, gemeinsam genutzter Computer). Auf diesem Gerät bleiben Sie angemeldet.",
+        "currentPassword": "Aktuelles Passwort",
+        "submit": "Auf allen anderen Geräten abmelden",
+        "done": "Die Sitzungen auf allen anderen Geräten wurden beendet."
+      }
     },
     "errors": {
       "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
@@ -2682,7 +2689,8 @@
         "bic": "Bitte eine gültige BIC eingeben (8 oder 11 Zeichen).",
         "vatId": "Bitte eine gültige USt-IdNr. eingeben (z. B. DE123456789)."
       }
-    }
+    },
+    "forgotPassword": "Passwort vergessen?"
   },
   "automation": {
     "module": {
@@ -10369,7 +10377,11 @@
       "delete": "Endgültig löschen",
       "deleted": "Benutzer gelöscht.",
       "deleteTitle": "Benutzer endgültig löschen",
-      "deleteConfirm": "\"{name}\" wird endgültig gelöscht; dies kann nicht rückgängig gemacht werden. In anderen Datensätzen bleibt der Name sichtbar. Wenn Sie nur den Zugang sperren möchten, deaktivieren Sie den Benutzer stattdessen. Fortfahren?"
+      "deleteConfirm": "\"{name}\" wird endgültig gelöscht; dies kann nicht rückgängig gemacht werden. In anderen Datensätzen bleibt der Name sichtbar. Wenn Sie nur den Zugang sperren möchten, deaktivieren Sie den Benutzer stattdessen. Fortfahren?",
+      "revokeSessions": "Alle Sitzungen beenden",
+      "revokeSessionsTitle": "Alle Sitzungen beenden?",
+      "revokeSessionsConfirm": "{name} wird auf allen Geräten abgemeldet und muss sich neu anmelden.",
+      "sessionsRevoked": "Alle Sitzungen von {name} wurden beendet."
     },
     "form": {
       "name": "Vor- und Nachname",
@@ -10657,6 +10669,25 @@
         "appUrl": "Die App-Adresse (APP_URL) muss mit https definiert sein.",
         "sendFailed": "Einladungs-E-Mail konnte nicht gesendet werden.",
         "mismatch": "Die Passwörter stimmen nicht überein."
+      }
+    },
+    "passwordReset": {
+      "requestTitle": "Passwort vergessen",
+      "requestIntro": "Geben Sie die E-Mail-Adresse Ihres Kontos ein. Falls ein Konto existiert, erhalten Sie einen einmaligen Link zum Zurücksetzen, der 30 Minuten gültig ist.",
+      "email": "E-Mail",
+      "submitRequest": "Link zum Zurücksetzen senden",
+      "sent": "Falls zu dieser Adresse ein aktives Konto existiert, wurde ein Link zum Zurücksetzen gesendet. Bitte prüfen Sie Ihr Postfach (auch den Spam-Ordner).",
+      "toLogin": "Zurück zur Anmeldung",
+      "resetTitle": "Neues Passwort festlegen",
+      "resetIntro": "Legen Sie ein neues Passwort für {email} fest. Alle anderen Sitzungen werden beendet.",
+      "password": "Neues Passwort",
+      "confirm": "Neues Passwort (Wiederholung)",
+      "submitReset": "Passwort speichern",
+      "done": "Ihr Passwort wurde geändert. Sie können sich jetzt mit dem neuen Passwort anmelden.",
+      "errors": {
+        "email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "rateLimited": "Zu viele Versuche. Bitte versuchen Sie es später erneut.",
+        "invalid": "Dieser Link ist ungültig, abgelaufen oder wurde bereits verwendet. Fordern Sie einen neuen Link an."
       }
     }
   },

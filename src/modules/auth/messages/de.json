@@ -11,7 +11,7 @@
   },
   "appTitle": "Vereinsverwaltung",
   "loginSubtitle": "Melden Sie sich an, um fortzufahren",
-  "passiveNotice": "Ihre Sitzung wurde beendet. Ihr Konto wurde möglicherweise deaktiviert; bitte wenden Sie sich an Ihren Administrator.",
+  "passiveNotice": "Ihre Sitzung wurde beendet (z. B. Passwortänderung, Abmeldung auf allen Geräten oder deaktiviertes Konto). Bitte melden Sie sich erneut an; bei Problemen wenden Sie sich an Ihren Administrator.",
   "profile": {
     "title": "Profil",
     "description": "Ihre Kontodaten und Passwortänderung.",
@@ -26,7 +26,14 @@
     "submit": "Passwort aktualisieren",
     "updated": "Ihr Passwort wurde aktualisiert.",
     "details": "Meine Profildaten",
-    "detailsHint": "Kontakt-, Adress-, Zahlungs- und Rechnungsdaten. Nur Sie und berechtigte Verantwortliche können sie sehen."
+    "detailsHint": "Kontakt-, Adress-, Zahlungs- und Rechnungsdaten. Nur Sie und berechtigte Verantwortliche können sie sehen.",
+    "sessions": {
+      "title": "Sitzungen",
+      "hint": "Melden Sie sich auf allen anderen Geräten und Browsern ab (z. B. verlorenes Handy, gemeinsam genutzter Computer). Auf diesem Gerät bleiben Sie angemeldet.",
+      "currentPassword": "Aktuelles Passwort",
+      "submit": "Auf allen anderen Geräten abmelden",
+      "done": "Die Sitzungen auf allen anderen Geräten wurden beendet."
+    }
   },
   "errors": {
     "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
@@ -86,5 +93,6 @@
       "bic": "Bitte eine gültige BIC eingeben (8 oder 11 Zeichen).",
       "vatId": "Bitte eine gültige USt-IdNr. eingeben (z. B. DE123456789)."
     }
-  }
+  },
+  "forgotPassword": "Passwort vergessen?"
 }

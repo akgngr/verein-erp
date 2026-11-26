@@ -6,6 +6,7 @@ import { RoleChip } from "@/shared/components/roles/roles-provider";
 import { SurfaceCard } from "@/shared/components/ui/surface-card";
 import type { ActionResult } from "@/shared/types/action";
 import { ChangePasswordForm } from "../components/change-password-form";
+import { SignOutEverywhereForm } from "../components/sign-out-everywhere-form";
 import type { ProfileData } from "../schemas/profile";
 import type { SessionUser } from "../types";
 import { ProfileForm } from "./profile-form";
@@ -56,6 +57,12 @@ export function ProfileContent({
         header={<h2 className="text-base font-medium">{t("changePassword")}</h2>}
       >
         <ChangePasswordForm />
+      </SurfaceCard>
+
+      <SurfaceCard
+        header={<h2 className="text-base font-medium">{t("sessions.title")}</h2>}
+      >
+        <SignOutEverywhereForm />
       </SurfaceCard>
 
       <SurfaceCard

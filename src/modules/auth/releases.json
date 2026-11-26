@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Şifre sıfırlama ve oturum yönetimi",
+        "de": "Passwort zurücksetzen und Sitzungsverwaltung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Giriş sayfasında \"Şifremi unuttum\" bağlantısı; profilde \"Diğer tüm cihazlardan çıkış yap\" (mevcut şifreyle onay; bu cihaz açık kalır).",
+          "de": "Link „Passwort vergessen?“ auf der Anmeldeseite; im Profil „Auf allen anderen Geräten abmelden“ (Bestätigung mit aktuellem Passwort; dieses Gerät bleibt angemeldet)."
+        },
+        {
+          "type": "security",
+          "tr": "Oturum sürümü kullanıcı başına bir sayaç içerir; sayaç artınca diğer tüm oturumlar anında düşer. Mevcut oturumlar güncellemeyle düşmez.",
+          "de": "Die Sitzungsversion enthält einen Zähler pro Benutzer; wird er erhöht, enden alle anderen Sitzungen sofort. Bestehende Sitzungen bleiben beim Update gültig."
+        }
+      ]
+    },
+    {
       "version": "1.1.2",
       "date": "2026-11-25",
       "title": {
