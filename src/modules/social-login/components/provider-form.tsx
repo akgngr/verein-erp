@@ -31,8 +31,9 @@ export function ProviderForm({ settings }: { settings: Settings }) {
     <SurfaceCard contentClassName="flex flex-col gap-3 p-5">
       <h2 className="font-semibold">{t(`providers.${settings.id}`)}</h2>
       <label className="flex items-center gap-2"><input type="checkbox" checked={enabled} onChange={(e) => setEnabled(e.target.checked)} />{t("enabled")}</label>
-      <label className="flex flex-col gap-1 text-sm">{t("clientId")}<input className="rounded-lg border border-ink-200 bg-surface p-2" value={clientId} onChange={(e) => setClientId(e.target.value)} /></label>
-      {settings.id === "microsoft-entra-id" && <label className="flex flex-col gap-1 text-sm">{t("tenantId")}<input className="rounded-lg border border-ink-200 bg-surface p-2" value={tenantId} onChange={(e) => setTenantId(e.target.value)} /></label>}
+      <label className="flex flex-col gap-1 text-sm">{t("clientId")}<input className="rounded-lg border border-ink-200 bg-surface p-2" disabled={pending || Boolean(settings.clientId)} value={clientId} onChange={(e) => setClientId(e.target.value)} /></label>
+      {settings.id === "microsoft-entra-id" && <label className="flex flex-col gap-1 text-sm">{t("tenantId")}<input className="rounded-lg border border-ink-200 bg-surface p-2" disabled={pending || Boolean(settings.clientId)} value={tenantId} onChange={(e) => setTenantId(e.target.value)} /></label>}
+      {settings.clientId && <p className="text-xs text-ink-500">{t("applicationLocked")}</p>}
       <label className="flex flex-col gap-1 text-sm">{t("secret")}<input type="password" autoComplete="new-password" className="rounded-lg border border-ink-200 bg-surface p-2" value={secret} onChange={(e) => setSecret(e.target.value)} placeholder={settings.hasSecret ? t("stored") : ""} /></label>
       <p className="break-all text-xs text-ink-500">{t("callback")}: /api/auth/callback/{settings.id}</p>
       <ActionButton pending={pending} disabled={pending} onClick={() => void save()}>{t("save")}</ActionButton>

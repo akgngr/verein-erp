@@ -51,5 +51,6 @@
   "continue": "Weiter",
   "linkSuccess": "Konto verknüpft.",
   "linkDenied": "Konto konnte nicht verknüpft werden. Bitte erneut versuchen.",
-  "otp": "Bestätigungscode (bei aktiver Zwei-Faktor-Anmeldung)"
+  "otp": "Bestätigungscode (bei aktiver Zwei-Faktor-Anmeldung)",
+  "applicationLocked": "Zum Schutz der Kontoverknüpfungen bleibt die gespeicherte Anwendungskennung unverändert; der geheime Schlüssel kann erneuert werden."
 }

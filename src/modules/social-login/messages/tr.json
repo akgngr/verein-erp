@@ -51,5 +51,6 @@
   "continue": "Devam et",
   "linkSuccess": "Hesap bağlandı.",
   "linkDenied": "Hesap bağlanamadı. Yeniden deneyin.",
-  "otp": "Doğrulama kodu (iki adımlı doğrulama açıksa)"
+  "otp": "Doğrulama kodu (iki adımlı doğrulama açıksa)",
+  "applicationLocked": "Kimlik eşleştirmelerini korumak için kayıtlı uygulama kimliği sabittir; gizli anahtar yenilenebilir."
 }
