@@ -44,7 +44,11 @@
     "revokeSessions": "Tüm oturumları sonlandır",
     "revokeSessionsTitle": "Tüm oturumlar sonlandırılsın mı?",
     "revokeSessionsConfirm": "{name} kullanıcısı tüm cihazlarda oturumdan çıkarılacak ve yeniden giriş yapması gerekecek.",
-    "sessionsRevoked": "{name} kullanıcısının tüm oturumları sonlandırıldı."
+    "sessionsRevoked": "{name} kullanıcısının tüm oturumları sonlandırıldı.",
+    "resetTwoFactor": "İki adımlı doğrulamayı sıfırla",
+    "resetTwoFactorTitle": "İki adımlı doğrulama sıfırlansın mı?",
+    "resetTwoFactorConfirm": "{name} kullanıcısının doğrulama uygulaması ve kurtarma kodları kaldırılacak; tüm oturumları sonlanır. Yeniden yalnızca parolasıyla giriş yapıp kurulumu tekrarlayabilir.",
+    "twoFactorReset": "{name} kullanıcısının iki adımlı doğrulaması sıfırlandı."
   },
   "form": {
     "name": "Ad Soyad",
@@ -80,7 +84,8 @@
     "roleUnavailable": "Bu rol atanamaz: rol yok ya da modülü etkin değil.",
     "adminOnly": "Yönetici rolünü yalnızca bir yönetici atayabilir veya değiştirebilir.",
     "grantExceedsMaxDuration": "Erişim süresi en fazla 90 gün olabilir.",
-    "grantEndBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır."
+    "grantEndBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.",
+    "twoFactorNotEnabled": "Bu kullanıcı için iki adımlı doğrulama açık değil."
   },
   "validation": {
     "nameRequired": "Ad soyad zorunludur.",

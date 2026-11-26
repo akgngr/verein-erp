@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.5.1",
+      "version": "1.6.1",
       "date": "2026-11-26",
       "title": {
         "tr": "Ayar merkezi grubu",
@@ -13,6 +13,21 @@
           "type": "improvement",
           "tr": "Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.",
           "de": "Die Einstellungsseiten erscheinen in der Einstellungsübersicht in ihrer eigenen Gruppe und Reihenfolge."
+        }
+      ]
+    },
+    {
+      "version": "1.6.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "İki adımlı doğrulamayı sıfırlama",
+        "de": "Zwei-Faktor-Anmeldung zurücksetzen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kullanıcılar tablosunda \"İki adımlı doğrulamayı sıfırla\" (kayıp telefon ve kurtarma kodları): doğrulama kaldırılır, tüm oturumlar sonlanır, işlem denetim kaydına yazılır.",
+          "de": "„Zwei-Faktor-Anmeldung zurücksetzen“ in der Benutzertabelle (verlorenes Smartphone und Wiederherstellungscodes): der zweite Faktor wird entfernt, alle Sitzungen enden, der Vorgang wird protokolliert."
         }
       ]
     },

@@ -2659,7 +2659,8 @@
         "currentPassword": "Aktuelles Passwort",
         "submit": "Auf allen anderen Geräten abmelden",
         "done": "Die Sitzungen auf allen anderen Geräten wurden beendet."
-      }
+      },
+      "twoFactor": "Zwei-Faktor-Anmeldung"
     },
     "errors": {
       "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
@@ -2669,7 +2670,9 @@
       "accountLocked": "Das Konto ist vorübergehend gesperrt. Bitte versuchen Sie es später erneut.",
       "rateLimited": "Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.",
       "loginFailed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-      "invalidLocale": "Ungültige Sprachauswahl."
+      "invalidLocale": "Ungültige Sprachauswahl.",
+      "twoFactorRequired": "Geben Sie den Code aus Ihrer Authenticator-App ein.",
+      "twoFactorInvalid": "Der Code ist falsch, abgelaufen oder wurde bereits verwendet."
     },
     "validation": {
       "currentPasswordRequired": "Bitte das aktuelle Passwort eingeben.",
@@ -2720,7 +2723,46 @@
         "vatId": "Bitte eine gültige USt-IdNr. eingeben (z. B. DE123456789)."
       }
     },
-    "forgotPassword": "Passwort vergessen?"
+    "forgotPassword": "Passwort vergessen?",
+    "twoFactorCode": "Bestätigungscode",
+    "twoFactorCodeHint": "Geben Sie den 6-stelligen Code aus Ihrer Authenticator-App oder einen Ihrer Wiederherstellungscodes ein.",
+    "twoFactorBack": "Mit einem anderen Konto anmelden",
+    "twoFactor": {
+      "loading": "Wird geladen…",
+      "off": "Die Zwei-Faktor-Anmeldung ist ausgeschaltet.",
+      "on": "Die Zwei-Faktor-Anmeldung ist aktiv — {count, plural, one {# Wiederherstellungscode} other {# Wiederherstellungscodes}} übrig.",
+      "hint": "Fragt bei der Anmeldung zusätzlich zum Passwort einen Code aus einer Authenticator-App ab (z. B. Google Authenticator, Microsoft Authenticator, 2FAS). Empfohlen für Administrations- und Kassenkonten.",
+      "manageHint": "Zum Ausschalten oder für neue Wiederherstellungscodes geben Sie den aktuellen Code aus Ihrer App (oder einen Wiederherstellungscode) ein.",
+      "currentPassword": "Aktuelles Passwort",
+      "currentPasswordForDisable": "Aktuelles Passwort (zum Ausschalten)",
+      "code": "Code",
+      "cancel": "Abbrechen",
+      "enabled": "Die Zwei-Faktor-Anmeldung ist eingeschaltet.",
+      "disabled": "Die Zwei-Faktor-Anmeldung ist ausgeschaltet.",
+      "disable": "Zwei-Faktor-Anmeldung ausschalten",
+      "error": "Der Vorgang konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.",
+      "setup": {
+        "start": "Einrichtung starten",
+        "step1": "1. Fügen Sie in Ihrer Authenticator-App ein neues Konto hinzu und geben Sie den folgenden Schlüssel ein (auf dem Smartphone genügt ein Tippen auf den Link).",
+        "manualKey": "Einrichtungsschlüssel",
+        "openApp": "In der Authenticator-App öffnen",
+        "step2": "2. Geben Sie den 6-stelligen Code aus der App ein.",
+        "confirm": "Bestätigen und einschalten"
+      },
+      "recovery": {
+        "title": "Wiederherstellungscodes",
+        "hint": "Ohne Zugriff auf Ihr Smartphone melden Sie sich mit diesen Codes an; jeder Code funktioniert einmal. Bewahren Sie sie sicher auf — sie werden nicht erneut angezeigt.",
+        "copy": "Codes kopieren",
+        "copied": "Wiederherstellungscodes kopiert.",
+        "done": "Gespeichert",
+        "replace": "Neue Wiederherstellungscodes erstellen"
+      },
+      "errors": {
+        "alreadyEnabled": "Die Zwei-Faktor-Anmeldung ist bereits aktiv.",
+        "noEnrolment": "Starten Sie zuerst die Einrichtung.",
+        "codeInvalid": "Der Code ist falsch, abgelaufen oder wurde bereits verwendet."
+      }
+    }
   },
   "automation": {
     "module": {
@@ -10411,7 +10453,11 @@
       "revokeSessions": "Alle Sitzungen beenden",
       "revokeSessionsTitle": "Alle Sitzungen beenden?",
       "revokeSessionsConfirm": "{name} wird auf allen Geräten abgemeldet und muss sich neu anmelden.",
-      "sessionsRevoked": "Alle Sitzungen von {name} wurden beendet."
+      "sessionsRevoked": "Alle Sitzungen von {name} wurden beendet.",
+      "resetTwoFactor": "Zwei-Faktor-Anmeldung zurücksetzen",
+      "resetTwoFactorTitle": "Zwei-Faktor-Anmeldung zurücksetzen?",
+      "resetTwoFactorConfirm": "Authenticator-App und Wiederherstellungscodes von {name} werden entfernt, alle Sitzungen enden. Die Person meldet sich danach nur mit dem Passwort an und kann die Einrichtung wiederholen.",
+      "twoFactorReset": "Die Zwei-Faktor-Anmeldung von {name} wurde zurückgesetzt."
     },
     "form": {
       "name": "Vor- und Nachname",
@@ -10447,7 +10493,8 @@
       "roleUnavailable": "Diese Rolle kann nicht zugewiesen werden: Sie existiert nicht oder ihr Modul ist nicht aktiv.",
       "adminOnly": "Nur ein Administrator kann die Administratorrolle vergeben oder ändern.",
       "grantExceedsMaxDuration": "Die Zugriffsdauer darf höchstens 90 Tage betragen.",
-      "grantEndBeforeStart": "Das Enddatum muss nach dem Startdatum liegen."
+      "grantEndBeforeStart": "Das Enddatum muss nach dem Startdatum liegen.",
+      "twoFactorNotEnabled": "Für dieses Konto ist die Zwei-Faktor-Anmeldung nicht aktiv."
     },
     "validation": {
       "nameRequired": "Name ist erforderlich.",

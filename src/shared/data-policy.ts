@@ -74,6 +74,8 @@ export const DATA_POLICY = {
   SecurityTestSchedule: { owner: "security-monitor", category: "K0", reason: "Eski zamanlama kaydı (kullanılmıyor; zamanlama otomasyondadır)", sensitiveFields: [] },
   SystemSetting: { owner: "system", category: "K0", reason: "Yapılandırma ve erişim onayları (sır içerebilir)", sensitiveFields: [] },
   User: { owner: "users", category: "K0", reason: "Kimlik doğrulama sırları (parola hash, kilit)", sensitiveFields: ["passwordHash", "email"], directAccess: ["auth"] },
+  UserTotp: { owner: "auth", category: "K0", reason: "İkinci faktör sırrı (#603; secret box ile şifreli)", sensitiveFields: ["secretEnc", "lastUsedStep"], personalOwnerField: "userId" },
+  UserTotpRecoveryCode: { owner: "auth", category: "K0", reason: "İkinci faktör kurtarma kodları (#603; yalnızca SHA-256 özeti)", sensitiveFields: ["codeHash"], personalOwnerField: "userId" },
   UserProfile: { owner: "auth", category: "K0", reason: "Banka ve iletişim verisi", sensitiveFields: ["accountHolder", "bic", "city", "houseNumber", "ibanEnc", "mobile", "phone", "postalCode", "street", "taxNumberEnc"], personalOwnerField: "userId" },
   YouthProtectionRecord: {
     owner: "youth-protection",

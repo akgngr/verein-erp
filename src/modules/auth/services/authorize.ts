@@ -15,6 +15,7 @@ import { buildUserLabel } from "@/shared/utils";
 
 import { loginSchema } from "../schemas/login";
 import { computeSessionVersion } from "./session-version";
+import { checkLoginSecondFactor } from "./two-factor";
 
 /** Genel hata: hangi bilginin yanlış olduğu veya hesabın varlığı belli edilmez. */
 export class InvalidCredentialsError extends CredentialsSignin {
@@ -29,6 +30,16 @@ export class AccountLockedError extends CredentialsSignin {
 /** IP tabanlı hız sınırı aşıldı. */
 export class RateLimitedError extends CredentialsSignin {
   code = "rate_limited";
+}
+
+/** #603: Password correct, 2FA is on and no code was sent — the form asks for the second factor. */
+export class TwoFactorRequiredError extends CredentialsSignin {
+  code = "two_factor_required";
+}
+
+/** #603: Wrong, reused or expired second-factor code (counts as a failed login). */
+export class TwoFactorInvalidError extends CredentialsSignin {
+  code = "two_factor_invalid";
 }
 
 const LOGIN_IP_RATE_LIMIT = {
@@ -172,6 +183,33 @@ export async function authorize(
     }
   }
 
+  // #603: Second factor — only when the user turned it on; checked after the password, never instead of it.
+  const secondFactor = await checkLoginSecondFactor({
+    userId: user.id,
+    otp: credentials?.otp,
+    reissue: credentials?.reissue,
+    authSecret: env.AUTH_SECRET,
+    now,
+  });
+  if (secondFactor === "required") throw new TwoFactorRequiredError();
+  if (secondFactor === "invalid") {
+    // A wrong code counts like a wrong password, so the 6-digit space cannot be brute-forced (lockout after 5).
+    const lockout = getLoginFailureState(user.failedLoginCount, user.lockedUntil, now);
+    await db.user.update({
+      where: { id: user.id },
+      data: { failedLoginCount: lockout.failedLoginCount, lockedUntil: lockout.lockedUntil },
+    });
+    await writeAudit({
+      userId: user.id,
+      userLabel,
+      action: "LOGIN_FAILED",
+      entity: "Auth",
+      entityId: user.id,
+      after: { reason: "second_factor_invalid" },
+    });
+    throw new TwoFactorInvalidError();
+  }
+
   await db.user.update({
     where: { id: user.id },
     data: { failedLoginCount: 0, lockedUntil: null, lastLoginAt: now },
@@ -183,6 +221,7 @@ export async function authorize(
     action: "LOGIN_SUCCESS",
     entity: "Auth",
     entityId: user.id,
+    ...(secondFactor === "totp" || secondFactor === "recovery" ? { after: { secondFactor } } : {}),
   });
 
   return {
