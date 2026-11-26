@@ -31,8 +31,11 @@ test("N2b allows token write only and safe Telegram link handling", () => {
 test("N2b route is permission-gated and localized in both languages", () => {
   const page = read("src/modules/notifications/page.tsx");
   assert.match(page, /requirePermission\(notificationsPermissions, "view"\)/);
-  assert.match(page, /<NotificationPreferencesForm/);
-  assert.match(page, /<NotificationChannelLinks/);
+  // #604: forms render inside the channels panel (shared availability), which the page renders.
+  assert.match(page, /<NotificationChannelsPanel/);
+  const panel = read("src/modules/notifications/components/channels-panel.tsx");
+  assert.match(panel, /<NotificationPreferencesForm/);
+  assert.match(panel, /<NotificationChannelLinks/);
   const tr = JSON.parse(read("src/modules/notifications/messages/tr.json"));
   const de = JSON.parse(read("src/modules/notifications/messages/de.json"));
   assert.deepEqual(Object.keys(tr.ui).sort(), Object.keys(de.ui).sort());

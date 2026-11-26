@@ -18,7 +18,7 @@ const DEFAULT_SETTINGS: NotificationSettingsInput = {
 };
 
 /** User-scoped preferences, with every write confirmed by backend before UI success. */
-export function NotificationPreferencesForm() {
+export function NotificationPreferencesForm({ available }: { available?: Partial<Record<typeof CHANNELS[number], boolean>> | null }) {
   const t = useTranslations("notifications");
   // #586: Tür anahtarı (ör. "meetings.invited") yerine okunur ad; çevirisi olmayan yeni türlerde anahtar gösterilir.
   const typeLabel = (typeKey: string) => (t.has(`ui.typeLabels.${typeKey}`) ? t(`ui.typeLabels.${typeKey}`) : typeKey);
@@ -27,6 +27,8 @@ export function NotificationPreferencesForm() {
   const [loading, setLoading] = useState(true);
   const [unavailable, setUnavailable] = useState(false);
   const [pending, setPending] = useState(false);
+  // #604: Yalnız çalışan kanallar sütun olarak gösterilir (yapılandırılmamış kanal hiçbir şey göndermez).
+  const visibleChannels = available ? CHANNELS.filter((channel) => available[channel]) : CHANNELS;
 
   useEffect(() => {
     let active = true;
@@ -84,12 +86,12 @@ export function NotificationPreferencesForm() {
             <thead><tr className="border-b border-ink-200">
               <th scope="col" className="p-2">{t("ui.type")}</th>
               <th scope="col" className="p-2">{t("ui.inApp")}</th>
-              {CHANNELS.map(channel => <th key={channel} scope="col" className="p-2">{t(`ui.channel.${channel}`)}</th>)}
+              {visibleChannels.map(channel => <th key={channel} scope="col" className="p-2">{t(`ui.channel.${channel}`)}</th>)}
             </tr></thead>
             <tbody>{types.map(row => <tr className="border-b border-ink-200/60" key={row.typeKey}>
               <th scope="row" className="p-2 font-medium">{typeLabel(row.typeKey)}</th>
               <td className="p-2"><input type="checkbox" checked disabled aria-label={t("ui.inApp")} /></td>
-              {CHANNELS.map(channel => <td className="p-2" key={channel}>
+              {visibleChannels.map(channel => <td className="p-2" key={channel}>
                 <input type="checkbox" checked={row.channels[channel] ?? false} disabled={pending}
                   aria-label={`${typeLabel(row.typeKey)} — ${t(`ui.channel.${channel}`)}`}
                   onChange={event => void change(row.typeKey, channel, event.target.checked)} />

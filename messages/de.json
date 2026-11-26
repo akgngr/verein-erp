@@ -8344,6 +8344,46 @@
         "prevPage": "Zurück",
         "nextPage": "Weiter",
         "pageInfo": "Seite {page} / {totalPages} ({total} Einträge)"
+      },
+      "phoneLink": {
+        "title": {
+          "sms": "SMS-Nummer",
+          "whatsapp": "WhatsApp-Nummer"
+        },
+        "loading": "Wird geladen …",
+        "linked": "Verknüpfte Nummer: {number}",
+        "pending": "Der Bestätigungscode wurde an {number} gesendet; er ist 15 Minuten gültig.",
+        "none": "Keine Nummer verknüpft. Bestätigen Sie Ihre Nummer, um Benachrichtigungen über diesen Kanal zu erhalten.",
+        "revoke": "Verknüpfung entfernen",
+        "revoked": "Die Nummer wurde entfernt.",
+        "phone": "Telefonnummer",
+        "sendCode": "Code senden",
+        "codeSent": "Der Bestätigungscode wurde gesendet.",
+        "code": "6-stelliger Code",
+        "confirm": "Bestätigen",
+        "confirmed": "Die Nummer wurde bestätigt.",
+        "error": "Der Vorgang konnte nicht abgeschlossen werden."
+      },
+      "channelAdmin": {
+        "smsTitle": "SMS-Kanal (Administration)",
+        "whatsappTitle": "WhatsApp-Kanal (Administration)",
+        "whatsappHint": "Meta WhatsApp Cloud API. Zum Aktivieren sind Zugriffstoken, Telefonnummer-ID, eine genehmigte Benachrichtigungsvorlage und die Bestätigung der Meta-Freigabe nötig. Für die Nummernbestätigung zusätzlich eine genehmigte Authentifizierungsvorlage angeben.",
+        "enabled": "Kanal aktiv",
+        "provider": "Anbieter",
+        "apiKey": "API-Schlüssel",
+        "accountSid": "Twilio Account SID",
+        "sender": "Absendername/-nummer",
+        "accessToken": "Dauerhaftes Zugriffstoken",
+        "phoneNumberId": "Telefonnummer-ID",
+        "templateLanguage": "Vorlagensprache (z. B. de, tr)",
+        "templateName": "Benachrichtigungsvorlage (Utility)",
+        "verifyTemplateName": "Bestätigungsvorlage (Authentication)",
+        "templateApproved": "Meta hat die Benachrichtigungsvorlage genehmigt",
+        "save": "Speichern",
+        "saved": "Kanaleinstellungen gespeichert.",
+        "error": "Die Einstellungen konnten nicht gespeichert werden.",
+        "secretStored": "Schlüssel gespeichert (wird nicht angezeigt; zum Ändern einen neuen eingeben).",
+        "secretMissing": "Noch kein Schlüssel gespeichert."
       }
     },
     "widget": {
