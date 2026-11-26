@@ -18,6 +18,16 @@
           "type": "fix",
           "tr": "Kassenminus, banka içe aktarma/ters kayıt, SOLL-Versteuerung UStVA, § 19 UStG, GoBD Z3 UTF-8/ek CSV'ler, yıllık kapanış, e-fatura KDV kategorisi E ve SEPA pain.001 transliterasyon hataları giderildi (#576, #577).",
           "de": "Kassenminus, Bankimport/Storno, Soll-Versteuerung UStVA, § 19 UStG, GoBD Z3 UTF-8/Zusatz-CSVs, Jahresabschluss, E-Rechnung Steuerkategorie E und SEPA pain.001-Transliteration behoben (#576, #577)."
+        },
+        {
+          "type": "fix",
+          "tr": "Kesilmiş faturanın tahsilatında faturadaki KDV oranları esas alınır; § 19 UStG ayarı sonradan açılsa da KDV'li fatura KDV'siz kaydedilmez.",
+          "de": "Beim Zahlungseingang gelten die Steuersätze der ausgestellten Rechnung; wird § 19 UStG später aktiviert, wird eine Rechnung mit USt nicht ohne USt gebucht."
+        },
+        {
+          "type": "fix",
+          "tr": "İçe aktarılan tedarikçi alacak dekontları (negatif tutarlar) iade olarak kapatılabilir: elle veya gelen banka hareketiyle eşleştirilir, gider ve ön KDV azaltılır.",
+          "de": "Importierte Lieferantengutschriften (negative Beträge) lassen sich als Erstattung ausgleichen – manuell oder über einen Zahlungseingang; Aufwand und Vorsteuer werden gemindert."
         }
       ]
     },

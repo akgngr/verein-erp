@@ -1174,7 +1174,8 @@
       "invoiceRequired": "Bitte eine Rechnung wählen.",
       "invoiceNeedsCredit": "Nur Zahlungseingänge können Rechnungen zugeordnet werden.",
       "payableRequired": "Bitte eine Eingangsrechnung wählen.",
-      "payableNeedsDebit": "Nur Zahlungsausgänge können Eingangsrechnungen zugeordnet werden."
+      "payableNeedsDebit": "Nur Zahlungsausgänge können Eingangsrechnungen zugeordnet werden.",
+      "creditNoteNeedsCredit": "Eine Gutschrift kann nur mit einer Erstattung des Lieferanten (Zahlungseingang) abgeglichen werden."
     }
   },
   "payables": {

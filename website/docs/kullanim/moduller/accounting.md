@@ -50,6 +50,8 @@ _2026-11-25_
 
 - **Güvenlik:** Sayman raporu PDF oluşturucusunda çapraz modül dosya okuma engellendi ve KoSIT doğrulayıcıda DNS-sabitli SSRF koruması eklendi (#573).
 - **Düzeltme:** Kassenminus, banka içe aktarma/ters kayıt, SOLL-Versteuerung UStVA, § 19 UStG, GoBD Z3 UTF-8/ek CSV'ler, yıllık kapanış, e-fatura KDV kategorisi E ve SEPA pain.001 transliterasyon hataları giderildi (#576, #577).
+- **Düzeltme:** Kesilmiş faturanın tahsilatında faturadaki KDV oranları esas alınır; § 19 UStG ayarı sonradan açılsa da KDV'li fatura KDV'siz kaydedilmez.
+- **Düzeltme:** İçe aktarılan tedarikçi alacak dekontları (negatif tutarlar) iade olarak kapatılabilir: elle veya gelen banka hareketiyle eşleştirilir, gider ve ön KDV azaltılır.
 
 ### 1.27.4 — Arayüz düzeltmeleri (#586)
 

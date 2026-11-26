@@ -7,7 +7,6 @@ import { ActionError } from "@/modules/auth/server";
 import { calculateInvoiceTotals } from "./invoice-calc";
 import { allocatePayment, openCents } from "./invoice-payments";
 import { createSourcedBooking } from "./sourced-bookings";
-import { getTaxSettings } from "./tax";
 
 export const INVOICE_SOURCE = "INVOICE";
 
@@ -36,14 +35,11 @@ export async function applyInvoicePayment(tx: Prisma.TransactionClient, input: I
   if (amountCents <= 0 || amountCents > open) {
     throw new ActionError("accounting.invoices.errors.amountInvalid", { amount: ["accounting.invoices.errors.amountInvalid"] });
   }
-  const taxSettings = await getTaxSettings(tx);
+  // Kesilmiş faturanın kayıtlı KDV oranları esas alınır: § 19 UStG ayarı faturayı keserken satırlara işlenir
+  // (invoice-actions → effectiveTaxRate). Ayar sonradan açılsa da KDV'li kesilmiş fatura KDV'siz tahsil edilmez.
   const lines = await tx.accountingInvoiceLine.findMany({ where: { invoiceId: invoice.id }, orderBy: { position: "asc" } });
   const { byRate } = calculateInvoiceTotals(
-    lines.map((line) => ({
-      quantity: Number(line.quantity),
-      unitPriceCents: line.unitPriceCents,
-      taxRate: taxSettings.smallBusiness ? 0 : line.taxRate,
-    })),
+    lines.map((line) => ({ quantity: Number(line.quantity), unitPriceCents: line.unitPriceCents, taxRate: line.taxRate })),
   );
   const parts = allocatePayment(byRate, amountCents).filter((part) => part.netCents + part.taxCents !== 0);
   const existing = await tx.accountingBooking.count({
@@ -54,9 +50,7 @@ export async function applyInvoicePayment(tx: Prisma.TransactionClient, input: I
   for (const [index, part] of parts.entries()) {
     const seq = existing + index;
     const partGross = part.netCents + part.taxCents;
-    const tax = taxSettings.smallBusiness
-      ? { rate: 0, netCents: partGross, taxCents: 0 }
-      : { rate: part.rate, netCents: part.netCents, taxCents: part.taxCents };
+    const tax = { rate: part.rate, netCents: part.netCents, taxCents: part.taxCents };
     const label = [parts.length > 1 && tax.rate > 0 ? `${tax.rate} % USt` : "", partial ? "Teilzahlung" : ""].filter(Boolean).join(", "); // i18n-ignore: Buchungstext (Almanca muhasebe kaydı)
     bookings.push(
       await createSourcedBooking({

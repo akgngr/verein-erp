@@ -1530,7 +1530,8 @@
         "invoiceRequired": "Fatura seçin.",
         "invoiceNeedsCredit": "Faturaya yalnızca gelen ödemeler bağlanabilir.",
         "payableRequired": "Gelen fatura seçin.",
-        "payableNeedsDebit": "Gelen faturaya yalnızca giden ödemeler bağlanabilir."
+        "payableNeedsDebit": "Gelen faturaya yalnızca giden ödemeler bağlanabilir.",
+        "creditNoteNeedsCredit": "Alacak dekontu yalnızca tedarikçiden gelen bir iadeyle (hesaba giriş) eşleştirilebilir."
       }
     },
     "payables": {

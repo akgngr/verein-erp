@@ -85,8 +85,13 @@ export async function bookBankTransactionAction(input: unknown): Promise<ActionR
           bookingIds = paid.bookingIds;
           invoiceId = input.invoiceId;
         } else if (input.mode === "payable") {
-          if (row.amountCents >= 0) throw new ActionError("accounting.bank.errors.payableNeedsDebit");
-          const paid = await applyPayablePayment(tx, { payableId: input.payableId, paidDate: row.bookingDate, accountId: row.accountId, amountCents: -row.amountCents, actor });
+          // Normal gelen fatura giden ödemeyle, tedarikçi alacak dekontu (negatif tutar) gelen iadeyle eşleşir.
+          const target = await tx.accountingPayable.findUnique({ where: { id: input.payableId }, select: { grossCents: true } });
+          const creditNote = (target?.grossCents ?? 0) < 0;
+          if (creditNote ? row.amountCents <= 0 : row.amountCents >= 0) {
+            throw new ActionError(creditNote ? "accounting.bank.errors.creditNoteNeedsCredit" : "accounting.bank.errors.payableNeedsDebit");
+          }
+          const paid = await applyPayablePayment(tx, { payableId: input.payableId, paidDate: row.bookingDate, accountId: row.accountId, amountCents: Math.abs(row.amountCents), actor });
           bookingNumber = paid.bookingNumber;
           bookingIds = paid.bookingIds;
         } else {
