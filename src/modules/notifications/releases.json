@@ -23,6 +23,11 @@
           "type": "improvement",
           "tr": "Tercih tablosunda yalnız gerçekten çalışan kanallar gösterilir; yapılandırılmamış kanal sütunu gizlenir.",
           "de": "Die Präferenztabelle zeigt nur Kanäle, die tatsächlich zustellen; nicht konfigurierte Kanäle werden ausgeblendet."
+        },
+        {
+          "type": "security",
+          "tr": "SMS ve WhatsApp numara doğrulaması yalnız kodun gönderildiği numarayı doğrular; eşzamanlı yeni bir istek başka bir numarayı doğrulanmış yapamaz.",
+          "de": "Die SMS- und WhatsApp-Bestätigung gilt nur für die Nummer, an die der Code gesendet wurde; eine parallele neue Anfrage kann keine andere Nummer als bestätigt markieren."
         }
       ]
     },

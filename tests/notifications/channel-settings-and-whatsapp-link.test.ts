@@ -75,3 +75,37 @@ test("db: WhatsApp code flow — unavailable until configured, hashed code, wron
     if (before) await db.notificationChannelConfig.create({ data: before as never });
   }
 });
+
+test("db: confirmation only verifies the number the code was sent to (request/confirm race)", { skip: !enabled }, async () => {
+  const { configureWhatsapp } = await import("@/modules/notifications/services/whatsapp");
+  const { requestWhatsappVerification, confirmWhatsappVerification, phoneLinkStatus } = await import("@/modules/notifications/services/whatsapp-link");
+  const db = getDb();
+  const before = await db.notificationChannelConfig.findUnique({ where: { channel: "whatsapp" } });
+  const userId = `wa-race-${randomUUID()}`;
+  type Sent = { body: { template: { components: Array<{ parameters: Array<{ text: string }> }> } } };
+  const sent: Sent[] = [];
+  const transport = async (input: { body: unknown }) => { sent.push(input as Sent); return { ok: true }; };
+  try {
+    await db.notificationChannelConfig.deleteMany({ where: { channel: "whatsapp" } });
+    await configureWhatsapp({ enabled: true, accessToken: "EAAG-test", phoneNumberId: "123456789", templateName: "verein_notification", templateLanguage: "de", templateApproved: true, verifyTemplateName: "verein_code" }, "admin");
+    await requestWhatsappVerification(userId, "+49 151 11111111", transport);
+    const ownCode = sent[0]!.body.template.components[0]!.parameters[0]!.text;
+    // Simulate the race: between the code check and the update, the row is switched to another number and code.
+    const original = db.notificationChannelLink.findUnique.bind(db.notificationChannelLink);
+    const row = await original({ where: { userId_channel: { userId, channel: "whatsapp" } } });
+    await requestWhatsappVerification(userId, "+49 151 22222222", transport);
+    const swapped = db.notificationChannelLink as unknown as { findUnique: (args: unknown) => Promise<unknown> };
+    swapped.findUnique = async () => row;
+    try {
+      await assert.rejects(confirmWhatsappVerification(userId, ownCode), /codeExpired/);
+    } finally {
+      swapped.findUnique = original as never;
+    }
+    assert.equal((await phoneLinkStatus(userId, "whatsapp")).status, "pending", "the replacement number stays unverified");
+  } finally {
+    await db.notificationDelivery.deleteMany({ where: { userId } });
+    await db.notificationChannelLink.deleteMany({ where: { userId } });
+    await db.notificationChannelConfig.deleteMany({ where: { channel: "whatsapp" } });
+    if (before) await db.notificationChannelConfig.create({ data: before as never });
+  }
+});

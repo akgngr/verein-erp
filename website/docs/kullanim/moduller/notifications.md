@@ -43,6 +43,7 @@ _2026-11-26_
 - **Yeni:** Bildirim ayarlarında yöneticiler için SMS (seven.io/Twilio) ve WhatsApp (Meta Cloud API) bölümleri; anahtarlar yalnız yazılır, hiçbir zaman gösterilmez.
 - **Yeni:** Kullanıcılar SMS ve WhatsApp numaralarını 6 haneli kodla doğrular (numara yalnız son haneleriyle gösterilir). WhatsApp kodu onaylı bir kimlik doğrulama şablonuyla gönderilir.
 - **İyileştirme:** Tercih tablosunda yalnız gerçekten çalışan kanallar gösterilir; yapılandırılmamış kanal sütunu gizlenir.
+- **Güvenlik:** SMS ve WhatsApp numara doğrulaması yalnız kodun gönderildiği numarayı doğrular; eşzamanlı yeni bir istek başka bir numarayı doğrulanmış yapamaz.
 
 ### 0.15.3 — Arayüz düzeltmeleri (#586)
 
