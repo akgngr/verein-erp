@@ -243,14 +243,6 @@
     "noResults": "Keine Einstellung passt zu Ihrer Suche.",
     "open": "Öffnen",
     "sections": {
-      "general": {
-        "title": "Verein und System",
-        "description": "Vereinsdaten, Benutzer und Systemverwaltung."
-      },
-      "modules": {
-        "title": "Moduleinstellungen",
-        "description": "Eigene Konfigurationsseiten der Module."
-      },
       "personal": {
         "title": "Persönliche Einstellungen",
         "description": "Wirkt sich nur auf Ihre Oberfläche aus."
@@ -281,6 +273,44 @@
       "surumNotlari": "Versionshinweise der App und der Module.",
       "organization": "Vereinsname, Anschrift, Logo und Angaben zur Gemeinnützigkeit.",
       "bankaBaglantisi": "Bankverbindung und Import von Kontoumsätzen."
+    },
+    "groups": {
+      "general": {
+        "title": "Allgemein",
+        "description": "Vereinsdaten, Einrichtung, Lizenz und Versionshinweise."
+      },
+      "users-access": {
+        "title": "Benutzer und Zugriff",
+        "description": "Benutzer, Rollen und Einladungen."
+      },
+      "security-privacy": {
+        "title": "Sicherheit und Datenschutz",
+        "description": "Datenschutzeinstellungen, Datenabfluss, Audit-Log und Sicherheitsüberwachung."
+      },
+      "integrations": {
+        "title": "Integrationen",
+        "description": "Bankanbindung und externe Dienste."
+      },
+      "appearance": {
+        "title": "Darstellung",
+        "description": "Dashboard-Widgets und Menüanordnung."
+      },
+      "communication": {
+        "title": "Kommunikation",
+        "description": "E-Mail, Posteingang und Benachrichtigungskanäle."
+      },
+      "ai-automation": {
+        "title": "KI und Automatisierung",
+        "description": "KI-Assistent und Automatisierungsmonitor."
+      },
+      "module-management": {
+        "title": "Modulverwaltung",
+        "description": "Module, Modulzustand, Pakete und die eigenen Einstellungen der Module."
+      },
+      "system-management": {
+        "title": "Systemverwaltung",
+        "description": "Demodaten und Wartungswerkzeuge."
+      }
     }
   },
   "roles": {

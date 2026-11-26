@@ -13,7 +13,7 @@ Kalıcı arka plan görevleri ve iş akışları.
 |---|---|
 | Anahtar | `automation` |
 | Tür | Eklenti |
-| Sürüm | 0.10.19 |
+| Sürüm | 0.10.20 |
 | Sayfalar | `/automation`, `/automation/workflows` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Otomasyon | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | — | görüntüleme |
 
 ## Sürüm notları
+
+### 0.10.20 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
 
 ### 0.10.19 — Arayüz düzeltmeleri (#586)
 
@@ -81,10 +87,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 0.10.9 — Onay eylemleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Workflow onay/red eylemleri ortak ActionButton/notify pattern'lerine taşındı; approvals panel artık HeroUI Button/Toast bileşenlerini doğrudan içe aktarmıyor.
-
-Daha eski 31 herkese açık sürüm notu.
+Daha eski 32 herkese açık sürüm notu.

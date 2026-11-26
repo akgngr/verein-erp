@@ -31,6 +31,7 @@ import { registry } from "@/registry";
 import { RoleChip } from "@/shared/components/roles/roles-provider";
 import { getCategoryIcon } from "@/shared/navigation/category-icons";
 import { MODULE_NAV_DEFAULTS } from "@/shared/navigation/nav-defaults.generated";
+import { compareSettingsEntries, settingsPageOrder } from "@/shared/navigation/settings-groups";
 import {
   resolveUserSidebarTree,
   type UserNavConfig,
@@ -164,7 +165,10 @@ function buildSettingsModule(
 ): { module: ModuleConfig; hub: NavItem; items: NavItem[] } | null {
   if (items.length === 0) return null;
   const hub = items.find((item) => item.href === "/ayarlar") ?? items[0];
-  const pages = items.filter((item) => item !== hub);
+  // #611: Alt menü, ayar merkeziyle aynı grup sırasını izler (grup → grup içi sıra → adres).
+  const pages = items
+    .filter((item) => item !== hub)
+    .sort((a, b) => compareSettingsEntries(settingsPageOrder(a), settingsPageOrder(b)));
   return {
     hub,
     items,

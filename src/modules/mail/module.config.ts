@@ -5,7 +5,7 @@ import { mailInboxPermissions, mailPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "mail",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.5.5",
+  version: "1.5.6",
   label: "E-posta Altyapısı",
   description:
     "Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları.",
@@ -35,6 +35,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Mail,
       group: "settings",
       order: 50,
+      settingsGroup: "communication",
+      settingsOrder: 10,
       permission: { definition: mailPermissions, action: "view" },
     },
     {
@@ -45,6 +47,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Inbox,
       group: "settings",
       order: 51,
+      settingsGroup: "communication",
+      settingsOrder: 20,
       permission: { definition: mailInboxPermissions, action: "view" },
     },
   ],

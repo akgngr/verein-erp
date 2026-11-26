@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.20.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Gruplu ayar merkezi",
+        "de": "Gruppierte Einstellungsübersicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayar merkezi artık dokuz gruba ayrılıyor (Genel, Kullanıcılar ve erişim, Güvenlik ve gizlilik, Entegrasyonlar, Görünüm, İletişim, Yapay zekâ ve otomasyon, Modül yönetimi, Sistem yönetimi). Gruplar ve sıra modül tanımlarından gelir; sol paneldeki Ayarlar alt menüsü aynı sırayı izler.",
+          "de": "Die Einstellungsübersicht ist jetzt in neun Gruppen gegliedert (Allgemein, Benutzer und Zugriff, Sicherheit und Datenschutz, Integrationen, Darstellung, Kommunikation, KI und Automatisierung, Modulverwaltung, Systemverwaltung). Gruppen und Reihenfolge kommen aus den Moduldefinitionen; das Einstellungsmenü in der Seitenleiste folgt derselben Reihenfolge."
+        }
+      ]
+    },
+    {
       "version": "1.19.2",
       "date": "2026-11-25",
       "title": {

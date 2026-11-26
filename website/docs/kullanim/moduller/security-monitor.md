@@ -13,7 +13,7 @@ Regularly runs system security tests and monitors results
 |---|---|
 | Anahtar | `security-monitor` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.0 |
+| Sürüm | 1.4.1 |
 | Sayfalar | `/guvenlik-izleme` |
 | Gerektirir | [Otomasyon](./automation) |
 
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Güvenlik İzleme | görüntüleme, oluşturma, düzenleme, silme | — | — | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.4.1 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
 
 ### 1.4.0 — Süreç içi güvenlik denetimi
 
@@ -78,10 +84,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 1.3.1 — İş akışı etiketleri
-
-_2026-11-06_
-
-- **İyileştirme:** Güvenlik testleri adımı için okunur ad ve alan etiketleri eklendi.
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.

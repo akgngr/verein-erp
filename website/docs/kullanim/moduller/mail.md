@@ -13,7 +13,7 @@ Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gön
 |---|---|
 | Anahtar | `mail` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.5.5 |
+| Sürüm | 1.5.6 |
 | Sayfalar | `/mail`, `/mail/gelen-kutusu`, `/mail/kayitlar` |
 
 ## Diğer modüllere erişim
@@ -38,6 +38,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | E-posta altyapısı | görüntüleme, oluşturma, düzenleme | — | — | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.5.6 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
 
 ### 1.5.5 — E-posta eki MIME ve CSP sandbox sertleştirmesi
 
@@ -84,10 +90,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 1.4.2 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-Daha eski 12 herkese açık sürüm notu.
+Daha eski 13 herkese açık sürüm notu.

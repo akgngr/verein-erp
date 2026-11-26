@@ -13,7 +13,7 @@ Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketle
 |---|---|
 | Anahtar | `banking` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.9 |
+| Sürüm | 1.1.10 |
 | Sayfalar | `/ayarlar/banka-baglantisi` |
 | Gerektirir | [Muhasebe](./accounting) |
 
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Banka bağlantısı | görüntüleme, düzenleme, onay | görüntüleme | — | görüntüleme, düzenleme, onay | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.10 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
 
 ### 1.1.9 — Callback tekrar koruma ve GoCardless belirteç sertleştirmesi
 
@@ -77,10 +83,4 @@ _2026-11-06_
 
 - **Düzeltme:** Banka bağlantısı ayarlarındaki sağlayıcı seçiminde oluşan hydration hatası giderildi.
 
-### 1.1.0 — Bağımlılık
-
-_2026-11-01_
-
-- **İyileştirme:** Zorunlu: Muhasebe.
-
-Daha eski 1 herkese açık sürüm notu.
+Daha eski 2 herkese açık sürüm notu.

@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.5.0 |
+| Sürüm | 1.5.1 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.5.1 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
 
 ### 1.5.0 — Şifre sıfırlama ve oturum yönetimi
 
@@ -79,10 +85,4 @@ _2026-11-24_
 
 - **Yeni:** UserNavPreference modeli, /api/users/nav-preferences uç noktası ve DSGVO silme kancası eklendi.
 
-### 1.2.0 — Vergi danışmanı (TAX_ADVISOR) rolü ve zaman sınırlı erişim
-
-_2026-11-23_
-
-- **Yeni:** Muhasebe ve finans raporları için salt okunur TAX_ADVISOR rolü ile varsayılan 14 / en fazla 90 günlük erişim penceresi yönetimi eklendi.
-
-Daha eski 14 herkese açık sürüm notu.
+Daha eski 15 herkese açık sürüm notu.

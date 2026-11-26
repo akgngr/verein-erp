@@ -289,14 +289,6 @@
     "noResults": "Aramanızla eşleşen ayar yok.",
     "open": "Aç",
     "sections": {
-      "general": {
-        "title": "Dernek ve sistem",
-        "description": "Dernek bilgileri, kullanıcılar ve sistem yönetimi."
-      },
-      "modules": {
-        "title": "Modül ayarları",
-        "description": "Modüllerin kendi yapılandırma sayfaları."
-      },
       "personal": {
         "title": "Kişisel tercihler",
         "description": "Yalnızca sizin arayüzünüzü etkiler."
@@ -327,6 +319,44 @@
       "surumNotlari": "Uygulama ve modül sürüm notları.",
       "organization": "Dernek adı, adres, logo ve kamu yararı bilgileri.",
       "bankaBaglantisi": "Banka hesabı bağlantısı ve hesap hareketleri aktarımı."
+    },
+    "groups": {
+      "general": {
+        "title": "Genel",
+        "description": "Dernek bilgileri, kurulum, lisans ve sürüm notları."
+      },
+      "users-access": {
+        "title": "Kullanıcılar ve erişim",
+        "description": "Kullanıcılar, roller ve davetler."
+      },
+      "security-privacy": {
+        "title": "Güvenlik ve gizlilik",
+        "description": "Gizlilik ayarları, veri çıkışı, denetim kaydı ve güvenlik izleme."
+      },
+      "integrations": {
+        "title": "Entegrasyonlar",
+        "description": "Banka bağlantısı ve dış hizmetler."
+      },
+      "appearance": {
+        "title": "Görünüm",
+        "description": "Pano widget'ları ve menü düzeni."
+      },
+      "communication": {
+        "title": "İletişim",
+        "description": "E-posta, gelen kutusu ve bildirim kanalları."
+      },
+      "ai-automation": {
+        "title": "Yapay zekâ ve otomasyon",
+        "description": "Yapay zekâ asistanı ve otomasyon izleme."
+      },
+      "module-management": {
+        "title": "Modül yönetimi",
+        "description": "Modüller, sağlık durumu, paketler ve modüllerin kendi ayarları."
+      },
+      "system-management": {
+        "title": "Sistem yönetimi",
+        "description": "Demo verisi ve bakım araçları."
+      }
     }
   },
   "roles": {

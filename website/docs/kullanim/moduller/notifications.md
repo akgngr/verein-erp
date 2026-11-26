@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.16.0 |
+| Sürüm | 0.16.1 |
 | Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular`, `/ayarlar/bildirimler/aboneler` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.16.1 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
 
 ### 0.16.0 — Kanal ayarları ve numara doğrulama
 
@@ -83,10 +89,4 @@ _2026-11-23_
 - **İyileştirme:** Bildirim çekmecesi için aria-live, aria-haspopup, genişletilmiş durum yönetimi ve ekran okuyuculara yönelik bağlamsal buton etiketleri ile tam erişilebilirlik sağlandı.
 - **Güvenlik:** SSE akışı kullanıcı bazında katı şekilde yalıtılmıştır; akış üzerinden kişisel veri (PII) iletilmez, yalnızca hafif sinyal ve sayılar taşınır.
 
-### 0.12.0 — Yönetici duyuru gönderme ekranı
-
-_2026-11-22_
-
-- **Yeni:** Yöneticiler duyuruyu herkese veya seçilen rollere onay penceresinden gönderebilir ve gerçek alıcı sayısını görebilir.
-
-Daha eski 11 herkese açık sürüm notu.
+Daha eski 12 herkese açık sürüm notu.

@@ -11,7 +11,7 @@ import { notificationsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "notifications",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.16.0",
+  version: "0.16.1",
   label: "Bildirimler",
   description: "Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.",
   category: "CORE",
@@ -36,6 +36,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Bell,
       group: "settings",
       order: 11,
+      settingsGroup: "communication",
+      settingsOrder: 30,
       permission: { definition: notificationsPermissions, action: "view" },
     },
     {
@@ -45,6 +47,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Megaphone,
       group: "settings",
       order: 12,
+      settingsGroup: "communication",
+      settingsOrder: 40,
       permission: { definition: notificationsPermissions, action: "update" },
     },
     {
@@ -54,6 +58,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Users,
       group: "settings",
       order: 13,
+      settingsGroup: "communication",
+      settingsOrder: 50,
       permission: { definition: notificationsPermissions, action: "update" },
     },
   ],

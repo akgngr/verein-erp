@@ -8,7 +8,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "system",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.19.2",
+  version: "1.20.0",
   label: "Modül Yönetimi",
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
@@ -45,6 +45,8 @@ export const moduleConfig: ModuleConfig = {
       icon: PanelsTopLeft,
       group: "settings",
       order: 2,
+      settingsGroup: "appearance",
+      settingsOrder: 10,
       permission: { definition: settingsPermissions, action: "view" },
     },
     {
@@ -54,6 +56,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Boxes,
       group: "settings",
       order: 3,
+      settingsGroup: "module-management",
+      settingsOrder: 10,
       permission: { definition: systemPermissions, action: "view" },
     },
     {
@@ -63,6 +67,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Activity,
       group: "settings",
       order: 4,
+      settingsGroup: "module-management",
+      settingsOrder: 20,
       permission: { definition: systemPermissions, action: "view" },
     },
     {
@@ -72,6 +78,8 @@ export const moduleConfig: ModuleConfig = {
       icon: PackageCheck,
       group: "settings",
       order: 5,
+      settingsGroup: "module-management",
+      settingsOrder: 30,
       permission: { definition: systemPermissions, action: "view" },
       // Ayrı menü yok: Modül Yönetimi ekranındaki "Yeni modül kur" butonundan açılır.
       hidden: true,
@@ -83,6 +91,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Wand2,
       group: "settings",
       order: 1,
+      settingsGroup: "general",
+      settingsOrder: 20,
       permission: { definition: systemPermissions, action: "update" },
     },
     {
@@ -93,6 +103,8 @@ export const moduleConfig: ModuleConfig = {
       icon: KeyRound,
       group: "settings",
       order: 5,
+      settingsGroup: "general",
+      settingsOrder: 30,
       permission: { definition: systemPermissions, action: "update" },
     },
     {
@@ -102,6 +114,8 @@ export const moduleConfig: ModuleConfig = {
       icon: ShieldCheck,
       group: "settings",
       order: 6,
+      settingsGroup: "security-privacy",
+      settingsOrder: 10,
       permission: { definition: systemPermissions, action: "view" },
     },
     {
@@ -111,6 +125,8 @@ export const moduleConfig: ModuleConfig = {
       icon: FileText,
       group: "settings",
       order: 7,
+      settingsGroup: "security-privacy",
+      settingsOrder: 20,
       permission: { definition: systemPermissions, action: "view" },
     },
     {
@@ -120,6 +136,8 @@ export const moduleConfig: ModuleConfig = {
       icon: SlidersHorizontal,
       group: "settings",
       order: 8,
+      settingsGroup: "appearance",
+      settingsOrder: 20,
       permission: { definition: settingsPermissions, action: "view" },
     },
     {
@@ -129,6 +147,8 @@ export const moduleConfig: ModuleConfig = {
       icon: History,
       group: "settings",
       order: 99,
+      settingsGroup: "general",
+      settingsOrder: 40,
       permission: { definition: settingsPermissions, action: "view" },
     },
   ],

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.20",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Ayar merkezi grubu",
+        "de": "Gruppe in der Einstellungsübersicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.",
+          "de": "Die Einstellungsseiten erscheinen in der Einstellungsübersicht in ihrer eigenen Gruppe und Reihenfolge."
+        }
+      ]
+    },
+    {
       "version": "0.10.19",
       "date": "2026-11-25",
       "title": {
