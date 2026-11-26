@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { LoginView } from "./login-view";
-import { signIn } from "../auth";
+import { externalLogin } from "../actions/external-login";
 import { loadEnabledAuthProviders } from "../services/oauth-providers";
 
 export async function LoginPageView({ passive, oauthDenied }: { passive?: boolean; oauthDenied?: boolean }) {
@@ -10,12 +10,6 @@ export async function LoginPageView({ passive, oauthDenied }: { passive?: boolea
     return config.id && config.name ? [{ id: config.id, name: config.name }] : [];
   });
   const t = await getTranslations("auth");
-  async function externalLogin(form: FormData) {
-    "use server";
-    const id = form.get("provider");
-    if (typeof id !== "string" || !(await loadEnabledAuthProviders()).ids.includes(id)) return;
-    await signIn(id, { redirectTo: "/" });
-  }
   return <div className="w-full max-w-md">
     <LoginView passive={passive} oauthDenied={oauthDenied} />
     {options.length > 0 && <form action={externalLogin} className="mt-4 flex flex-col gap-2">
