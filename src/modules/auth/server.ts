@@ -71,7 +71,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   if (!dbUser || !dbUser.isActive) return null;
 
   const tokenSv = (session.user as { sessionVersion?: string }).sessionVersion;
-  if (!isSessionVersionValid(tokenSv, dbUser.passwordHash, getEnv().AUTH_SECRET)) {
+  if (!isSessionVersionValid(tokenSv, dbUser.passwordHash, getEnv().AUTH_SECRET, dbUser.sessionEpoch)) {
     return null;
   }
 
@@ -102,7 +102,7 @@ export async function requireUser(options?: RequireUserOptions): Promise<Session
   }
 
   const tokenSv = (session.user as { sessionVersion?: string }).sessionVersion;
-  if (!isSessionVersionValid(tokenSv, dbUser.passwordHash, getEnv().AUTH_SECRET)) {
+  if (!isSessionVersionValid(tokenSv, dbUser.passwordHash, getEnv().AUTH_SECRET, dbUser.sessionEpoch)) {
     throw new UnauthorizedError("auth.errors.sessionInvalid");
   }
 

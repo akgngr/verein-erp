@@ -191,6 +191,6 @@ export async function authorize(
     email: user.email,
     role: user.role,
     mustChangePassword: user.mustChangePassword,
-    sessionVersion: computeSessionVersion(user.passwordHash, env.AUTH_SECRET),
+    sessionVersion: computeSessionVersion(user.passwordHash, env.AUTH_SECRET, user.sessionEpoch),
   };
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -57,6 +58,10 @@ export function LoginForm() {
       />
       <FormErrorSummary message={formError} />
       <SubmitButton isSubmitting={form.formState.isSubmitting}>{t("loginButton")}</SubmitButton>
+      {/* #603: Self-service password reset. */}
+      <Link href="/sifremi-unuttum" className="self-center text-sm text-ink-500 hover:text-foreground hover:underline">
+        {t("forgotPassword")}
+      </Link>
     </form>
   );
 }

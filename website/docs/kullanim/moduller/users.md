@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.4 |
+| Sürüm | 1.5.0 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.5.0 — Şifre sıfırlama ve oturum yönetimi
+
+_2026-11-26_
+
+- **Yeni:** Kendi kendine şifre sıfırlama: tek kullanımlık, 30 dakika geçerli e-posta bağlantısı; adresin kayıtlı olup olmadığı yanıt veya süreden anlaşılmaz; IP ve adres başına sınır.
+- **Yeni:** Yönetici, kullanıcı listesinden bir kullanıcının tüm oturumlarını sonlandırabilir (kayıp cihaz).
+- **Güvenlik:** Davet ve sıfırlama bağlantıları amaç bazlıdır, birbirinin yerine kullanılamaz; şifre belirlenince bekleyen tüm bağlantılar geçersiz olur ve kilit kalkar.
 
 ### 1.4.4 — Yerel tarih alanları
 
@@ -77,10 +85,4 @@ _2026-11-23_
 
 - **Yeni:** Muhasebe ve finans raporları için salt okunur TAX_ADVISOR rolü ile varsayılan 14 / en fazla 90 günlük erişim penceresi yönetimi eklendi.
 
-### 1.1.11 — Silinen kullanıcı için daha az kişisel veri
-
-_2026-11-23_
-
-- **Güvenlik:** Bir kullanıcı silindiğinde denetim kaydına artık adı ve e-posta adresi yazılmıyor; yalnız kimlik numarası ve rol tutuluyor.
-
-Daha eski 13 herkese açık sürüm notu.
+Daha eski 14 herkese açık sürüm notu.
