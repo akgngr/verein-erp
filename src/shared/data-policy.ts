@@ -76,6 +76,7 @@ export const DATA_POLICY = {
   User: { owner: "users", category: "K0", reason: "Kimlik doğrulama sırları (parola hash, kilit)", sensitiveFields: ["passwordHash", "email"], directAccess: ["auth"] },
   UserTotp: { owner: "auth", category: "K0", reason: "İkinci faktör sırrı (#603; secret box ile şifreli)", sensitiveFields: ["secretEnc", "lastUsedStep"], personalOwnerField: "userId" },
   UserTotpRecoveryCode: { owner: "auth", category: "K0", reason: "İkinci faktör kurtarma kodları (#603; yalnızca SHA-256 özeti)", sensitiveFields: ["codeHash"], personalOwnerField: "userId" },
+  AuthIdentity: { owner: "auth", category: "K0", reason: "Dış giriş sağlayıcısı bağlantısı (#612; sağlayıcı + subject, token yok)", sensitiveFields: ["subject"], personalOwnerField: "userId" },
   UserProfile: { owner: "auth", category: "K0", reason: "Banka ve iletişim verisi", sensitiveFields: ["accountHolder", "bic", "city", "houseNumber", "ibanEnc", "mobile", "phone", "postalCode", "street", "taxNumberEnc"], personalOwnerField: "userId" },
   YouthProtectionRecord: {
     owner: "youth-protection",

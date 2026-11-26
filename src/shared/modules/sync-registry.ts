@@ -18,6 +18,7 @@ const SECRETARY_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "s
 const NOTIFICATION_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "notification-registry.ts");
 const WIDGET_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "widget-registry.ts");
 const COMPLIANCE_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "compliance-registry.ts");
+const AUTH_PROVIDERS_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "auth-provider-registry.ts");
 const CALENDAR_SYNC_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "calendar-sync-registry.ts");
 const CAMPAIGN_CHANNEL_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "campaign-channel-registry.ts");
 const AUTOMATION_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "automation-registry.ts");
@@ -117,6 +118,7 @@ export const registry: ModuleConfig[] = allModules;
   syncConventionFile(validModules, "secretary.ts", "secretary", SECRETARY_FILE, "ModuleSecretary", "@/shared/secretary/define", "moduleSecretaryRegistry", "Kişisel sekretere sabah özeti katkısı veren modüller (src/modules/<modül>/secretary.ts).");
   syncConventionFile(validModules, "notifications.ts", "notifications", NOTIFICATION_FILE, "ModuleNotifications", "@/shared/notifications/define", "moduleNotificationRegistry", "Merkezi bildirim türleri (src/modules/<modül>/notifications.ts, ADR 0006).");
   syncConventionFile(validModules, "compliance.ts", "compliance", COMPLIANCE_FILE, "ModuleCompliance", "@/shared/compliance/define", "moduleComplianceRegistry", "Uyum (Gemeinnützigkeit) metrik sağlayıcıları (src/modules/<modül>/compliance.ts, ADR 0009).");
+  syncConventionFile(validModules, "auth-providers.ts", "authProviders", AUTH_PROVIDERS_FILE, "ModuleAuthProviders", "@/shared/auth/providers", "moduleAuthProviderRegistry", "Giriş sağlayıcıları (OAuth/OIDC) sunan modüller (src/modules/<modül>/auth-providers.ts, #612). Yalnız sunucu.");
   syncWidgetRegistry(validModules);
   syncAutomationTasks(validModules);
 

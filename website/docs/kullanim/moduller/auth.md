@@ -13,9 +13,16 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.3.0 |
+| Sürüm | 1.4.0 |
 
 ## Sürüm notları
+
+### 1.4.0 — Dış giriş sağlayıcıları için platform
+
+_2026-11-26_
+
+- **Yeni:** Modüller giriş sağlayıcısı (OAuth/OIDC) ekleyebilir; sağlayıcılar istek anında yüklenir ve modül kapalıysa görünmez. Parola girişi değişmedi.
+- **Güvenlik:** Dış sağlayıcıyla giriş yalnızca açıkça bağlanmış hesapla mümkündür; e-posta ile eşleme ve otomatik hesap oluşturma yoktur. İki adımlı doğrulaması açık hesaplar parola ile girer; yönlendirmeler yalnız aynı adrese yapılır.
 
 ### 1.3.0 — İki adımlı doğrulama (TOTP)
 
@@ -62,10 +69,4 @@ _2026-11-17_
 
 - **İyileştirme:** Kart ve yüzey görünümleri ortak SurfaceCard/StatCard pattern'ine taşındı; modül bu kullanımda HeroUI Card implementasyonuna doğrudan bağlı değil.
 
-### 1.0.4 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 4 herkese açık sürüm notu.
+Daha eski 5 herkese açık sürüm notu.

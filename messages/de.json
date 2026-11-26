@@ -2762,6 +2762,13 @@
         "noEnrolment": "Starten Sie zuerst die Einrichtung.",
         "codeInvalid": "Der Code ist falsch, abgelaufen oder wurde bereits verwendet."
       }
+    },
+    "oauthDenied": "Die Anmeldung mit diesem Konto war nicht möglich. Wenn das Konto nicht verknüpft oder deaktiviert ist oder die Zwei-Faktor-Authentifizierung aktiv ist, melden Sie sich mit E-Mail und Passwort an.",
+    "oauth": {
+      "errors": {
+        "invalidLink": "Die Kontoverknüpfung ist ungültig.",
+        "alreadyLinked": "Dieses Konto ist bereits mit einem anderen Benutzer verknüpft."
+      }
     }
   },
   "automation": {

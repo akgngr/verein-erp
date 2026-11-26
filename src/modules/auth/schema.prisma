@@ -50,3 +50,21 @@ model UserTotpRecoveryCode {
   @@index([userId])
   @@map("user_totp_recovery_codes")
 }
+
+/// #612: Explicit link between an external sign-in provider subject and an internal ERP user.
+/// Sign-in through a provider succeeds ONLY when (provider, subject) is linked here, never by e-mail matching
+/// and never by creating a user (no auto-provisioning). Links are created by an authenticated, authorized flow
+/// (e.g. the social-login module, #613). No provider tokens are stored.
+model AuthIdentity {
+  id          String    @id @default(cuid())
+  provider    String // AuthProviderDefinition.id
+  subject     String // provider's stable account id (OIDC `sub`), never the e-mail
+  userId      String // FK DEĞİL (yumuşak referans)
+  linkedById  String? // who created the link (the user themselves or an admin)
+  linkedAt    DateTime  @default(now())
+  lastUsedAt  DateTime?
+
+  @@unique([provider, subject])
+  @@index([userId])
+  @@map("auth_identities")
+}

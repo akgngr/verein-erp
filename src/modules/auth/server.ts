@@ -31,6 +31,15 @@ export { ActionError, ForbiddenError, UnauthorizedError } from "./errors";
 // Auth.js tam yapılandırmasının public sunucu girişleri (6. bölüm)
 export { handlers, auth, signIn, signOut, unstable_update } from "./auth";
 
+// #612: Dış giriş sağlayıcısı kimlik bağlantıları (sağlayıcı modülleri, ör. social-login #613, bunları kullanır).
+// Yetki denetimi çağıranın sorumluluğundadır (kullanıcının kendisi veya yönetici).
+export {
+  IdentityLinkError,
+  linkAuthIdentity,
+  listAuthIdentities,
+  unlinkAuthIdentity,
+} from "./services/oauth-identity";
+
 // Server action'lar: client bileşenler bunları prop yoluyla alır (server.ts "server-only"
 // olduğu için doğrudan client import edilemez).
 export { signOutAction } from "./actions/logout";
