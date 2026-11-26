@@ -6,6 +6,7 @@ import type { ActionResult } from "@/shared/types/action";
 
 import { ActionError, createAction } from "@/modules/auth/server";
 import { usersPermissions } from "../permissions";
+import { revokePendingPasswordLinks } from "../services/invitations";
 import { userResetPasswordSchema } from "../schemas/user";
 
 /** Parola sıfırlama: yeni geçici parola, mustChangePassword = true (11.1). */
@@ -32,7 +33,7 @@ export async function resetUserPasswordAction(input: unknown): Promise<ActionRes
       });
 
       // #603: Yönetici geçici şifre verdiğinde bekleyen sıfırlama/davet bağlantıları geçersiz olur.
-      await db.userInvitation.updateMany({ where: { userId: target.id, usedAt: null, revokedAt: null }, data: { revokedAt: new Date() } });
+      await revokePendingPasswordLinks(target.id);
 
       await audit({ action: "PASSWORD_RESET", entity: "User", entityId: target.id });
 

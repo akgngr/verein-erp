@@ -39,7 +39,7 @@ describe("password reset & sessions (pure)", () => {
 describe("password reset & sessions (review fixes)", () => {
   test("every password-changing flow revokes pending reset/invitation links", () => {
     for (const file of ["src/modules/auth/actions/change-password.ts", "src/modules/users/actions/reset-password.ts"]) {
-      assert.match(fs.readFileSync(file, "utf8"), /userInvitation\.updateMany\(\{ where: \{ userId: [\w.]+, usedAt: null, revokedAt: null \}, data: \{ revokedAt: new Date\(\) \} \}\)/, file);
+      assert.match(fs.readFileSync(file, "utf8"), /await revokePendingPasswordLinks\([\w.]+\)/, file);
     }
   });
 

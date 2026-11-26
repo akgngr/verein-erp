@@ -39,6 +39,11 @@ export async function createInvitation(
   return { token, expiresAt };
 }
 
+/** #603: revoke every pending invitation/reset link of a user (called when the password changes in any flow). */
+export async function revokePendingPasswordLinks(userId: string, now = new Date()): Promise<void> {
+  await getDb().userInvitation.updateMany({ where: { userId, usedAt: null, revokedAt: null }, data: { revokedAt: now } });
+}
+
 /** Pure: link for the mail. */
 export function invitationLink(appUrl: string, token: string): string | null {
   try {
