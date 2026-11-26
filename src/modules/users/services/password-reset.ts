@@ -53,7 +53,7 @@ type Deliver = (message: { to: string; subject: string; text: string; reference:
  */
 export async function requestPasswordReset(
   input: { email: string; clientIp: string | null },
-  deps: { deliver?: Deliver; schedule?: (task: () => Promise<void>) => void | Promise<void> } = {},
+  deps: { deliver?: Deliver; schedule?: (task: () => Promise<void>) => void | Promise<void>; appUrl?: string } = {},
   now = new Date(),
 ): Promise<ResetRequestOutcome> {
   const email = input.email.trim().toLowerCase();
@@ -64,16 +64,16 @@ export async function requestPasswordReset(
   const perAddress = await consumeRateLimit(`reset:addr:${hashRateLimitSubject(email)}`, RESET_RATE_LIMITS.perAddress, now);
   if (!perAddress.allowed) return "rateLimited";
 
-  const task = () => issuePasswordReset(email, deps.deliver ?? defaultDeliver, now).catch(() => undefined);
+  const appUrl = deps.appUrl ?? getEnv().APP_URL;
+  const task = () => issuePasswordReset(email, deps.deliver ?? defaultDeliver, appUrl, now).catch(() => undefined);
   if (deps.schedule) await deps.schedule(task);
   else await task();
   return "accepted";
 }
 
-async function issuePasswordReset(email: string, deliver: Deliver, now: Date): Promise<void> {
+async function issuePasswordReset(email: string, deliver: Deliver, appUrl: string | undefined, now: Date): Promise<void> {
   const user = await getDb().user.findUnique({ where: { email }, select: { id: true, name: true, email: true, locale: true, isActive: true } });
   if (!user?.isActive) return;
-  const appUrl = getEnv().APP_URL;
   if (!appUrl || !passwordResetLink(appUrl, "x".repeat(43))) return;
   const { token } = await createInvitation(user.id, user.id, now, "RESET");
   const link = passwordResetLink(appUrl, token)!;

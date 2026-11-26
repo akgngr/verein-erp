@@ -31,6 +31,9 @@ export async function resetUserPasswordAction(input: unknown): Promise<ActionRes
         },
       });
 
+      // #603: Yönetici geçici şifre verdiğinde bekleyen sıfırlama/davet bağlantıları geçersiz olur.
+      await db.userInvitation.updateMany({ where: { userId: target.id, usedAt: null, revokedAt: null }, data: { revokedAt: new Date() } });
+
       await audit({ action: "PASSWORD_RESET", entity: "User", entityId: target.id });
 
       return undefined;

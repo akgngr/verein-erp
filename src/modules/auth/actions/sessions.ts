@@ -28,8 +28,15 @@ export async function signOutOtherDevicesAction(input: unknown) {
         throw new ActionError("auth.errors.currentPasswordWrong", { currentPassword: ["auth.errors.currentPasswordWrong"] });
       }
       await db.user.update({ where: { id: user.id }, data: { sessionEpoch: { increment: 1 } } });
+      try {
+        await signIn("credentials", { email: dbUser.email, password: input.currentPassword, redirect: false });
+      } catch {
+        // All or nothing: if login throttling (lock/IP limit) blocks re-issuing this device's cookie, undo the
+        // epoch bump so neither this device nor the others are signed out, and ask the user to try again later.
+        await db.user.update({ where: { id: user.id }, data: { sessionEpoch: { decrement: 1 } } });
+        throw new ActionError("auth.errors.rateLimited");
+      }
       await audit({ action: "LOGOUT", entity: "User", entityId: user.id, after: { scope: "allOtherDevices" } });
-      await signIn("credentials", { email: dbUser.email, password: input.currentPassword, redirect: false });
       return undefined;
     },
   });

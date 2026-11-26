@@ -36,6 +36,21 @@ describe("password reset & sessions (pure)", () => {
   });
 });
 
+describe("password reset & sessions (review fixes)", () => {
+  test("every password-changing flow revokes pending reset/invitation links", () => {
+    for (const file of ["src/modules/auth/actions/change-password.ts", "src/modules/users/actions/reset-password.ts"]) {
+      assert.match(fs.readFileSync(file, "utf8"), /userInvitation\.updateMany\(\{ where: \{ userId: [\w.]+, usedAt: null, revokedAt: null \}, data: \{ revokedAt: new Date\(\) \} \}\)/, file);
+    }
+  });
+
+  test("sign-out-all is all or nothing: a blocked re-issue rolls the epoch back before anything is audited", () => {
+    const src = fs.readFileSync("src/modules/auth/actions/sessions.ts", "utf8");
+    const rollback = src.indexOf("sessionEpoch: { decrement: 1 }");
+    assert.ok(rollback > src.indexOf("sessionEpoch: { increment: 1 }"));
+    assert.ok(src.indexOf("await audit(") > rollback, "audit only after a successful re-issue");
+  });
+});
+
 const enabled = Boolean(process.env.AI_TEST_DATABASE_URL);
 if (enabled && process.env.DATABASE_URL !== process.env.AI_TEST_DATABASE_URL) throw new Error("AI_TEST_DATABASE_URL must match the isolated DATABASE_URL");
 
@@ -50,14 +65,14 @@ test("db: reset request, purpose separation, 30 min expiry, one-time use, revoca
   const deliver = async (message: { to: string; text: string }) => { sent.push(message); return true; };
   try {
     const now = new Date("2031-01-01T10:00:00Z");
-    process.env.APP_URL ??= "https://erp.example.test";
+    const appUrl = "https://erp.example.test";
 
     // Unknown address: same outcome, nothing sent.
-    assert.equal(await requestPasswordReset({ email: `nobody-${randomUUID()}@reset.example.test`, clientIp: ip }, { deliver }, now), "accepted");
+    assert.equal(await requestPasswordReset({ email: `nobody-${randomUUID()}@reset.example.test`, clientIp: ip }, { deliver, appUrl }, now), "accepted");
     assert.equal(sent.length, 0);
 
     // Known address: mail with a link; the raw token is never stored.
-    assert.equal(await requestPasswordReset({ email: email.toUpperCase(), clientIp: ip }, { deliver }, now), "accepted");
+    assert.equal(await requestPasswordReset({ email: email.toUpperCase(), clientIp: ip }, { deliver, appUrl }, now), "accepted");
     assert.equal(sent.length, 1);
     const token = /sifre-sifirla\/([A-Za-z0-9_-]+)/.exec(sent[0]!.text)?.[1];
     assert.ok(token);
@@ -81,7 +96,7 @@ test("db: reset request, purpose separation, 30 min expiry, one-time use, revoca
 
     // Per-address rate limit (3 per 15 min); the response gives nothing away beyond "try later".
     const limited = [];
-    for (let i = 0; i < 3; i += 1) limited.push(await requestPasswordReset({ email, clientIp: null }, { deliver }, now));
+    for (let i = 0; i < 3; i += 1) limited.push(await requestPasswordReset({ email, clientIp: null }, { deliver, appUrl }, now));
     assert.deepEqual(limited.slice(-1), ["rateLimited"]);
   } finally {
     await db.userInvitation.deleteMany({ where: { userId: user.id } });
