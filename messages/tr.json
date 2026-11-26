@@ -8336,6 +8336,46 @@
         "prevPage": "Önceki",
         "nextPage": "Sonraki",
         "pageInfo": "Sayfa {page} / {totalPages} ({total} kayıt)"
+      },
+      "phoneLink": {
+        "title": {
+          "sms": "SMS numarası",
+          "whatsapp": "WhatsApp numarası"
+        },
+        "loading": "Yükleniyor…",
+        "linked": "Bağlı numara: {number}",
+        "pending": "Doğrulama kodu {number} numarasına gönderildi; 15 dakika geçerli.",
+        "none": "Bağlı numara yok. Bildirimleri bu kanaldan almak için numaranızı doğrulayın.",
+        "revoke": "Bağlantıyı kaldır",
+        "revoked": "Numara bağlantısı kaldırıldı.",
+        "phone": "Telefon numarası",
+        "sendCode": "Kod gönder",
+        "codeSent": "Doğrulama kodu gönderildi.",
+        "code": "6 haneli kod",
+        "confirm": "Doğrula",
+        "confirmed": "Numara doğrulandı.",
+        "error": "İşlem tamamlanamadı."
+      },
+      "channelAdmin": {
+        "smsTitle": "SMS kanalı (yönetici)",
+        "whatsappTitle": "WhatsApp kanalı (yönetici)",
+        "whatsappHint": "Meta WhatsApp Cloud API. Etkinleştirmek için erişim anahtarı, telefon numarası kimliği, onaylı bildirim şablonu ve Meta onayının teyidi gerekir. Numara doğrulaması için ayrıca onaylı bir kimlik doğrulama (authentication) şablonu girin.",
+        "enabled": "Kanal etkin",
+        "provider": "Sağlayıcı",
+        "apiKey": "API anahtarı",
+        "accountSid": "Twilio Account SID",
+        "sender": "Gönderen adı/numarası",
+        "accessToken": "Kalıcı erişim anahtarı",
+        "phoneNumberId": "Telefon numarası kimliği",
+        "templateLanguage": "Şablon dili (ör. de, tr)",
+        "templateName": "Bildirim şablonu (utility)",
+        "verifyTemplateName": "Doğrulama şablonu (authentication)",
+        "templateApproved": "Meta bildirim şablonunu onayladı",
+        "save": "Kaydet",
+        "saved": "Kanal ayarları kaydedildi.",
+        "error": "Ayarlar kaydedilemedi.",
+        "secretStored": "Anahtar kayıtlı (gösterilmez; değiştirmek için yenisini girin).",
+        "secretMissing": "Henüz anahtar kayıtlı değil."
       }
     },
     "widget": {

@@ -3,8 +3,7 @@ import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { notificationsPermissions } from "./permissions";
-import { NotificationPreferencesForm } from "./components/preferences-form";
-import { NotificationChannelLinks } from "./components/channel-links";
+import { NotificationChannelsPanel } from "./components/channels-panel";
 import { PushCard } from "./components/push-card";
 
 export default async function NotificationSettingsPage() {
@@ -17,8 +16,7 @@ export default async function NotificationSettingsPage() {
   const t = await getTranslations("notifications");
   return <section className="space-y-6">
     <PageHeader title={t("ui.preferencesTitle")} description={t("ui.preferencesDescription")} />
-    <NotificationPreferencesForm />
-    <NotificationChannelLinks />
+    <NotificationChannelsPanel />
     <PushCard />
   </section>;
 }

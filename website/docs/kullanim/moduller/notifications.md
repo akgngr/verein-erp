@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.15.3 |
+| Sürüm | 0.16.0 |
 | Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular`, `/ayarlar/bildirimler/aboneler` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.16.0 — Kanal ayarları ve numara doğrulama
+
+_2026-11-26_
+
+- **Yeni:** Bildirim ayarlarında yöneticiler için SMS (seven.io/Twilio) ve WhatsApp (Meta Cloud API) bölümleri; anahtarlar yalnız yazılır, hiçbir zaman gösterilmez.
+- **Yeni:** Kullanıcılar SMS ve WhatsApp numaralarını 6 haneli kodla doğrular (numara yalnız son haneleriyle gösterilir). WhatsApp kodu onaylı bir kimlik doğrulama şablonuyla gönderilir.
+- **İyileştirme:** Tercih tablosunda yalnız gerçekten çalışan kanallar gösterilir; yapılandırılmamış kanal sütunu gizlenir.
 
 ### 0.15.3 — Arayüz düzeltmeleri (#586)
 
@@ -80,11 +88,4 @@ _2026-11-22_
 
 - **Yeni:** Yöneticiler duyuruyu herkese veya seçilen rollere onay penceresinden gönderebilir ve gerçek alıcı sayısını görebilir.
 
-### 0.11.0 — Bildirim zili ve tercih ekranı
-
-_2026-11-22_
-
-- **Yeni:** Sağ üstte bildirim zili ve okunmamış rozeti; sağ çekmecede bildirimler (okundu, tümünü okundu, ertele). Zil Widget Platformu üzerinden eklenir.
-- **Yeni:** Ayarlar → Bildirimler: tür × kanal tercihleri, sessiz saatler, günlük özet, Telegram bağlama ve tarayıcı (push) bildirimleri.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 11 herkese açık sürüm notu.
