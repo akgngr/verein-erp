@@ -10,7 +10,7 @@ export async function resolveExternalIdentity(userId: string) {
   const db = getDb();
   const user = await db.user.findUnique({ where: { id: userId } });
   const now = new Date();
-  if (!user || getLoginAccessStatus(user.isActive, user.lockedUntil, now) !== "active") return null;
+  if (!user || getLoginAccessStatus(user.isActive, user.lockedUntil, now) !== "allowed") return null;
   if (isTimeBoxedRole(user.role)) {
     const grants = await db.externalAccessGrant.findMany({ where: { userId } });
     if (!hasActiveExternalGrant(grants, now)) return null;
