@@ -12,9 +12,10 @@ import { membersPermissions } from "../permissions";
 import { memberCreateSchema } from "../schemas/member";
 import {
   allocateMembershipNumber,
+  membershipNumberYear,
   runWithMembershipNumberRetry,
 } from "../services/membership-number";
-import { berlinYear, parseDateOnly, berlinToday } from "../utils";
+import { parseDateOnly, berlinToday } from "../utils";
 import { checkMemberDates, hasProblems } from "../services/date-rules";
 
 /**
@@ -54,8 +55,8 @@ export async function createMemberAction(
       if (hasProblems(dateProblems)) throw new ActionError("members.errors.datesInvalid", dateProblems);
 
       const createdByLabel = buildUserLabel(user.name, user.email);
-      const createdAt = new Date();
-      const year = berlinYear(createdAt);
+      // #605: numaradaki yıl üyelik başlangıcının yılıdır (geç kayıt/içe aktarmada da doğru yıl).
+      const year = membershipNumberYear(joinDate);
 
       const created = await runWithMembershipNumberRetry(() =>
         db.$transaction(async (tx) => {

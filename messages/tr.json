@@ -7956,6 +7956,17 @@
         "caption": "{collected} / {expected}",
         "open": "Açık",
         "overdue": "Gecikmiş"
+      },
+      "celebrations": {
+        "title": "Doğum günleri ve yıldönümleri",
+        "description": "Önümüzdeki 30 gündeki doğum günleri ve 10/25/40/50/60. üyelik yılları.",
+        "empty": "Önümüzdeki 30 günde doğum günü veya yıldönümü yok.",
+        "colName": "Üye",
+        "colOccasion": "Vesile",
+        "colDate": "Tarih",
+        "birthday": "{years}. doğum günü",
+        "anniversary": "{years}. üyelik yılı",
+        "today": "Bugün"
       }
     },
     "access": {
