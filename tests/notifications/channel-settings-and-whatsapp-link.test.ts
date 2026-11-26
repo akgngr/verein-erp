@@ -44,8 +44,9 @@ test("db: WhatsApp code flow — unavailable until configured, hashed code, wron
   const db = getDb();
   const before = await db.notificationChannelConfig.findUnique({ where: { channel: "whatsapp" } });
   const userId = `wa-link-${randomUUID()}`;
-  const sent: Array<{ body: { template: { components: Array<{ parameters: Array<{ text: string }> }> } } }> = [];
-  const transport = async (input: never) => { sent.push(input); return { ok: true }; };
+  type Sent = { body: { template: { components: Array<{ parameters: Array<{ text: string }> }> } } };
+  const sent: Sent[] = [];
+  const transport = async (input: { body: unknown }) => { sent.push(input as Sent); return { ok: true }; };
   try {
     await db.notificationChannelConfig.deleteMany({ where: { channel: "whatsapp" } });
     await assert.rejects(requestWhatsappVerification(userId, "+49 151 12345678", transport), /unavailable/);
