@@ -1,0 +1,22 @@
+model SocialLoginProvider {
+  id           String   @id
+  enabled      Boolean  @default(false)
+  clientId     String
+  secretEnc    String
+  tenantId     String?
+  updatedAt    DateTime @updatedAt
+
+  @@map("social_login_providers")
+}
+
+model SocialLoginIdentity {
+  id          String   @id @default(cuid())
+  provider    String
+  subjectHash String
+  userId      String
+  createdAt   DateTime @default(now())
+
+  @@unique([provider, subjectHash])
+  @@unique([provider, userId])
+  @@map("social_login_identities")
+}
