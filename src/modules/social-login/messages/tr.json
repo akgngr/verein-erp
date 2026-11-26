@@ -44,5 +44,11 @@
   "confirmUnlink": "Bağlantı kaldırılsın mı?",
   "unlink": "Bağlantıyı kaldır",
   "cancel": "Vazgeç",
-  "unlinked": "Bağlantı kaldırıldı."
+  "unlinked": "Bağlantı kaldırıldı.",
+  "link": "{provider} hesabını bağla",
+  "password": "Mevcut ERP parolanız",
+  "linkHint": "Sağlayıcıda hesabınızı doğrulayacaksınız. İki adımlı doğrulama açık hesaplarda sosyal giriş kullanılamaz.",
+  "continue": "Devam et",
+  "linkSuccess": "Hesap bağlandı.",
+  "linkDenied": "Hesap bağlanamadı. Yeniden deneyin."
 }

@@ -44,5 +44,11 @@
   "confirmUnlink": "Verknüpfung entfernen?",
   "unlink": "Verknüpfung entfernen",
   "cancel": "Abbrechen",
-  "unlinked": "Verknüpfung entfernt."
+  "unlinked": "Verknüpfung entfernt.",
+  "link": "{provider}-Konto verknüpfen",
+  "password": "Aktuelles ERP-Passwort",
+  "linkHint": "Sie bestätigen Ihr Konto beim Anbieter. Bei aktiver Zwei-Faktor-Anmeldung ist die externe Anmeldung nicht verfügbar.",
+  "continue": "Weiter",
+  "linkSuccess": "Konto verknüpft.",
+  "linkDenied": "Konto konnte nicht verknüpft werden. Bitte erneut versuchen."
 }

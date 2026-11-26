@@ -4,11 +4,13 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 import { ActionButton } from "@/shared/components/ui/action-button";
 import { SurfaceCard } from "@/shared/components/ui/surface-card";
-import { unlinkProviderAction } from "../actions/identities";
+import { unlinkProviderAction, linkProviderAction } from "../actions/identities";
 import type { ProviderId } from "../constants";
 
-export function LinkedAccounts({ linked }: { linked: ProviderId[] }) {
+export function LinkedAccounts({ linked, available }: { linked: ProviderId[]; available: ProviderId[] }) {
   const t = useTranslations("social-login");
+  const [password, setPassword] = useState("");
+  const [selected, setSelected] = useState<ProviderId | null>(null);
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
   const [confirming, setConfirming] = useState<ProviderId | null>(null);
@@ -21,6 +23,15 @@ export function LinkedAccounts({ linked }: { linked: ProviderId[] }) {
       if (result.ok) setConfirming(null);
     } catch { setMessage(t("errors.invalid")); }
     finally { setPending(false); }
+  }
+  async function link() {
+    if (!selected || !password) return;
+    setPending(true);
+    setMessage("");
+    try {
+      const result = await linkProviderAction({ provider: selected, password });
+      if (!result.ok) setMessage(result.error);
+    } finally { setPassword(""); setPending(false); }
   }
   return (
     <SurfaceCard contentClassName="flex flex-col gap-3 p-5">
@@ -38,6 +49,15 @@ export function LinkedAccounts({ linked }: { linked: ProviderId[] }) {
           ) : <ActionButton tone="neutral" disabled={pending} onClick={() => setConfirming(id)}>{t("unlink")}</ActionButton>}
         </div>
       ))}
+      {available.filter((id) => !linked.includes(id)).map((id) => (
+        <ActionButton key={id} tone="neutral" disabled={pending} onClick={() => { setSelected(id); setPassword(""); }}>{t("link", { provider: t(`providers.${id}`) })}</ActionButton>
+      ))}
+      {selected && <div className="flex flex-col gap-2">
+        <label className="text-sm">{t("password")}<input type="password" autoComplete="current-password" className="block w-full rounded-lg border border-ink-200 bg-surface p-2" value={password} onChange={(e) => setPassword(e.target.value)} /></label>
+        <p className="text-xs text-ink-500">{t("linkHint")}</p>
+        <ActionButton disabled={pending || !password} pending={pending} onClick={() => void link()}>{t("continue")}</ActionButton>
+        <ActionButton tone="neutral" disabled={pending} onClick={() => { setSelected(null); setPassword(""); }}>{t("cancel")}</ActionButton>
+      </div>}
       <p role="status" className="text-sm">{message}</p>
     </SurfaceCard>
   );

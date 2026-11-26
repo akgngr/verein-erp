@@ -9,7 +9,7 @@ export const moduleConfig: ModuleConfig = {
   description: "Harici kimlik sağlayıcıları ve bağlı hesaplar.",
   category: "OFFICIAL",
   hasSchema: true,
-  requires: [{ module: "auth", version: "1.4.0" }],
+  requires: [{ module: "auth", version: "1.5.0" }],
   access: [{ module: "system", operations: ["read"] }],
-  nav: [{ href: "/ayarlar/sosyal-giris", label: "Sosyal Giriş", labelKey: "socialLogin", icon: KeyRound, group: "settings", order: 25, permission: { definition: socialLoginPermissions, action: "view" } }],
+  nav: [{ href: "/ayarlar/sosyal-giris", label: "Sosyal Giriş", labelKey: "socialLogin", icon: KeyRound, group: "settings", settingsGroup: "users-access", order: 25, permission: { definition: socialLoginPermissions, action: "view" } }],
 };

@@ -68,3 +68,17 @@ model AuthIdentity {
   @@index([userId])
   @@map("auth_identities")
 }
+
+/// Short-lived, single-use OAuth linking intent. No provider token or password is stored.
+model AuthOAuthLinkIntent {
+  tokenHash      String   @id
+  userId         String
+  sessionVersion String
+  provider       String
+  returnPath     String
+  expiresAt      DateTime
+
+  @@unique([userId])
+  @@index([expiresAt])
+  @@map("auth_oauth_link_intents")
+}

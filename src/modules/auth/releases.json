@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Güvenli harici hesap bağlama",
+        "de": "Sichere externe Kontoverknüpfung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Kısa süreli tek kullanımlık OAuth bağlama niyeti ve yeniden parola doğrulaması.",
+          "de": "Kurzlebiger einmaliger OAuth-Verknüpfungsauftrag mit erneuter Passwortprüfung."
+        }
+      ]
+    },
+    {
       "version": "1.4.0",
       "date": "2026-11-26",
       "title": {
