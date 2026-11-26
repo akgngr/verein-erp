@@ -143,5 +143,6 @@
       "invalidLink": "Die Kontoverknüpfung ist ungültig.",
       "alreadyLinked": "Dieses Konto ist bereits mit einem anderen Benutzer verknüpft."
     }
-  }
+  },
+  "externalLogin": "Mit {provider} anmelden"
 }

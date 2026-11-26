@@ -9,14 +9,12 @@ import { authorize } from "./authorize";
 import { linkAuthIdentity } from "./oauth-identity";
 import { loadEnabledAuthProviders } from "./oauth-providers";
 import { isTwoFactorEnabled } from "./two-factor";
+import { validReturnPath, validLinkToken, matchesLinkIntent } from "./oauth-link-policy";
 
 const COOKIE = "verein-oauth-link";
 const TTL_SECONDS = 300;
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 
-function validReturnPath(path: string): boolean {
-  return /^\/[a-zA-Z0-9_-]+(?:\/[a-zA-Z0-9_-]+)*$/.test(path);
-}
 
 /** Provider-agnostic linking intent, created only after reauthenticating the current ERP user. */
 export async function prepareAuthIdentityLink(input: { provider: string; password: string; returnPath: string }): Promise<void> {
@@ -67,7 +65,7 @@ export async function completeAuthIdentityLink(provider: string, subject: string
   jar.delete(COOKIE);
   let returnPath = "/profil";
   try {
-    if (!/^[A-Za-z0-9_-]{43}$/.test(token) || !subject) return returnPath + "?oauthLink=denied";
+    if (!validLinkToken(token) || !subject) return returnPath + "?oauthLink=denied";
     const db = getDb();
     const tokenHash = hash(token);
     const intent = await db.authOAuthLinkIntent.findUnique({ where: { tokenHash } });
@@ -77,8 +75,7 @@ export async function completeAuthIdentityLink(provider: string, subject: string
     const user = await requireUser();
     const session = await auth();
     const version = (session?.user as { sessionVersion?: string } | undefined)?.sessionVersion;
-    if (user.id !== intent.userId || session?.user?.id !== user.id || version !== intent.sessionVersion ||
-        provider !== intent.provider || await isTwoFactorEnabled(user.id)) return returnPath + "?oauthLink=denied";
+    if (session?.user?.id !== user.id || !matchesLinkIntent(intent, { userId: user.id, provider, sessionVersion: version, twoFactorEnabled: await isTwoFactorEnabled(user.id), now: new Date() })) return returnPath + "?oauthLink=denied";
     const claimed = await db.authOAuthLinkIntent.deleteMany({ where: {
       tokenHash, userId: user.id, provider, sessionVersion: version, expiresAt: { gt: new Date() },
     } });
