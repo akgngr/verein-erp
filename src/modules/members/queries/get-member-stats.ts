@@ -10,8 +10,8 @@ import { berlinMonthRange } from "../utils";
 /**
  * Panel ve liste üstü istatistikler: silinmemiş kayıtlar üzerinden.
  *
- * KARAR: "Bu ay yeni üye" kayıt tarihi (createdAt) bazlıdır — üyenin deftere
- * kaydedildiği ay esas alınır; Europe/Berlin takvim ayı kullanılır.
+ * KARAR (#605): "Bu ay yeni üye" üyelik başlangıcı (joinDate) bazlıdır — toplu içe aktarma veya geç kayıt
+ * (createdAt) sayıyı şişirmez; Europe/Berlin takvim ayı kullanılır.
  */
 export async function getMemberStats(): Promise<MemberStats> {
   const db = getDb();
@@ -22,7 +22,7 @@ export async function getMemberStats(): Promise<MemberStats> {
     db.member.count({ where: { deletedAt: null, status: "PASSIVE" } }),
     db.member.count({ where: { deletedAt: null, status: "RESIGNED" } }),
     db.member.count({
-      where: { deletedAt: null, createdAt: { gte: month.start, lt: month.end } },
+      where: { deletedAt: null, joinDate: { gte: month.start, lt: month.end } },
     }),
     db.member.groupBy({
       by: ["type"],

@@ -520,6 +520,17 @@
       "caption": "{collected} / {expected}",
       "open": "Offen",
       "overdue": "Überfällig"
+    },
+    "celebrations": {
+      "title": "Geburtstage und Jubiläen",
+      "description": "Geburtstage und Mitgliedsjubiläen (10/25/40/50/60 Jahre) in den nächsten 30 Tagen.",
+      "empty": "In den nächsten 30 Tagen gibt es keine Geburtstage oder Jubiläen.",
+      "colName": "Mitglied",
+      "colOccasion": "Anlass",
+      "colDate": "Datum",
+      "birthday": "{years}. Geburtstag",
+      "anniversary": "{years} Jahre Mitglied",
+      "today": "Heute"
     }
   },
   "access": {
