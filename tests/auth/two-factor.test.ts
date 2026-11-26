@@ -113,6 +113,13 @@ describe("TOTP (wiring contracts)", () => {
     assert.match(invalidBranch, /reason: "second_factor_invalid"/);
   });
 
+  test("enrolment restarts only replace an unconfirmed secret (conditional write, no upsert)", () => {
+    const source = fs.readFileSync("src/modules/auth/services/two-factor.ts", "utf8");
+    const start = source.slice(source.indexOf("export async function startTotpEnrolment"), source.indexOf("export async function confirmTotpEnrolment"));
+    assert.doesNotMatch(start, /upsert\(/);
+    assert.match(start, /updateMany\(\{ where: \{ userId, enabledAt: null \}/);
+  });
+
   test("user deletion removes the second factor", () => {
     const lifecycle = fs.readFileSync("src/modules/auth/lifecycle.ts", "utf8");
     assert.match(lifecycle, /userTotp\.deleteMany\(\{ where: \{ userId \} \}\)/);
@@ -187,6 +194,25 @@ test("db: enrolment, encrypted secret, one-time TOTP steps and recovery codes, a
     assert.equal(await two.removeTwoFactor(user.id), false);
     assert.equal(await db.userTotpRecoveryCode.count({ where: { userId: user.id } }), 0);
     assert.equal(await two.isTwoFactorEnabled(user.id), false);
+  } finally {
+    await cleanup(user.id);
+  }
+});
+
+test("db: an enrolment restart racing a confirmation never turns a confirmed factor off", { skip: !enabled }, async () => {
+  const { base32Decode, hotp, totpStep } = await import("@/modules/auth/services/totp");
+  const two = await import("@/modules/auth/services/two-factor");
+  const user = await createUser("Totp-Race-Passwort-1");
+  try {
+    const now = new Date("2031-03-01T12:00:10Z");
+    for (let round = 0; round < 8; round += 1) {
+      await two.removeTwoFactor(user.id);
+      const { manualKey } = await two.startTotpEnrolment(user.id, user.email);
+      const code = hotp(base32Decode(manualKey.replace(/\s/g, ""))!, totpStep(now));
+      const [confirm] = await Promise.allSettled([two.confirmTotpEnrolment(user.id, code, now), two.startTotpEnrolment(user.id, user.email)]);
+      // Invariant: "enabled" reported to the user ⇔ enabled in the database.
+      assert.equal(await two.isTwoFactorEnabled(user.id), confirm.status === "fulfilled", `round ${round}`);
+    }
   } finally {
     await cleanup(user.id);
   }

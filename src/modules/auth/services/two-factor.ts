@@ -1,5 +1,7 @@
 import "server-only";
 
+import { Prisma } from "@prisma/client";
+
 import { getDb } from "@/shared/db";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
@@ -47,12 +49,24 @@ export async function startTotpEnrolment(userId: string, account: string): Promi
   if (existing?.enabledAt) throw new TwoFactorError("auth.twoFactor.errors.alreadyEnabled");
   const secret = generateTotpSecret();
   const secretEnc = sealSecret(PURPOSE, secret);
-  await db.userTotp.upsert({
-    where: { userId },
-    create: { userId, secretEnc },
-    update: { secretEnc, enabledAt: null, lastUsedStep: null },
-  });
+  // The write itself is the guard (the read above only gives the clear message): a confirmation that lands in
+  // between must never be overwritten, or 2FA would silently be off while the user was told it is on.
+  if (!(await replaceUnconfirmedSecret(userId, secretEnc))) {
+    try {
+      await db.userTotp.create({ data: { userId, secretEnc } });
+    } catch (error) {
+      if (!(error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002")) throw error;
+      // A row appeared meanwhile: replace it only if it is still an unconfirmed enrolment.
+      if (!(await replaceUnconfirmedSecret(userId, secretEnc))) throw new TwoFactorError("auth.twoFactor.errors.alreadyEnabled");
+    }
+  }
   return { manualKey: formatManualKey(secret), otpauthUri: otpauthUri({ secret, account }) };
+}
+
+/** Conditional: only an enrolment that is not confirmed (`enabledAt` null) is replaced. */
+async function replaceUnconfirmedSecret(userId: string, secretEnc: string): Promise<boolean> {
+  const updated = await getDb().userTotp.updateMany({ where: { userId, enabledAt: null }, data: { secretEnc, lastUsedStep: null } });
+  return updated.count === 1;
 }
 
 /** Confirms enrolment with a code from the app; turns 2FA on and returns the one-time recovery codes (shown once). */
