@@ -41,7 +41,7 @@
   },
   "linkedAccounts": "Meine verknüpften Konten",
   "noLinkedAccounts": "Keine verknüpften externen Konten.",
-  "confirmUnlink": "Verknüpfung entfernen?",
+  "confirmUnlink": "Verknüpfung entfernen? Alle Sitzungen werden beendet.",
   "unlink": "Verknüpfung entfernen",
   "cancel": "Abbrechen",
   "unlinked": "Verknüpfung entfernt.",
@@ -50,5 +50,6 @@
   "linkHint": "Sie bestätigen Ihr Konto beim Anbieter. Bei aktiver Zwei-Faktor-Anmeldung ist die externe Anmeldung nicht verfügbar.",
   "continue": "Weiter",
   "linkSuccess": "Konto verknüpft.",
-  "linkDenied": "Konto konnte nicht verknüpft werden. Bitte erneut versuchen."
+  "linkDenied": "Konto konnte nicht verknüpft werden. Bitte erneut versuchen.",
+  "otp": "Bestätigungscode (bei aktiver Zwei-Faktor-Anmeldung)"
 }

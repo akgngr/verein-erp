@@ -10,6 +10,8 @@ import type { ProviderId } from "../constants";
 export function LinkedAccounts({ linked, available }: { linked: ProviderId[]; available: ProviderId[] }) {
   const t = useTranslations("social-login");
   const [password, setPassword] = useState("");
+  const [unlinkPassword, setUnlinkPassword] = useState("");
+  const [otp, setOtp] = useState("");
   const [selected, setSelected] = useState<ProviderId | null>(null);
   const [pending, setPending] = useState(false);
   const [message, setMessage] = useState("");
@@ -18,11 +20,11 @@ export function LinkedAccounts({ linked, available }: { linked: ProviderId[]; av
     setPending(true);
     setMessage("");
     try {
-      const result = await unlinkProviderAction({ provider });
+      const result = await unlinkProviderAction({ provider, password: unlinkPassword, otp: otp || undefined });
       setMessage(result.ok ? t("unlinked") : result.error);
-      if (result.ok) setConfirming(null);
+      if (result.ok) { setConfirming(null); window.location.assign("/giris?pasif=1"); }
     } catch { setMessage(t("errors.invalid")); }
-    finally { setPending(false); }
+    finally { setUnlinkPassword(""); setOtp(""); setPending(false); }
   }
   async function link() {
     if (!selected || !password) return;
@@ -43,8 +45,10 @@ export function LinkedAccounts({ linked, available }: { linked: ProviderId[]; av
           {confirming === id ? (
             <div className="flex items-center gap-2">
               <span className="text-sm">{t("confirmUnlink")}</span>
-              <ActionButton tone="danger" disabled={pending} pending={pending} onClick={() => void unlink(id)}>{t("unlink")}</ActionButton>
-              <ActionButton tone="neutral" disabled={pending} onClick={() => setConfirming(null)}>{t("cancel")}</ActionButton>
+              <label className="text-sm">{t("password")}<input type="password" autoComplete="current-password" value={unlinkPassword} onChange={(e) => setUnlinkPassword(e.target.value)} className="block rounded border p-2" /></label>
+              <label className="text-sm">{t("otp")}<input autoComplete="one-time-code" value={otp} onChange={(e) => setOtp(e.target.value)} className="block rounded border p-2" /></label>
+              <ActionButton tone="danger" disabled={pending || !unlinkPassword} pending={pending} onClick={() => void unlink(id)}>{t("unlink")}</ActionButton>
+              <ActionButton tone="neutral" disabled={pending} onClick={() => { setConfirming(null); setUnlinkPassword(""); setOtp(""); }}>{t("cancel")}</ActionButton>
             </div>
           ) : <ActionButton tone="neutral" disabled={pending} onClick={() => setConfirming(id)}>{t("unlink")}</ActionButton>}
         </div>

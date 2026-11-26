@@ -88,3 +88,20 @@ export async function completeAuthIdentityLink(provider: string, subject: string
     return returnPath + "?oauthLink=denied";
   }
 }
+
+/** Reauthenticate before removing an identity; existing TOTP policy is preserved. */
+export async function reauthenticateIdentityRemoval(password: string, otp?: string): Promise<void> {
+  const { requireUser, auth } = await import("../server");
+  const user = await requireUser();
+  const session = await auth();
+  const version = (session?.user as { sessionVersion?: string } | undefined)?.sessionVersion;
+  if (!(await consumeRateLimit(`auth:oauth-unlink:${user.id}`, { limit: 5, windowMs: 900000 })).allowed) {
+    throw new ActionError("auth.errors.rateLimited");
+  }
+  let verified: Awaited<ReturnType<typeof authorize>>;
+  try { verified = await authorize({ email: user.email, password, otp }); }
+  catch { throw new ActionError("auth.errors.invalidCredentials"); }
+  if (!version || verified.id !== user.id || verified.sessionVersion !== version || verified.mustChangePassword) {
+    throw new ActionError("auth.oauth.errors.invalidLink");
+  }
+}

@@ -41,7 +41,7 @@
   },
   "linkedAccounts": "Bağlı hesaplarım",
   "noLinkedAccounts": "Bağlı sosyal hesabınız yok.",
-  "confirmUnlink": "Bağlantı kaldırılsın mı?",
+  "confirmUnlink": "Bağlantı kaldırılsın mı? Tüm oturumlar sonlandırılır.",
   "unlink": "Bağlantıyı kaldır",
   "cancel": "Vazgeç",
   "unlinked": "Bağlantı kaldırıldı.",
@@ -50,5 +50,6 @@
   "linkHint": "Sağlayıcıda hesabınızı doğrulayacaksınız. İki adımlı doğrulama açık hesaplarda sosyal giriş kullanılamaz.",
   "continue": "Devam et",
   "linkSuccess": "Hesap bağlandı.",
-  "linkDenied": "Hesap bağlanamadı. Yeniden deneyin."
+  "linkDenied": "Hesap bağlanamadı. Yeniden deneyin.",
+  "otp": "Doğrulama kodu (iki adımlı doğrulama açıksa)"
 }

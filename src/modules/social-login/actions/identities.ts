@@ -2,16 +2,17 @@
 
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
-import { ActionError, createAction, unlinkAuthIdentity, prepareAuthIdentityLink, signIn } from "@/modules/auth/server";
+import { ActionError, createAction, unlinkAuthIdentity, prepareAuthIdentityLink, reauthenticateIdentityRemoval, signIn } from "@/modules/auth/server";
 import { getModuleAvailability } from "@/modules/system/server";
 import { BASE_PATH, PROVIDERS } from "../constants";
 
 const unlink = createAction({
-  schema: z.object({ provider: z.enum(PROVIDERS) }).strict(),
+  schema: z.object({ provider: z.enum(PROVIDERS), password: z.string().min(1).max(200), otp: z.string().max(32).optional() }).strict(),
   async handler({ input, user }) {
     if (await getModuleAvailability("social-login") !== "available") {
       throw new ActionError("social-login.errors.unavailable");
     }
+    await reauthenticateIdentityRemoval(input.password, input.otp);
     await unlinkAuthIdentity({ provider: input.provider, userId: user.id, actorId: user.id });
     revalidatePath(BASE_PATH);
     return null;
