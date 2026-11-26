@@ -13,7 +13,8 @@ import { loginSchema } from "../schemas/login";
  */
 const LOGIN_ERROR_MESSAGES: Record<string, string> = {
   invalid_credentials: "auth.errors.invalidCredentials",
-  account_locked: "auth.errors.accountLocked",
+  account_locked: "auth.errors.invalidCredentials",
+  rate_limited: "auth.errors.rateLimited",
 };
 
 export async function loginAction(input: unknown): Promise<ActionResult<null>> {

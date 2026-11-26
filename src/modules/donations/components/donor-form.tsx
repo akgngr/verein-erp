@@ -16,7 +16,7 @@ import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
-import { createDonorAction, updateDonorAction } from "../actions/donor-actions";
+import { checkDonorDuplicateAction, createDonorAction, updateDonorAction } from "../actions/donor-actions";
 import { donorCreateSchema, donorUpdateSchema } from "../schemas/donor";
 
 type DonorFormValues = {
@@ -48,6 +48,7 @@ export function DonorForm({
   const closeDrawer = useFormDrawerClose();
   const t = useTranslations("donations.donors.form");
   const [formError, setFormError] = useState<string | null>(null);
+  const [duplicateDonorNumber, setDuplicateDonorNumber] = useState<string | null>(null);
 
   const form = useForm<DonorFormValues>({
     resolver: (mode === "edit"
@@ -75,8 +76,10 @@ export function DonorForm({
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
-    if (mode === "edit" && values.id) {
-      const result = await updateDonorAction({ ...values, id: values.id });
+    if (mode === "edit") {
+      const editId = initial?.id ?? values.id;
+      if (!editId) return;
+      const result = await updateDonorAction({ ...values, id: editId });
       if (!result.ok) {
         setFormError(applyActionResult(result, form.setError));
         return;
@@ -85,10 +88,17 @@ export function DonorForm({
       if (closeDrawer) {
         closeDrawer();
       } else {
-        router.push(`/bagislar/bagiscilar/${values.id}`);
+        router.push(`/bagislar/bagiscilar/${editId}`);
         router.refresh();
       }
       return;
+    }
+    if (!duplicateDonorNumber) {
+      const check = await checkDonorDuplicateAction(values);
+      if (check.ok && check.data.duplicate) {
+        setDuplicateDonorNumber(check.data.duplicate.donorNumber);
+        return;
+      }
     }
     const result = await createDonorAction(values);
     if (!result.ok) {
@@ -166,13 +176,21 @@ export function DonorForm({
             placeholder={tDonors("memberNumberPlaceholder")}
           />
         ) : null}
+        {duplicateDonorNumber ? (
+          <p
+            className="rounded-lg border border-warning/40 bg-warning/10 p-3 text-sm text-warning-700"
+            role="status"
+          >
+            {t("duplicateWarning", { number: duplicateDonorNumber })}
+          </p>
+        ) : null}
         {formError ? (
           <p className="text-sm text-danger" role="alert">
             {formError}
           </p>
         ) : null}
         <SubmitButton isSubmitting={form.formState.isSubmitting}>
-          {t("save")}
+          {duplicateDonorNumber ? t("confirmCreateDuplicate") : t("save")}
         </SubmitButton>
       </form>
     </FormSurface>

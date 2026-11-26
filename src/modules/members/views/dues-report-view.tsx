@@ -104,6 +104,7 @@ export async function DuesReportView({
             {canCreate ? <GenerateDuesModal currentYear={currentYear} /> : null}
             <LinkButton
               href={`/api/members/dues/export?${exportQuery.toString()}`}
+              download
               startIcon={<Download className="h-4 w-4" aria-hidden />}
             >
               {t("exportExcel")}

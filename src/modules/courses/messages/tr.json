@@ -316,7 +316,8 @@
     "chargeNotOpen": "Bu kalem açık değil.",
     "paymentNotFound": "Tahsilat bulunamadı ya da zaten geri alınmış.",
     "categoryMissing": "Kurs ayarlarında muhasebe gelir kategorisi seçilmemiş.",
-    "teacherHasAccount": "Bu öğretmenin zaten bir hesabı var."
+    "teacherHasAccount": "Bu öğretmenin zaten bir hesabı var.",
+    "sessionInLockedPayout": "Bu ders onaylanmış veya ödenmiş bir öğretmen hakedişinde yer aldığı için silinemez."
   },
   "validation": {
     "textMax": "Metin çok uzun.",
@@ -367,7 +368,8 @@
     "mail": "Öğretmen davet e-postası gönderir.",
     "students": "Kursa kaydedilecek öğrencileri ve ödeme sorumlularını okur.",
     "users": "Davet edilen öğretmen için Öğretmen rolünde kullanıcı hesabı açar; hesabı olan öğretmenin ad ve e-postasını kullanıcı kaydından okur.",
-    "organization": "Öğretmen hakediş PDF'inin antetinde dernek bilgilerini ve logosunu okur."
+    "organization": "Öğretmen hakediş PDF'inin antetinde dernek bilgilerini ve logosunu okur.",
+    "progress": "Bir kurs dersi silindiğinde o derse ait yetim yoklama kayıtlarını temizler."
   },
   "ai": {
     "create": {

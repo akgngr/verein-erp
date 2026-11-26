@@ -8,7 +8,7 @@ export type ConsentState = "PENDING" | "LINKED" | "EXPIRED" | "ERROR";
 export class BankProviderError extends Error {
   constructor(
     message: string,
-    readonly code: "credentials" | "provider" | "notConfigured",
+    readonly code: "credentials" | "provider" | "notConfigured" | "rateLimit",
   ) {
     super(message);
   }

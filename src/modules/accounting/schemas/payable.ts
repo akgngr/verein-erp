@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
-const DECIMAL = /^\d{1,7}([.,]\d{1,2})?$/;
+const DECIMAL = /^-?\d{1,7}([.,]\d{1,2})?$/;
 const text = (max: number) => z.string().trim().max(max, "accounting.invoices.validation.textMax");
 const optionalDate = z.string().trim().refine((value) => value === "" || DATE_ONLY.test(value), "accounting.validation.bookingDateInvalid");
 const money = z.string().trim().refine((value) => value === "" || DECIMAL.test(value), "accounting.invoices.validation.price");

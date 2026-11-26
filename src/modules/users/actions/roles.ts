@@ -20,12 +20,13 @@ const roleFields = {
 };
 const done = () => revalidatePath("/", "layout");
 
-/** Bir rolün bir kaynaktaki izinleri (Roller ve İzinler ekranı). Yönetici rolü değiştirilemez. */
+/** Bir rolün bir kaynaktaki izinleri (Roller ve İzinler ekranı). Yalnız Yönetici rol izinlerini değiştirebilir. */
 export async function setRoleGrantAction(input: unknown): Promise<ActionResult> {
   const run = createAction({
     permission: { definition: usersPermissions, action: "update" },
     schema: z.object({ role: roleKey, resource: z.string().min(1).max(60), actions: z.array(z.enum(PERMISSION_ACTIONS as [string, ...string[]])).max(5) }),
-    handler: async ({ input, audit }) => {
+    handler: async ({ input, user, audit }) => {
+      if (user.role !== "ADMIN") throw new ActionError("users.errors.adminOnly");
       const result = await setRoleGrant(input.role, input.resource, input.actions as never);
       if (result !== "ok") throw new ActionError(`users.roles.errors.${result}`); // i18n-ignore (çeviri anahtarı)
       await audit({ action: "ROLE_PERMISSIONS_CHANGED", entity: "Role", entityId: input.role, after: { resource: input.resource, actions: input.actions } });
@@ -40,7 +41,8 @@ export async function resetRoleGrantsAction(input: unknown): Promise<ActionResul
   const run = createAction({
     permission: { definition: usersPermissions, action: "update" },
     schema: z.object({ role: roleKey }),
-    handler: async ({ input, audit }) => {
+    handler: async ({ input, user, audit }) => {
+      if (user.role !== "ADMIN") throw new ActionError("users.errors.adminOnly");
       if (input.role === "ADMIN") throw new ActionError("users.roles.errors.locked");
       await resetRoleGrants(input.role);
       await audit({ action: "ROLE_PERMISSIONS_RESET", entity: "Role", entityId: input.role });
@@ -55,7 +57,8 @@ export async function createRoleAction(input: unknown): Promise<ActionResult<{ k
   const run = createAction({
     permission: { definition: usersPermissions, action: "create" },
     schema: z.object({ ...roleFields, copyFrom: roleKey.nullable() }),
-    handler: async ({ input, audit }) => {
+    handler: async ({ input, user, audit }) => {
+      if (user.role !== "ADMIN") throw new ActionError("users.errors.adminOnly");
       const key = await createCustomRole({ label: input.label, description: input.description || null, color: input.color as never, copyFrom: input.copyFrom });
       await audit({ action: "ROLE_CREATED", entity: "Role", entityId: key, after: { label: input.label, copyFrom: input.copyFrom } });
       done();
@@ -69,7 +72,8 @@ export async function updateRoleAction(input: unknown): Promise<ActionResult> {
   const run = createAction({
     permission: { definition: usersPermissions, action: "update" },
     schema: z.object({ key: roleKey, ...roleFields }),
-    handler: async ({ input, audit }) => {
+    handler: async ({ input, user, audit }) => {
+      if (user.role !== "ADMIN") throw new ActionError("users.errors.adminOnly");
       if (!(await updateCustomRole(input.key, { label: input.label, description: input.description || null, color: input.color as never }))) throw new ActionError("users.roles.errors.notCustom");
       await audit({ action: "ROLE_UPDATED", entity: "Role", entityId: input.key, after: { label: input.label } });
       done();
@@ -83,7 +87,8 @@ export async function deleteRoleAction(input: unknown): Promise<ActionResult> {
   const run = createAction({
     permission: { definition: usersPermissions, action: "delete" },
     schema: z.object({ key: roleKey }),
-    handler: async ({ input, audit }) => {
+    handler: async ({ input, user, audit }) => {
+      if (user.role !== "ADMIN") throw new ActionError("users.errors.adminOnly");
       const result = await deleteCustomRole(input.key);
       if (result === "notFound") throw new ActionError("users.roles.errors.notCustom");
       if (result === "inUse") throw new ActionError("users.roles.errors.inUse");

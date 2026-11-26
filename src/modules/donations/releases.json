@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.14",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Bağışçı düzenleme, BMF PDF, 10 yıl saklama ve toplu PDF birleştirme",
+        "de": "Spender-Bearbeitung, BMF-PDF, 10-Jahres-Frist und Sammel-PDF"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Bağışçı güncelleme/mükerrer kontrolü, bağış düzenleme fiş sürümlemesi, BMF PDF numaralandırma ve satır bölme, 10 yıllık saklama koruması ve SHA-256 doğrulamalı pdf-lib toplu birleştirme düzeltildi (#575, #577).",
+          "de": "Spender-Aktualisierung/Duplikatprüfung, Buchungs-Versionierung, BMF-PDF-Nummerierung/Silbentrennung, 10-Jahres-Aufbewahrung und SHA-256-geprüftes pdf-lib-Sammel-PDF behoben (#575, #577)."
+        }
+      ]
+    },
+    {
       "version": "1.1.13",
       "date": "2026-11-24",
       "title": {

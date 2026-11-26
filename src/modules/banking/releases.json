@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.9",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Callback tekrar koruma ve GoCardless belirteç sertleştirmesi",
+        "de": "Callback-Replay-Schutz und GoCardless-Token-Härtung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Banka callback tekrar oynatma koruması, kanonik APP_URL doğrulaması ve GoCardless belirteç önbelleği / 401-429 hata yönetimi eklendi (#574).",
+          "de": "Callback-Replay-Schutz, kanonische APP_URL-Auflösung sowie GoCardless-Token-Cache und 401/429-Fehlerbehandlung ergänzt (#574)."
+        }
+      ]
+    },
+    {
       "version": "1.1.8",
       "date": "2026-11-23",
       "title": {

@@ -22,6 +22,10 @@ export function LinkButton({
   startIcon,
   color,
   variant,
+  download,
+  target,
+  rel,
+  "aria-label": ariaLabel,
 }: {
   href: string;
   children: ReactNode;
@@ -30,6 +34,11 @@ export function LinkButton({
   emphasis?: LinkButtonEmphasis;
   size?: "sm" | "md" | "lg";
   className?: string;
+  /** Render as plain <a> with download attribute (disables Next.js Link prefetching). */
+  download?: boolean | string;
+  target?: string;
+  rel?: string;
+  "aria-label"?: string;
   /** @deprecated Use icon. */
   startIcon?: ReactNode;
   /** @deprecated Use tone. */
@@ -41,14 +50,37 @@ export function LinkButton({
   const resolvedStyle: ActionPresentation = emphasis
     ? ({ high: "solid", medium: "bordered", low: "light" } as const)[emphasis]
     : variant ?? "solid";
+  const classes = cn(
+    buttonVariants({
+      size,
+      variant: actionVariant(resolvedTone, resolvedStyle),
+    }),
+    "erp-motion-interactive",
+    className,
+  );
+  // API routes, file downloads, and external links MUST use a native <a> tag so Next.js
+  // never auto-prefetches export/PDF endpoints on page render (avoids phantom audit logs & load).
+  const isNativeAnchor =
+    download !== undefined ||
+    href.startsWith("/api/") ||
+    /^https?:\/\//i.test(href);
+  if (isNativeAnchor) {
+    return (
+      <a
+        href={href}
+        download={download}
+        target={target}
+        rel={rel}
+        aria-label={ariaLabel}
+        className={classes}
+      >
+        {icon ?? startIcon}
+        {children}
+      </a>
+    );
+  }
   return (
-    <Link
-      href={href}
-      className={cn(buttonVariants({
-        size,
-        variant: actionVariant(resolvedTone, resolvedStyle),
-      }), "erp-motion-interactive", className)}
-    >
+    <Link href={href} aria-label={ariaLabel} className={classes}>
       {icon ?? startIcon}
       {children}
     </Link>

@@ -83,16 +83,27 @@ export function donorRecipient(donor: {
   };
 }
 
-/** Üye alıcı anlık görüntüsü (§ 5 getMemberAddressBlock). */
+import { validateRecipientAddress } from "./confirmation-rules";
+
+/** Üye alıcı anlık görüntüsü (§ 5 getMemberAddressBlock) — adres eksikse açık hatayla reddeder. */
 export function memberRecipient(block: MemberAddressBlock): RecipientSnapshot {
+  const checked = validateRecipientAddress({
+    name: block.name,
+    street: block.street,
+    postalCode: block.postalCode,
+    city: block.city,
+    country: block.country,
+  });
+  if (!checked.ok) {
+    throw new ActionError("donations.errors.memberAddressMissing");
+  }
   return {
     kind: "member",
-    name: block.name,
-    // KARAR: Adres alanları opsiyoneldir; makbuzda boş alan boş string görünür.
-    street: block.street ?? "",
-    postalCode: block.postalCode ?? "",
-    city: block.city ?? "",
-    country: block.country,
+    name: checked.name,
+    street: checked.street,
+    postalCode: checked.postalCode,
+    city: checked.city,
+    country: checked.country,
   };
 }
 

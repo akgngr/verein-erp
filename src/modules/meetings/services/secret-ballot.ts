@@ -105,38 +105,73 @@ export async function castBallot(code: string, choice: string): Promise<{ ok: tr
  */
 export async function closeVote(voteId: string, decisionText: string | null) {
   const db = getDb();
-  const vote = await db.meetingVote.findUnique({ where: { id: voteId }, select: { id: true, status: true, options: true, minBallots: true, meetingId: true, agendaItemId: true, question: true, meeting: { select: { meetingDate: true } } } });
-  if (!vote || vote.status !== "OPEN") return { ok: false, error: "voteNotOpen" } as Fail;
-  const ballots = await db.meetingVoteBallot.findMany({ where: { voteId }, select: { choice: true, weight: true, ballotNonce: true } });
-  const totals = tally(vote.options, ballots);
-  const published = ballots.length >= vote.minBallots;
-  const closedAt = new Date();
-  const result = published ? yesNoResult(vote.options, totals) : null;
-  await runWithNumberRetry(() =>
+  return runWithNumberRetry(() =>
     db.$transaction(async (tx) => {
+      const vote = await tx.meetingVote.findUnique({
+        where: { id: voteId },
+        select: { id: true, status: true, options: true, minBallots: true, meetingId: true, agendaItemId: true, question: true, meeting: { select: { meetingDate: true } } },
+      });
+      if (!vote || vote.status !== "OPEN") return { ok: false, error: "voteNotOpen" } as Fail;
+
+      // Atomically claim OPEN -> CLOSED inside the transaction before reading/rewriting ballots (#579)
+      // so no concurrent castBallot or closeVote can race between reading and replacing the ballot box.
+      const claimed = await tx.meetingVote.updateMany({
+        where: { id: voteId, status: "OPEN" },
+        data: { status: "CLOSED" },
+      });
+      if (claimed.count !== 1) return { ok: false, error: "voteNotOpen" } as Fail;
+
       await tx.meetingVoteCredential.deleteMany({ where: { voteId } });
+      const ballots = await tx.meetingVoteBallot.findMany({ where: { voteId }, select: { choice: true, weight: true, ballotNonce: true } });
+      const totals = tally(vote.options, ballots);
+      const published = ballots.length >= vote.minBallots;
+      const closedAt = new Date();
+      const result = published ? yesNoResult(vote.options, totals) : null;
+
       // Re-write the ballot box in random order with fresh ids in ONE transaction: PostgreSQL keeps the creating
       // transaction id (xmin) per row, which would otherwise reveal the casting order and tie each ballot to the
       // transaction that spent its credential. Afterwards all ballots share one xmin. Dead tuples disappear at the
       // next (auto)vacuum; the runbook recommends `VACUUM "MeetingVoteBallot"` after an assembly.
       await tx.meetingVoteBallot.deleteMany({ where: { voteId } });
-      if (ballots.length) await tx.meetingVoteBallot.createMany({ data: shuffled(ballots).map((ballot) => ({ id: newBallotId(), voteId, choice: ballot.choice, weight: ballot.weight, batch: 1, ballotNonce: ballot.ballotNonce })) });
+      if (ballots.length) {
+        await tx.meetingVoteBallot.createMany({
+          data: shuffled(ballots).map((ballot) => ({ id: newBallotId(), voteId, choice: ballot.choice, weight: ballot.weight, batch: 1, ballotNonce: ballot.ballotNonce })),
+        });
+      }
       await tx.meetingVoteEligibility.updateMany({ where: { voteId }, data: { usedAt: null } });
       await tx.meetingVote.update({
         where: { id: voteId },
         data: {
-          status: "CLOSED", closedAt, retainUntil: addMonthsUtc(closedAt, RETENTION_MONTHS), ballotCount: ballots.length,
-          totals: published ? totals : undefined, ballotHash: ballotListHash(ballots), receipts: shuffled(ballots.map((ballot) => ballot.ballotNonce)),
+          status: "CLOSED",
+          closedAt,
+          retainUntil: addMonthsUtc(closedAt, RETENTION_MONTHS),
+          ballotCount: ballots.length,
+          totals: published ? totals : undefined,
+          ballotHash: ballotListHash(ballots),
+          receipts: shuffled(ballots.map((ballot) => ballot.ballotNonce)),
         },
       });
       if (result) {
         const year = berlinYear(vote.meeting.meetingDate);
         const { sequence, decisionNumber } = await allocateDecisionNumber(tx, year);
-        await tx.meetingDecision.create({ data: { meetingId: vote.meetingId, agendaItemId: vote.agendaItemId, year, sequence, decisionNumber, text: decisionText?.trim() || vote.question, result, votesFor: totals.yes, votesAgainst: totals.no, votesAbstain: totals.abstain } });
+        await tx.meetingDecision.create({
+          data: {
+            meetingId: vote.meetingId,
+            agendaItemId: vote.agendaItemId,
+            year,
+            sequence,
+            decisionNumber,
+            text: decisionText?.trim() || vote.question,
+            result,
+            votesFor: totals.yes,
+            votesAgainst: totals.no,
+            votesAbstain: totals.abstain,
+          },
+        });
       }
+      return { ok: true as const, published, ballotCount: ballots.length };
     }),
   );
-  return { ok: true as const, published, ballotCount: ballots.length };
 }
 
 /** Votes of a meeting for the detail page. Never returns ballots, credentials or eligibility member ids. */

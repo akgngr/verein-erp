@@ -51,3 +51,4 @@ export {
   registerPortalEvent,
   signPortalPendingForm,
 } from "./services/rights";
+export { revokePortalSessionsForMember } from "./services/cleanup";

@@ -181,11 +181,11 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
             Konum / Bağlantı
           </span>
           {event.isOnline ? (
-            event.onlineUrl ? (
+            event.onlineUrl && /^https?:\/\//i.test(event.onlineUrl) ? (
               <a
                 href={event.onlineUrl}
                 target="_blank"
-                rel="noreferrer"
+                rel="noopener noreferrer"
                 className="text-sm text-accent underline truncate font-medium"
               >
                 {event.onlineUrl}

@@ -21,12 +21,23 @@ export function ProfileContent({
   saveProfileAction: (input: unknown) => Promise<ActionResult>;
 }) {
   const t = useTranslations("auth.profile");
+  const tAuth = useTranslations("auth");
   return (
-    <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      <SurfaceCard
-        header={<h2 className="text-base font-medium">{t("accountInfo")}</h2>}
-        contentClassName="gap-3 text-sm"
-      >
+    <div className="flex flex-col gap-6">
+      {user.mustChangePassword ? (
+        <div
+          role="alert"
+          className="rounded-xl border border-warning/40 bg-warning/10 px-4 py-3 text-sm text-warning-700 dark:text-warning-300"
+        >
+          <p className="font-semibold">{tAuth("mustChangePasswordBanner")}</p>
+          <p className="mt-1 text-xs opacity-90">{tAuth("mustChangePasswordHint")}</p>
+        </div>
+      ) : null}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
+        <SurfaceCard
+          header={<h2 className="text-base font-medium">{t("accountInfo")}</h2>}
+          contentClassName="gap-3 text-sm"
+        >
         <div className="flex items-center justify-between gap-4">
           <span className="text-ink-500">{t("name")}</span>
           <span className="font-medium">{user.name}</span>
@@ -58,6 +69,7 @@ export function ProfileContent({
       >
         <ProfileForm profile={profile} saveAction={saveProfileAction} />
       </SurfaceCard>
+      </div>
     </div>
   );
 }

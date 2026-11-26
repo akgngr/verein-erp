@@ -35,7 +35,7 @@ import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
-import { createMemberAction } from "../actions/create-member";
+import { checkMemberDuplicateAction, createMemberAction } from "../actions/create-member";
 import { updateMemberAction } from "../actions/update-member";
 import { MEMBERSHIP_TYPE_VALUES, MEMBER_STATUS_VALUES } from "../constants";
 import { memberCreateSchema, memberUpdateSchema } from "../schemas/member";
@@ -115,6 +115,10 @@ export function MemberForm(props: MemberFormProps) {
   const closeDrawer = useFormDrawerClose();
   const t = useTranslations("members");
   const [formError, setFormError] = useState<string | null>(null);
+  const [duplicateWarning, setDuplicateWarning] = useState<{
+    key: string;
+    matches: string[];
+  } | null>(null);
 
   const isEdit = props.mode === "edit";
   const member = isEdit ? props.member : null;
@@ -235,11 +239,29 @@ export function MemberForm(props: MemberFormProps) {
       return;
     }
 
+    const dupKey = `${values.firstName.trim().toLowerCase()}|${values.lastName.trim().toLowerCase()}|${values.email.trim().toLowerCase()}|${values.birthDate.trim()}`;
+    if (duplicateWarning?.key !== dupKey) {
+      const dupCheck = await checkMemberDuplicateAction({
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+        birthDate: values.birthDate,
+      });
+      if (dupCheck.ok && dupCheck.data.duplicates.length > 0) {
+        setDuplicateWarning({
+          key: dupKey,
+          matches: dupCheck.data.duplicates.map((d) => d.membershipNumber),
+        });
+        return;
+      }
+    }
+
     const result = await createMemberAction(values);
     if (!result.ok) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
+    setDuplicateWarning(null);
     notify.success(
       t("created.toast", { membershipNumber: result.data.membershipNumber }));
     router.push(`/uyeler/${result.data.id}`);
@@ -449,6 +471,20 @@ export function MemberForm(props: MemberFormProps) {
             </CheckboxGroup>
           )}
         />
+
+        {duplicateWarning ? (
+          <div
+            role="alert"
+            className="rounded-md border border-warning-300 bg-warning-50 p-3 text-sm text-warning-900"
+          >
+            <p className="font-semibold">{t("duplicateWarning.title")}</p>
+            <p className="mt-1 text-xs">
+              {t("duplicateWarning.description", {
+                matches: duplicateWarning.matches.join(", "),
+              })}
+            </p>
+          </div>
+        ) : null}
 
         <FormErrorSummary message={formError} />
 

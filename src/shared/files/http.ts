@@ -78,9 +78,20 @@ function asciiFileName(name: string): string {
   return name.replace(/[^\x20-\x7e]/g, "_").replace(/["\\]/g, "_").slice(0, 150);
 }
 
+const SAFE_INLINE_MIMES = new Set(["application/pdf", "image/jpeg", "image/png"]);
+const DANGEROUS_MIMES = new Set([
+  "text/html",
+  "application/xhtml+xml",
+  "image/svg+xml",
+  "text/javascript",
+  "application/javascript",
+  "application/x-javascript",
+]);
+
 /**
  * İndirme yanıtı (8. bölüm): nosniff, private no-store, RFC 5987 Content-Disposition.
- * `inline` yalnızca pdf/jpg/png için onurlanır; diğer her tür attachment döner.
+ * `inline` yalnızca hem uzantı hem MIME türü güvenli önizleme listesinde (pdf/jpg/png) ise onurlanır;
+ * tehlikeli MIME türleri (`text/html`, `image/svg+xml` vb.) her zaman `application/octet-stream` + `attachment` döner.
  */
 export function buildDownloadResponse(input: {
   stream: ReadableStream<Uint8Array>;
@@ -88,16 +99,25 @@ export function buildDownloadResponse(input: {
   mimeType: string;
   inline: boolean;
 }): Response {
-  const canInline = INLINE_PREVIEW_EXTENSIONS.includes(getExtension(input.originalName));
+  const normalizedMime = (input.mimeType || "").split(";")[0].trim().toLowerCase();
+  const isDangerous = !normalizedMime || DANGEROUS_MIMES.has(normalizedMime);
+  const safeMime = isDangerous ? "application/octet-stream" : normalizedMime;
+  const canInline =
+    !isDangerous &&
+    INLINE_PREVIEW_EXTENSIONS.includes(getExtension(input.originalName)) &&
+    SAFE_INLINE_MIMES.has(safeMime);
   const disposition = input.inline && canInline ? "inline" : "attachment";
 
   const encodedName = encodeURIComponent(input.originalName);
   const headers = new Headers({
-    "Content-Type": input.mimeType,
+    "Content-Type": safeMime,
     "X-Content-Type-Options": "nosniff",
     "Cache-Control": "private, no-store",
     "Content-Disposition": `${disposition}; filename="${asciiFileName(input.originalName)}"; filename*=UTF-8''${encodedName}`,
   });
+  if (disposition === "inline") {
+    headers.set("Content-Security-Policy", "sandbox");
+  }
 
   return new Response(input.stream, { headers });
 }

@@ -10,7 +10,7 @@ const esc = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;"
 const amount = (cents: number) => (cents / 100).toFixed(2);
 const tag = (name: string, value: string | null | undefined, attrs = "") => (value ? `<${name}${attrs}>${esc(value)}</${name}>` : "");
 const date102 = (iso: string) => `<udt:DateTimeString format="102">${iso.replace(/-/g, "")}</udt:DateTimeString>`;
-const category = (rate: number, smallBusiness: boolean) => (rate > 0 ? "S" : smallBusiness ? "E" : "Z");
+const category = (rate: number, _smallBusiness: boolean) => (rate > 0 ? "S" : "E");
 
 function party(name: "SellerTradeParty" | "BuyerTradeParty", p: XInvoiceParty, seller: boolean): string {
   return [

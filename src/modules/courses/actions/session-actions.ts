@@ -4,6 +4,7 @@ import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { deleteSessionAttendance } from "@/modules/progress/server";
 
 import { courseSessionsPermissions } from "../permissions";
 import { sessionDeleteSchema, sessionSchema, sessionSeriesSchema, sessionUpdateSchema, type SessionInput } from "../schemas/course";
@@ -68,7 +69,24 @@ export async function deleteSessionAction(input: unknown): Promise<ActionResult<
       const existing = await db.courseSession.findUnique({ where: { id: input.id } });
       if (!existing) throw new ActionError("courses.errors.sessionNotFound");
       const course = await assertCourse(user, existing.courseId);
-      await db.courseSession.delete({ where: { id: existing.id } });
+      const period = existing.date.toISOString().slice(0, 7);
+
+      await db.$transaction(async (tx) => {
+        const lockedPayouts = await tx.courseTeacherPayout.findMany({
+          where: { period, status: { in: ["APPROVED", "PAID"] } },
+          select: { id: true, lines: true },
+        });
+        const inLockedPayout = lockedPayouts.some((payout) => {
+          const lines = Array.isArray(payout.lines) ? (payout.lines as Array<{ sessionId?: string }>) : [];
+          return lines.some((line) => line.sessionId === existing.id);
+        });
+        if (inLockedPayout) {
+          throw new ActionError("courses.errors.sessionInLockedPayout");
+        }
+        await deleteSessionAttendance(tx, existing.id);
+        await tx.courseSession.delete({ where: { id: existing.id } });
+      });
+
       await audit({ action: "SESSION_DELETE", entity: "CourseSession", entityId: existing.id, before: { course: course.code, date: existing.date } });
       return { id: existing.id };
     },

@@ -18,10 +18,24 @@ export function isValidIban(raw: string): boolean {
   return remainder === 1;
 }
 
-/** SEPA karakter kümesi: Latin temel + ä/ö/ü/ß dönüşümü; diğerleri boşluk. */
+/** SEPA karakter kümesi: Latin temel + Almanca (ä/ö/ü/ß) + Türkçe (ı/İ/ğ/ş/ç) dönüşümü; diğerleri boşluk. */
 export function sepaText(value: string, max: number): string {
   return value
-    .replace(/Ä/g, "Ae").replace(/Ö/g, "Oe").replace(/Ü/g, "Ue").replace(/ä/g, "ae").replace(/ö/g, "oe").replace(/ü/g, "ue").replace(/ß/g, "ss")
+    .replace(/Ä/g, "Ae")
+    .replace(/Ö/g, "Oe")
+    .replace(/Ü/g, "Ue")
+    .replace(/ä/g, "ae")
+    .replace(/ö/g, "oe")
+    .replace(/ü/g, "ue")
+    .replace(/ß/g, "ss")
+    .replace(/İ/g, "I")
+    .replace(/ı/g, "i")
+    .replace(/Ğ/g, "G")
+    .replace(/ğ/g, "g")
+    .replace(/Ş/g, "S")
+    .replace(/ş/g, "s")
+    .replace(/Ç/g, "C")
+    .replace(/ç/g, "c")
     .normalize("NFKD").replace(/[̀-ͯ]/g, "")
     .replace(/[^A-Za-z0-9/?:().,'+\- ]/g, " ")
     .replace(/\s+/g, " ")
@@ -33,19 +47,25 @@ const amount = (cents: number) => (cents / 100).toFixed(2);
 const esc = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
 export function buildPain001(batch: SepaBatch): string {
+  const debtorName = sepaText(batch.debtor.name, 70);
+  if (!debtorName) throw new Error("accounting.paymentRun.errors.invalid");
+  const msgId = sepaText(batch.messageId, 35) || "SEPA-PAY";
   const total = batch.payments.reduce((sum, payment) => sum + payment.amountCents, 0);
   const bicBlock = (bic: string | null) => (bic ? `<BICFI>${esc(bic)}</BICFI>` : "<Othr><Id>NOTPROVIDED</Id></Othr>");
   const transactions = batch.payments
-    .map(
-      (payment) => `<CdtTrfTxInf><PmtId><EndToEndId>${esc(sepaText(payment.endToEndId, 35) || "NOTPROVIDED")}</EndToEndId></PmtId><Amt><InstdAmt Ccy="EUR">${amount(payment.amountCents)}</InstdAmt></Amt>${payment.creditorBic ? `<CdtrAgt><FinInstnId><BICFI>${esc(payment.creditorBic)}</BICFI></FinInstnId></CdtrAgt>` : ""}<Cdtr><Nm>${esc(sepaText(payment.creditorName, 70))}</Nm></Cdtr><CdtrAcct><Id><IBAN>${payment.creditorIban.replace(/\s/g, "").toUpperCase()}</IBAN></Id></CdtrAcct><RmtInf><Ustrd>${esc(sepaText(payment.remittance, 140))}</Ustrd></RmtInf></CdtTrfTxInf>`,
-    )
+    .map((payment) => {
+      const creditorName = sepaText(payment.creditorName, 70);
+      if (!creditorName) throw new Error("accounting.paymentRun.errors.invalid");
+      const remittance = sepaText(payment.remittance, 140) || "Rechnung"; // i18n-ignore: Verwendungszweck
+      return `<CdtTrfTxInf><PmtId><EndToEndId>${esc(sepaText(payment.endToEndId, 35) || "NOTPROVIDED")}</EndToEndId></PmtId><Amt><InstdAmt Ccy="EUR">${amount(payment.amountCents)}</InstdAmt></Amt>${payment.creditorBic ? `<CdtrAgt><FinInstnId><BICFI>${esc(payment.creditorBic)}</BICFI></FinInstnId></CdtrAgt>` : ""}<Cdtr><Nm>${esc(creditorName)}</Nm></Cdtr><CdtrAcct><Id><IBAN>${payment.creditorIban.replace(/\s/g, "").toUpperCase()}</IBAN></Id></CdtrAcct><RmtInf><Ustrd>${esc(remittance)}</Ustrd></RmtInf></CdtTrfTxInf>`;
+    })
     .join("");
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pain.001.001.09" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">',
     "<CstmrCdtTrfInitn>",
-    `<GrpHdr><MsgId>${esc(sepaText(batch.messageId, 35))}</MsgId><CreDtTm>${batch.createdAt.toISOString().slice(0, 19)}</CreDtTm><NbOfTxs>${batch.payments.length}</NbOfTxs><CtrlSum>${amount(total)}</CtrlSum><InitgPty><Nm>${esc(sepaText(batch.debtor.name, 70))}</Nm></InitgPty></GrpHdr>`,
-    `<PmtInf><PmtInfId>${esc(sepaText(batch.messageId, 35))}</PmtInfId><PmtMtd>TRF</PmtMtd><BtchBookg>true</BtchBookg><NbOfTxs>${batch.payments.length}</NbOfTxs><CtrlSum>${amount(total)}</CtrlSum><PmtTpInf><SvcLvl><Cd>SEPA</Cd></SvcLvl></PmtTpInf><ReqdExctnDt><Dt>${batch.executionDate}</Dt></ReqdExctnDt><Dbtr><Nm>${esc(sepaText(batch.debtor.name, 70))}</Nm></Dbtr><DbtrAcct><Id><IBAN>${batch.debtor.iban.replace(/\s/g, "").toUpperCase()}</IBAN></Id></DbtrAcct><DbtrAgt><FinInstnId>${bicBlock(batch.debtor.bic)}</FinInstnId></DbtrAgt><ChrgBr>SLEV</ChrgBr>${transactions}</PmtInf>`,
+    `<GrpHdr><MsgId>${esc(msgId)}</MsgId><CreDtTm>${batch.createdAt.toISOString().slice(0, 19)}</CreDtTm><NbOfTxs>${batch.payments.length}</NbOfTxs><CtrlSum>${amount(total)}</CtrlSum><InitgPty><Nm>${esc(debtorName)}</Nm></InitgPty></GrpHdr>`,
+    `<PmtInf><PmtInfId>${esc(msgId)}</PmtInfId><PmtMtd>TRF</PmtMtd><BtchBookg>true</BtchBookg><NbOfTxs>${batch.payments.length}</NbOfTxs><CtrlSum>${amount(total)}</CtrlSum><PmtTpInf><SvcLvl><Cd>SEPA</Cd></SvcLvl></PmtTpInf><ReqdExctnDt><Dt>${batch.executionDate}</Dt></ReqdExctnDt><Dbtr><Nm>${esc(debtorName)}</Nm></Dbtr><DbtrAcct><Id><IBAN>${batch.debtor.iban.replace(/\s/g, "").toUpperCase()}</IBAN></Id></DbtrAcct><DbtrAgt><FinInstnId>${bicBlock(batch.debtor.bic)}</FinInstnId></DbtrAgt><ChrgBr>SLEV</ChrgBr>${transactions}</PmtInf>`,
     "</CstmrCdtTrfInitn>",
     "</Document>",
   ].join("\n");

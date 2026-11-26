@@ -305,6 +305,7 @@
     "empty": "Noch kein Zugriffsfenster hinterlegt.",
     "statuses": {
       "active": "Aktiv",
+      "scheduled": "Geplant",
       "expired": "Abgelaufen",
       "revoked": "Widerrufen"
     }
@@ -321,6 +322,7 @@
     "toLogin": "Zur Anmeldung",
     "errors": {
       "invalid": "Dieser Einladungslink ist ungültig, abgelaufen oder bereits verwendet. Bitten Sie Ihre Verwaltung um eine neue Einladung.",
+      "rateLimited": "Zu viele Versuche. Bitte versuchen Sie es später erneut.",
       "inactive": "An inaktive Nutzer kann keine Einladung gesendet werden.",
       "mailNotConfigured": "E-Mail-Versand ist nicht eingerichtet (Einstellungen → E-Mail).",
       "appUrl": "Die App-Adresse (APP_URL) muss mit https definiert sein.",

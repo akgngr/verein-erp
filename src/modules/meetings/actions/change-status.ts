@@ -54,6 +54,12 @@ export async function changeMeetingStatusAction(
         if (meeting._count.attendees < 1) {
           throw new ActionError("meetings.errors.approveNeedsPresent");
         }
+        const openVotes = await db.meetingVote.count({
+          where: { meetingId: meeting.id, status: "OPEN" },
+        });
+        if (openVotes > 0) {
+          throw new ActionError("meetings.errors.approveHasOpenVotes");
+        }
       }
 
       // KARAR: yeniden açma şeması gereği reason zorunlu; transition map'i zaten

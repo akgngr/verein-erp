@@ -5,6 +5,7 @@
   "loginButton": "Giriş yap",
   "logout": "Çıkış yap",
   "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur",
+  "mustChangePasswordHint": "Güvenliğiniz için devam etmeden önce aşağıdan yeni bir parola belirlemeniz gerekir.",
   "meta": {
     "profile": "Profil"
   },
@@ -21,6 +22,7 @@
     "changePassword": "Parola Değiştir",
     "currentPassword": "Mevcut parola",
     "newPassword": "Yeni parola",
+    "confirmPassword": "Yeni parola (tekrar)",
     "submit": "Parolayı güncelle",
     "updated": "Parolanız güncellendi.",
     "details": "Profil Bilgilerim",
@@ -29,13 +31,17 @@
   "errors": {
     "sessionInvalid": "Oturumunuz geçersiz. Lütfen tekrar giriş yapın.",
     "currentPasswordWrong": "Mevcut parolanız hatalı.",
+    "samePassword": "Yeni parola mevcut parolanızla aynı olamaz.",
     "invalidCredentials": "E-posta veya parola hatalı.",
     "accountLocked": "Hesap geçici olarak kilitlendi, daha sonra tekrar deneyin.",
+    "rateLimited": "Çok fazla giriş denemesi yapıldı. Lütfen daha sonra tekrar deneyin.",
     "loginFailed": "Giriş yapılamadı. Lütfen tekrar deneyin.",
     "invalidLocale": "Geçersiz dil seçimi."
   },
   "validation": {
     "currentPasswordRequired": "Mevcut parolanızı girin.",
+    "confirmPasswordRequired": "Yeni parolanızı tekrar girin.",
+    "passwordsMismatch": "Yeni parolalar eşleşmiyor.",
     "emailRequired": "E-posta zorunludur.",
     "passwordRequired": "Parola zorunludur."
   },

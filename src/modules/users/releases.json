@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.3",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "ADMIN yetki denetimleri, davet hız sınırı ve harici erişim sertleştirmesi",
+        "de": "ADMIN-Berechtigungsprüfungen, Einladungs-Rate-Limit und Gastzugriffs-Härtung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Yönetici yetki korumaları, davet hız sınırı ve atomik işlem, harici erişim hibesi doğrulaması ve kanonik APP_URL bağlantıları eklendi (#574).",
+          "de": "ADMIN-Schutzprüfungen, Einladungs-Rate-Limit/Transaktion, Prüfung externer Zugriffsrechte und kanonische APP_URL-Links ergänzt (#574)."
+        }
+      ]
+    },
+    {
       "version": "1.4.2",
       "date": "2026-11-25",
       "title": {

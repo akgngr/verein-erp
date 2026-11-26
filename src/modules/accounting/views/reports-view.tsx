@@ -77,6 +77,7 @@ export async function ReportsView({
             {tab === "e" ? (
               <LinkButton
                 href={`/api/accounting/reports/income-expense/export?year=${year}`}
+                download
                 variant="bordered"
                 startIcon={<Download className="h-4 w-4" />}
               >
@@ -87,6 +88,7 @@ export async function ReportsView({
               <>
                 <LinkButton
                   href={`/api/accounting/reports/ledger/export?account=${effectiveAccountId}&from=${effectiveFrom}&to=${effectiveTo}`}
+                  download
                   variant="bordered"
                   startIcon={<Download className="h-4 w-4" />}
                 >

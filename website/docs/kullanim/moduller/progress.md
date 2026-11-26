@@ -13,7 +13,7 @@ Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli 
 |---|---|
 | Anahtar | `progress` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.7 |
+| Sürüm | 1.1.8 |
 | Sayfalar | `/ogrenci-takibi` |
 | Gerektirir | [Kurslar](./courses) |
 
@@ -42,6 +42,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_progress_statistics`
 
 ## Sürüm notları
+
+### 1.1.8 — Veli raporu PDF denetim kaydı ve yoklama doğrulaması
+
+_2026-11-25_
+
+- **Güvenlik:** Öğrenci gelişim raporu PDF dışa aktarımına kişisel veri içermeyen denetim kaydı eklendi (#579).
+- **Düzeltme:** İptal edilen derslere ve kurstan ayrılmış öğrencilere yoklama kaydedilmesi engellendi (#579).
 
 ### 1.1.7 — nav.json kategori ve alt modül tanımı
 
@@ -85,10 +92,4 @@ _2026-11-01_
 
 - **İyileştirme:** Zorunlu: Kurslar.
 
-### 1.0.1 — Menü: Kurslar altında
-
-_2026-11-01_
-
-- **İyileştirme:** Öğrenci takibi ana menüde değil, Kurslar menüsünde.
-
-Daha eski 1 herkese açık sürüm notu.
+Daha eski 2 herkese açık sürüm notu.

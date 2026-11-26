@@ -9,8 +9,11 @@ import type { ActionResult } from "@/shared/types/action";
 
 import { ActionError, createAction } from "@/modules/auth/server";
 
+import { can } from "@/shared/permissions/define";
+
 import { accountingPermissions } from "../permissions";
 import { flatRateAmountCents, type FlatRateKind } from "../services/afa";
+import { isYearLocked } from "../services/booking-guards";
 import { linkAllAssetsToInventory, syncAssetToInventory } from "../services/inventory-link";
 import { parseDateOnly } from "../utils";
 
@@ -41,12 +44,29 @@ export async function saveAssetAction(input: unknown): Promise<ActionResult> {
   const run = createAction({
     permission: { definition: accountingPermissions, action: "create" },
     schema: assetSchema,
-    handler: async ({ input, audit }) => {
+    handler: async ({ input, user, audit }) => {
+      const db = getDb();
+      if (input.id && !can(user.role, accountingPermissions, "update")) {
+        throw new ActionError("common.errors.forbidden");
+      }
       const costCents = toCents(input.cost) ?? 0;
       if (input.method === "GWG" && costCents > 80_000) throw new ActionError("accounting.extras.errors.gwgLimit");
       if (input.method === "POOL" && (costCents <= 25_000 || costCents > 100_000)) throw new ActionError("accounting.extras.errors.poolRange");
-      const data = { name: input.name, acquisitionDate: date(input.acquisitionDate), costCents, method: input.method, usefulLifeMonths: input.usefulLifeMonths, notes: input.notes || null };
-      const db = getDb();
+      const acqDate = date(input.acquisitionDate);
+      const acqYear = acqDate.getUTCFullYear();
+      if (await isYearLocked(acqYear)) {
+        throw new ActionError("accounting.errors.yearLocked", undefined, { year: acqYear });
+      }
+      if (input.id) {
+        const existing = await db.accountingAsset.findUnique({ where: { id: input.id }, select: { acquisitionDate: true } });
+        if (existing) {
+          const prevYear = existing.acquisitionDate.getUTCFullYear();
+          if (await isYearLocked(prevYear)) {
+            throw new ActionError("accounting.errors.yearLocked", undefined, { year: prevYear });
+          }
+        }
+      }
+      const data = { name: input.name, acquisitionDate: acqDate, costCents, method: input.method, usefulLifeMonths: input.usefulLifeMonths, notes: input.notes || null };
       const saved = input.id ? await db.accountingAsset.update({ where: { id: input.id }, data }) : await db.accountingAsset.create({ data });
       await syncAssetToInventory(saved.id);
       await audit({ action: input.id ? "UPDATE" : "CREATE", entity: "AccountingAsset", entityId: saved.id, after: { costCents, method: input.method } });
@@ -63,7 +83,18 @@ export async function disposeAssetAction(input: unknown): Promise<ActionResult> 
     permission: { definition: accountingPermissions, action: "update" },
     schema: z.object({ id: z.string().min(1), disposalDate: z.string().regex(DATE, "accounting.validation.bookingDateInvalid"), note: z.string().trim().max(300).default("") }),
     handler: async ({ input, audit }) => {
-      await getDb().accountingAsset.update({ where: { id: input.id }, data: { disposalDate: date(input.disposalDate), disposalNote: input.note || null } });
+      const db = getDb();
+      const existing = await db.accountingAsset.findUnique({ where: { id: input.id }, select: { acquisitionDate: true } });
+      if (!existing) throw new ActionError("common.errors.notFound");
+      const disposalDate = date(input.disposalDate);
+      if (disposalDate.getTime() < existing.acquisitionDate.getTime()) {
+        throw new ActionError("accounting.extras.errors.disposalBeforeAcquisition");
+      }
+      const disposalYear = disposalDate.getUTCFullYear();
+      if (await isYearLocked(disposalYear)) {
+        throw new ActionError("accounting.errors.yearLocked", undefined, { year: disposalYear });
+      }
+      await db.accountingAsset.update({ where: { id: input.id }, data: { disposalDate, disposalNote: input.note || null } });
       await syncAssetToInventory(input.id);
       await audit({ action: "UPDATE", entity: "AccountingAsset", entityId: input.id, after: { disposal: input.disposalDate } });
       refresh();
@@ -86,7 +117,12 @@ export async function addFlatRateAction(input: unknown): Promise<ActionResult> {
     handler: async ({ input, audit }) => {
       const quantity = Number(input.quantity.replace(",", "."));
       if (!(quantity > 0)) throw new ActionError("accounting.extras.validation.quantity");
-      const created = await getDb().accountingFlatRate.create({ data: { date: date(input.date), kind: input.kind, quantity: quantity.toFixed(2), amountCents: flatRateAmountCents(input.kind as FlatRateKind, quantity), note: input.note || null } });
+      const entryDate = date(input.date);
+      const entryYear = entryDate.getUTCFullYear();
+      if (await isYearLocked(entryYear)) {
+        throw new ActionError("accounting.errors.yearLocked", undefined, { year: entryYear });
+      }
+      const created = await getDb().accountingFlatRate.create({ data: { date: entryDate, kind: input.kind, quantity: quantity.toFixed(2), amountCents: flatRateAmountCents(input.kind as FlatRateKind, quantity), note: input.note || null } });
       await audit({ action: "CREATE", entity: "AccountingFlatRate", entityId: created.id, after: { kind: input.kind, amountCents: created.amountCents } });
       refresh();
       return undefined;
@@ -100,7 +136,14 @@ export async function deleteFlatRateAction(input: unknown): Promise<ActionResult
     permission: { definition: accountingPermissions, action: "delete" },
     schema: z.object({ id: z.string().min(1) }),
     handler: async ({ input, audit }) => {
-      await getDb().accountingFlatRate.delete({ where: { id: input.id } });
+      const db = getDb();
+      const existing = await db.accountingFlatRate.findUnique({ where: { id: input.id }, select: { date: true } });
+      if (!existing) throw new ActionError("common.errors.notFound");
+      const year = existing.date.getUTCFullYear();
+      if (await isYearLocked(year)) {
+        throw new ActionError("accounting.errors.yearLocked", undefined, { year });
+      }
+      await db.accountingFlatRate.delete({ where: { id: input.id } });
       await audit({ action: "DELETE", entity: "AccountingFlatRate", entityId: input.id });
       refresh();
       return undefined;
@@ -121,6 +164,9 @@ export async function saveReserveAction(input: unknown): Promise<ActionResult> {
       plannedUseYear: z.string().trim().regex(/^(\d{4})?$/).default(""),
     }),
     handler: async ({ input, audit }) => {
+      if (await isYearLocked(input.year)) {
+        throw new ActionError("accounting.errors.yearLocked", undefined, { year: input.year });
+      }
       const created = await getDb().accountingReserve.create({ data: { year: input.year, kind: input.kind, amountCents: toCents(input.amount) ?? 0, purpose: input.purpose, plannedUseYear: input.plannedUseYear ? Number(input.plannedUseYear) : null } });
       await audit({ action: "CREATE", entity: "AccountingReserve", entityId: created.id, after: { kind: input.kind, amountCents: created.amountCents } });
       refresh();
@@ -135,6 +181,9 @@ export async function releaseReserveAction(input: unknown): Promise<ActionResult
     permission: { definition: accountingPermissions, action: "approve" },
     schema: z.object({ id: z.string().min(1), year: z.coerce.number().int().min(2000).max(2100) }),
     handler: async ({ input, audit }) => {
+      if (await isYearLocked(input.year)) {
+        throw new ActionError("accounting.errors.yearLocked", undefined, { year: input.year });
+      }
       await getDb().accountingReserve.update({ where: { id: input.id }, data: { releasedYear: input.year } });
       await audit({ action: "UPDATE", entity: "AccountingReserve", entityId: input.id, after: { releasedYear: input.year } });
       refresh();

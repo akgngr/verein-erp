@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "2.2.7",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Dışa aktarım alt süreç ortam izolasyonu",
+        "de": "Umgebungsisolation für Export-Subprozesse"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Alt süreç oluşturma ortamında hassas ortam değişkenlerinin sızmasını önleyen beyaz liste uygulandı (#573).",
+          "de": "Allowlist für Kindprozess-Umgebungsvariablen zur Vermeidung von Secret-Lecks umgesetzt (#573)."
+        }
+      ]
+    },
+    {
       "version": "2.2.6",
       "date": "2026-11-25",
       "title": {

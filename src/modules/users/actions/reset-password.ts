@@ -13,10 +13,13 @@ export async function resetUserPasswordAction(input: unknown): Promise<ActionRes
   const run = createAction({
     permission: { definition: usersPermissions, action: "update" },
     schema: userResetPasswordSchema,
-    handler: async ({ input, audit }) => {
+    handler: async ({ input, user, audit }) => {
       const db = getDb();
       const target = await db.user.findUnique({ where: { id: input.id } });
       if (!target) throw new ActionError("users.errors.notFound");
+      if (user.role !== "ADMIN" && target.role === "ADMIN") {
+        throw new ActionError("users.errors.adminOnly");
+      }
 
       await db.user.update({
         where: { id: target.id },

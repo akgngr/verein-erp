@@ -373,7 +373,24 @@
     "paymentNotSpecified": "Keine Zahlung angegeben.",
     "paymentNotFound2": "Zahlung nicht gefunden.",
     "datesInvalid": "Die Datumsangaben sind nicht stimmig; bitte markierte Felder prüfen.",
-    "exitDateRequired": "Für ausgetretene oder verstorbene Mitglieder ist ein Austrittsdatum erforderlich."
+    "exitDateRequired": "Für ausgetretene oder verstorbene Mitglieder ist ein Austrittsdatum erforderlich.",
+    "paymentExceedsOpenDue": "Der Zahlungsbetrag darf den offenen Beitragsbetrag ({remaining} €) nicht überschreiten."
+  },
+  "corrections": {
+    "title": "Offene Änderungsvorschläge aus dem Mitgliederportal",
+    "description": "Prüfen, genehmigen oder lehnen Sie Kontakt- und Adressänderungen aus dem Portal ab.",
+    "pendingCount": "{count} offen",
+    "emptyValue": "—",
+    "noteLabel": "Prüfnotiz",
+    "notePlaceholder": "Optionale Notiz",
+    "approve": "Genehmigen",
+    "reject": "Ablehnen",
+    "approved": "Änderungsvorschlag genehmigt und Mitgliedsdaten aktualisiert.",
+    "rejected": "Änderungsvorschlag abgelehnt."
+  },
+  "duplicateWarning": {
+    "title": "Mögliches Duplikat gefunden",
+    "description": "Bestehende Einträge mit gleicher E-Mail oder Name/Geburtsdatum: {matches}. Klicken Sie erneut auf Speichern, um trotzdem anzulegen."
   },
   "validation": {
     "yearMinPrev": "Das Jahr darf höchstens das Vorjahr sein.",
@@ -420,6 +437,7 @@
     "voidReasonMax": "Der Stornogrund darf höchstens 300 Zeichen lang sein.",
     "exitDateRequired": "Austrittsdatum ist erforderlich.",
     "amountBelowPaid": "Der Betrag muss mindestens dem bereits gezahlten Betrag entsprechen.",
+    "paymentExceedsOpenDue": "Der Zahlungsbetrag darf den offenen Beitrag nicht überschreiten.",
     "amountInvalid": "Bitte einen Betrag größer 0 eingeben (höchstens 2 Nachkommastellen).",
     "annualDueInvalid": "Bitte einen gültigen Betrag eingeben (höchstens 2 Nachkommastellen, nicht negativ).",
     "birthDateFuture": "Das Geburtsdatum darf nicht in der Zukunft liegen.",
@@ -506,7 +524,8 @@
   },
   "access": {
     "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten.",
-    "online-forms": "Um von der Mitgliederseite E-Signatur-/Online-Formular-Links zu senden und signierte Dokumente anzuzeigen."
+    "online-forms": "Um von der Mitgliederseite E-Signatur-/Online-Formular-Links zu senden, signierte Dokumente anzuzeigen und beim Löschen offene Einladungen zu stornieren.",
+    "member-portal": "Widerruft aktive Mitgliederportal-Sitzungen, wenn ein Mitglied gelöscht wird."
   },
   "permissions": {
     "memberPayments": {

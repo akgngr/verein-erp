@@ -63,12 +63,16 @@ export async function createExternalGrant(params: {
 
 export async function revokeExternalGrant(params: {
   grantId: string;
+  expectedUserId?: string;
   actorUserId: string;
   actorUserLabel: string;
 }) {
   const db = getDb();
   const existing = await db.externalAccessGrant.findUnique({ where: { id: params.grantId } });
   if (!existing) throw new Error("notFound");
+  if (params.expectedUserId && existing.userId !== params.expectedUserId) {
+    throw new Error("notFound");
+  }
   if (existing.revokedAt) return existing;
 
   const updated = await db.externalAccessGrant.update({

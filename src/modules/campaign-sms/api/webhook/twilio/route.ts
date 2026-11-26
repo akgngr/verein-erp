@@ -1,14 +1,15 @@
 import { getChannelConfig, recordProviderStatus } from "@/modules/mailings/server";
 import { readWebhookBody } from "@/shared/campaigns/webhook-body";
+import { resolvePublicOrigin } from "@/shared/security/public-origin";
 
 import { mapTwilioStatus, verifyTwilioSignature } from "../../../services/webhook";
 
-/** Genel istek adresi (proxy arkasında X-Forwarded-*): Twilio imzayı bu adresle hesaplar. */
-function publicUrl(request: Request): string {
+/** Kanonik genel istek adresi (APP_URL): Twilio imzayı bu adresle doğrular, Host başlığına güvenilmez. */
+function publicUrl(request: Request): string | null {
+  const origin = resolvePublicOrigin(request.headers);
+  if (!origin) return null;
   const url = new URL(request.url);
-  const host = request.headers.get("x-forwarded-host") ?? request.headers.get("host") ?? url.host;
-  const proto = request.headers.get("x-forwarded-proto") ?? url.protocol.replace(":", "");
-  return `${proto}://${host}${url.pathname}${url.search}`;
+  return `${origin}${url.pathname}${url.search}`;
 }
 
 /**
@@ -21,8 +22,10 @@ export async function POST(request: Request) {
   // #581: Gövde boyutu sınırlıdır (oturumsuz uç).
   const raw = await readWebhookBody(request);
   if (raw === null) return new Response(null, { status: 413 });
+  const webhookUrl = publicUrl(request);
+  if (!webhookUrl) return new Response(null, { status: 500 });
   const params = Object.fromEntries(new URLSearchParams(raw)) as Record<string, string>;
-  if (!verifyTwilioSignature(config.apiKey, publicUrl(request), params, request.headers.get("x-twilio-signature") ?? "")) {
+  if (!verifyTwilioSignature(config.apiKey, webhookUrl, params, request.headers.get("x-twilio-signature") ?? "")) {
     return new Response(null, { status: 403 });
   }
   const status = mapTwilioStatus(params.MessageStatus ?? "");

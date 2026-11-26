@@ -18,7 +18,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "members",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.15.10",
+  version: "1.15.11",
   label: "Üyeler",
   description: "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi.",
   category: "OFFICIAL",
@@ -26,7 +26,8 @@ export const moduleConfig: ModuleConfig = {
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
   access: [
     { module: "organization", operations: ["read"] },
-    { module: "online-forms", operations: ["read"] },
+    { module: "online-forms", operations: ["read", "write"] },
+    { module: "member-portal", operations: ["read", "write"] },
   ],
   // Kurulu ve yetkiliyse kullanılır (e-imza bağlantısı); yoksa düğme gizlenir.
   recommends: ["online-forms"],
