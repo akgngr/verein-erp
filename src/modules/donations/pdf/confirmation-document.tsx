@@ -23,10 +23,18 @@ import {
   ATTACHMENT_TITLE,
   ATTACHMENT_TOTAL_ROW,
   COLLECTIVE_NO_OTHER_CONFIRMATIONS,
+  IN_KIND_ORIGIN_BUSINESS,
+  IN_KIND_ORIGIN_PRIVATE,
+  IN_KIND_ORIGIN_UNKNOWN,
+  IN_KIND_VALUATION_RECORDS_NO,
+  IN_KIND_VALUATION_RECORDS_YES,
   LABEL_AMOUNT_DIGITS,
   LABEL_AMOUNT_WORDS,
   LABEL_DAY_OF_DONATION,
   LABEL_DAY_SEE_ATTACHMENT,
+  LABEL_IN_KIND_ITEM,
+  LABEL_IN_KIND_ORIGIN_HEADING,
+  LABEL_IN_KIND_VALUE_DIGITS,
   LABEL_ISSUER,
   LABEL_KIND_SEE_ATTACHMENT,
   LABEL_PERIOD,
@@ -45,6 +53,7 @@ import {
   TITLE_COLLECTIVE_FEE,
   TITLE_SINGLE_DONATION,
   TITLE_SINGLE_FEE,
+  TITLE_SINGLE_IN_KIND,
   USAGE_COLLECTIVE,
   USAGE_SINGLE,
   WAIVER_NO,
@@ -54,10 +63,16 @@ import {
 } from "./template-de";
 
 /**
- * RESMİ BAĞIŞ BİLDİRİMİ PDF (Faz 5, § 13) — YALNIZCA ALMANCA (KARAR: hukuki
- * şablon Almanca; ?lang= YOKTUR). A4 dikey, siyah-beyaz, süs yok. Yalnızca
- * o vakit için geçerli olan ögeler basılır. İmza satırı ASLA kaldırılmaz.
+ * RESMİ BAĞIŞ BİLDİRİMİ PDF (Faz 5, § 13 + #618 BMF Anlage 4 Sachzuwendung) — YALNIZCA ALMANCA.
+ * A4 dikey, siyah-beyaz, süs yok. Yalnızca o vakit için geçerli olan ögeler basılır.
+ * İmza satırı ASLA kaldırılmaz.
  */
+
+export type InKindSnapshotData = {
+  itemDescription: string;
+  origin: "BUSINESS_ASSETS" | "PRIVATE_ASSETS" | "UNKNOWN";
+  valuationRecordsAvailable: boolean;
+};
 
 export type ConfirmationPdfData = {
   /** Depolanan PDF için organization adı/anteti — issuer snapshot'tan kurulur. */
@@ -67,13 +82,15 @@ export type ConfirmationPdfData = {
   /** Önizleme: her sayfada büyük MUSTER işareti; depolanmaz. */
   isPreview: boolean;
   kind: "SINGLE" | "COLLECTIVE";
-  content: "DONATION" | "MEMBERSHIP_FEE";
+  content: "DONATION" | "IN_KIND_DONATION" | "MEMBERSHIP_FEE";
   recipient: RecipientSnapshot;
   totalCents: number;
   amountInWords: string;
   periodFrom: Date;
   periodTo: Date;
   waived: boolean;
+  /** Yalnız IN_KIND_DONATION (Sachzuwendung; #618). */
+  inKind?: InKindSnapshotData | null;
   membershipFeesDeductible: boolean;
   /** Ögeler (Anlage; yalnız COLLECTIVE). */
   items?: AnlageItemRow[];
@@ -117,18 +134,27 @@ const styles = StyleSheet.create({
   amountLine: { flexDirection: "row", marginTop: 4 },
   amountLabel: { width: 230, fontSize: 9, color: "#555555" },
   amountValue: { flex: 1, fontWeight: 700 },
-  checkboxRow: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 6 },
+  checkboxRow: { flexDirection: "row", alignItems: "flex-start", gap: 8, marginTop: 5 },
   checkbox: {
     width: 12,
     height: 12,
+    marginTop: 2,
     borderStyle: "solid",
     borderWidth: 0.75,
     borderColor: "#111111",
     alignItems: "center",
     justifyContent: "center",
+    flexShrink: 0,
   },
   checkboxMark: { fontSize: 9, fontWeight: 700, lineHeight: 1.1 },
-  checkboxLabel: { fontSize: 10 },
+  checkboxLabel: { fontSize: 9, flex: 1 },
+  inKindBox: {
+    marginTop: 8,
+    padding: 6,
+    borderWidth: 0.75,
+    borderColor: "#888888",
+  },
+  inKindItemText: { fontSize: 9.5, marginTop: 2 },
   waiverLine: { flexDirection: "row", alignItems: "center", gap: 6, marginTop: 8 },
   waiverText: { flex: 1, fontSize: 9.5 },
   paragraph: { marginTop: 8, textAlign: "justify" },
@@ -174,8 +200,10 @@ function Checkbox({ checked, label }: { checked: boolean; label: string }) {
 
 export function ConfirmationBody({ data }: { data: ConfirmationPdfData }) {
   const isCollective = data.kind === "COLLECTIVE";
-  const title =
-    data.content === "DONATION"
+  const isInKind = data.content === "IN_KIND_DONATION";
+  const title = isInKind
+    ? TITLE_SINGLE_IN_KIND
+    : data.content === "DONATION"
       ? isCollective
         ? TITLE_COLLECTIVE_DONATION
         : TITLE_SINGLE_DONATION
@@ -212,7 +240,7 @@ export function ConfirmationBody({ data }: { data: ConfirmationPdfData }) {
         </Text>
       </View>
 
-      {/* 4) Tutar / dönem */}
+      {/* 4) Tutar / değer / dönem */}
       {isCollective ? (
         <>
           <View style={styles.amountLine}>
@@ -235,7 +263,9 @@ export function ConfirmationBody({ data }: { data: ConfirmationPdfData }) {
       ) : (
         <>
           <View style={styles.amountLine}>
-            <Text style={styles.amountLabel}>{LABEL_AMOUNT_DIGITS}</Text>
+            <Text style={styles.amountLabel}>
+              {isInKind ? LABEL_IN_KIND_VALUE_DIGITS : LABEL_AMOUNT_DIGITS}
+            </Text>
             <Text style={styles.amountValue}>{money(data.totalCents)} €</Text>
           </View>
           <View style={styles.amountLine}>
@@ -249,12 +279,42 @@ export function ConfirmationBody({ data }: { data: ConfirmationPdfData }) {
         </>
       )}
 
-      {/* 5) Aufwandsspende satırı — HER para bildiriminde (§ 13 md. 5). */}
-      <View style={styles.waiverLine}>
-        <Text style={styles.waiverText}>{LABEL_WAIVER}</Text>
-        <Checkbox checked={data.waived} label={WAIVER_YES} />
-        <Checkbox checked={!data.waived} label={WAIVER_NO} />
-      </View>
+      {/* 5) Sachzuwendung (BMF Anlage 4) veya Aufwandsspende (para bağışları). */}
+      {isInKind && data.inKind ? (
+        <>
+          <View style={styles.inKindBox}>
+            <Text style={styles.smallLabel}>{LABEL_IN_KIND_ITEM}</Text>
+            <Text style={styles.inKindItemText}>{data.inKind.itemDescription}</Text>
+          </View>
+          <Text style={styles.sectionLabel}>{LABEL_IN_KIND_ORIGIN_HEADING}</Text>
+          <Checkbox
+            checked={data.inKind.origin === "BUSINESS_ASSETS"}
+            label={IN_KIND_ORIGIN_BUSINESS}
+          />
+          <Checkbox
+            checked={data.inKind.origin === "PRIVATE_ASSETS"}
+            label={IN_KIND_ORIGIN_PRIVATE}
+          />
+          <Checkbox
+            checked={data.inKind.origin === "UNKNOWN"}
+            label={IN_KIND_ORIGIN_UNKNOWN}
+          />
+          <Checkbox
+            checked={data.inKind.valuationRecordsAvailable}
+            label={
+              data.inKind.valuationRecordsAvailable
+                ? IN_KIND_VALUATION_RECORDS_YES
+                : IN_KIND_VALUATION_RECORDS_NO
+            }
+          />
+        </>
+      ) : (
+        <View style={styles.waiverLine}>
+          <Text style={styles.waiverText}>{LABEL_WAIVER}</Text>
+          <Checkbox checked={data.waived} label={WAIVER_YES} />
+          <Checkbox checked={!data.waived} label={WAIVER_NO} />
+        </View>
+      )}
 
       {/* 6) Muafiyet paragrafı */}
       {documentType && snapshot.charitablePurposes && snapshot.taxOffice && snapshot.taxNumber ? (
@@ -284,8 +344,8 @@ export function ConfirmationBody({ data }: { data: ConfirmationPdfData }) {
       {/* 8) Sammelbestätigung ek cümlesi */}
       {isCollective ? <Text style={styles.paragraph}>{COLLECTIVE_NO_OTHER_CONFIRMATIONS}</Text> : null}
 
-      {/* 9) Aidat indirilemez bloğu (yalnız DONATION + bayrak false). */}
-      {data.content === "DONATION" && !data.membershipFeesDeductible ? (
+      {/* 9) Aidat indirilemez bloğu (yalnız DONATION / IN_KIND_DONATION + bayrak false). */}
+      {(data.content === "DONATION" || data.content === "IN_KIND_DONATION") && !data.membershipFeesDeductible ? (
         <>
           <Text style={styles.nonDeductibleHeading}>{NON_DEDUCTIBLE_HEADING}</Text>
           <Text style={styles.paragraph}>{NON_DEDUCTIBLE_TEXT}</Text>

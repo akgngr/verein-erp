@@ -189,6 +189,7 @@ export function DonationTable({
     "BANK_TRANSFER",
     "CARD",
     "PAYPAL",
+    "IN_KIND",
     "REIMBURSEMENT_WAIVER",
     "OTHER",
   ] as const;

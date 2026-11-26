@@ -9,7 +9,11 @@ import type { ConfirmationCandidate } from "../types";
  * Bildirim adayları (§ 15 md. 6 candidate-picker): aktif ögesi olmayan
  * bağışlar/aidat ödemeleri; vazgeçim değeri gruplaması UI'da yapılır.
  */
-export async function findDonationCandidates(donorId: string, year: number): Promise<ConfirmationCandidate[]> {
+export async function findDonationCandidates(
+  donorId: string,
+  year: number,
+  options?: { excludeInKind?: boolean },
+): Promise<ConfirmationCandidate[]> {
   const db = getDb();
   const activeItems = await db.zuwendungConfirmationItem.findMany({
     where: { activeKey: { not: null }, itemType: "DONATION" },
@@ -21,13 +25,21 @@ export async function findDonationCandidates(donorId: string, year: number): Pro
     where: {
       donorId,
       reversedAt: null,
+      ...(options?.excludeInKind ? { method: { not: "IN_KIND" as const } } : {}),
       receivedAt: {
         gte: new Date(Date.UTC(year, 0, 1)),
         lt: new Date(Date.UTC(year + 1, 0, 1)),
       },
     },
     orderBy: { receivedAt: "asc" },
-    select: { id: true, donationNumber: true, receivedAt: true, amount: true, waivedReimbursement: true },
+    select: {
+      id: true,
+      donationNumber: true,
+      receivedAt: true,
+      amount: true,
+      method: true,
+      waivedReimbursement: true,
+    },
   });
 
   return donations
@@ -36,8 +48,9 @@ export async function findDonationCandidates(donorId: string, year: number): Pro
       sourceId: donation.id,
       itemDate: donation.receivedAt,
       amountCents: Number(donation.amount.mul(100).toFixed(0)),
-      label: "Geldspende", // i18n-ignore (amtlicher Belegtext, immer Deutsch)
+      label: donation.method === "IN_KIND" ? "Sachzuwendung" : "Geldspende", // i18n-ignore (amtlicher Belegtext, immer Deutsch)
       waived: donation.waivedReimbursement,
+      isInKind: donation.method === "IN_KIND",
       sourceNumber: donation.donationNumber,
     }));
 }
@@ -71,11 +84,24 @@ export async function findMemberFeeCandidates(memberId: string, year: number): P
 export async function findBatchRecipients(
   content: "DONATION" | "MEMBERSHIP_FEE",
   year: number,
+  options?: { excludeInKind?: boolean },
 ): Promise<Array<{ id: string; label: string }>> {
   const db = getDb();
   if (content === "DONATION") {
     const donors = await db.donor.findMany({
-      where: { isActive: true, donations: { some: { reversedAt: null, receivedAt: { gte: new Date(Date.UTC(year, 0, 1)), lt: new Date(Date.UTC(year + 1, 0, 1)) } } } },
+      where: {
+        isActive: true,
+        donations: {
+          some: {
+            reversedAt: null,
+            ...(options?.excludeInKind ? { method: { not: "IN_KIND" as const } } : {}),
+            receivedAt: {
+              gte: new Date(Date.UTC(year, 0, 1)),
+              lt: new Date(Date.UTC(year + 1, 0, 1)),
+            },
+          },
+        },
+      },
       orderBy: [{ lastName: "asc" }, { organizationName: "asc" }],
       select: { id: true, donorNumber: true, firstName: true, lastName: true, organizationName: true },
     });
