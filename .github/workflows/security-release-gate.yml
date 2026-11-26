@@ -1,0 +1,190 @@
+# Tiered OSS DevSecOps release gate (#621).
+#
+# Intentionally does NOT run on `feature/* -> alpha` PRs so daily development
+# stays fast and noise-free. Runs only on release-candidate / production
+# promotions (`alpha -> beta`, `beta -> main`), pushes to `beta`/`main`,
+# weekly schedule (catches newly disclosed CVEs when code is unchanged),
+# and manual workflow_dispatch.
+#
+# Third-party security actions are pinned to immutable 40-character commit SHAs
+# (mitigating tag-hijacking attacks such as CVE-2026-33634).
+
+name: Security release gate
+
+on:
+  pull_request:
+    branches: [beta, main]
+  push:
+    branches: [beta, main]
+  schedule:
+    - cron: "23 3 * * 1" # Weekly Monday 03:23 UTC
+  workflow_dispatch:
+
+concurrency:
+  group: security-release-gate-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  fs-sca-and-licenses:
+    name: Filesystem SCA & license policy (Trivy)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Trivy filesystem SCA & license scan (SARIF)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.2
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln,license
+          format: sarif
+          output: trivy-fs.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          trivy-config: trivy.yaml
+          trivyignores: .trivyignore.yaml
+          exit-code: "0"
+
+      - name: Upload filesystem SARIF to GitHub Security
+        uses: github/codeql-action/upload-sarif@915412ff23e8b7659517e607487dbeae018f2934 # v4
+        with:
+          sarif_file: trivy-fs.sarif
+          category: trivy-fs
+
+      - name: Gate on unignored fixed HIGH/CRITICAL CVEs
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.2
+          scan-type: fs
+          scan-ref: .
+          scanners: vuln
+          format: table
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          trivy-config: trivy.yaml
+          trivyignores: .trivyignore.yaml
+          exit-code: "1"
+
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install production manifests (scripts disabled)
+        run: pnpm install --frozen-lockfile --prod --ignore-scripts
+
+      - name: Production OSS license policy check
+        run: node scripts/check-licenses.mjs
+
+  sbom-repo:
+    name: CycloneDX SBOM (repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Generate CycloneDX SBOM
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.2
+          scan-type: fs
+          scan-ref: .
+          format: cyclonedx
+          output: sbom-repo-cyclonedx.json
+          trivy-config: trivy.yaml
+
+      - name: Validate CycloneDX JSON structure
+        run: jq -e '.bomFormat == "CycloneDX" and (.components | type == "array")' sbom-repo-cyclonedx.json > /dev/null
+
+      - name: Archive repository CycloneDX SBOM
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom-repo-cyclonedx
+          path: sbom-repo-cyclonedx.json
+          retention-days: 90
+
+  container-image-scan:
+    name: Container image scan & SBOM (Trivy)
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    permissions:
+      contents: read
+      security-events: write
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v4
+
+      # Builds the standalone production runner image locally without secrets/.env.
+      - name: Build production web image for scanning
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./Dockerfile
+          target: runner
+          platforms: linux/amd64
+          load: true
+          push: false
+          tags: verein-erp:trivy-scan
+          cache-from: type=gha,scope=verein-erp-runner
+
+      - name: Generate container image CycloneDX SBOM
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.2
+          scan-type: image
+          image-ref: verein-erp:trivy-scan
+          format: cyclonedx
+          output: sbom-image-web-cyclonedx.json
+
+      - name: Archive container image CycloneDX SBOM
+        uses: actions/upload-artifact@v7
+        with:
+          name: sbom-image-web-cyclonedx
+          path: sbom-image-web-cyclonedx.json
+          retention-days: 90
+
+      - name: Trivy container image vulnerability scan (SARIF)
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.2
+          scan-type: image
+          image-ref: verein-erp:trivy-scan
+          scanners: vuln
+          format: sarif
+          output: trivy-image-web.sarif
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          trivyignores: .trivyignore.yaml
+          exit-code: "0"
+
+      - name: Upload container SARIF to GitHub Security
+        uses: github/codeql-action/upload-sarif@915412ff23e8b7659517e607487dbeae018f2934 # v4
+        with:
+          sarif_file: trivy-image-web.sarif
+          category: trivy-image-web
+
+      - name: Gate on unignored fixed HIGH/CRITICAL image CVEs
+        uses: aquasecurity/trivy-action@ed142fd0673e97e23eac54620cfb913e5ce36c25 # v0.36.0
+        with:
+          version: v0.76.2
+          scan-type: image
+          image-ref: verein-erp:trivy-scan
+          scanners: vuln
+          format: table
+          severity: HIGH,CRITICAL
+          ignore-unfixed: true
+          trivyignores: .trivyignore.yaml
+          exit-code: "1"
