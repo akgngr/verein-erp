@@ -7,6 +7,7 @@ import { SurfaceCard } from "@/shared/components/ui/surface-card";
 import type { ActionResult } from "@/shared/types/action";
 import { ChangePasswordForm } from "../components/change-password-form";
 import { SignOutEverywhereForm } from "../components/sign-out-everywhere-form";
+import { TwoFactorCard } from "../components/two-factor-card";
 import type { ProfileData } from "../schemas/profile";
 import type { SessionUser } from "../types";
 import { ProfileForm } from "./profile-form";
@@ -63,6 +64,12 @@ export function ProfileContent({
         header={<h2 className="text-base font-medium">{t("sessions.title")}</h2>}
       >
         <SignOutEverywhereForm />
+      </SurfaceCard>
+
+      <SurfaceCard
+        header={<h2 className="text-base font-medium">{t("twoFactor")}</h2>}
+      >
+        <TwoFactorCard />
       </SurfaceCard>
 
       <SurfaceCard

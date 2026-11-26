@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "İki adımlı doğrulama (TOTP)",
+        "de": "Zwei-Faktor-Anmeldung (TOTP)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Profilde isteğe bağlı iki adımlı doğrulama: doğrulama uygulamasıyla kurulum (anahtar veya bağlantı), onay kodu ve bir kez gösterilen 10 kurtarma kodu. Açıksa girişte parolanın ardından kod sorulur.",
+          "de": "Optionale Zwei-Faktor-Anmeldung im Profil: Einrichtung mit einer Authenticator-App (Schlüssel oder Link), Bestätigungscode und 10 einmal angezeigte Wiederherstellungscodes. Ist sie aktiv, fragt die Anmeldung nach dem Passwort einen Code ab."
+        },
+        {
+          "type": "security",
+          "tr": "RFC 6238 (±30 sn tolerans); her kod bir kez geçer (tekrar oynatma koruması). Sır şifreli, kurtarma kodları yalnızca özet olarak saklanır; hatalı kodlar hesap kilidine sayılır. Kurulum/kapatma mevcut parolayı, kapatma ayrıca güncel kodu ister.",
+          "de": "RFC 6238 (±30 s Toleranz); jeder Code gilt nur einmal (Schutz vor Wiederverwendung). Das Geheimnis wird verschlüsselt, Wiederherstellungscodes nur als Hash gespeichert; falsche Codes zählen zur Kontosperre. Einrichten/Ausschalten verlangen das aktuelle Passwort, Ausschalten zusätzlich einen gültigen Code."
+        },
+        {
+          "type": "fix",
+          "tr": "\"Diğer tüm cihazlardan çıkış yap\" sonrasında bu cihaz yanlışlıkla giriş sayfasına (\"oturumunuz sonlandırıldı\") yönlendirilmiyor; sayfa yeni oturum çereziyle yeniden yüklenir.",
+          "de": "Nach „Auf allen anderen Geräten abmelden“ landet dieses Gerät nicht mehr fälschlich auf der Anmeldeseite („Sitzung beendet“); die Seite wird mit dem neuen Sitzungscookie neu geladen."
+        }
+      ]
+    },
+    {
       "version": "1.2.0",
       "date": "2026-11-26",
       "title": {

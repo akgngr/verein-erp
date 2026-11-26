@@ -16,6 +16,9 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
         // i18n-ignore — Auth.js varsayılan formu kullanılmaz; etiketler görünmez.
         email: { label: "email" },
         password: { label: "password", type: "password" },
+        // #603: second factor (TOTP or recovery code) and the server-internal re-issue ticket.
+        otp: { label: "otp" },
+        reissue: { label: "reissue" },
       },
       authorize,
     }),

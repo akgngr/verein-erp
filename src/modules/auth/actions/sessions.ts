@@ -3,10 +3,12 @@
 import { z } from "zod";
 
 import { getDb } from "@/shared/db";
+import { getEnv } from "@/shared/env";
 import { verifyPassword } from "@/shared/security/password";
 
 import { signIn } from "../auth";
 import { ActionError } from "../errors";
+import { createReissueTicket } from "../services/totp";
 import { createAction } from "../server";
 
 const schema = z.object({ currentPassword: z.string().min(1, "auth.errors.currentPasswordWrong").max(200) }).strict();
@@ -29,7 +31,8 @@ export async function signOutOtherDevicesAction(input: unknown) {
       }
       await db.user.update({ where: { id: user.id }, data: { sessionEpoch: { increment: 1 } } });
       try {
-        await signIn("credentials", { email: dbUser.email, password: input.currentPassword, redirect: false });
+        // #603: the re-issue ticket stands in for the second factor this session already passed (server-only).
+        await signIn("credentials", { email: dbUser.email, password: input.currentPassword, reissue: createReissueTicket(dbUser.id, getEnv().AUTH_SECRET), redirect: false });
       } catch {
         // All or nothing: if login throttling (lock/IP limit) blocks re-issuing this device's cookie, undo the
         // epoch bump so neither this device nor the others are signed out, and ask the user to try again later.

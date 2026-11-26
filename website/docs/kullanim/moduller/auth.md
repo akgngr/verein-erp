@@ -13,9 +13,17 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.2.0 |
+| Sürüm | 1.3.0 |
 
 ## Sürüm notları
+
+### 1.3.0 — İki adımlı doğrulama (TOTP)
+
+_2026-11-26_
+
+- **Yeni:** Profilde isteğe bağlı iki adımlı doğrulama: doğrulama uygulamasıyla kurulum (anahtar veya bağlantı), onay kodu ve bir kez gösterilen 10 kurtarma kodu. Açıksa girişte parolanın ardından kod sorulur.
+- **Güvenlik:** RFC 6238 (±30 sn tolerans); her kod bir kez geçer (tekrar oynatma koruması). Sır şifreli, kurtarma kodları yalnızca özet olarak saklanır; hatalı kodlar hesap kilidine sayılır. Kurulum/kapatma mevcut parolayı, kapatma ayrıca güncel kodu ister.
+- **Düzeltme:** "Diğer tüm cihazlardan çıkış yap" sonrasında bu cihaz yanlışlıkla giriş sayfasına ("oturumunuz sonlandırıldı") yönlendirilmiyor; sayfa yeni oturum çereziyle yeniden yüklenir.
 
 ### 1.2.0 — Şifre sıfırlama ve oturum yönetimi
 
@@ -60,10 +68,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 1.0.3 — AI v2 güvenilirlik ve veri koruma
-
-_2026-11-14_
-
-- **Güvenlik:** Sunucu tarafından doğrulanan AI işlemleri, kapsamlı veri erişimi ve güvenilir yaşam döngüsü kontrolleri güncellendi.
-
-Daha eski 3 herkese açık sürüm notu.
+Daha eski 4 herkese açık sürüm notu.
