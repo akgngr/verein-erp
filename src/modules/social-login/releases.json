@@ -1,0 +1,19 @@
+{
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Sosyal giriş",
+        "de": "Externe Anmeldung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "OAuth sağlayıcı ayarları ve güvenli kimlik eşleştirme altyapısı.",
+          "de": "OAuth-Anbietereinstellungen und sichere Identitätszuordnung."
+        }
+      ]
+    }
+  ]
+}

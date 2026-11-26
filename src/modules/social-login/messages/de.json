@@ -1,0 +1,42 @@
+{
+  "nav": {
+    "socialLogin": "Externe Anmeldung"
+  },
+  "module": {
+    "label": "Externe Anmeldung",
+    "description": "Externe Identitätsanbieter."
+  },
+  "meta": {
+    "title": "Externe Anmeldung"
+  },
+  "title": "Externe Anmeldung",
+  "description": "Externe Anmeldung ist optional; Authentifizierungsdaten werden an den Anbieter übertragen.",
+  "permissions": {
+    "socialLogin": {
+      "label": "Externe Anmeldung",
+      "description": "Verbindungen ansehen und Anbietereinstellungen verwalten."
+    }
+  },
+  "access": {
+    "system": "Prüft die Modulverfügbarkeit."
+  },
+  "providers": {
+    "google": "Google",
+    "microsoft-entra-id": "Microsoft Entra ID",
+    "twitter": "X",
+    "facebook": "Facebook"
+  },
+  "enabled": "Aktiv",
+  "clientId": "Client ID",
+  "tenantId": "Tenant ID",
+  "secret": "Client Secret",
+  "stored": "Gespeichert; zum Ändern eingeben",
+  "callback": "Callback",
+  "save": "Speichern",
+  "saved": "Gespeichert",
+  "errors": {
+    "invalid": "Bitte prüfen Sie die Einstellungen.",
+    "unavailable": "Modul nicht verfügbar.",
+    "applicationImmutable": "Die bestehende OAuth-Anwendungskennung kann nicht geändert werden."
+  }
+}
