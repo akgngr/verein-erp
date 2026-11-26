@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Dinamik kimlik sağlayıcı sözleşmesi",
+        "de": "Dynamischer Identitätsanbieter-Vertrag"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modül tabanlı OAuth sağlayıcı keşfi için altyapı (#612).",
+          "de": "Grundlage für modulbasierte OAuth-Anbieter-Erkennung (#612)."
+        }
+      ]
+    },
+    {
       "version": "1.1.2",
       "date": "2026-11-25",
       "title": {
