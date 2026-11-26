@@ -51,6 +51,18 @@ describe("password reset & sessions (review fixes)", () => {
   });
 });
 
+describe("sign out other devices (UI)", () => {
+  test("after success the form reloads with the re-issued cookie instead of trusting the in-action re-render", () => {
+    // The action response re-renders /profil with the old (now invalid) request cookie, which would bounce to
+    // /giris?pasif=1; a full navigation applies the new cookie. The confirmation survives it via a one-shot flag.
+    const form = fs.readFileSync("src/modules/auth/components/sign-out-everywhere-form.tsx", "utf8");
+    const success = form.slice(form.indexOf("if (result.ok)"), form.indexOf("const fieldError"));
+    assert.match(success, /window\.location\.assign\("\/profil"\)/);
+    assert.match(success, /sessionStorage\.setItem\(DONE_FLAG, "1"\)/);
+    assert.match(form, /sessionStorage\.removeItem\(DONE_FLAG\)/);
+  });
+});
+
 const enabled = Boolean(process.env.AI_TEST_DATABASE_URL);
 if (enabled && process.env.DATABASE_URL !== process.env.AI_TEST_DATABASE_URL) throw new Error("AI_TEST_DATABASE_URL must match the isolated DATABASE_URL");
 

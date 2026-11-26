@@ -18,6 +18,11 @@
           "type": "security",
           "tr": "RFC 6238 (±30 sn tolerans); her kod bir kez geçer (tekrar oynatma koruması). Sır şifreli, kurtarma kodları yalnızca özet olarak saklanır; hatalı kodlar hesap kilidine sayılır. Kurulum/kapatma mevcut parolayı, kapatma ayrıca güncel kodu ister.",
           "de": "RFC 6238 (±30 s Toleranz); jeder Code gilt nur einmal (Schutz vor Wiederverwendung). Das Geheimnis wird verschlüsselt, Wiederherstellungscodes nur als Hash gespeichert; falsche Codes zählen zur Kontosperre. Einrichten/Ausschalten verlangen das aktuelle Passwort, Ausschalten zusätzlich einen gültigen Code."
+        },
+        {
+          "type": "fix",
+          "tr": "\"Diğer tüm cihazlardan çıkış yap\" sonrasında bu cihaz yanlışlıkla giriş sayfasına (\"oturumunuz sonlandırıldı\") yönlendirilmiyor; sayfa yeni oturum çereziyle yeniden yüklenir.",
+          "de": "Nach „Auf allen anderen Geräten abmelden“ landet dieses Gerät nicht mehr fälschlich auf der Anmeldeseite („Sitzung beendet“); die Seite wird mit dem neuen Sitzungscookie neu geladen."
         }
       ]
     },

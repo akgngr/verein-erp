@@ -23,6 +23,7 @@ _2026-11-26_
 
 - **Yeni:** Profilde isteğe bağlı iki adımlı doğrulama: doğrulama uygulamasıyla kurulum (anahtar veya bağlantı), onay kodu ve bir kez gösterilen 10 kurtarma kodu. Açıksa girişte parolanın ardından kod sorulur.
 - **Güvenlik:** RFC 6238 (±30 sn tolerans); her kod bir kez geçer (tekrar oynatma koruması). Sır şifreli, kurtarma kodları yalnızca özet olarak saklanır; hatalı kodlar hesap kilidine sayılır. Kurulum/kapatma mevcut parolayı, kapatma ayrıca güncel kodu ister.
+- **Düzeltme:** "Diğer tüm cihazlardan çıkış yap" sonrasında bu cihaz yanlışlıkla giriş sayfasına ("oturumunuz sonlandırıldı") yönlendirilmiyor; sayfa yeni oturum çereziyle yeniden yüklenir.
 
 ### 1.2.0 — Şifre sıfırlama ve oturum yönetimi
 
