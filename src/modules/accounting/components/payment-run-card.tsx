@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Card, Checkbox, Input, Label, Spinner, TextField, Button } from "@/shared/components/kit";
+import { DateInput, Card, Checkbox, Label, Spinner, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -123,18 +123,14 @@ export function PaymentRunCard({
           ))}
         </ul>
         <div className="flex flex-wrap items-end gap-3">
-          <TextField
+          <DateInput
+            label={t("executionDate")}
+            ariaLabel={t("executionDate")}
             value={date}
             onChange={setDate}
-            className={["max-w-48"].filter(Boolean).join(" ")}
-          >
-            <Label>{t("executionDate")}</Label>
-            <Input
-              type="date"
-              min={defaultDate}
-              className={["h-9 text-sm"].filter(Boolean).join(" ")}
-            />
-          </TextField>
+            minValue={defaultDate}
+            className="max-w-48"
+          />
           <Button
             isDisabled={!selected.size || !date}
             onPress={download}

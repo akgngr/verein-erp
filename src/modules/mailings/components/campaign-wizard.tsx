@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Checkbox, CheckboxGroup, Description, Dialog, FieldError, Input, Label, Radio, RadioGroup, Select, Spinner, StatusChip, Switch, TextArea, TextField, Button } from "@/shared/components/kit";
+import { DateTimeInput, Checkbox, CheckboxGroup, Description, Dialog, Input, Label, Radio, RadioGroup, Select, Spinner, StatusChip, Switch, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -674,16 +674,15 @@ export function CampaignWizard({
                         </div>
                       </RadioGroup>
                       {when === "later" ? (
-                        <TextField
+                        <DateTimeInput
+                          label={t("wizard.scheduledAt")}
+                          ariaLabel={t("wizard.scheduledAt")}
                           value={scheduledAt}
-                          isInvalid={Boolean(scheduledAt) && !scheduleValid}
                           onChange={setScheduledAt}
-                          className={["max-w-xs"].filter(Boolean).join(" ")}
-                        >
-                          <Label>{t("wizard.scheduledAt")}</Label>
-                          <Input type="datetime-local" />
-                          <FieldError>{t("wizard.scheduleFuture")}</FieldError>
-                        </TextField>
+                          isInvalid={Boolean(scheduledAt) && !scheduleValid}
+                          className="max-w-xs"
+                          errorMessage={t("wizard.scheduleFuture")}
+                        />
                       ) : null}
                       {channelKey === "email" ? (
                         <Switch

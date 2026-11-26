@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Dialog, Input, Label, Spinner, StatusChip, TextArea, TextField, Button } from "@/shared/components/kit";
+import { DateInput, Dialog, Input, Label, Spinner, StatusChip, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -293,16 +293,15 @@ export function ChargesTable({
                     {dialog.type === "pay" ? (
                       <>
                         <div className="grid grid-cols-2 gap-3">
-                          <TextField
+                          <DateInput
+                            label={t("paidAt")}
+                            ariaLabel={t("paidAt")}
                             value={dialog.paidAt}
                             onChange={(paidAt) =>
                               setDialog({ ...dialog, paidAt })
                             }
-                            className={["w-full"].filter(Boolean).join(" ")}
-                          >
-                            <Label>{t("paidAt")}</Label>
-                            <Input type="date" placeholder=" " />
-                          </TextField>
+                            className="w-full"
+                          />
                           <label className="flex flex-col gap-1 text-sm">
                             <span>{t("method")}</span>
                             <select
