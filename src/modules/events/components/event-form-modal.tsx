@@ -3,7 +3,7 @@
 import { notify } from "@/shared/components/ui/notify";
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass } from "@/shared/components/forms/form-drawer";
-import { Checkbox, Input, Label, Sheet, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
+import { DateTimeInput, Checkbox, Input, Label, Sheet, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -216,29 +216,23 @@ export function EventFormModal({
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <TextField
+                    <DateTimeInput
+                      label={tFields("startDate")}
+                      ariaLabel={tFields("startDate")}
                       value={startDate}
+                      onChange={(value) => setStartDate(value)}
                       isRequired
-                      className={["w-full"].filter(Boolean).join(" ")}
-                    >
-                      <Label>{tFields("startDate")}</Label>
-                      <Input
-                        type="datetime-local"
-                        onChange={(e) => setStartDate(e.target.value)}
-                      />
-                    </TextField>
+                      className="w-full"
+                    />
 
-                    <TextField
+                    <DateTimeInput
+                      label={tForm("endOptional")}
+                      ariaLabel={tForm("endOptional")}
                       value={endDate}
-                      className={["w-full"].filter(Boolean).join(" ")}
-                    >
-                      <Label>{tForm("endOptional")}</Label>
-                      <Input
-                        type="datetime-local"
-                        min={startDate || undefined}
-                        onChange={(e) => setEndDate(e.target.value)}
-                      />
-                    </TextField>
+                      onChange={(value) => setEndDate(value)}
+                      minValue={startDate || undefined}
+                      className="w-full"
+                    />
                   </div>
 
                   <div className="flex flex-col gap-2">

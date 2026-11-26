@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Checkbox, Dialog, Input, InputGroup, Label, Spinner, StatusChip, TextField, Button } from "@/shared/components/kit";
+import { DateInput, Checkbox, Dialog, InputGroup, Label, Spinner, StatusChip, TextField, Button } from "@/shared/components/kit";
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -270,14 +270,13 @@ export function EnrollmentsPanel({
                   )}
                 </div>
                 <div className="grid grid-cols-2 gap-3">
-                  <TextField
+                  <DateInput
+                    label={t("enrolledAt")}
+                    ariaLabel={t("enrolledAt")}
                     value={enrolledAt}
                     onChange={setEnrolledAt}
-                    className={["w-full"].filter(Boolean).join(" ")}
-                  >
-                    <Label>{t("enrolledAt")}</Label>
-                    <Input type="date" placeholder=" " />
-                  </TextField>
+                    className="w-full"
+                  />
                   <TextField
                     value={discount}
                     onChange={setDiscount}

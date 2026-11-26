@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Dialog, Input, Label, Spinner, TextField, Button } from "@/shared/components/kit";
+import { DateInput, Dialog, Input, Label, Spinner, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -285,14 +285,13 @@ export function GradesPanel({
                       <Input placeholder=" " maxLength={120} />
                     </TextField>
                     <div className="grid grid-cols-3 gap-3">
-                      <TextField
+                      <DateInput
+                        label={t("date")}
+                        ariaLabel={t("date")}
                         value={creating.date}
                         onChange={(date) => setCreating({ ...creating, date })}
-                        className={["w-full"].filter(Boolean).join(" ")}
-                      >
-                        <Label>{t("date")}</Label>
-                        <Input type="date" placeholder=" " />
-                      </TextField>
+                        className="w-full"
+                      />
                       <label className="flex flex-col gap-1 text-sm">
                         <span>{t("type")}</span>
                         <select

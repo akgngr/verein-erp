@@ -3,7 +3,7 @@
 import { notify } from "@/shared/components/ui/notify";
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import { Card, Checkbox, Dialog, Input, InputGroup, Label, Select, Sheet, Spinner, StatusChip, Tabs, TextArea, TextField, Button } from "@/shared/components/kit";
+import { DateTimeInput, DateInput, Card, Checkbox, Dialog, Input, InputGroup, Label, Select, Sheet, Spinner, StatusChip, Tabs, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -824,7 +824,9 @@ function PartyDrawer({
                               .join(" ")}
                           />
                         </TextField>
-                        <TextField
+                        <DateInput
+                          label={t("expectedClose")}
+                          ariaLabel={t("expectedClose")}
                           value={deal.close}
                           onChange={(close) =>
                             setDeal((current) => ({ ...current, close }))
@@ -832,16 +834,7 @@ function PartyDrawer({
                           className={["max-w-[170px]"]
                             .filter(Boolean)
                             .join(" ")}
-                        >
-                          <Label>{t("expectedClose")}</Label>
-                          <Input
-                            type="date"
-                            placeholder=" "
-                            className={["h-9 text-sm"]
-                              .filter(Boolean)
-                              .join(" ")}
-                          />
-                        </TextField>
+                        />
                         <Button
                           size="sm"
                           isDisabled={deal.title.trim().length < 2}
@@ -902,7 +895,9 @@ function PartyDrawer({
                     ))}
                     {can.update ? (
                       <div className="flex flex-wrap items-end gap-2">
-                        <TextField
+                        <DateTimeInput
+                          label={t("dueAt")}
+                          ariaLabel={t("dueAt")}
                           value={follow.dueAt}
                           onChange={(dueAt) =>
                             setFollow((current) => ({ ...current, dueAt }))
@@ -910,16 +905,7 @@ function PartyDrawer({
                           className={["max-w-[220px]"]
                             .filter(Boolean)
                             .join(" ")}
-                        >
-                          <Label>{t("dueAt")}</Label>
-                          <Input
-                            type="datetime-local"
-                            placeholder=" "
-                            className={["h-9 text-sm"]
-                              .filter(Boolean)
-                              .join(" ")}
-                          />
-                        </TextField>
+                        />
                         <TextField
                           value={follow.note}
                           onChange={(note) =>

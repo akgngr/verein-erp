@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
+import { DateInput, Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -198,14 +198,13 @@ export function ActionItemModal({
                 </div>
               ) : null}
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                <TextField
+                <DateInput
+                  label={t("dueDateLabel")}
+                  ariaLabel={t("dueDateLabel")}
                   value={dueDate}
                   onChange={setDueDate}
-                  className={["w-full"].filter(Boolean).join(" ")}
-                >
-                  <Label>{t("dueDateLabel")}</Label>
-                  <Input type="date" />
-                </TextField>
+                  className="w-full"
+                />
                 <Select
                   value={Array.from(decisionId)[0] ?? null}
                   onChange={(selectedValue) => {

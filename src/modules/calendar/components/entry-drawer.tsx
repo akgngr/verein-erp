@@ -3,7 +3,7 @@
 import { notify } from "@/shared/components/ui/notify";
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import { Checkbox, Description, Input, Label, Select, Sheet, Spinner, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
+import { DateInput, Checkbox, Description, Input, Label, Select, Sheet, Spinner, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -416,15 +416,14 @@ function EntryForm({
                 <Input type="number" min={1} max={99} />
                 <Description>{t("fields.intervalHelp")}</Description>
               </TextField>
-              <TextField
+              <DateInput
+                label={t("fields.until")}
+                ariaLabel={t("fields.until")}
                 value={until}
                 onChange={setUntil}
-                className={["w-full"].filter(Boolean).join(" ")}
-              >
-                <Label>{t("fields.until")}</Label>
-                <Input type="date" />
-                <Description>{t("fields.untilHelp")}</Description>
-              </TextField>
+                className="w-full"
+                description={t("fields.untilHelp")}
+              />
             </>
           ) : null}
         </div>

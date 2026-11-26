@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Input, Label, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
+import { DateInput, Label, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -97,14 +97,13 @@ export function NotesPanel({
         {canEdit ? (
           <div className="flex flex-col gap-3 rounded-xl border border-ink-200 bg-surface p-4">
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-              <TextField
+              <DateInput
+                label={t("date")}
+                ariaLabel={t("date")}
                 value={draft.date}
                 onChange={(date) => setDraft({ ...draft, date })}
-                className={["w-full"].filter(Boolean).join(" ")}
-              >
-                <Label>{t("date")}</Label>
-                <Input type="date" placeholder=" " />
-              </TextField>
+                className="w-full"
+              />
               <label className="flex flex-col gap-1 text-sm">
                 <span>{t("rating")}</span>
                 <select
