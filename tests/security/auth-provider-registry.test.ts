@@ -1,4 +1,5 @@
-import { describe, expect, it } from "vitest";
+import { describe, it } from "node:test";
+import assert from "node:assert/strict";
 import Google from "next-auth/providers/google";
 import { collectAuthProviders, type ModuleAuthProviders } from "../../src/shared/auth/providers";
 
@@ -12,15 +13,15 @@ function registration(module: string): ModuleAuthProviders {
 
 describe("OAuth module registry", () => {
   it("does not load disabled modules", async () => {
-    expect(await collectAuthProviders([registration("disabled")], async () => false)).toEqual([]);
+    assert.deepEqual(await collectAuthProviders([registration("disabled")], async () => false), []);
   });
   it("quarantines duplicate provider ids", async () => {
-    expect(await collectAuthProviders([registration("a"), registration("b")], async () => true)).toEqual([]);
+    assert.deepEqual(await collectAuthProviders([registration("a"), registration("b")], async () => true), []);
   });
   it("isolates failed provider configuration", async () => {
     const broken = { ...registration("broken"), load: async () => { throw new Error("unavailable"); } };
     const entries = await collectAuthProviders([broken, registration("working")], async () => true);
-    expect(entries.map((entry) => entry.provider.id)).toEqual(["google"]);
-    expect(await entries[0].resolveUserId("google", "unknown")).toBeNull();
+    assert.deepEqual(entries.map((entry) => entry.provider.id), ["google"]);
+    assert.equal(await entries[0].resolveUserId("google", "unknown"), null);
   });
 });

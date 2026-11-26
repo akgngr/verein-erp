@@ -86,5 +86,6 @@
       "bic": "Geçerli bir BIC girin (8 veya 11 karakter).",
       "vatId": "Geçerli bir KDV kimlik numarası girin (ör. DE123456789)."
     }
-  }
+  },
+  "externalLogin": "{provider} ile giriş yap"
 }

@@ -86,5 +86,6 @@
       "bic": "Bitte eine gültige BIC eingeben (8 oder 11 Zeichen).",
       "vatId": "Bitte eine gültige USt-IdNr. eingeben (z. B. DE123456789)."
     }
-  }
+  },
+  "externalLogin": "Mit {provider} anmelden"
 }

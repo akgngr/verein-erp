@@ -8,11 +8,19 @@ import { authorize } from "./services/authorize";
 import { resolveExternalIdentity } from "./services/external-auth";
 
 /** Server-only lazy configuration; the Edge configuration remains independent. */
-export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth(async () => {
-  const external = await collectAuthProviders(moduleAuthProviderRegistry, async (key) => {
+async function loadExternalProviders() {
+  return collectAuthProviders(moduleAuthProviderRegistry, async (key) => {
     const { getModuleAvailability } = await import("@/modules/system/server");
     return (await getModuleAvailability(key)) === "available";
   });
+}
+
+export async function listExternalLoginProviders() {
+  return (await loadExternalProviders()).map(({ provider }) => ({ id: provider.id, name: provider.name }));
+}
+
+export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth(async () => {
+  const external = await loadExternalProviders();
   async function resolve(provider: string, subject: string) {
     const entry = external.find((item) => item.provider.id === provider);
     if (!entry || !subject) return null;
