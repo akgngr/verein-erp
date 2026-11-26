@@ -6,6 +6,8 @@ import { createAction } from "@/modules/auth/server";
 import { systemPermissions } from "@/shared/permissions/system";
 import { buildUserLabel } from "@/shared/utils";
 
+import type { ActionResult } from "@/shared/types/action";
+
 import {
   backupConfigSchema,
   createSystemBackup,
@@ -22,74 +24,91 @@ const backupIdSchema = z.object({
   id: z.string().min(4).max(80),
 });
 
-export const getBackupOverviewAction = createAction<
-  Record<string, never>,
-  BackupOverview
->({
-  permission: { definition: systemPermissions, action: "update" },
-  schema: z.object({}).strict(),
-  handler: async () => getBackupOverview(),
-});
+const emptySchema = z.object({}).strict();
 
-export const createBackupAction = createAction<
-  Record<string, never>,
-  { overview: BackupOverview; prunedCount: number }
->({
-  permission: { definition: systemPermissions, action: "update" },
-  schema: z.object({}).strict(),
-  handler: async ({ user }) => {
-    const { prunedCount } = await createSystemBackup({
-      trigger: "manual",
-      actor: { id: user.id, label: buildUserLabel(user.name, user.email) },
-    });
-    revalidatePath("/ayarlar/yedekleme");
-    const overview = await getBackupOverview();
-    return { overview, prunedCount };
-  },
-});
+export async function getBackupOverviewAction(
+  input: unknown,
+): Promise<ActionResult<BackupOverview>> {
+  const run = createAction({
+    permission: { definition: systemPermissions, action: "update" },
+    schema: emptySchema,
+    handler: async () => getBackupOverview(),
+  });
+  return run(input);
+}
 
-export const verifyBackupAction = createAction<
-  z.infer<typeof backupIdSchema>,
-  { verification: BackupVerificationResult; overview: BackupOverview }
->({
-  permission: { definition: systemPermissions, action: "update" },
-  schema: backupIdSchema,
-  handler: async ({ input, user }) => {
-    const verification = await verifySystemBackup(input.id, {
-      id: user.id,
-      label: buildUserLabel(user.name, user.email),
-    });
-    revalidatePath("/ayarlar/yedekleme");
-    const overview = await getBackupOverview();
-    return { verification, overview };
-  },
-});
+export async function createBackupAction(
+  input: unknown,
+): Promise<ActionResult<{ overview: BackupOverview; prunedCount: number }>> {
+  const run = createAction({
+    permission: { definition: systemPermissions, action: "update" },
+    schema: emptySchema,
+    handler: async ({ user }) => {
+      const { prunedCount } = await createSystemBackup({
+        trigger: "manual",
+        actor: { id: user.id, label: buildUserLabel(user.name, user.email) },
+      });
+      revalidatePath("/ayarlar/yedekleme");
+      const overview = await getBackupOverview();
+      return { overview, prunedCount };
+    },
+  });
+  return run(input);
+}
 
-export const deleteBackupAction = createAction<
-  z.infer<typeof backupIdSchema>,
-  BackupOverview
->({
-  permission: { definition: systemPermissions, action: "delete" },
-  schema: backupIdSchema,
-  handler: async ({ input, user }) => {
-    await deleteSystemBackup(input.id, {
-      id: user.id,
-      label: buildUserLabel(user.name, user.email),
-    });
-    revalidatePath("/ayarlar/yedekleme");
-    return getBackupOverview();
-  },
-});
+export async function verifyBackupAction(
+  input: unknown,
+): Promise<
+  ActionResult<{ verification: BackupVerificationResult; overview: BackupOverview }>
+> {
+  const run = createAction({
+    permission: { definition: systemPermissions, action: "update" },
+    schema: backupIdSchema,
+    handler: async ({ input, user }) => {
+      const verification = await verifySystemBackup(input.id, {
+        id: user.id,
+        label: buildUserLabel(user.name, user.email),
+      });
+      revalidatePath("/ayarlar/yedekleme");
+      const overview = await getBackupOverview();
+      return { verification, overview };
+    },
+  });
+  return run(input);
+}
 
-export const saveBackupConfigAction = createAction<BackupConfig, BackupConfig>({
-  permission: { definition: systemPermissions, action: "update" },
-  schema: backupConfigSchema,
-  handler: async ({ input, user }) => {
-    const saved = await saveBackupConfig(input, {
-      id: user.id,
-      label: buildUserLabel(user.name, user.email),
-    });
-    revalidatePath("/ayarlar/yedekleme");
-    return saved;
-  },
-});
+export async function deleteBackupAction(
+  input: unknown,
+): Promise<ActionResult<BackupOverview>> {
+  const run = createAction({
+    permission: { definition: systemPermissions, action: "delete" },
+    schema: backupIdSchema,
+    handler: async ({ input, user }) => {
+      await deleteSystemBackup(input.id, {
+        id: user.id,
+        label: buildUserLabel(user.name, user.email),
+      });
+      revalidatePath("/ayarlar/yedekleme");
+      return getBackupOverview();
+    },
+  });
+  return run(input);
+}
+
+export async function saveBackupConfigAction(
+  input: unknown,
+): Promise<ActionResult<BackupConfig>> {
+  const run = createAction({
+    permission: { definition: systemPermissions, action: "update" },
+    schema: backupConfigSchema,
+    handler: async ({ input, user }) => {
+      const saved = await saveBackupConfig(input, {
+        id: user.id,
+        label: buildUserLabel(user.name, user.email),
+      });
+      revalidatePath("/ayarlar/yedekleme");
+      return saved;
+    },
+  });
+  return run(input);
+}
