@@ -135,8 +135,8 @@ export function computeUstva(rows: TaxBookingRow[]): UstvaResult {
     else if (row.type === "EXPENSE" && row.taxRate > 0) groups["66"].push(row);
   }
   const sum = (list: TaxBookingRow[], key: "netCents" | "taxCents") => list.reduce((total, row) => total + row[key], 0);
-  const kz81BaseEuros = Math.floor(sum(groups["81"], "netCents") / 100);
-  const kz86BaseEuros = Math.floor(sum(groups["86"], "netCents") / 100);
+  const kz81BaseEuros = Math.trunc(sum(groups["81"], "netCents") / 100);
+  const kz86BaseEuros = Math.trunc(sum(groups["86"], "netCents") / 100);
   const kz81TaxCents = kz81BaseEuros * 19;
   const kz86TaxCents = kz86BaseEuros * 7;
   const kz66Cents = sum(groups["66"], "taxCents");
@@ -182,7 +182,7 @@ export type EuerResult = {
 
 /** EÜR (§ 4 Abs. 3 EStG) özeti: kategori (SKR hesabı) bazında net toplamlar + USt/VSt satırları. */
 export type EuerAdjustments = {
-  /** Anlagegut kategorileri: alım gideri EÜR'e girmez (AfA ile dağıtılır). */
+  /** Anlagegut kategorileri: alım gideri EÜR'e girmez (AfA ile dağıtılır); ödenen Vorsteuer ise indirim konusu olur. */
   assetCategoryIds: Set<string>;
   /** Nakit dışı giderler: AfA, götürüler (anahtar → cent). */
   nonCash: Array<{ key: string; cents: number }>;
@@ -206,12 +206,13 @@ export function computeEuer(allRows: TaxBookingRow[], adjustments?: EuerAdjustme
   for (const item of adjustments?.nonCash ?? []) {
     if (item.cents) expense.push({ categoryId: `noncash:${item.key}`, name: item.key, accountNumber: null, netCents: item.cents, count: 0 });
   }
-  const total = (type: "INCOME" | "EXPENSE", key: "netCents" | "taxCents") =>
-    rows.filter((row) => row.type === type).reduce((sum, row) => sum + row[key], 0);
-  const incomeNetCents = total("INCOME", "netCents");
-  const outputTaxCents = total("INCOME", "taxCents");
-  const expenseNetCents = total("EXPENSE", "netCents") + (adjustments?.nonCash ?? []).reduce((sum, item) => sum + item.cents, 0);
-  const inputTaxCents = total("EXPENSE", "taxCents");
+  const total = (source: TaxBookingRow[], type: "INCOME" | "EXPENSE", key: "netCents" | "taxCents") =>
+    source.filter((row) => row.type === type).reduce((sum, row) => sum + row[key], 0);
+  const incomeNetCents = total(rows, "INCOME", "netCents");
+  const outputTaxCents = total(rows, "INCOME", "taxCents");
+  const expenseNetCents = total(rows, "EXPENSE", "netCents") + (adjustments?.nonCash ?? []).reduce((sum, item) => sum + item.cents, 0);
+  // § 4 Abs. 3 EStG: demirbaş alımlarının net bedeli AfA ile dağıtılır, ancak ödenen Vorsteuer ödeme yılında doğrudan indirilir.
+  const inputTaxCents = total(allRows, "EXPENSE", "taxCents");
   return { income, expense, incomeNetCents, outputTaxCents, expenseNetCents, inputTaxCents, resultCents: incomeNetCents + outputTaxCents - expenseNetCents - inputTaxCents };
 }
 

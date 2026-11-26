@@ -316,7 +316,8 @@
     "chargeNotOpen": "Diese Forderung ist nicht offen.",
     "paymentNotFound": "Zahlung nicht gefunden oder bereits zurückgenommen.",
     "categoryMissing": "In den Kurs-Einstellungen ist keine Einnahmekategorie gewählt.",
-    "teacherHasAccount": "Diese Lehrkraft hat bereits ein Konto."
+    "teacherHasAccount": "Diese Lehrkraft hat bereits ein Konto.",
+    "sessionInLockedPayout": "Dieser Termin ist Teil einer freigegebenen oder bezahlten Honorarabrechnung und kann nicht gelöscht werden."
   },
   "validation": {
     "textMax": "Der Text ist zu lang.",
@@ -367,7 +368,8 @@
     "mail": "Versendet Einladungs-E-Mails an Lehrkräfte.",
     "students": "Liest Schüler und Zahlungspflichtige für Kursanmeldungen.",
     "users": "Legt für eingeladene Lehrkräfte ein Benutzerkonto mit der Rolle Lehrkraft an und liest Name und E-Mail verknüpfter Lehrkräfte aus dem Benutzerkonto.",
-    "organization": "Liest Vereinsdaten und Logo für den Briefkopf der Honorarabrechnung."
+    "organization": "Liest Vereinsdaten und Logo für den Briefkopf der Honorarabrechnung.",
+    "progress": "Bereinigt verwaiste Anwesenheitseinträge, wenn ein Kurstermin gelöscht wird."
   },
   "ai": {
     "create": {

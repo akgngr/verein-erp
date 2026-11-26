@@ -132,6 +132,8 @@
       "note": "Not",
       "fromMember": "Üyeden bağışçı oluştur",
       "fromMemberHint": "Üyenin adı ve adresi bir kez kopyalanır; üye kaydıyla canlı bağlantı kurulmaz.",
+      "duplicateWarning": "Benzer bir bağışçı zaten kayıtlı ({number}). Yine de yeni bağışçı oluşturmak istiyorsanız aşağıdan onaylayın.",
+      "confirmCreateDuplicate": "Yine de kaydet",
       "save": "Kaydet",
       "cancel": "Vazgeç",
       "toastSaved": "Bağışçı kaydedildi: {number}"
@@ -364,6 +366,7 @@
     "reversedDonation": "İptal edilmiş bağışa bildirim düzenlenemez.",
     "someDonationsMissing": "Seçilen bağışlardan bazıları bulunamadı.",
     "periodSingleYear": "Sammelbestätigung dönemi tek takvim yılı içinde olmalıdır.",
+    "periodOrderInvalid": "Dönem başlangıç tarihi bitiş tarihinden sonra olamaz.",
     "donationReversed": "{number} iptal edilmiş.",
     "donationOutsidePeriod": "{number} dönem yılı dışında.",
     "noFeePayments": "Bu üye ve yıl için bildirilebilir ödeme yok.",

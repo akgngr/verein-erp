@@ -10,7 +10,7 @@ import type { Prisma } from "@prisma/client";
  * (DB tetikleyicisi UPDATE/DELETE'i reddeder). Doğrulama: zincir sürekliliği + her fişin son
  * olayının mevcut durumla aynı olması.
  */
-export type JournalEvent = "CREATE" | "UPDATE" | "REVERSE" | "SEAL";
+export type JournalEvent = "CREATE" | "UPDATE" | "REVERSE" | "SEAL" | "YEAR_UNLOCK";
 
 export const GENESIS_HASH = "0".repeat(64);
 
@@ -78,6 +78,46 @@ export async function recordJournal(tx: Prisma.TransactionClient, bookingIds: st
     });
     last = { seq, hash };
   }
+}
+
+/** Yıl kilidi açma gibi sistem düzeyindeki GoBD olaylarını aynı SHA-256 hash zincirine yazar. */
+export async function recordSystemJournalEvent(
+  tx: Prisma.TransactionClient,
+  input: {
+    key: string;
+    label: string;
+    event: JournalEvent;
+    snapshot: Record<string, string | number | null>;
+    actor: { id: string; label: string } | null;
+  },
+): Promise<void> {
+  await tx.$executeRawUnsafe("SELECT pg_advisory_xact_lock(hashtext('accounting_journal'))");
+  const last = await tx.accountingJournal.findFirst({ orderBy: { seq: "desc" }, select: { seq: true, hash: true } });
+  const seq = (last?.seq ?? 0) + 1;
+  const createdAt = new Date();
+  const snapHash = snapshotHash(input.snapshot);
+  const hash = chainHash(last?.hash ?? GENESIS_HASH, {
+    seq,
+    bookingId: input.key,
+    event: input.event,
+    snapshotHash: snapHash,
+    createdAt: createdAt.toISOString(),
+  });
+  await tx.accountingJournal.create({
+    data: {
+      seq,
+      bookingId: input.key,
+      bookingNumber: input.label,
+      event: input.event,
+      snapshot: input.snapshot,
+      snapshotHash: snapHash,
+      prevHash: last?.hash ?? GENESIS_HASH,
+      hash,
+      actorId: input.actor?.id ?? null,
+      actorLabel: input.actor?.label ?? null,
+      createdAt,
+    },
+  });
 }
 
 export type JournalProblem =

@@ -1,5 +1,7 @@
 import { Image, Text, View, StyleSheet } from "@react-pdf/renderer";
 
+import { normalizeRegisterCourtName, normalizeTaxOfficeName } from "./format";
+
 /**
  * PDF antet (Faz 4, 4.2): tüm resmi PDF'lerin başlığı. shared/pdf bu modülü
  * import EDEMEZ (katman kuralı); çağıran taraf getOrganizationProfile() sonucunu
@@ -53,16 +55,18 @@ export function Letterhead({ profile }: { profile: LetterheadProfile }) {
           .join(", ")
       : null;
 
+  const courtName = profile.registerCourt ? normalizeRegisterCourtName(profile.registerCourt) : null;
   const registerLine =
-    profile.registerCourt || profile.registerNumber
-      ? `Vereinsregister: ${[profile.registerCourt ? `AG ${profile.registerCourt}` : null, profile.registerNumber]
+    courtName || profile.registerNumber
+      ? `Vereinsregister: ${[courtName ? `AG ${courtName}` : null, profile.registerNumber]
           .filter(Boolean)
           .join(", ")}`
       : null;
 
+  const taxOfficeName = profile.taxOffice ? normalizeTaxOfficeName(profile.taxOffice) : null;
   const taxLine =
-    profile.taxNumber || profile.taxOffice
-      ? `Steuernummer: ${profile.taxNumber ?? "–"}${profile.taxOffice ? ` – Finanzamt ${profile.taxOffice}` : ""}`
+    profile.taxNumber || taxOfficeName
+      ? `Steuernummer: ${profile.taxNumber ? profile.taxNumber.trim().replace(/\s+/g, "\u00A0") : "–"}${taxOfficeName ? ` – Finanzamt ${taxOfficeName}` : ""}`
       : null;
 
   // Faz 5 (§ 4): belge türüne göre antet metni (yalnızca tarih + Finanzamt doluysa).
@@ -75,8 +79,8 @@ export function Letterhead({ profile }: { profile: LetterheadProfile }) {
         ? "Feststellungsbescheid nach § 60a AO"
         : "Freistellungsbescheid";
   const exemptionLine =
-    profile.exemptionNoticeDate && profile.taxOffice
-      ? `Gemeinnützigkeit: ${exemptionKind} des Finanzamts ${profile.taxOffice} vom ${formatAntetDate(profile.exemptionNoticeDate)}${
+    profile.exemptionNoticeDate && taxOfficeName
+      ? `Gemeinnützigkeit: ${exemptionKind} des Finanzamts ${taxOfficeName} vom ${formatAntetDate(profile.exemptionNoticeDate)}${
           profile.exemptionNoticePeriod && profile.exemptionDocumentType !== "SPECIAL_ASSESSMENT_60A"
             ? ` (${profile.exemptionNoticePeriod})`
             : ""

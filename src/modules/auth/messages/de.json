@@ -5,6 +5,7 @@
   "loginButton": "Anmelden",
   "logout": "Abmelden",
   "mustChangePasswordBanner": "Passwort muss aktualisiert werden",
+  "mustChangePasswordHint": "Zu Ihrer Sicherheit müssen Sie unten zuerst ein neues Passwort festlegen, bevor Sie fortfahren können.",
   "meta": {
     "profile": "Profil"
   },
@@ -21,6 +22,7 @@
     "changePassword": "Passwort ändern",
     "currentPassword": "Aktuelles Passwort",
     "newPassword": "Neues Passwort",
+    "confirmPassword": "Neues Passwort bestätigen",
     "submit": "Passwort aktualisieren",
     "updated": "Ihr Passwort wurde aktualisiert.",
     "details": "Meine Profildaten",
@@ -29,13 +31,17 @@
   "errors": {
     "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
     "currentPasswordWrong": "Das aktuelle Passwort ist falsch.",
+    "samePassword": "Das neue Passwort darf nicht mit dem aktuellen Passwort übereinstimmen.",
     "invalidCredentials": "E-Mail oder Passwort ist falsch.",
     "accountLocked": "Das Konto ist vorübergehend gesperrt. Bitte versuchen Sie es später erneut.",
+    "rateLimited": "Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.",
     "loginFailed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
     "invalidLocale": "Ungültige Sprachauswahl."
   },
   "validation": {
     "currentPasswordRequired": "Bitte das aktuelle Passwort eingeben.",
+    "confirmPasswordRequired": "Bitte das neue Passwort wiederholen.",
+    "passwordsMismatch": "Die neuen Passwörter stimmen nicht überein.",
     "emailRequired": "E-Mail ist erforderlich.",
     "passwordRequired": "Passwort ist erforderlich."
   },

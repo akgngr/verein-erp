@@ -16,8 +16,8 @@ export const CONFIRMATION_NUMBER_PREFIX = "ZB"; // ZB-2026-0001
 /** 300 € altı bağışlar için resmi bildirim zorunlu değildir (uyarı, engel değil). */
 export const SMALL_DONATION_LIMIT_CENTS = 30_000;
 
-/** Bildirim nüshaları (Doppel) fiş olarak saklanır: yıl sonundan itibaren 8 yıl. */
-export const CONFIRMATION_RETENTION_YEARS = 8;
+/** Bildirim nüshaları (Doppel) § 50 Abs. 7 EStDV uyarınca yıl sonundan itibaren 10 yıl saklanır. */
+export const CONFIRMATION_RETENTION_YEARS = 10;
 
 /** Maksimum tutar (§ 10 Donation.amount üst sınırı): 9.999.999,99 €. */
 export const MAX_DONATION_CENTS = 999_999_999;

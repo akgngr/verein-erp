@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Checkbox, Dialog, Label, Select, Spinner, StatusChip, Tabs, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
+import { Checkbox, Dialog, Label, Select, Spinner, StatusChip, Tabs, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -14,6 +14,7 @@ import { useState } from "react";
 
 import {
   bookBankTransactionAction,
+  reverseBankTransactionAction,
   setBankTransactionStatusAction,
 } from "../actions/bank-actions";
 import type { BankRow } from "../queries/bank";
@@ -57,6 +58,24 @@ export function BankTransactionList({
   >("NONE");
   const [closeRemainder, setCloseRemainder] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [reversingRow, setReversingRow] = useState<BankRow | null>(null);
+  const [reverseReason, setReverseReason] = useState("");
+  const [reversingBusy, setReversingBusy] = useState(false);
+
+  const submitReverse = async () => {
+    if (!reversingRow) return;
+    setReversingBusy(true);
+    const result = await reverseBankTransactionAction({
+      id: reversingRow.id,
+      reason: reverseReason,
+    });
+    setReversingBusy(false);
+    if (!result.ok) return notify.error(result.error);
+    notify.success(t("reversed"));
+    setReversingRow(null);
+    setReverseReason("");
+    router.refresh();
+  };
 
   const open = (
     row: BankRow,
@@ -256,15 +275,30 @@ export function BankTransactionList({
                 </Button>
               ) : null}
               {row.status === "BOOKED" && row.bookingIds[0] ? (
-                <ActionLink
-                  href={`/muhasebe/${row.bookingIds[0]}`}
-                  className={buttonClassName({
-                    variant: actionVariant("default", "light"),
-                    size: "sm",
-                  })}
-                >
-                  {t("actions.openBooking")}
-                </ActionLink>
+                <>
+                  <ActionLink
+                    href={`/muhasebe/${row.bookingIds[0]}`}
+                    className={buttonClassName({
+                      variant: actionVariant("default", "light"),
+                      size: "sm",
+                    })}
+                  >
+                    {t("actions.openBooking")}
+                  </ActionLink>
+                  {canEdit && !row.invoiceId ? (
+                    <Button
+                      size="sm"
+                      onPress={() => {
+                        setReversingRow(row);
+                        setReverseReason("");
+                      }}
+                      variant={actionVariant("danger", "light")}
+                    >
+                      <Undo2 className="h-4 w-4" aria-hidden />
+                      {t("actions.reverse")}
+                    </Button>
+                  ) : null}
+                </>
               ) : null}
             </div>
           </li>
@@ -512,6 +546,60 @@ export function BankTransactionList({
                   </>
                 ) : null
               }
+      </Dialog>
+
+      <Dialog
+        isOpen={reversingRow !== null}
+        onOpenChange={(isOpen) => {
+          if (!isOpen) {
+            setReversingRow(null);
+            setReverseReason("");
+          }
+        }}
+        size="md"
+        className="w-full max-w-md"
+      >
+        {({ close }) =>
+          reversingRow ? (
+            <>
+              <DialogDismissButton />
+              <Dialog.Header className="flex flex-col gap-1">
+                <Dialog.Heading>{t("reverseModal.title")}</Dialog.Heading>
+                <span className="text-sm font-normal text-ink-500">
+                  {day(reversingRow.bookingDate)} ·{" "}
+                  {reversingRow.counterpartyName ?? t("unknownParty")} ·{" "}
+                  {euro(reversingRow.amountCents)}
+                </span>
+              </Dialog.Header>
+              <Dialog.Body className="gap-3">
+                <p className="text-xs text-ink-600">{t("reverseModal.description")}</p>
+                <TextField
+                  id="bank-reverse-reason"
+                  value={reverseReason}
+                  onChange={setReverseReason}
+                  isRequired
+                >
+                  <Label>{t("reverseModal.reasonLabel")}</Label>
+                  <TextArea rows={3} placeholder={t("reverseModal.reasonPlaceholder")} />
+                </TextField>
+              </Dialog.Body>
+              <Dialog.Footer>
+                <Button onPress={close} variant={actionVariant("default", "light")}>
+                  {t("modal.cancel")}
+                </Button>
+                <Button
+                  isDisabled={reverseReason.trim().length < 5}
+                  onPress={submitReverse}
+                  variant={actionVariant("danger", "solid")}
+                  isPending={reversingBusy}
+                >
+                  {reversingBusy ? <Spinner size="sm" tone="current" /> : null}
+                  {t("reverseModal.submit")}
+                </Button>
+              </Dialog.Footer>
+            </>
+          ) : null
+        }
       </Dialog>
     </>
   );

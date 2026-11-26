@@ -56,10 +56,20 @@ export async function acceptInvitation(token: string, password: string, now = ne
   if (!usable) throw new InvitationError("users.invite.errors.invalid");
   const db = getDb();
   const passwordHash = await hashPassword(password);
-  const consumed = await db.userInvitation.updateMany({ where: { id: usable.id, usedAt: null, revokedAt: null, expiresAt: { gt: now } }, data: { usedAt: now } });
-  if (consumed.count !== 1) throw new InvitationError("users.invite.errors.invalid");
-  await db.user.update({ where: { id: usable.userId }, data: { passwordHash, mustChangePassword: false, failedLoginCount: 0, lockedUntil: null } });
-  return { userId: usable.userId };
+  return db.$transaction(async (tx) => {
+    const targetUser = await tx.user.findUnique({ where: { id: usable.userId }, select: { isActive: true } });
+    if (!targetUser?.isActive) throw new InvitationError("users.invite.errors.invalid");
+    const consumed = await tx.userInvitation.updateMany({
+      where: { id: usable.id, usedAt: null, revokedAt: null, expiresAt: { gt: now } },
+      data: { usedAt: now },
+    });
+    if (consumed.count !== 1) throw new InvitationError("users.invite.errors.invalid");
+    await tx.user.update({
+      where: { id: usable.userId },
+      data: { passwordHash, mustChangePassword: false, failedLoginCount: 0, lockedUntil: null },
+    });
+    return { userId: usable.userId };
+  });
 }
 
 export function inviteMail(locale: "tr" | "de", input: { name: string; link: string; expiresAt: Date }): { subject: string; text: string } {

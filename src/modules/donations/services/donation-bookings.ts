@@ -2,7 +2,13 @@ import "server-only";
 
 import type { Prisma } from "@prisma/client";
 
-import { createSourcedBooking, donationAccountKeyFor, getDonationBookingTargets, reverseSourcedBooking } from "@/modules/accounting/server";
+import {
+  createSourcedBooking,
+  donationAccountKeyFor,
+  getDonationBookingTargets,
+  nextVersionedSourcedBookingId,
+  reverseSourcedBooking,
+} from "@/modules/accounting/server";
 
 import { formatDonorNumber } from "./confirmation-numbers";
 import { ActionError } from "@/modules/auth/server";
@@ -47,13 +53,16 @@ export async function createDonationBookings(
   const accountKey = donationAccountKeyFor(args.method);
   const accountId = accountKey === "cashAccountId" ? targets.cashAccountId : targets.bankAccountId;
 
-  const description = `Spende ${args.donationNumber} – Spender Nr. ${formatDonorNumber(args.donorNumber)}`;
+  const description = args.waivedReimbursement
+    ? donationBookingDescription(args.donationNumber, args.donorNumber, "income")
+    : `Spende ${args.donationNumber} – Spender Nr. ${formatDonorNumber(args.donorNumber)}`;
+  const incomeSourceId = await nextVersionedSourcedBookingId(tx, "DONATION", args.donationId);
   const income = await createSourcedBooking({
     tx,
     actor: args.actor,
     type: "INCOME",
     sourceType: "DONATION",
-    sourceId: args.donationId,
+    sourceId: incomeSourceId,
     bookingDate: args.receivedAt,
     accountId,
     categoryId: targets.donationCategoryId,
@@ -70,12 +79,13 @@ export async function createDonationBookings(
   if (!args.expenseCategoryId) {
     throw new ActionError("donations.errors.waiverExpenseRequired");
   }
+  const waiverSourceId = await nextVersionedSourcedBookingId(tx, "DONATION_WAIVER", args.donationId);
   const expense = await createSourcedBooking({
     tx,
     actor: args.actor,
     type: "EXPENSE",
     sourceType: "DONATION_WAIVER",
-    sourceId: args.donationId,
+    sourceId: waiverSourceId,
     bookingDate: args.receivedAt,
     accountId: targets.bankAccountId,
     categoryId: args.expenseCategoryId,

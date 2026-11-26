@@ -21,7 +21,7 @@ export type ProjectBookingRow = {
 export async function listProjectBookings(projectId: string, from: Date, to: Date): Promise<ProjectBookingRow[]> {
   const rows = await getDb().accountingBooking.findMany({
     where: { projectId, reversedAt: null, type: { in: ["INCOME", "EXPENSE"] }, bookingDate: { gte: from, lte: to } },
-    select: { id: true, bookingNumber: true, bookingDate: true, type: true, categoryId: true, category: { select: { name: true } }, amount: true, netAmount: true, description: true, counterparty: true, receiptReference: true, _count: { select: { files: true } } },
+    select: { id: true, bookingNumber: true, bookingDate: true, type: true, categoryId: true, category: { select: { name: true } }, amount: true, netAmount: true, description: true, counterparty: true, receiptReference: true, _count: { select: { files: { where: { deletedAt: null } } } } },
     orderBy: [{ bookingDate: "asc" }, { sequence: "asc" }],
     take: 5000,
   });

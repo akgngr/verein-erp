@@ -12,7 +12,7 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 import { getOrganizationProfile } from "@/modules/organization/server";
 
 import { accountingPermissions } from "../permissions";
-import { buildPain001, isValidIban } from "../services/sepa";
+import { buildPain001, isValidIban, sepaText } from "../services/sepa";
 import { berlinToday } from "../utils";
 
 /**
@@ -43,8 +43,16 @@ export async function paymentRunHandler(request: Request): Promise<Response> {
     getOrganizationProfile(),
     db.accountingPayable.findMany({ where: { id: { in: ids }, status: "OPEN" } }),
   ]);
-  if (!settings?.iban || !isValidIban(settings.iban)) return NextResponse.json({ ok: false, error: await translateMessage("accounting.paymentRun.errors.ownIban") }, { status: 422 });
-  const payable = payables.filter((item) => item.supplierIban && isValidIban(item.supplierIban) && item.grossCents > item.paidCents);
+  if (!settings?.iban || !isValidIban(settings.iban) || !sepaText(profile.name, 70)) {
+    return NextResponse.json({ ok: false, error: await translateMessage("accounting.paymentRun.errors.ownIban") }, { status: 422 });
+  }
+  const payable = payables.filter(
+    (item) =>
+      item.supplierIban &&
+      isValidIban(item.supplierIban) &&
+      item.grossCents > item.paidCents &&
+      Boolean(sepaText(item.supplierName, 70)),
+  );
   if (payable.length !== ids.length) return NextResponse.json({ ok: false, error: await translateMessage("accounting.paymentRun.errors.invalid") }, { status: 422 });
 
   const now = new Date();
@@ -60,7 +68,10 @@ export async function paymentRunHandler(request: Request): Promise<Response> {
       creditorName: item.supplierName,
       creditorIban: item.supplierIban as string,
       creditorBic: null,
-      remittance: [item.number ? `Rechnung ${item.number}` : null, item.issueDate ? item.issueDate.toISOString().slice(0, 10) : null].filter(Boolean).join(" "), // i18n-ignore: Verwendungszweck
+      remittance:
+        [item.number ? `Rechnung ${item.number}` : null, item.issueDate ? item.issueDate.toISOString().slice(0, 10) : null] // i18n-ignore: Verwendungszweck
+          .filter(Boolean)
+          .join(" ") || `Rechnung ${item.id.slice(0, 8)}`, // i18n-ignore: Verwendungszweck
     })),
   });
   await writeAudit({

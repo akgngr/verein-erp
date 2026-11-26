@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.7.1",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Kanonik APP_URL kampanya bağlantıları",
+        "de": "Kanonische APP_URL für Kampagnenlinks"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Kampanya abonelik iptali ve bağlantı üretiminde kanonik APP_URL kökü kullanıldı (#574).",
+          "de": "Abmelde- und Kampagnenlinks verwenden nun die kanonische APP_URL (#574)."
+        }
+      ]
+    },
+    {
       "version": "2.7.0",
       "date": "2026-11-25",
       "title": {
@@ -23,6 +38,7 @@
           "type": "fix",
           "tr": "Sonradan gelen 'başarısız' teslim bildirimleri kampanya sayaçlarına yansır; programatik toplu e-posta worker kuyruğundan gönderilir.",
           "de": "Nachträgliche Fehlermeldungen der Anbieter aktualisieren die Kampagnenzähler; programmatischer Massenversand läuft über die Worker-Warteschlange."
+
         }
       ]
     },

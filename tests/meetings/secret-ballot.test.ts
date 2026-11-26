@@ -107,6 +107,11 @@ describe("cast and close with a fake database", () => {
       meetingVoteEligibility: { updateMany: async ({ data }: { data: { usedAt: null } }) => { for (const row of state.eligibility) row.usedAt = data.usedAt; return { count: state.eligibility.length }; } },
       meetingVote: {
         findUnique: async () => state.vote,
+        updateMany: async ({ where, data }: { where: { id: string; status: string }; data: Record<string, unknown> }) => {
+          if (state.vote.status !== where.status) return { count: 0 };
+          Object.assign(state.vote, data);
+          return { count: 1 };
+        },
         update: async ({ data }: { data: Record<string, unknown> }) => { Object.assign(state.vote, data); return state.vote; },
       },
       meetingCounter: { upsert: async () => ({ lastSeq: 7 }) },

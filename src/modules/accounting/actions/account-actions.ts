@@ -122,7 +122,13 @@ export async function updateAccountAction(input: unknown): Promise<ActionResult>
         data.openingDate = openingDate;
       }
 
-      await db.accountingAccount.update({ where: { id: existing.id }, data });
+      await db.$transaction(async (tx) => {
+        await tx.accountingAccount.update({ where: { id: existing.id }, data });
+        if (input.type === "CASH") {
+          const { assertNoNegativeCash } = await import("../services/balances");
+          await assertNoNegativeCash(existing.id, tx);
+        }
+      });
       await audit({
         action:
           input.isActive === false

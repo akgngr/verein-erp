@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.14",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "URL protokol doğrulaması ve kanonik APP_URL",
+        "de": "URL-Protokollprüfung und kanonische APP_URL"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Etkinlik bağlantılarında güvenli protokol doğrulaması ve kanonik APP_URL kökü uygulandı (#573, #574).",
+          "de": "Sichere Protokollprüfung für Veranstaltungslinks und kanonische APP_URL umgesetzt (#573, #574)."
+        }
+      ]
+    },
+    {
       "version": "1.2.13",
       "date": "2026-11-25",
       "title": {

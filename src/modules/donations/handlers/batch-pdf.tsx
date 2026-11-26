@@ -1,22 +1,26 @@
 import "server-only";
 
-import { Document, Page, Text, renderToBuffer } from "@react-pdf/renderer";
+import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
+
+import { renderToBuffer } from "@react-pdf/renderer";
 import { NextResponse } from "next/server";
+import { PDFDocument } from "pdf-lib";
 
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
-import { can } from "@/shared/permissions/define";
+import { resolveSafePath } from "@/shared/files";
+import { translateMessage } from "@/shared/i18n/translate-message";
 import { registerSharedPdfFonts } from "@/shared/pdf/fonts";
+import { can } from "@/shared/permissions/define";
 import { buildUserLabel } from "@/shared/utils";
 
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { BATCH_PDF_MAX_IDS } from "../constants";
+import { ConfirmationDocument } from "../pdf/confirmation-document";
 import { donationsPermissions } from "../permissions";
-import { ConfirmationBody, type ConfirmationPdfData } from "../pdf/confirmation-document";
-import { ATTACHMENT_TITLE } from "../pdf/template-de";
 import { storedSnapshotToPdfData } from "./snapshot-pdf";
-import { translateMessage } from "@/shared/i18n/translate-message";
 
 /** ASCII güvenli dosya adı. */
 function asciiFileName(name: string): string {
@@ -24,8 +28,10 @@ function asciiFileName(name: string): string {
 }
 
 /**
- * Toplu yazdırma (§ 13): ?ids=a,b,c (max 100); DEPOLANMIŞ snapshot'lardan TEK
- * çok sayfalı PDF (deterministik; depolanmaz). audit PDF_BATCH_DOWNLOAD (adet).
+ * Toplu yazdırma (§ 13): ?ids=a,b,c (max 100); yalnızca aktif (`ISSUED`)
+ * bildirimlerin depolanmış PDF'leri SHA-256 bütünlüğü doğrulanarak `pdf-lib`
+ * ile tek çok sayfalı PDF'te birleştirilir. Her bağışçı kendi bağımsız sayfa
+ * numaralandırmasını ("Seite 1 von 1" / "Seite 1 von 2") korur.
  */
 export async function batchPdfHandler(request: Request): Promise<Response> {
   let user;
@@ -50,7 +56,7 @@ export async function batchPdfHandler(request: Request): Promise<Response> {
 
   const db = getDb();
   const confirmations = await db.zuwendungConfirmation.findMany({
-    where: { id: { in: ids } },
+    where: { id: { in: ids }, status: "ISSUED" },
     include: { items: { orderBy: { position: "asc" } } },
     orderBy: [{ year: "asc" }, { sequence: "asc" }],
   });
@@ -58,28 +64,56 @@ export async function batchPdfHandler(request: Request): Promise<Response> {
     return NextResponse.json({ ok: false, error: await translateMessage("donations.errors.confirmationNotFound2") }, { status: 404 });
   }
 
-  // Değişmez snapshot'lardan PDF verisi (yeniden üretim deterministik; § 13).
-  const documents: ConfirmationPdfData[] = [];
+  const mergedPdf = await PDFDocument.create();
+  mergedPdf.setTitle("Zuwendungsbestätigungen");
+
   for (const confirmation of confirmations) {
-    documents.push(
-      await storedSnapshotToPdfData(confirmation, confirmation.items.map((item) => ({
-        position: item.position,
-        itemType: item.itemType,
-        sourceId: item.sourceId,
-        itemDate: item.itemDate,
-        amountCents: Number(item.amount.mul(100).toFixed(0)),
-        label: item.label,
-        waived: item.waived,
-      }))),
-    );
+    let singleBytes: Uint8Array;
+    if (confirmation.pdfStoragePath && confirmation.pdfSha256) {
+      const absolutePath = resolveSafePath(confirmation.pdfStoragePath);
+      const fileBuffer = await readFile(absolutePath);
+      const actualHash = createHash("sha256").update(fileBuffer).digest("hex");
+      if (actualHash !== confirmation.pdfSha256) {
+        await writeAudit({
+          userId: user.id,
+          userLabel: buildUserLabel(user.name, user.email),
+          action: "PDF_INTEGRITY_ERROR",
+          entity: "ZuwendungConfirmation",
+          entityId: confirmation.id,
+          before: { confirmationNumber: confirmation.confirmationNumber, expectedSha256: confirmation.pdfSha256 },
+          after: { actualSha256: actualHash },
+        });
+        return NextResponse.json(
+          { ok: false, error: await translateMessage("donations.errors.pdfIntegrity") },
+          { status: 500 },
+        );
+      }
+      singleBytes = new Uint8Array(fileBuffer);
+    } else {
+      const pdfData = await storedSnapshotToPdfData(
+        confirmation,
+        confirmation.items.map((item) => ({
+          position: item.position,
+          itemType: item.itemType,
+          sourceId: item.sourceId,
+          itemDate: item.itemDate,
+          amountCents: Number(item.amount.mul(100).toFixed(0)),
+          label: item.label,
+          waived: item.waived,
+        })),
+      );
+      registerSharedPdfFonts();
+      singleBytes = new Uint8Array(await renderToBuffer(<ConfirmationDocument data={pdfData} />));
+    }
+
+    const srcDoc = await PDFDocument.load(singleBytes);
+    const copiedPages = await mergedPdf.copyPages(srcDoc, srcDoc.getPageIndices());
+    for (const page of copiedPages) {
+      mergedPdf.addPage(page);
+    }
   }
 
-  registerSharedPdfFonts();
-
-  // KARAR: Tek Document içinde birden çok ConfirmationDocument body'si —
-  // sayfa sayısı = her bildirimin sayfaları toplamı. Basitlik: her bildirim
-  // ayrı <Page> dizisiyle tek Document'te birleşir (§ 13: one multi-page PDF).
-  const buffer = await renderToBuffer(<BatchDocument documents={documents} />);
+  const mergedBytes = await mergedPdf.save();
 
   await writeAudit({
     userId: user.id,
@@ -87,77 +121,18 @@ export async function batchPdfHandler(request: Request): Promise<Response> {
     action: "PDF_BATCH_DOWNLOAD",
     entity: "ZuwendungConfirmation",
     entityId: null,
-    after: { count: documents.length },
+    after: { count: confirmations.length },
   });
 
   const today = new Date().toISOString().slice(0, 10);
   const fileName = `zuwendungsbestaetigungen-${today}.pdf`;
-  return new Response(new Uint8Array(buffer), {
+  return new Response(new Uint8Array(mergedBytes), {
     headers: {
       "Content-Type": "application/pdf",
       "Content-Disposition": `inline; filename="${asciiFileName(fileName)}"`,
+      "X-Content-Type-Options": "nosniff",
+      "Content-Security-Policy": "sandbox",
       "Cache-Control": "private, no-store",
     },
   });
-}
-
-/** Tek Document'te çok bildirim: her bildirimin gövde + Anlage sayfaları. */
-function BatchDocument({ documents }: { documents: ConfirmationPdfData[] }) {
-  return (
-    <Document title="Zuwendungsbestätigungen" language="de">
-      {documents.map((data, index) => (
-        <SingleConfirmationPages key={`${data.confirmationNumber ?? "muster"}-${index}`} data={data} />
-      ))}
-    </Document>
-  );
-}
-
-function SingleConfirmationPages({ data }: { data: ConfirmationPdfData }) {
-  const items = data.items ?? [];
-  const money = (cents: number) =>
-    new Intl.NumberFormat("de-DE", { minimumFractionDigits: 2 }).format(cents / 100);
-  const formatDE = (date: Date) => {
-    const iso = date.toISOString().slice(0, 10);
-    const [y, m, d] = iso.split("-");
-    return `${d}.${m}.${y}`;
-  };
-  return (
-    <>
-      <Page size="A4" style={{ padding: 36, fontFamily: "NotoSans", fontSize: 10 }} wrap>
-        <ConfirmationBody data={data} />
-        <Text
-          style={{ position: "absolute", bottom: 24, right: 36, fontSize: 8.5, color: "#555555" }}
-          fixed
-          render={({ pageNumber, totalPages }) => `Seite ${pageNumber} von ${totalPages}`}
-        />
-      </Page>
-      {data.attachment && items.length > 0 ? (
-        <Page size="A4" style={{ padding: 36, fontFamily: "NotoSans", fontSize: 10 }} wrap>
-          <Text style={{ fontSize: 12, fontWeight: 700, marginBottom: 6 }}>
-            {ATTACHMENT_TITLE(formatDE(data.issueDate))}
-          </Text>
-          <Text>{data.recipient.name}</Text>
-          <Text style={{ fontSize: 9, color: "#555555", marginBottom: 6 }}>
-            {data.confirmationNumber ?? ""}
-          </Text>
-          <Text style={{ fontSize: 8.5 }}>
-            {items
-              .map(
-                (item) =>
-                  `${item.position}. ${formatDE(item.itemDate)} — ${item.label} — ${money(item.amountCents)} € — ${item.waived ? "Ja" : "Nein"}`,
-              )
-              .join("\n")}
-          </Text>
-          <Text style={{ fontSize: 9, fontWeight: 700, marginTop: 8 }}>
-            Gesamtsumme: {money(data.totalCents)} €
-          </Text>
-          <Text
-            style={{ position: "absolute", bottom: 24, right: 36, fontSize: 8.5, color: "#555555" }}
-            fixed
-            render={({ pageNumber, totalPages }) => `Seite ${pageNumber} von ${totalPages}`}
-          />
-        </Page>
-      ) : null}
-    </>
-  );
 }

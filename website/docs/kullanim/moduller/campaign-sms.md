@@ -13,7 +13,7 @@ Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere
 |---|---|
 | Anahtar | `campaign-sms` |
 | Tür | Eklenti |
-| Sürüm | 1.1.3 |
+| Sürüm | 1.1.4 |
 | Gerektirir | [Toplu e-posta](./mailings) |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | SMS | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.4 — Kanonik APP_URL webhook adresleri
+
+_2026-11-25_
+
+- **Güvenlik:** SMS durum geri çağrı (webhook) adresleri kanonik APP_URL kökü ile oluşturuluyor (#574).
 
 ### 1.1.3 — Webhook sertleştirme
 

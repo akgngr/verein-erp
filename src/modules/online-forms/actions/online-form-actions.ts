@@ -11,6 +11,7 @@ import { membersPermissions } from "@/modules/members";
 import { studentsPermissions } from "@/modules/students";
 import type { ActionResult } from "@/shared/types/action";
 import { can } from "@/shared/permissions/define";
+import { resolvePublicOrigin } from "@/shared/security/public-origin";
 import { canEncryptSecrets } from "@/shared/security/secret-box";
 import { buildUserLabel } from "@/shared/utils";
 
@@ -47,12 +48,10 @@ export async function sendOnlineFormAction(input: unknown): Promise<ActionResult
     handler: async ({ input, user, audit }) => {
       if (!canWriteSubject(user.role, input.kind)) throw new ActionError("online-forms.errors.forbidden");
       if (!canEncryptSecrets()) throw new ActionError("online-forms.errors.noEncryption");
-      const h = await headers();
-      const host = h.get("x-forwarded-host") ?? h.get("host");
-      if (!host) throw new ActionError("online-forms.errors.sendFailed");
-      const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
+      const origin = resolvePublicOrigin(await headers());
+      if (!origin) throw new ActionError("online-forms.errors.sendFailed");
       const t = await getTranslations("online-forms.message");
-      const result = await createAndSend(input, { id: user.id, label: buildUserLabel(user.name, user.email) }, `${proto}://${host}`, (org, name) => ({
+      const result = await createAndSend(input, { id: user.id, label: buildUserLabel(user.name, user.email) }, origin, (org, name) => ({
         subject: t("subject", { org }),
         text: (link, until) => t("text", { org, name, link, until }),
       }));

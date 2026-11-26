@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.27.4 |
+| Sürüm | 1.27.5 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/denetim`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,15 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.27.5 — GoBD, vergi, Kassenminus, banka ve PDF güvenlik düzeltmeleri
+
+_2026-11-25_
+
+- **Güvenlik:** Sayman raporu PDF oluşturucusunda çapraz modül dosya okuma engellendi ve KoSIT doğrulayıcıda DNS-sabitli SSRF koruması eklendi (#573).
+- **Düzeltme:** Kassenminus, banka içe aktarma/ters kayıt, SOLL-Versteuerung UStVA, § 19 UStG, GoBD Z3 UTF-8/ek CSV'ler, yıllık kapanış, e-fatura KDV kategorisi E ve SEPA pain.001 transliterasyon hataları giderildi (#576, #577).
+- **Düzeltme:** Kesilmiş faturanın tahsilatında faturadaki KDV oranları esas alınır; § 19 UStG ayarı sonradan açılsa da KDV'li fatura KDV'siz kaydedilmez.
+- **Düzeltme:** İçe aktarılan tedarikçi alacak dekontları (negatif tutarlar) iade olarak kapatılabilir: elle veya gelen banka hareketiyle eşleştirilir, gider ve ön KDV azaltılır.
 
 ### 1.27.4 — Arayüz düzeltmeleri (#586)
 
@@ -86,10 +95,4 @@ _2026-11-19_
 
 - **Yeni:** Vadesi geçmiş ve ihtar zamanı gelmiş faturalar için sekreter, onay kutusunda "ihtar kaydı oluştur" önerisi sunar. Onaylanınca her faturaya sıradaki ihtar kademesi kaydedilir; e-posta veya PDF gönderilmez. Yalnız muhasebe düzenleme yetkisi olanlar görür; bu arada ödenen veya ihtarlanan fatura varsa öneri geçersiz olur.
 
-### 1.24.2 — Kod bakımı
-
-_2026-11-19_
-
-- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
-
-Daha eski 51 herkese açık sürüm notu.
+Daha eski 52 herkese açık sürüm notu.

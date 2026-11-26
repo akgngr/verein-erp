@@ -117,3 +117,68 @@ export async function createMemberAction(
 
   return run(input) as Promise<ActionResult<{ id: string; membershipNumber: string }>>;
 }
+
+/**
+ * Yeni üye oluşturulmadan önce potansiyel mükerrer kayıt uyarısı (#578):
+ * aynı e-posta (büyük/küçük harf duyarsız) veya aynı ad+soyad+doğum tarihi eşleşmelerini döner.
+ */
+export async function checkMemberDuplicateAction(input: unknown): Promise<
+  ActionResult<{
+    duplicates: Array<{ id: string; membershipNumber: string; reason: "email" | "person" }>;
+  }>
+> {
+  const { z } = await import("zod");
+  const run = createAction({
+    permission: { definition: membersPermissions, action: "create" },
+    schema: z.object({
+      firstName: z.string().trim().max(100).optional().default(""),
+      lastName: z.string().trim().max(100).optional().default(""),
+      email: z.string().trim().max(200).optional().default(""),
+      birthDate: z.string().trim().max(20).optional().default(""),
+    }),
+    handler: async ({ input: parsed }) => {
+      const db = getDb();
+      const duplicates: Array<{ id: string; membershipNumber: string; reason: "email" | "person" }> = [];
+      const seen = new Set<string>();
+
+      if (parsed.email) {
+        const emailMatches = await db.member.findMany({
+          where: { deletedAt: null, email: { equals: parsed.email, mode: "insensitive" } },
+          select: { id: true, membershipNumber: true },
+          take: 5,
+        });
+        for (const m of emailMatches) {
+          seen.add(m.id);
+          duplicates.push({ id: m.id, membershipNumber: m.membershipNumber, reason: "email" });
+        }
+      }
+
+      const birth = parsed.birthDate ? parseDateOnly(parsed.birthDate) : null;
+      if (parsed.firstName && parsed.lastName && birth) {
+        const personMatches = await db.member.findMany({
+          where: {
+            deletedAt: null,
+            firstName: { equals: parsed.firstName, mode: "insensitive" },
+            lastName: { equals: parsed.lastName, mode: "insensitive" },
+            birthDate: birth,
+          },
+          select: { id: true, membershipNumber: true },
+          take: 5,
+        });
+        for (const m of personMatches) {
+          if (seen.has(m.id)) continue;
+          seen.add(m.id);
+          duplicates.push({ id: m.id, membershipNumber: m.membershipNumber, reason: "person" });
+        }
+      }
+
+      return { duplicates };
+    },
+  });
+
+  return run(input) as Promise<
+    ActionResult<{
+      duplicates: Array<{ id: string; membershipNumber: string; reason: "email" | "person" }>;
+    }>
+  >;
+}

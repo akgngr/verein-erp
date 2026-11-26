@@ -13,7 +13,7 @@ Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi.
 |---|---|
 | Anahtar | `events` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.13 |
+| Sürüm | 1.2.14 |
 | Sayfalar | `/events`, `/events?filter.timeFilter=upcoming`, `/events?filter.timeFilter=past` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_upcoming_events` · `propose_event`
 
 ## Sürüm notları
+
+### 1.2.14 — URL protokol doğrulaması ve kanonik APP_URL
+
+_2026-11-25_
+
+- **Güvenlik:** Etkinlik bağlantılarında güvenli protokol doğrulaması ve kanonik APP_URL kökü uygulandı (#573, #574).
 
 ### 1.2.13 — Doğrulama, saat dilimi, yetki ve denetim düzeltmeleri
 
@@ -87,10 +93,4 @@ _2026-11-16_
 
 - **İyileştirme:** Form/ayrıntı çekmecesi mobilde alttan açılır (masaüstünde sağdan).
 
-### 1.2.5 — Asistan önerileri bulutta
-
-_2026-11-16_
-
-- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
-
-Daha eski 7 herkese açık sürüm notu.
+Daha eski 8 herkese açık sürüm notu.

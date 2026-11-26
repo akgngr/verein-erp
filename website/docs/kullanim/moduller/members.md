@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.15.10 |
+| Sürüm | 1.15.11 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -24,7 +24,8 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | Modül | İşlem | Gerekçe |
 |---|---|---|
 | [Dernek Bilgileri](./organization) | okuma | Makbuz ve belgelerde dernek antetini kullanır. |
-| [e-Sign](./online-forms) | okuma | Üye sayfasından e-imza/uzaktan form bağlantısı göndermek ve imzalı belgeleri göstermek için. |
+| [e-Sign](./online-forms) | okuma, yazma | Üye sayfasından e-imza/uzaktan form bağlantısı göndermek, imzalı belgeleri göstermek ve üye silindiğinde bekleyen davetleri iptal etmek için. |
+| [Üye Portalı](./member-portal) | okuma, yazma | Üye silindiğinde o üyeye ait aktif üye portalı oturumlarını iptal eder. |
 
 ## Varsayılan yetkiler
 
@@ -44,6 +45,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.15.11 — Aidat korumaları, DSGVO dışa aktarım, silme temizliği ve düzeltme talebi paneli
+
+_2026-11-25_
+
+- **Düzeltme:** Aidat fazla ödeme/işlem içi koruma, makbuz PDF tutarı ve denetim kaydı, mükerrer üye uyarısı, tam DSGVO dışa aktarımı, toplu içe aktarma tekilleştirme, silmede SEPA/portal temizliği ve üye düzeltme talebi onay paneli eklendi (#578, #577).
 
 ### 1.15.10 — Arayüz düzeltmeleri (#586)
 
@@ -87,10 +94,4 @@ _2026-11-23_
 
 - **Güvenlik:** Aidat tahakkuk ilişkisi (MemberDue.member) onDelete: Restrict olarak güncellendi.
 
-### 1.15.3 — Kod bakımı
-
-_2026-11-19_
-
-- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
-
-Daha eski 35 herkese açık sürüm notu.
+Daha eski 36 herkese açık sürüm notu.

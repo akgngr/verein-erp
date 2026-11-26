@@ -305,6 +305,7 @@
     "empty": "Henüz tanımlı erişim penceresi yok.",
     "statuses": {
       "active": "Aktif",
+      "scheduled": "Planlandı",
       "expired": "Süresi doldu",
       "revoked": "İptal edildi"
     }
@@ -321,6 +322,7 @@
     "toLogin": "Girişe git",
     "errors": {
       "invalid": "Bu davet bağlantısı geçersiz, süresi dolmuş veya daha önce kullanılmış. Yöneticinizden yeni bir davet isteyin.",
+      "rateLimited": "Çok fazla deneme yapıldı. Lütfen daha sonra tekrar deneyin.",
       "inactive": "Pasif kullanıcıya davet gönderilemez.",
       "mailNotConfigured": "E-posta gönderimi yapılandırılmamış (Ayarlar → E-posta).",
       "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",

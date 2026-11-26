@@ -29,6 +29,8 @@
     "noMandate": "Kein SEPA-Mandat",
     "invalidIban": "IBAN ungültig",
     "alreadyInRun": "Bereits in einem offenen Einzug",
+    "futureSignatureDate": "Mandatsdatum liegt in der Zukunft",
+    "missingDebtorName": "Name des Zahlungspflichtigen leer oder ungültig",
     "dormant": "Mandat 36 Monate ungenutzt",
     "renewAfterReturn": "Nach Rückgabe neues Mandat nötig",
     "pausedAfterReturns": "Wegen wiederholter Rückgaben pausiert"
@@ -82,6 +84,8 @@
     "date": "Bitte ein gültiges Datum eingeben.",
     "year": "Bitte ein gültiges Jahr eingeben.",
     "pastDate": "Das Einzugsdatum darf nicht in der Vergangenheit liegen.",
+    "invalidCollectionDate": "Das Einzugsdatum muss mindestens 1 TARGET2-Bankarbeitstag in der Zukunft liegen (keine Wochenenden oder TARGET2-Feiertage).",
+    "invalidName": "Name des Zahlungsempfängers oder Zahlungspflichtigen darf im SEPA-Zeichensatz nicht leer sein.",
     "nothingToCollect": "Keine einziehbaren Posten.",
     "notOpen": "Der Einzug ist nicht offen.",
     "notCollected": "Der Posten ist nicht eingezogen.",

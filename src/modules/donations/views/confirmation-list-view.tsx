@@ -60,6 +60,7 @@ export async function ConfirmationListView({
             </LinkButton>
             <LinkButton
               href="/api/donations/confirmations/export"
+              download
               variant="bordered"
               startIcon={<Download className="h-4 w-4" />}
             >

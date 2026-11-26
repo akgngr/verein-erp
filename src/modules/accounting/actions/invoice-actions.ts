@@ -29,6 +29,8 @@ import { allocateInvoiceNumber } from "../services/invoice-number";
 import { validateWithKosit } from "../services/kosit";
 import { applyInvoicePayment, INVOICE_SOURCE } from "../services/invoice-payment-service";
 import { reverseSourcedBooking } from "../services/sourced-bookings";
+import { isYearLocked } from "../services/booking-guards";
+import { effectiveTaxRate, getTaxSettings } from "../services/tax";
 import { parseDateOnly } from "../utils";
 
 
@@ -38,14 +40,15 @@ function dateOrThrow(value: string): Date {
   return date;
 }
 
-/** Form girdisi → kalıcı alanlar + satırlar + toplamlar (cent). */
-function invoiceData(input: InvoiceInput) {
+/** Form girdisi → kalıcı alanlar + satırlar + toplamlar (cent). § 19 UStG açıksa KDV %0 zorlanır. */
+function invoiceData(input: InvoiceInput, smallBusiness: boolean) {
   const lines = input.lines.map((line, index) => {
     const unitPriceCents = toCents(line.unitPrice);
     if (unitPriceCents === null) {
       throw new ActionError("accounting.invoices.validation.price", { [`lines.${index}.unitPrice`]: ["accounting.invoices.validation.price"] });
     }
-    return { description: line.description, quantity: parseDecimal(line.quantity), unit: line.unit || null, unitPriceCents, taxRate: Number(line.taxRate) };
+    const taxRate = effectiveTaxRate(Number(line.taxRate), { smallBusiness });
+    return { description: line.description, quantity: parseDecimal(line.quantity), unit: line.unit || null, unitPriceCents, taxRate };
   });
   const totals = calculateInvoiceTotals(lines);
   return {
@@ -133,8 +136,10 @@ export async function createInvoiceAction(input: unknown): Promise<ActionResult<
     permission: { definition: accountingPermissions, action: "create" },
     schema: invoiceSchema,
     handler: async ({ input, user, audit }) => {
-      const { fields, lines } = invoiceData(input);
-      const created = await getDb().accountingInvoice.create({
+      const db = getDb();
+      const tax = await getTaxSettings(db);
+      const { fields, lines } = invoiceData(input, tax.smallBusiness);
+      const created = await db.accountingInvoice.create({
         data: { ...fields, createdById: user.id, createdByLabel: buildUserLabel(user.name, user.email), lines: { create: lines } },
       });
       await audit({ action: "CREATE", entity: "AccountingInvoice", entityId: created.id, after: { kind: created.kind, grossCents: created.grossCents } });
@@ -151,12 +156,14 @@ export async function updateInvoiceAction(input: unknown): Promise<ActionResult<
     permission: { definition: accountingPermissions, action: "update" },
     schema: invoiceUpdateSchema,
     handler: async ({ input, audit }) => {
-      const existing = await loadInvoice(input.id);
+      const db = getDb();
+      const existing = await loadInvoice(input.id, db);
       if (existing.status !== "DRAFT") throw new ActionError("accounting.invoices.errors.notDraft");
-      const { fields, lines } = invoiceData(input);
-      await getDb().$transaction([
-        getDb().accountingInvoiceLine.deleteMany({ where: { invoiceId: existing.id } }),
-        getDb().accountingInvoice.update({ where: { id: existing.id }, data: { ...fields, lines: { create: lines } } }),
+      const tax = await getTaxSettings(db);
+      const { fields, lines } = invoiceData(input, tax.smallBusiness);
+      await db.$transaction([
+        db.accountingInvoiceLine.deleteMany({ where: { invoiceId: existing.id } }),
+        db.accountingInvoice.update({ where: { id: existing.id }, data: { ...fields, lines: { create: lines } } }),
       ]);
       await audit({ action: "UPDATE", entity: "AccountingInvoice", entityId: existing.id, after: { grossCents: fields.grossCents } });
       refresh(existing.id);
@@ -191,13 +198,16 @@ export async function issueInvoiceAction(input: unknown): Promise<ActionResult<{
       const number = await getDb().$transaction(async (tx) => {
         const invoice = await loadInvoice(input.id, tx);
         if (invoice.status !== "DRAFT") throw new ActionError("accounting.invoices.errors.notDraft");
+        const year = invoice.issueDate.getUTCFullYear();
+        if (await isYearLocked(year, tx)) {
+          throw new ActionError("accounting.errors.yearLocked", undefined, { year });
+        }
         // EI-4: kamu alıcısında Leitweg-ID (BuyerReference) olmadan e-fatura kesilemez; boşsa carideki değer kullanılır.
         const contact = invoice.contactId ? await tx.accountingContact.findUnique({ where: { id: invoice.contactId }, select: { einvoiceType: true, leitwegId: true } }) : null;
         if (contact && (invoice.kind === "INVOICE" || invoice.kind === "CREDIT_NOTE") && missingLeitweg({ recipientType: contact.einvoiceType, buyerReference: invoice.buyerReference, contactLeitwegId: contact.leitwegId })) {
           throw new ActionError("accounting.einvoice.obligation.errors.leitwegMissing");
         }
         const buyerReference = invoice.buyerReference || (contact?.einvoiceType === "PUBLIC" ? contact.leitwegId : null) || invoice.buyerReference;
-        const year = invoice.issueDate.getUTCFullYear();
         const allocated = await allocateInvoiceNumber(tx, invoice.kind, year);
         await tx.accountingInvoice.update({
           where: { id: invoice.id },

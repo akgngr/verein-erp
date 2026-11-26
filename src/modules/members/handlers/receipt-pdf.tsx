@@ -3,11 +3,13 @@ import "server-only";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { NextResponse } from "next/server";
 
+import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import { can } from "@/shared/permissions/define";
 import { formatPdfDate, formatPdfMoney } from "@/shared/pdf/format";
 import { registerSharedPdfFonts } from "@/shared/pdf/fonts";
 import { resolvePdfLang } from "@/shared/pdf/i18n";
+import { buildUserLabel } from "@/shared/utils";
 
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 import { getOrganizationLogoDataUri, getOrganizationProfile } from "@/modules/organization/server";
@@ -65,9 +67,13 @@ export async function exportReceiptPdfHandler(
   const lang = resolvePdfLang(request);
   const strings = RECEIPT_STRINGS[lang];
 
-  const [profile, logoDataUri] = await Promise.all([
+  const [profile, logoDataUri, due] = await Promise.all([
     getOrganizationProfile(),
     getOrganizationLogoDataUri(),
+    db.memberDue.findUnique({
+      where: { memberId_year: { memberId: payment.memberId, year: payment.dueYear } },
+      select: { amountDue: true },
+    }),
   ]);
 
   const data: ReceiptPdfData = {
@@ -91,6 +97,7 @@ export async function exportReceiptPdfHandler(
     memberNumber: payment.member.membershipNumber,
     dueYear: payment.dueYear,
     amountLabel: formatPdfMoney(Number(payment.amount.mul(100).toFixed(0)), lang),
+    dueAmountLabel: due ? formatPdfMoney(Number(due.amountDue.mul(100).toFixed(0)), lang) : null,
     paidAtLabel: formatPdfDate(payment.paidAt, lang),
     methodLabel: strings.methodLabels[payment.method],
     reference: payment.reference,
@@ -100,6 +107,20 @@ export async function exportReceiptPdfHandler(
 
   registerSharedPdfFonts();
   const buffer = await renderToBuffer(<ReceiptDocument data={data} />);
+
+  await writeAudit({
+    userId: user.id,
+    userLabel: buildUserLabel(user.name, user.email),
+    action: "EXPORT",
+    entity: "MemberPayment",
+    entityId: payment.id,
+    after: {
+      receiptNumber: payment.receiptNumber,
+      memberNumber: payment.member.membershipNumber,
+      format: "pdf",
+      lang,
+    },
+  });
 
   const fileName = `makbuz-${payment.receiptNumber}.pdf`;
   return new Response(new Uint8Array(buffer), {

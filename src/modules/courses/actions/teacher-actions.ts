@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 
 import { getDb } from "@/shared/db";
 import { generatePassword } from "@/shared/security/generate-password";
+import { resolvePublicOrigin } from "@/shared/security/public-origin";
 import type { ActionResult } from "@/shared/types/action";
 
 import { ActionError, createAction } from "@/modules/auth/server";
@@ -31,11 +32,9 @@ function teacherData(input: TeacherInput) {
   };
 }
 
-async function loginUrl(): Promise<string> {
-  const requestHeaders = await headers();
-  const host = requestHeaders.get("x-forwarded-host") ?? requestHeaders.get("host") ?? "localhost:3000";
-  const proto = requestHeaders.get("x-forwarded-proto") ?? (host.startsWith("localhost") || host.startsWith("127.") ? "http" : "https");
-  return `${proto}://${host}/giris`;
+async function loginUrl(): Promise<string | null> {
+  const origin = resolvePublicOrigin(await headers());
+  return origin ? `${origin}/giris` : null;
 }
 
 /**
@@ -51,9 +50,9 @@ async function inviteTeacher(teacher: { id: string; firstName: string; lastName:
   await getDb().courseTeacher.update({ where: { id: teacher.id }, data: { userId: account.id } });
 
   let mailSent = false;
-  if (await isMailConfigured()) {
+  const url = await loginUrl();
+  if (url && (await isMailConfigured())) {
     const t = await getTranslations("courses.inviteMail");
-    const url = await loginUrl();
     const result = await sendMail({
       to: teacher.email,
       toName: name,

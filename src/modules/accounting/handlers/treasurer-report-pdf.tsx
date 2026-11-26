@@ -1,12 +1,14 @@
 import "server-only";
 
+import { access } from "node:fs/promises";
+
 import { renderToBuffer } from "@react-pdf/renderer";
 import { NextResponse } from "next/server";
 
 import { requireUser, UnauthorizedError } from "@/modules/auth/server";
 import { getOrganizationLogoDataUri, getOrganizationProfile } from "@/modules/organization/server";
 import { writeAudit } from "@/shared/audit/write-audit";
-import { buildDownloadResponse, makeStoredName, openReadStream, saveFile } from "@/shared/files";
+import { buildDownloadResponse, openReadStream, resolveSafePath } from "@/shared/files";
 import { translateMessage } from "@/shared/i18n/translate-message";
 import { registerSharedPdfFonts } from "@/shared/pdf/fonts";
 import { resolvePdfLang } from "@/shared/pdf/i18n";
@@ -16,6 +18,7 @@ import { buildUserLabel } from "@/shared/utils";
 import { TreasurerReportDocument } from "../pdf/treasurer-report-document";
 import { accountingPermissions } from "../permissions";
 import { getTreasurerReportData } from "../queries/treasurer-report";
+import { isValidTreasurerReportFile } from "../services/treasurer-report-file";
 import { berlinToday } from "../utils";
 
 /**
@@ -48,7 +51,32 @@ export async function treasurerReportPdfHandler(request: Request): Promise<Respo
   const fileParam = url.searchParams.get("file");
 
   if (fileParam) {
-    const fileName = url.searchParams.get("name") ?? "kassenbericht.pdf";
+    if (!isValidTreasurerReportFile(fileParam)) {
+      return NextResponse.json(
+        { ok: false, error: await translateMessage("common.errors.forbidden") },
+        { status: 400 },
+      );
+    }
+    try {
+      await access(resolveSafePath(fileParam));
+    } catch {
+      return NextResponse.json(
+        { ok: false, error: await translateMessage("common.errors.notFound") },
+        { status: 404 },
+      );
+    }
+
+    await writeAudit({
+      userId: user.id,
+      userLabel: buildUserLabel(user.name, user.email),
+      action: "EXPORT",
+      entity: "AccountingBooking",
+      entityId: undefined,
+      after: { report: "treasurer-report-pdf-download", storagePath: fileParam },
+    });
+
+    const rawName = url.searchParams.get("name") ?? "kassenbericht.pdf";
+    const fileName = rawName.toLowerCase().endsWith(".pdf") ? rawName : "kassenbericht.pdf";
     return buildDownloadResponse({
       stream: openReadStream(fileParam),
       originalName: fileName,
@@ -78,22 +106,24 @@ export async function treasurerReportPdfHandler(request: Request): Promise<Respo
     />,
   );
 
-  const storedName = makeStoredName("pdf");
-  const storagePath = ["accounting", "reports", String(year), storedName].join("/");
-  await saveFile(storagePath, new Uint8Array(buffer));
-
   await writeAudit({
     userId: user.id,
     userLabel: buildUserLabel(user.name, user.email),
     action: "EXPORT",
     entity: "AccountingBooking",
     entityId: undefined,
-    after: { report: "treasurer-report-pdf", year, lang, storagePath },
+    after: { report: "treasurer-report-pdf", year, lang },
   });
 
   const fileName = `kassenbericht-${year}-${lang}.pdf`;
+  const stream = new ReadableStream<Uint8Array>({
+    start(controller) {
+      controller.enqueue(new Uint8Array(buffer));
+      controller.close();
+    },
+  });
   return buildDownloadResponse({
-    stream: openReadStream(storagePath),
+    stream,
     originalName: fileName,
     mimeType: "application/pdf",
     inline: false,

@@ -91,6 +91,23 @@ export async function exportMemberDataHandler(_request: Request, ctx: { id: stri
         ? member.cancellationReceivedAt.toISOString().slice(0, 10)
         : null,
       notes: member.notes,
+      consents: {
+        bulkMailOptOut: member.bulkMailOptOut,
+        messagingConsents: member.messagingConsents,
+        photoConsent: member.photoConsent,
+        privacyConsentAt: member.privacyConsentAt
+          ? member.privacyConsentAt.toISOString().slice(0, 10)
+          : null,
+      },
+      sepaMandate: {
+        iban: member.sepaIban,
+        bic: member.sepaBic,
+        accountHolder: member.sepaAccountHolder,
+        mandateReference: member.sepaMandateReference,
+        mandateDate: member.sepaMandateDate
+          ? member.sepaMandateDate.toISOString().slice(0, 10)
+          : null,
+      },
       createdAt: member.createdAt.toISOString(),
       updatedAt: member.updatedAt.toISOString(),
     },
@@ -106,13 +123,52 @@ export async function exportMemberDataHandler(_request: Request, ctx: { id: stri
     })),
   };
 
-  // Notlar da veri kapsamındadır — memberNotes ayrı sorgu yerine include edildi.
-  const notes = await db.memberNote.findMany({
-    where: { memberId: member.id },
-    orderBy: { createdAt: "asc" },
-    select: { body: true, authorLabel: true, createdAt: true },
-  });
-  const fullPayload = { ...payload, notes };
+  // DSGVO Art. 15 tam kapsamı: notlar, yıllık aidat satırları ve portal düzeltme talepleri (#578).
+  const [notes, dues, correctionProposals] = await Promise.all([
+    db.memberNote.findMany({
+      where: { memberId: member.id },
+      orderBy: { createdAt: "asc" },
+      select: { body: true, authorLabel: true, createdAt: true },
+    }),
+    db.memberDue.findMany({
+      where: { memberId: member.id },
+      orderBy: { year: "asc" },
+      select: { year: true, amountDue: true, status: true, dueDate: true, note: true },
+    }),
+    db.memberCorrectionProposal.findMany({
+      where: { memberId: member.id },
+      orderBy: { createdAt: "asc" },
+      select: {
+        field: true,
+        previousValue: true,
+        proposedValue: true,
+        status: true,
+        reviewNote: true,
+        createdAt: true,
+        reviewedAt: true,
+      },
+    }),
+  ]);
+  const fullPayload = {
+    ...payload,
+    dues: dues.map((due) => ({
+      year: due.year,
+      amountDue: due.amountDue.toFixed(2),
+      status: due.status,
+      dueDate: due.dueDate.toISOString().slice(0, 10),
+      note: due.note,
+    })),
+    correctionProposals: correctionProposals.map((item) => ({
+      field: item.field,
+      previousValue: item.previousValue,
+      proposedValue: item.proposedValue,
+      status: item.status,
+      reviewNote: item.reviewNote,
+      createdAt: item.createdAt.toISOString(),
+      reviewedAt: item.reviewedAt ? item.reviewedAt.toISOString() : null,
+    })),
+    notes,
+  };
 
   await writeAudit({
     userId: user.id,

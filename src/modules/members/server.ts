@@ -141,6 +141,8 @@ export type MemberAddressBlock = {
   /** UYE-2026-0001 biçimli üyelik numarası */
   memberNumber: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   street: string | null;
   postalCode: string | null;
   city: string | null;
@@ -173,6 +175,8 @@ export async function getMemberAddressBlock(
     memberId: member.id,
     memberNumber: member.membershipNumber,
     name: `${member.firstName} ${member.lastName}`.trim(),
+    firstName: member.firstName,
+    lastName: member.lastName,
     street: [member.street, member.houseNumber].filter(Boolean).join(" ") || null,
     postalCode: member.postalCode,
     city: member.city,

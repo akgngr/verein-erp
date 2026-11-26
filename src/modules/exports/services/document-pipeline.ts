@@ -47,6 +47,17 @@ export async function createPipelineDocumentFile(args:PipelineDocumentArgs):Prom
  return args.id;
 }
 
+const CHILD_RENDER_ENV_ALLOWLIST = ["PATH", "NODE_ENV", "TZ", "HOME", "LANG", "LC_ALL"] as const;
+
+/** Alt PDF işleme yalnız temel çalışma değişkenlerini aktarır; veritabanı/anahtar sırları asla geçirilmez. */
+export function buildChildRenderEnv(source: NodeJS.ProcessEnv = process.env): NodeJS.ProcessEnv {
+ const env: Record<string, string | undefined> = {};
+ for (const key of CHILD_RENDER_ENV_ALLOWLIST) {
+  if (source[key] !== undefined) env[key] = source[key];
+ }
+ return env as NodeJS.ProcessEnv;
+}
+
 /**
  * Worker react-server koşuluyla çalışır; @react-pdf tam React ister. Belge alt işlemde (koşulsuz node) çizilir:
  * alt işlem yalnız stdin girdisini alır ve PDF'i stdout'a yazar; veritabanına, sırlara ve ağa erişmez.
@@ -55,7 +66,7 @@ async function renderMarkdownInChild(input:Record<string,unknown>,signal:AbortSi
  const {spawn}=await import("node:child_process");
  const path=await import("node:path");
  const script=path.resolve(process.cwd(),"src/modules/exports/pdf/render-markdown-cli.mjs");
- const env={...process.env};delete env.NODE_OPTIONS;
+ const env=buildChildRenderEnv(process.env);
  return new Promise((resolve,reject)=>{
   const child=spawn(process.execPath,[script],{cwd:process.cwd(),env,stdio:["pipe","pipe","pipe"]});
   const out:Buffer[]=[];let size=0;

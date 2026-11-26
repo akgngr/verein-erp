@@ -19,22 +19,24 @@ export async function importBankTransactions(input: {
   actor: { id: string; label: string };
 }): Promise<{ importId: string; total: number; created: number }> {
   const db = getDb();
-  const rows = input.rows.map((row) => ({
-    ...row,
-    hash: createHash("sha256").update(transactionKey(input.accountId, row)).digest("hex"),
-  }));
-  const existing = new Set(
-    (await db.accountingBankTransaction.findMany({ where: { hash: { in: rows.map((row) => row.hash) } }, select: { hash: true } })).map((row) => row.hash),
-  );
-  // Aynı partide birebir aynı iki satır: ikinciye sıra eki (gerçekten iki ayrı ödeme olabilir).
   const seen = new Map<string, number>();
-  const fresh = rows
-    .map((row) => {
-      const count = seen.get(row.hash) ?? 0;
-      seen.set(row.hash, count + 1);
-      return count ? { ...row, hash: `${row.hash}:${count}` } : row;
-    })
-    .filter((row) => !existing.has(row.hash));
+  // Aynı partide birebir aynı iki satır: ikinciye sıra eki (gerçekten iki ayrı ödeme olabilir).
+  // Aday hash'ler veritabanı kontrolünden ÖNCE üretilir ki örtüşen içe aktarmalarda ":1" çakışmasın.
+  const rows = input.rows.map((row) => {
+    const baseHash = createHash("sha256").update(transactionKey(input.accountId, row)).digest("hex");
+    const count = seen.get(baseHash) ?? 0;
+    seen.set(baseHash, count + 1);
+    return { ...row, hash: count ? `${baseHash}:${count}` : baseHash };
+  });
+  const existing = new Set(
+    (
+      await db.accountingBankTransaction.findMany({
+        where: { hash: { in: rows.map((row) => row.hash) } },
+        select: { hash: true },
+      })
+    ).map((row) => row.hash),
+  );
+  const fresh = rows.filter((row) => !existing.has(row.hash));
   const created = await db.accountingBankImport.create({
     data: {
       accountId: input.accountId,

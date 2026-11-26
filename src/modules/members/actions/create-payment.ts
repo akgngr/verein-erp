@@ -10,7 +10,8 @@ import { ActionError, createAction } from "@/modules/auth/server";
 import { memberPaymentsPermissions } from "../permissions";
 import { paymentCreateSchema } from "../schemas/payment";
 import { allocateReceiptNumber, runWithReceiptNumberRetry } from "../services/receipt-number";
-import { recalculateDueStatus } from "../services/dues-calculation";
+import { decimalToCents, recalculateDueStatus } from "../services/dues-calculation";
+import { checkDueOverpayment } from "../services/dues-rules";
 import { berlinYear, parseDateOnly } from "../utils";
 import { checkDueYear, checkPaymentDate, hasProblems } from "../services/date-rules";
 
@@ -70,6 +71,31 @@ export async function createPaymentAction(
 
       const created = await runWithReceiptNumberRetry(() =>
         db.$transaction(async (tx) => {
+          // Fazla ödeme koruması (#578): yıllık aidat satırı varsa ödeme kalan açık tutarı aşamaz.
+          const due = await tx.memberDue.findUnique({
+            where: { memberId_year: { memberId: member.id, year: input.dueYear } },
+            select: { amountDue: true },
+          });
+          if (due) {
+            const paidAgg = await tx.memberPayment.aggregate({
+              where: { memberId: member.id, dueYear: input.dueYear, voidedAt: null },
+              _sum: { amount: true },
+            });
+            const check = checkDueOverpayment(
+              decimalToCents(due.amountDue),
+              decimalToCents(paidAgg._sum.amount),
+              cents,
+            );
+            if (!check.ok) {
+              const remaining = (check.remainingOpenCents / 100).toFixed(2).replace(".", ",");
+              throw new ActionError(
+                "members.errors.paymentExceedsOpenDue",
+                { amount: ["members.validation.paymentExceedsOpenDue"] },
+                { remaining },
+              );
+            }
+          }
+
           const { sequence, receiptNumber } = await allocateReceiptNumber(tx, year);
           const payment = await tx.memberPayment.create({
             data: {

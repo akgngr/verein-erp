@@ -68,6 +68,9 @@
   "errors": {
     "credentials": "Die Anbieter-Schlüssel wurden abgelehnt. Bitte Einstellungen prüfen.",
     "provider": "Der Bankanbieter ist nicht erreichbar oder hat die Anfrage abgelehnt. Bitte später erneut versuchen.",
+    "rateLimit": "Der Bankanbieter hat das Anfragelimit erreicht. Bitte versuchen Sie es später erneut.",
+    "invalidAccount": "Es kann nur ein aktives Bankkonto zugeordnet werden.",
+    "appUrlRequired": "Für die Bankverbindung muss die öffentliche Anwendungsadresse (APP_URL) konfiguriert sein.",
     "notConfigured": "Anbieter nicht eingerichtet.",
     "mockDisabled": "Der Testanbieter ist in dieser Umgebung nicht verfügbar."
   },

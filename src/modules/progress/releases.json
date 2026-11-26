@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.8",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Veli raporu PDF denetim kaydı ve yoklama doğrulaması",
+        "de": "Prüfprotokoll für Elternbericht-PDF und Anwesenheitsprüfung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Öğrenci gelişim raporu PDF dışa aktarımına kişisel veri içermeyen denetim kaydı eklendi (#579).",
+          "de": "Prüfprotokoll ohne personenbezogene Namen für den Export von Lernstandsberichten ergänzt (#579)."
+        },
+        {
+          "type": "fix",
+          "tr": "İptal edilen derslere ve kurstan ayrılmış öğrencilere yoklama kaydedilmesi engellendi (#579).",
+          "de": "Anwesenheitserfassung für ausgefallene Termine und abgemeldete Schüler gesperrt (#579)."
+        }
+      ]
+    },
+    {
       "version": "1.1.7",
       "date": "2026-11-24",
       "title": {

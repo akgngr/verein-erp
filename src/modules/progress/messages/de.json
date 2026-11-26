@@ -105,6 +105,8 @@
     "assessmentNotFound": "Leistung nicht gefunden.",
     "pointsAboveMax": "Die Punkte dürfen das Maximum ({max}) nicht überschreiten.",
     "enrollmentNotFound": "Der Schüler ist in diesem Kurs nicht angemeldet.",
+    "sessionCancelled": "Für einen ausgefallenen Termin kann keine Anwesenheit gespeichert werden.",
+    "enrollmentWithdrawn": "Für abgemeldete Schüler kann keine Anwesenheit gespeichert werden.",
     "noteNotFound": "Eintrag nicht gefunden.",
     "noteNotYours": "Sie können nur eigene Einträge löschen."
   },
