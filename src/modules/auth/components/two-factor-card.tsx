@@ -102,7 +102,7 @@ export function TwoFactorCard() {
         <div className="flex flex-col gap-1">
           <span className="text-xs text-ink-500">{t("setup.manualKey")}</span>
           <code className="select-all rounded-lg border border-ink-200 px-3 py-2 font-mono text-sm tracking-wider">{enrolment.manualKey}</code>
-          <a href={enrolment.otpauthUri} className="text-sm text-primary-600 hover:underline">{t("setup.openApp")}</a>
+          <a href={enrolment.otpauthUri} className="self-start text-sm font-medium text-accent hover:underline">{t("setup.openApp")}</a>
         </div>
         <p className="text-sm text-ink-500">{t("setup.step2")}</p>
         {codeField}
