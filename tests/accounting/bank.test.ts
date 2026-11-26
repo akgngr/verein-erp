@@ -110,3 +110,159 @@ test("eşleştirme: giden ödeme ↔ açık gelen fatura", () => {
   assert.equal(result.length, 1);
   assert.deepEqual(result[0].kind === "payable" && result[0].reasons, ["invoiceNumber", "amount", "name"]);
 });
+
+test("eşleştirme: gelen ödeme ↔ açık üye aidatı (üye no, IBAN, umlaut/Türkçe ad, fazla ödeme reddi)", () => {
+  const credit = {
+    amountCents: 12000,
+    counterpartyName: "Guelcan Oeztuerk",
+    counterpartyIban: "DE89 3704 0044 0532 0130 00",
+    purpose: "Mitgliedsbeitrag 2026 M-0042",
+  };
+  const result = suggestMatches(credit, [], [], [], {
+    memberDues: [
+      {
+        dueId: "due-1",
+        memberId: "mem-1",
+        year: 2026,
+        membershipNumber: "M-0042",
+        name: "Gülcan Öztürk",
+        openCents: 12000,
+        iban: "DE89370400440532013000",
+      },
+      {
+        dueId: "due-overpaid",
+        memberId: "mem-2",
+        year: 2026,
+        membershipNumber: "M-0043",
+        name: "Gülcan Öztürk",
+        openCents: 6000, // less than amountCents => overpayment must be excluded
+      },
+    ],
+  });
+  assert.equal(result.length, 1);
+  assert.equal(result[0].kind, "memberDue");
+  if (result[0].kind === "memberDue") {
+    assert.equal(result[0].dueId, "due-1");
+    assert.ok(result[0].reasons.includes("memberNumber"));
+    assert.ok(result[0].reasons.includes("iban"));
+    assert.ok(result[0].reasons.includes("amount"));
+    assert.ok(result[0].reasons.includes("name"));
+    assert.ok(result[0].score >= 100);
+  }
+});
+
+test("eşleştirme: gelen ödeme ↔ açık kurs ücreti (kurs kodu + tam tutar zorunlu)", () => {
+  const credit = {
+    amountCents: 4500,
+    counterpartyName: "Ahmet Yilmaz",
+    purpose: "Kursgebuehr KURS-2026-01 Oktober 70012",
+  };
+  const result = suggestMatches(credit, [], [], [], {
+    courseCharges: [
+      {
+        chargeId: "chg-1",
+        courseCode: "KURS-2026-01",
+        label: "Oktober 2026",
+        amountCents: 4500,
+        studentLabel: "Ali Yılmaz",
+        payerLabel: "Ahmet Yılmaz",
+        payerDebtorNumber: 70012,
+      },
+      {
+        chargeId: "chg-wrong-amount",
+        courseCode: "KURS-2026-01",
+        label: "November 2026",
+        amountCents: 5000, // exact amount mismatch must be excluded
+        studentLabel: "Ali Yılmaz",
+        payerLabel: "Ahmet Yılmaz",
+      },
+    ],
+  });
+  assert.equal(result.length, 1);
+  assert.equal(result[0].kind, "courseCharge");
+  if (result[0].kind === "courseCharge") {
+    assert.equal(result[0].chargeId, "chg-1");
+    assert.ok(result[0].reasons.includes("courseCode"));
+    assert.ok(result[0].reasons.includes("debtorNumber"));
+    assert.ok(result[0].reasons.includes("amount"));
+  }
+});
+
+test("eşleştirme: gelen ödeme ↔ tek tıkla bağış (mevcut bağışçı ve yeni bağışçı)", () => {
+  const knownCredit = {
+    amountCents: 25000,
+    counterpartyName: "Baeckerei Mueller",
+    purpose: "Spende Jugendprojekt SP-0009",
+  };
+  const knownResult = suggestMatches(knownCredit, [], [], [], {
+    donors: [{ id: "don-1", donorCode: "SP-0009", name: "Bäckerei Müller" }],
+    allowOneClickDonation: true,
+  });
+  assert.equal(knownResult.length, 1);
+  assert.equal(knownResult[0].kind, "donation");
+  if (knownResult[0].kind === "donation") {
+    assert.equal(knownResult[0].donorId, "don-1");
+    assert.ok(knownResult[0].reasons.includes("donor"));
+    assert.ok(knownResult[0].reasons.includes("donationKeyword"));
+  }
+
+  const unknownCredit = {
+    amountCents: 5000,
+    counterpartyName: "Neue Spenderin",
+    purpose: "Freiwillige Zuwendung Verein",
+  };
+  const unknownResult = suggestMatches(unknownCredit, [], [], [], {
+    donors: [],
+    allowOneClickDonation: true,
+  });
+  assert.equal(unknownResult.length, 1);
+  assert.equal(unknownResult[0].kind, "donation");
+  if (unknownResult[0].kind === "donation") {
+    assert.equal(unknownResult[0].donorId, null);
+    assert.deepEqual(unknownResult[0].reasons, ["donationKeyword"]);
+  }
+
+  // When donations capability is disabled, no donation suggestion is emitted.
+  const disabledResult = suggestMatches(unknownCredit, [], [], [], {
+    donors: [],
+    allowOneClickDonation: false,
+  });
+  assert.equal(disabledResult.length, 0);
+});
+
+test("bankBookSchema: memberDue, courseCharge ve donation modlarını doğrular", async () => {
+  const { bankBookSchema } = await import("@/modules/accounting/schemas/bank");
+  const dueParsed = bankBookSchema.safeParse({
+    mode: "memberDue",
+    id: "tx-1",
+    dueId: "due-1",
+    categoryId: "cat-1",
+  });
+  assert.equal(dueParsed.success, true);
+
+  const chargeParsed = bankBookSchema.safeParse({
+    mode: "courseCharge",
+    id: "tx-2",
+    chargeId: "chg-1",
+  });
+  assert.equal(chargeParsed.success, true);
+
+  const donationParsed = bankBookSchema.safeParse({
+    mode: "donation",
+    id: "tx-3",
+    donorId: null,
+    newDonorName: "Max Mustermann",
+    newDonorType: "PERSON",
+    purposeNote: "Spende",
+  });
+  assert.equal(donationParsed.success, true);
+
+  const invalidDue = bankBookSchema.safeParse({
+    mode: "memberDue",
+    id: "tx-1",
+    dueId: "",
+    categoryId: "cat-1",
+  });
+  assert.equal(invalidDue.success, false);
+});
+

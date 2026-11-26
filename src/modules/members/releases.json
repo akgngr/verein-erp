@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.16.1",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Banka eşleştirme aidat sözleşmesi (#616)",
+        "de": "Bankabgleich-Vertrag für Mitgliedsbeiträge (#616)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Muhasebe banka ekstre eşleştirmesi için açık aidat listeleme ve tek işlemde atomik aidat tahsilatı kaydetme sunucu sözleşmesi eklendi.",
+          "de": "Server-Vertrag zum Auflisten offener Mitgliedsbeiträge und zum atomaren Verbuchen von Bankabgleich-Zahlungen ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.16.0",
       "date": "2026-11-26",
       "title": {

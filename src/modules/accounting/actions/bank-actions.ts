@@ -1,12 +1,18 @@
 "use server";
 
+import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 
 import { getDb } from "@/shared/db";
+import { can } from "@/shared/permissions/define";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { courseFeesPermissions } from "@/modules/courses";
+import { donationsPermissions } from "@/modules/donations";
+import { memberPaymentsPermissions } from "@/modules/members";
+import { listUsableModuleKeys } from "@/modules/system/server";
 
 import { accountingPermissions } from "../permissions";
 import { bankBookSchema, bankImportSchema, bankRuleIdSchema, bankStatusSchema } from "../schemas/bank";
@@ -18,6 +24,22 @@ import { createSourcedBooking } from "../services/sourced-bookings";
 
 const BANK_SOURCE = "BANK";
 const refresh = () => revalidatePath("/muhasebe/banka");
+
+async function runWithUniqueRetry<T>(fn: () => Promise<T>, maxAttempts = 3): Promise<T> {
+  let attempt = 0;
+  while (true) {
+    try {
+      return await fn();
+    } catch (error) {
+      attempt += 1;
+      const isUniqueCollision =
+        error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002";
+      if (!isUniqueCollision || attempt >= maxAttempts) {
+        throw error;
+      }
+    }
+  }
+}
 
 /**
  * Ekstre içe aktar (ACC-4): satırlar ayrıştırılır, hash ile mükerrerler atlanır. Dosyanın kendisi
@@ -56,87 +78,184 @@ export async function importBankStatementAction(input: unknown): Promise<ActionR
   return run(input);
 }
 
-/** Satırı fişe bağla: açık fatura tahsilatı ya da kategori fişi (+ isteğe bağlı kural öğrenme). */
+/**
+ * Satırı fişe bağla: açık fatura, gelen fatura, üye aidatı, kurs ücreti, tek tıkla bağış
+ * ya da kategori fişi (+ isteğe bağlı kural öğrenme).
+ */
 export async function bookBankTransactionAction(input: unknown): Promise<ActionResult<{ bookingNumber: string }>> {
   const run = createAction({
     permission: { definition: accountingPermissions, action: "create" },
     schema: bankBookSchema,
     handler: async ({ input, user, audit }) => {
       const actor = { id: user.id, label: buildUserLabel(user.name, user.email) };
-      const result = await getDb().$transaction(async (tx) => {
-        const row = await tx.accountingBankTransaction.findUnique({ where: { id: input.id } });
-        if (!row) throw new ActionError("accounting.bank.errors.notFound");
-        if (row.status !== "OPEN") throw new ActionError("accounting.bank.errors.notOpen");
-        let bookingNumber: string;
-        let bookingIds: string[];
-        let invoiceId: string | null = null;
-        if (input.mode === "invoice") {
-          if (row.amountCents <= 0) throw new ActionError("accounting.bank.errors.invoiceNeedsCredit");
-          const paid = await applyInvoicePayment(tx, {
-            invoiceId: input.invoiceId,
-            paidDate: row.bookingDate,
-            accountId: row.accountId,
-            categoryId: input.categoryId,
-            amountCents: row.amountCents,
-            closeRemainder: input.closeRemainder,
-            actor,
-          });
-          bookingNumber = paid.bookingNumber;
-          bookingIds = paid.bookingIds;
-          invoiceId = input.invoiceId;
-        } else if (input.mode === "payable") {
-          // Normal gelen fatura giden ödemeyle, tedarikçi alacak dekontu (negatif tutar) gelen iadeyle eşleşir.
-          const target = await tx.accountingPayable.findUnique({ where: { id: input.payableId }, select: { grossCents: true } });
-          const creditNote = (target?.grossCents ?? 0) < 0;
-          if (creditNote ? row.amountCents <= 0 : row.amountCents >= 0) {
-            throw new ActionError(creditNote ? "accounting.bank.errors.creditNoteNeedsCredit" : "accounting.bank.errors.payableNeedsDebit");
+
+      // Enforce module usability + target-module RBAC upfront for cross-module settlements.
+      if (
+        input.mode === "memberDue" ||
+        input.mode === "courseCharge" ||
+        input.mode === "donation"
+      ) {
+        const usable = new Set(await listUsableModuleKeys());
+        if (input.mode === "memberDue") {
+          if (!usable.has("members") || !can(user.role, memberPaymentsPermissions, "create")) {
+            throw new ActionError("common.errors.forbidden");
           }
-          const paid = await applyPayablePayment(tx, { payableId: input.payableId, paidDate: row.bookingDate, accountId: row.accountId, amountCents: Math.abs(row.amountCents), actor });
-          bookingNumber = paid.bookingNumber;
-          bookingIds = paid.bookingIds;
-        } else {
-          const text = [row.counterpartyName, row.purpose].filter(Boolean).join(" – ");
-          const existingBankCount = await tx.accountingBooking.count({
-            where: {
-              sourceType: BANK_SOURCE,
-              OR: [{ sourceId: row.id }, { sourceId: { startsWith: `${row.id}:` } }],
-            },
-          });
-          const bankSourceId = existingBankCount === 0 ? row.id : `${row.id}:${existingBankCount}`;
-          const booking = await createSourcedBooking({
-            tx,
-            actor,
-            type: row.amountCents >= 0 ? "INCOME" : "EXPENSE",
-            sourceType: BANK_SOURCE,
-            sourceId: bankSourceId,
-            bookingDate: row.bookingDate,
-            accountId: row.accountId,
-            categoryId: input.categoryId,
-            amountCents: Math.abs(row.amountCents),
-            taxRate: input.taxRate,
-            description: (text || "Bank").slice(0, 300), // i18n-ignore: Buchungstext
-            receiptReference: row.reference?.slice(0, 100) ?? null,
-          });
-          bookingNumber = booking.bookingNumber;
-          bookingIds = [booking.id];
-          if (input.learnRule !== "NONE") {
-            const pattern = (input.learnRule === "COUNTERPARTY" ? row.counterpartyName : row.purpose)?.trim().toLowerCase().slice(0, 100);
-            if (pattern) {
-              const direction = row.amountCents >= 0 ? "INCOME" : "EXPENSE";
-              await tx.accountingBankRule.upsert({
-                where: { field_pattern_direction: { field: input.learnRule, pattern, direction } },
-                update: { categoryId: input.categoryId, taxRate: input.taxRate, hits: { increment: 1 } },
-                create: { field: input.learnRule, pattern, direction, categoryId: input.categoryId, taxRate: input.taxRate, hits: 1 },
-              });
-            }
+        } else if (input.mode === "courseCharge") {
+          if (!usable.has("courses") || !can(user.role, courseFeesPermissions, "create")) {
+            throw new ActionError("common.errors.forbidden");
+          }
+        } else if (input.mode === "donation") {
+          if (!usable.has("donations") || !can(user.role, donationsPermissions, "create")) {
+            throw new ActionError("common.errors.forbidden");
           }
         }
-        await tx.accountingBankTransaction.update({ where: { id: row.id }, data: { status: "BOOKED", bookingIds: bookingIds.join(","), invoiceId } });
-        return { bookingNumber, mode: input.mode };
-      });
+      }
+
+      const result = await runWithUniqueRetry(() =>
+        getDb().$transaction(async (tx) => {
+          const row = await tx.accountingBankTransaction.findUnique({ where: { id: input.id } });
+          if (!row) throw new ActionError("accounting.bank.errors.notFound");
+          if (row.status !== "OPEN") throw new ActionError("accounting.bank.errors.notOpen");
+          let bookingNumber: string;
+          let bookingIds: string[];
+          let invoiceId: string | null = null;
+
+          if (input.mode === "invoice") {
+            if (row.amountCents <= 0) throw new ActionError("accounting.bank.errors.invoiceNeedsCredit");
+            const paid = await applyInvoicePayment(tx, {
+              invoiceId: input.invoiceId,
+              paidDate: row.bookingDate,
+              accountId: row.accountId,
+              categoryId: input.categoryId,
+              amountCents: row.amountCents,
+              closeRemainder: input.closeRemainder,
+              actor,
+            });
+            bookingNumber = paid.bookingNumber;
+            bookingIds = paid.bookingIds;
+            invoiceId = input.invoiceId;
+          } else if (input.mode === "payable") {
+            // Normal gelen fatura giden ödemeyle, tedarikçi alacak dekontu (negatif tutar) gelen iadeyle eşleşir.
+            const target = await tx.accountingPayable.findUnique({ where: { id: input.payableId }, select: { grossCents: true } });
+            const creditNote = (target?.grossCents ?? 0) < 0;
+            if (creditNote ? row.amountCents <= 0 : row.amountCents >= 0) {
+              throw new ActionError(creditNote ? "accounting.bank.errors.creditNoteNeedsCredit" : "accounting.bank.errors.payableNeedsDebit");
+            }
+            const paid = await applyPayablePayment(tx, { payableId: input.payableId, paidDate: row.bookingDate, accountId: row.accountId, amountCents: Math.abs(row.amountCents), actor });
+            bookingNumber = paid.bookingNumber;
+            bookingIds = paid.bookingIds;
+          } else if (input.mode === "memberDue") {
+            if (row.amountCents <= 0) throw new ActionError("accounting.bank.errors.memberDueNeedsCredit");
+            const { recordBankDuePayment } = await import("@/modules/members/server");
+            const settled = await recordBankDuePayment(
+              {
+                dueId: input.dueId,
+                amountCents: row.amountCents,
+                paidAt: row.bookingDate,
+                reference: row.reference ?? row.purpose.slice(0, 120),
+                actor,
+              },
+              tx,
+            );
+            // Privacy rule (§ 12): booking description carries membership number + receipt number only (never member name).
+            const booking = await createSourcedBooking({
+              tx,
+              actor,
+              type: "INCOME",
+              sourceType: "MEMBER_PAYMENT",
+              sourceId: settled.paymentId,
+              bookingDate: row.bookingDate,
+              accountId: row.accountId,
+              categoryId: input.categoryId,
+              amountCents: row.amountCents,
+              taxRate: 0,
+              description: `Mitgliedsbeitrag ${settled.dueYear} – Mitglied Nr. ${settled.membershipNumber} – ${settled.receiptNumber}`, // i18n-ignore: Buchungstext
+              receiptReference: settled.receiptNumber,
+            });
+            bookingNumber = booking.bookingNumber;
+            bookingIds = [booking.id];
+          } else if (input.mode === "courseCharge") {
+            if (row.amountCents <= 0) throw new ActionError("accounting.bank.errors.courseChargeNeedsCredit");
+            const { recordBankCourseChargePayment } = await import("@/modules/courses/server");
+            const settled = await recordBankCourseChargePayment(
+              {
+                chargeId: input.chargeId,
+                paidAt: row.bookingDate,
+                accountId: row.accountId,
+                amountCents: row.amountCents,
+                reference: row.reference ?? row.purpose.slice(0, 120),
+                actor,
+              },
+              tx,
+            );
+            bookingNumber = settled.bookingNumber;
+            bookingIds = [settled.bookingId];
+          } else if (input.mode === "donation") {
+            if (row.amountCents <= 0) throw new ActionError("accounting.bank.errors.donationNeedsCredit");
+            const { recordBankDonation } = await import("@/modules/donations/server");
+            const settled = await recordBankDonation(
+              {
+                donorId: input.donorId || null,
+                newDonorName: input.donorId ? null : (input.newDonorName || row.counterpartyName || null),
+                newDonorType: input.newDonorType,
+                receivedAt: row.bookingDate,
+                amountCents: row.amountCents,
+                accountId: row.accountId,
+                reference: row.reference ?? row.purpose.slice(0, 120),
+                purposeNote: input.purposeNote || row.purpose.slice(0, 300) || null,
+                actor,
+              },
+              tx,
+            );
+            bookingNumber = settled.bookingNumber;
+            bookingIds = [settled.bookingId];
+          } else {
+            const text = [row.counterpartyName, row.purpose].filter(Boolean).join(" – ");
+            const existingBankCount = await tx.accountingBooking.count({
+              where: {
+                sourceType: BANK_SOURCE,
+                OR: [{ sourceId: row.id }, { sourceId: { startsWith: `${row.id}:` } }],
+              },
+            });
+            const bankSourceId = existingBankCount === 0 ? row.id : `${row.id}:${existingBankCount}`;
+            const booking = await createSourcedBooking({
+              tx,
+              actor,
+              type: row.amountCents >= 0 ? "INCOME" : "EXPENSE",
+              sourceType: BANK_SOURCE,
+              sourceId: bankSourceId,
+              bookingDate: row.bookingDate,
+              accountId: row.accountId,
+              categoryId: input.categoryId,
+              amountCents: Math.abs(row.amountCents),
+              taxRate: input.taxRate,
+              description: (text || "Bank").slice(0, 300), // i18n-ignore: Buchungstext
+              receiptReference: row.reference?.slice(0, 100) ?? null,
+            });
+            bookingNumber = booking.bookingNumber;
+            bookingIds = [booking.id];
+            if (input.learnRule !== "NONE") {
+              const pattern = (input.learnRule === "COUNTERPARTY" ? row.counterpartyName : row.purpose)?.trim().toLowerCase().slice(0, 100);
+              if (pattern) {
+                const direction = row.amountCents >= 0 ? "INCOME" : "EXPENSE";
+                await tx.accountingBankRule.upsert({
+                  where: { field_pattern_direction: { field: input.learnRule, pattern, direction } },
+                  update: { categoryId: input.categoryId, taxRate: input.taxRate, hits: { increment: 1 } },
+                  create: { field: input.learnRule, pattern, direction, categoryId: input.categoryId, taxRate: input.taxRate, hits: 1 },
+                });
+              }
+            }
+          }
+          await tx.accountingBankTransaction.update({ where: { id: row.id }, data: { status: "BOOKED", bookingIds: bookingIds.join(","), invoiceId } });
+          return { bookingNumber, mode: input.mode };
+        }),
+      );
       await audit({ action: "UPDATE", entity: "AccountingBankTransaction", entityId: input.id, after: result });
       refresh();
       revalidatePath("/muhasebe");
+      if (input.mode === "memberDue") revalidatePath("/uyeler/aidat");
+      if (input.mode === "courseCharge") revalidatePath("/kurslar/odemeler");
+      if (input.mode === "donation") revalidatePath("/bagislar");
       return { bookingNumber: result.bookingNumber };
     },
   });
@@ -214,7 +333,7 @@ export async function setBankTransactionStatusAction(input: unknown): Promise<Ac
       return undefined;
     },
   });
-  return run(input) as Promise<ActionResult>;
+  return run(input);
 }
 
 export async function deleteBankRuleAction(input: unknown): Promise<ActionResult> {
@@ -228,5 +347,5 @@ export async function deleteBankRuleAction(input: unknown): Promise<ActionResult
       return undefined;
     },
   });
-  return run(input) as Promise<ActionResult>;
+  return run(input);
 }

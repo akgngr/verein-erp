@@ -3,6 +3,10 @@ import { getTranslations } from "next-intl/server";
 import Link from "next/link";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
+import { courseFeesPermissions } from "@/modules/courses";
+import { donationsPermissions } from "@/modules/donations";
+import { memberPaymentsPermissions } from "@/modules/members";
+import { listUsableModuleKeys } from "@/modules/system/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
@@ -16,6 +20,7 @@ import {
   listBankTransactions,
   listOpenInvoiceOptions,
 } from "../queries/bank";
+import { getSettings } from "../queries/get-settings";
 import { getInvoiceSettings } from "../queries/invoices";
 import { listOpenPayables } from "../queries/payables";
 import { listAccountOptions } from "../queries/list-accounts";
@@ -23,7 +28,7 @@ import { listCategoryOptions } from "../queries/list-categories";
 
 const STATUSES = ["OPEN", "BOOKED", "PRIVATE", "IGNORED"] as const;
 
-/** ACC-4 Banka: ekstre içe aktarma, eşleştirme önerileri, öğrenilmiş kurallar. */
+/** ACC-4 / #616 Banka: ekstre içe aktarma, eşleştirme önerileri, öğrenilmiş kurallar. */
 export async function BankView({
   status,
 }: {
@@ -38,15 +43,46 @@ export async function BankView({
   }
   const t = await getTranslations("accounting.bank");
   const canEdit = can(user.role, accountingPermissions, "create");
-  const [{ rows, counts }, accounts, categories, invoices, rules, settings] =
-    await Promise.all([
-      listBankTransactions({ status }),
-      listAccountOptions(),
-      listCategoryOptions(),
-      status === "OPEN" ? listOpenInvoiceOptions() : [],
-      listBankRules(),
-      getInvoiceSettings(),
-    ]);
+  const usable = new Set(await listUsableModuleKeys());
+  const canMembers =
+    usable.has("members") && can(user.role, memberPaymentsPermissions, "view");
+  const canCourses =
+    usable.has("courses") && can(user.role, courseFeesPermissions, "view");
+  const canDonations =
+    usable.has("donations") && can(user.role, donationsPermissions, "view");
+  const canBookMembers =
+    canEdit &&
+    usable.has("members") &&
+    can(user.role, memberPaymentsPermissions, "create");
+  const canBookCourses =
+    canEdit &&
+    usable.has("courses") &&
+    can(user.role, courseFeesPermissions, "create");
+  const canBookDonations =
+    canEdit &&
+    usable.has("donations") &&
+    can(user.role, donationsPermissions, "create");
+
+  const [
+    { rows, counts, memberDues, courseCharges, donors },
+    accounts,
+    categories,
+    invoices,
+    rules,
+    settings,
+    accountingSettings,
+  ] = await Promise.all([
+    listBankTransactions({
+      status,
+      capabilities: { canMembers, canCourses, canDonations },
+    }),
+    listAccountOptions(),
+    listCategoryOptions(),
+    status === "OPEN" ? listOpenInvoiceOptions() : [],
+    listBankRules(),
+    getInvoiceSettings(),
+    getSettings(),
+  ]);
   const payables = status === "OPEN" ? await listOpenPayables() : [];
   const options = (direction: "INCOME" | "EXPENSE") =>
     categories
@@ -78,6 +114,9 @@ export async function BankView({
       <BankTransactionList
         rows={rows}
         canEdit={canEdit}
+        canBookMembers={canBookMembers}
+        canBookCourses={canBookCourses}
+        canBookDonations={canBookDonations}
         incomeCategories={options("INCOME")}
         expenseCategories={options("EXPENSE")}
         invoices={invoices}
@@ -86,7 +125,11 @@ export async function BankView({
           label: `${payable.number ?? "—"} · ${payable.supplierName}`,
           openCents: payable.openCents,
         }))}
+        memberDues={memberDues}
+        courseCharges={courseCharges}
+        donors={donors}
         defaultIncomeCategoryId={settings.incomeCategoryId}
+        defaultMemberFeeCategoryId={accountingSettings.memberFeeCategoryId}
       />
       {rules.length ? (
         <section className="flex flex-col gap-2">

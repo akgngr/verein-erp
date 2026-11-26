@@ -21,6 +21,7 @@ import { ActionError } from "@/modules/auth/server";
  */
 
 export type DonationBookingResult = {
+  bookingId: string;
   bookingNumber: string;
   waiverBookingNumber: string | null;
 };
@@ -47,11 +48,16 @@ export async function createDonationBookings(
     method: string;
     waivedReimbursement: boolean;
     expenseCategoryId: string | null;
+    accountId?: string;
   },
 ): Promise<DonationBookingResult> {
   const targets = await getDonationBookingTargets();
   const accountKey = donationAccountKeyFor(args.method);
-  const accountId = accountKey === "cashAccountId" ? targets.cashAccountId : targets.bankAccountId;
+  const accountId =
+    args.accountId ??
+    (accountKey === "cashAccountId"
+      ? targets.cashAccountId
+      : targets.bankAccountId);
 
   const description = args.waivedReimbursement
     ? donationBookingDescription(args.donationNumber, args.donorNumber, "income")
@@ -72,7 +78,11 @@ export async function createDonationBookings(
   });
 
   if (!args.waivedReimbursement) {
-    return { bookingNumber: income.bookingNumber, waiverBookingNumber: null };
+    return {
+      bookingId: income.id,
+      bookingNumber: income.bookingNumber,
+      waiverBookingNumber: null,
+    };
   }
 
   // Aufwandsspende: banka hesabına gelir + gider çifti (§ 11 md. 5 md. 3).
@@ -94,7 +104,11 @@ export async function createDonationBookings(
     receiptReference: args.donationNumber,
   });
 
-  return { bookingNumber: income.bookingNumber, waiverBookingNumber: expense.bookingNumber };
+  return {
+    bookingId: income.id,
+    bookingNumber: income.bookingNumber,
+    waiverBookingNumber: expense.bookingNumber,
+  };
 }
 
 /**
