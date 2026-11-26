@@ -8,4 +8,3 @@ export {
   RolePermissionsPreview,
 } from "./components/role-permissions-matrix";
 export { InvitationView } from "./views/invitation-view";
-export { PasswordResetRequestView, PasswordResetView } from "./views/password-reset-views";

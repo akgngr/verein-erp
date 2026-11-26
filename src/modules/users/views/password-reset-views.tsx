@@ -11,14 +11,21 @@ const cardProps = {
   contentClassName: "gap-4 px-8 pb-9 pt-4",
 } as const;
 
+/** Public layout has no centering (unlike the auth shell); the reset pages match the login card. */
+function Centered({ children }: { children: React.ReactNode }) {
+  return <div className="flex min-h-[calc(100dvh-4rem)] items-center justify-center">{children}</div>;
+}
+
 /** #603: /sifremi-unuttum — request form (public). */
 export async function PasswordResetRequestView() {
   const t = await getTranslations("users.passwordReset");
   return (
-    <SurfaceCard {...cardProps} header={<h1 className="text-xl font-bold">{t("requestTitle")}</h1>}>
-      <p className="text-sm text-ink-500">{t("requestIntro")}</p>
-      <PasswordResetRequestForm />
-    </SurfaceCard>
+    <Centered>
+      <SurfaceCard {...cardProps} header={<h1 className="text-xl font-bold">{t("requestTitle")}</h1>}>
+        <p className="text-sm text-ink-500">{t("requestIntro")}</p>
+        <PasswordResetRequestForm />
+      </SurfaceCard>
+    </Centered>
   );
 }
 
@@ -27,6 +34,7 @@ export async function PasswordResetView({ token }: { token: string }) {
   const t = await getTranslations("users.passwordReset");
   const link = await findUsableInvitation(token, new Date(), "RESET");
   return (
+    <Centered>
     <SurfaceCard {...cardProps} header={<h1 className="text-xl font-bold">{t("resetTitle")}</h1>}>
       {link ? (
         <>
@@ -37,5 +45,6 @@ export async function PasswordResetView({ token }: { token: string }) {
         <p role="alert" className="text-sm text-danger-600">{t("errors.invalid")}</p>
       )}
     </SurfaceCard>
+    </Centered>
   );
 }

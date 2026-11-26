@@ -1,6 +1,6 @@
 import { getTranslations } from "next-intl/server";
 
-import { PasswordResetView } from "@/modules/users/ui";
+import { PasswordResetView } from "../../../views/password-reset-views";
 
 export async function generateMetadata() {
   const t = await getTranslations("users.passwordReset");
