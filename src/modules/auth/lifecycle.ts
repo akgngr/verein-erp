@@ -14,6 +14,7 @@ export const lifecycle = defineLifecycle({
     await db.userProfile.deleteMany({ where: { userId } });
     await db.userTotp.deleteMany({ where: { userId } });
     await db.userTotpRecoveryCode.deleteMany({ where: { userId } });
+    await db.authOAuthLinkIntent.deleteMany({ where: { userId } });
     await db.authIdentity.deleteMany({ where: { userId } });
   },
 });

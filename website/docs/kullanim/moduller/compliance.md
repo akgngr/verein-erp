@@ -1,5 +1,5 @@
 ---
-sidebar_position: 40
+sidebar_position: 41
 title: "Uyum kontrolü"
 description: "Kamu yararı (Gemeinnützigkeit) için iç kontrol listesi: süreler ve sınırlar. Vergi danışmanlığı değildir."
 slug: /kullanim/moduller/compliance

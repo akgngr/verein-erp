@@ -135,6 +135,7 @@
     "progress": "Lernfortschritt",
     "secretary": "Sekretariat",
     "securityMonitor": "Sicherheitsüberwachung",
+    "socialLogin": "Externe Anmeldung",
     "students": "Schüler",
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
@@ -2769,7 +2770,8 @@
         "invalidLink": "Die Kontoverknüpfung ist ungültig.",
         "alreadyLinked": "Dieses Konto ist bereits mit einem anderen Benutzer verknüpft."
       }
-    }
+    },
+    "externalLogin": "Mit {provider} anmelden"
   },
   "automation": {
     "module": {
@@ -9518,6 +9520,59 @@
         "EXPIRED": "Link abgelaufen ({date})"
       }
     }
+  },
+  "social-login": {
+    "module": {
+      "label": "Externe Anmeldung",
+      "description": "Externe Identitätsanbieter."
+    },
+    "meta": {
+      "title": "Externe Anmeldung"
+    },
+    "title": "Externe Anmeldung",
+    "description": "Externe Anmeldung ist optional; Authentifizierungsdaten werden an den Anbieter übertragen.",
+    "permissions": {
+      "socialLogin": {
+        "label": "Externe Anmeldung",
+        "description": "Verbindungen ansehen und Anbietereinstellungen verwalten."
+      }
+    },
+    "access": {
+      "system": "Prüft die Modulverfügbarkeit."
+    },
+    "providers": {
+      "google": "Google",
+      "microsoft-entra-id": "Microsoft Entra ID",
+      "twitter": "X",
+      "facebook": "Facebook"
+    },
+    "enabled": "Aktiv",
+    "clientId": "Client ID",
+    "tenantId": "Tenant ID",
+    "secret": "Client Secret",
+    "stored": "Gespeichert; zum Ändern eingeben",
+    "callback": "Callback",
+    "save": "Speichern",
+    "saved": "Gespeichert",
+    "errors": {
+      "invalid": "Bitte prüfen Sie die Einstellungen.",
+      "unavailable": "Modul nicht verfügbar.",
+      "applicationImmutable": "Die bestehende OAuth-Anwendungskennung kann nicht geändert werden."
+    },
+    "linkedAccounts": "Meine verknüpften Konten",
+    "noLinkedAccounts": "Keine verknüpften externen Konten.",
+    "confirmUnlink": "Verknüpfung entfernen? Alle Sitzungen werden beendet.",
+    "unlink": "Verknüpfung entfernen",
+    "cancel": "Abbrechen",
+    "unlinked": "Verknüpfung entfernt.",
+    "link": "{provider}-Konto verknüpfen",
+    "password": "Aktuelles ERP-Passwort",
+    "linkHint": "Sie bestätigen Ihr Konto beim Anbieter. Bei aktiver Zwei-Faktor-Anmeldung ist die externe Anmeldung nicht verfügbar.",
+    "continue": "Weiter",
+    "linkSuccess": "Konto verknüpft.",
+    "linkDenied": "Konto konnte nicht verknüpft werden. Bitte erneut versuchen.",
+    "otp": "Bestätigungscode (bei aktiver Zwei-Faktor-Anmeldung)",
+    "applicationLocked": "Zum Schutz der Kontoverknüpfungen bleibt die gespeicherte Anwendungskennung unverändert; der geheime Schlüssel kann erneuert werden."
   },
   "students": {
     "module": {

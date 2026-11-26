@@ -1,0 +1,11 @@
+model SocialLoginProvider {
+  id           String   @id
+  enabled      Boolean  @default(false)
+  clientId     String
+  secretEnc    String
+  tenantId     String?
+  updatedAt    DateTime @updatedAt
+
+  @@map("social_login_providers")
+}
+

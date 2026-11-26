@@ -40,6 +40,7 @@ import progressReleases from "@/modules/progress/releases.json";
 import secretaryReleases from "@/modules/secretary/releases.json";
 import securitymonitorReleases from "@/modules/security-monitor/releases.json";
 import sepaReleases from "@/modules/sepa/releases.json";
+import socialloginReleases from "@/modules/social-login/releases.json";
 import studentsReleases from "@/modules/students/releases.json";
 import tasksReleases from "@/modules/tasks/releases.json";
 import weatherReleases from "@/modules/weather/releases.json";
@@ -87,6 +88,7 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "secretary", releases: secretaryReleases.releases as ModuleRelease[] },
   { moduleKey: "security-monitor", releases: securitymonitorReleases.releases as ModuleRelease[] },
   { moduleKey: "sepa", releases: sepaReleases.releases as ModuleRelease[] },
+  { moduleKey: "social-login", releases: socialloginReleases.releases as ModuleRelease[] },
   { moduleKey: "students", releases: studentsReleases.releases as ModuleRelease[] },
   { moduleKey: "tasks", releases: tasksReleases.releases as ModuleRelease[] },
   { moduleKey: "weather", releases: weatherReleases.releases as ModuleRelease[] },

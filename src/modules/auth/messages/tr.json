@@ -143,5 +143,6 @@
       "invalidLink": "Giriş bağlantısı geçersiz.",
       "alreadyLinked": "Bu hesap başka bir kullanıcıya bağlı."
     }
-  }
+  },
+  "externalLogin": "{provider} ile giriş yap"
 }

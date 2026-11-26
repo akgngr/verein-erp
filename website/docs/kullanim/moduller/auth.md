@@ -13,9 +13,15 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.0 |
+| Sürüm | 1.5.0 |
 
 ## Sürüm notları
+
+### 1.5.0 — Güvenli harici hesap bağlama
+
+_2026-11-26_
+
+- **Güvenlik:** Kısa süreli tek kullanımlık OAuth bağlama niyeti ve yeniden parola doğrulaması.
 
 ### 1.4.0 — Dış giriş sağlayıcıları için platform
 
@@ -63,10 +69,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.0.5 — Giriş ve profil yüzeyleri ortak kart katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Kart ve yüzey görünümleri ortak SurfaceCard/StatCard pattern'ine taşındı; modül bu kullanımda HeroUI Card implementasyonuna doğrudan bağlı değil.
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.

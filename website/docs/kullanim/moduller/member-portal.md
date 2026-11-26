@@ -1,5 +1,5 @@
 ---
-sidebar_position: 41
+sidebar_position: 42
 title: "Üye Portalı"
 description: "Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı."
 slug: /kullanim/moduller/member-portal

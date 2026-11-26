@@ -135,6 +135,7 @@
     "progress": "Öğrenci takibi",
     "secretary": "Sekreter",
     "securityMonitor": "Güvenlik İzleme",
+    "socialLogin": "Sosyal Giriş",
     "students": "Öğrenciler",
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi",
@@ -2769,7 +2770,8 @@
         "invalidLink": "Giriş bağlantısı geçersiz.",
         "alreadyLinked": "Bu hesap başka bir kullanıcıya bağlı."
       }
-    }
+    },
+    "externalLogin": "{provider} ile giriş yap"
   },
   "automation": {
     "module": {
@@ -9518,6 +9520,59 @@
         "EXPIRED": "Bağlantının süresi doldu ({date})"
       }
     }
+  },
+  "social-login": {
+    "module": {
+      "label": "Sosyal Giriş",
+      "description": "Harici kimlik sağlayıcıları."
+    },
+    "meta": {
+      "title": "Sosyal Giriş"
+    },
+    "title": "Sosyal Giriş",
+    "description": "Harici giriş isteğe bağlıdır; sağlayıcıya kimlik doğrulama verileri aktarılır.",
+    "permissions": {
+      "socialLogin": {
+        "label": "Sosyal giriş",
+        "description": "Bağlantıları görüntüleme ve sağlayıcı ayarlarını yönetme."
+      }
+    },
+    "access": {
+      "system": "Modülün etkinliğini doğrular."
+    },
+    "providers": {
+      "google": "Google",
+      "microsoft-entra-id": "Microsoft Entra ID",
+      "twitter": "X",
+      "facebook": "Facebook"
+    },
+    "enabled": "Etkin",
+    "clientId": "Client ID",
+    "tenantId": "Tenant ID",
+    "secret": "Client Secret",
+    "stored": "Kayıtlı; değiştirmek için girin",
+    "callback": "Callback",
+    "save": "Kaydet",
+    "saved": "Kaydedildi",
+    "errors": {
+      "invalid": "Ayarları kontrol edin.",
+      "unavailable": "Modül kullanılamıyor.",
+      "applicationImmutable": "Mevcut OAuth uygulama kimliği değiştirilemez."
+    },
+    "linkedAccounts": "Bağlı hesaplarım",
+    "noLinkedAccounts": "Bağlı sosyal hesabınız yok.",
+    "confirmUnlink": "Bağlantı kaldırılsın mı? Tüm oturumlar sonlandırılır.",
+    "unlink": "Bağlantıyı kaldır",
+    "cancel": "Vazgeç",
+    "unlinked": "Bağlantı kaldırıldı.",
+    "link": "{provider} hesabını bağla",
+    "password": "Mevcut ERP parolanız",
+    "linkHint": "Sağlayıcıda hesabınızı doğrulayacaksınız. İki adımlı doğrulama açık hesaplarda sosyal giriş kullanılamaz.",
+    "continue": "Devam et",
+    "linkSuccess": "Hesap bağlandı.",
+    "linkDenied": "Hesap bağlanamadı. Yeniden deneyin.",
+    "otp": "Doğrulama kodu (iki adımlı doğrulama açıksa)",
+    "applicationLocked": "Kimlik eşleştirmelerini korumak için kayıtlı uygulama kimliği sabittir; gizli anahtar yenilenebilir."
   },
   "students": {
     "module": {

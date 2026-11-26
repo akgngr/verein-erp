@@ -5,6 +5,7 @@ import { authConfig } from "./auth.config";
 import { authorize } from "./services/authorize";
 import { resolveOAuthSignIn, type OAuthSessionUser } from "./services/oauth-identity";
 import { loadEnabledAuthProviders } from "./services/oauth-providers";
+import { completeAuthIdentityLink } from "./services/oauth-link";
 import { safeRedirect } from "./services/safe-redirect";
 
 /** signIn → jwt arasında iç kullanıcıyı işaretlemek için (sağlayıcı profili oturuma taşınmaz). */
@@ -43,6 +44,8 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth(asy
         if (!account || account.provider === "credentials") return true;
         // Yalnız bu istekte yüklenmiş sağlayıcı; e-posta ile eşleme yok, kullanıcı oluşturma yok.
         if (!externalIds.has(account.provider) || !account.providerAccountId) return "/giris?oauth=denied";
+        const linkRedirect = await completeAuthIdentityLink(account.provider, String(account.providerAccountId));
+        if (linkRedirect) return linkRedirect;
         const result = await resolveOAuthSignIn(account.provider, String(account.providerAccountId));
         if (!result.ok) return "/giris?oauth=denied";
         (user as ResolvedMarker)[OAUTH_RESOLVED] = result.user;

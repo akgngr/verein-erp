@@ -266,3 +266,6 @@ export { saveProfileAction } from "./actions/profile";
 
 // #603: admin reset of a user's second factor (users → "Reset two-factor"); returns whether one was on.
 export { removeTwoFactor as resetUserTwoFactor } from "./services/two-factor";
+
+export { prepareAuthIdentityLink, reauthenticateIdentityRemoval } from "./services/oauth-link";
+export { loadEnabledAuthProviders } from "./services/oauth-providers";

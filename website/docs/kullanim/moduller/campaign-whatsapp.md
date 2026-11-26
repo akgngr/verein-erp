@@ -1,5 +1,5 @@
 ---
-sidebar_position: 43
+sidebar_position: 44
 title: "WhatsApp"
 description: "Kampanyalar için WhatsApp kanalı (Meta Cloud API, onaylı şablonla). Yalnız WhatsApp izni verenlere gider."
 slug: /kullanim/moduller/campaign-whatsapp

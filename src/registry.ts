@@ -42,6 +42,7 @@ import { moduleConfig as progressModule } from "@/modules/progress";
 import { moduleConfig as secretaryModule } from "@/modules/secretary";
 import { moduleConfig as securitymonitorModule } from "@/modules/security-monitor";
 import { moduleConfig as sepaModule } from "@/modules/sepa";
+import { moduleConfig as socialloginModule } from "@/modules/social-login";
 import { moduleConfig as studentsModule } from "@/modules/students";
 import { moduleConfig as tasksModule } from "@/modules/tasks";
 import { moduleConfig as weatherModule } from "@/modules/weather";
@@ -91,6 +92,7 @@ export const allModules: ModuleConfig[] = [
   secretaryModule,
   securitymonitorModule,
   sepaModule,
+  socialloginModule,
   studentsModule,
   tasksModule,
   weatherModule,

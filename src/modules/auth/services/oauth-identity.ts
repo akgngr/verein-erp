@@ -141,7 +141,14 @@ export async function linkAuthIdentity(input: { provider: string; subject: strin
 
 /** Bağlantıyı kaldırır (kullanıcı veya yönetici). Bağlantı yoksa sessizce başarılıdır. */
 export async function unlinkAuthIdentity(input: { provider: string; userId: string; actorId: string }): Promise<void> {
-  const removed = await getDb().authIdentity.deleteMany({ where: { provider: input.provider, userId: input.userId } });
+  const removed = await getDb().$transaction(async (tx) => {
+    const result = await tx.authIdentity.deleteMany({ where: { provider: input.provider, userId: input.userId } });
+    if (result.count > 0) {
+      await tx.user.update({ where: { id: input.userId }, data: { sessionEpoch: { increment: 1 } } });
+      await tx.authOAuthLinkIntent.deleteMany({ where: { userId: input.userId } });
+    }
+    return result;
+  });
   if (removed.count > 0) {
     await writeAudit({ userId: input.actorId, action: "AUTH_IDENTITY_UNLINKED", entity: "User", entityId: input.userId, after: { provider: input.provider } });
   }

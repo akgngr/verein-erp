@@ -15,6 +15,7 @@ import nextTypescript from "eslint-config-next/typescript";
 //   @/modules/<modül>/secretary → sabah özeti katkıları (yalnızca üretilen src/secretary-registry.ts)
 //   @/modules/<modül>/notifications → bildirim türleri (yalnızca üretilen src/notification-registry.ts, ADR 0006)
 //   @/modules/<modül>/header → üst çubuk eylemleri (yalnızca üretilen src/header-registry.ts, RFC-002)
+//   @/modules/<modül>/auth-providers → yalnızca üretilen src/auth-provider-registry.ts (#612)
 //   @/modules/<modül>/demo, /lifecycle → yalnızca üretilen src/demo-registry.ts, src/lifecycle-registry.ts
 // KARAR: Desen; "@ /modules/x/queries/y" gibi derin içe aktarmaları da kapsasın diye
 // "@ /modules/*/**" ile genişletildi. İstisnalar yalnızca tam public giriş yollarıdır.
@@ -65,6 +66,24 @@ const eslintConfig = [
       "@typescript-eslint/no-unused-vars": [
         "warn",
         { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_", ignoreRestSiblings: true },
+      ],
+    },
+  },
+  {
+    // #612: Only the generated server-side registry may import OAuth provider contributions.
+    // Keep the module-internal import restriction everywhere else.
+    files: ["src/auth-provider-registry.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              ...MODULE_INTERNAL_IMPORTS,
+              group: [...MODULE_INTERNAL_IMPORTS.group, "!@/modules/*/auth-providers"],
+            },
+          ],
+        },
       ],
     },
   },
