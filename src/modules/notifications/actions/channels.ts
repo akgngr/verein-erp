@@ -192,7 +192,7 @@ export async function availableNotificationChannelsAction(input: unknown): Promi
     schema: z.object({}).strict(),
     handler: async () => {
       const [{ isMailConfigured }, { publicKey }, { getChannelConfig }, { smsAvailable }, whatsapp, link] = await Promise.all([
-        import("@/modules/mail/server"),
+        import("@/modules/mail/automation"),
         import("../services/web-push"),
         import("../services/channel-config"),
         import("../services/sms"),
