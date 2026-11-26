@@ -38,5 +38,11 @@
     "invalid": "Bitte prüfen Sie die Einstellungen.",
     "unavailable": "Modul nicht verfügbar.",
     "applicationImmutable": "Die bestehende OAuth-Anwendungskennung kann nicht geändert werden."
-  }
+  },
+  "linkedAccounts": "Meine verknüpften Konten",
+  "noLinkedAccounts": "Keine verknüpften externen Konten.",
+  "confirmUnlink": "Verknüpfung entfernen?",
+  "unlink": "Verknüpfung entfernen",
+  "cancel": "Abbrechen",
+  "unlinked": "Verknüpfung entfernt."
 }

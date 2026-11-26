@@ -38,5 +38,11 @@
     "invalid": "Ayarları kontrol edin.",
     "unavailable": "Modül kullanılamıyor.",
     "applicationImmutable": "Mevcut OAuth uygulama kimliği değiştirilemez."
-  }
+  },
+  "linkedAccounts": "Bağlı hesaplarım",
+  "noLinkedAccounts": "Bağlı sosyal hesabınız yok.",
+  "confirmUnlink": "Bağlantı kaldırılsın mı?",
+  "unlink": "Bağlantıyı kaldır",
+  "cancel": "Vazgeç",
+  "unlinked": "Bağlantı kaldırıldı."
 }
