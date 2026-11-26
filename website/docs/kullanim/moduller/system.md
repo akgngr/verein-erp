@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.19.2 |
+| Sürüm | 1.20.0 |
 | Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/menu`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.20.0 — Gruplu ayar merkezi
+
+_2026-11-26_
+
+- **Yeni:** Ayar merkezi artık dokuz gruba ayrılıyor (Genel, Kullanıcılar ve erişim, Güvenlik ve gizlilik, Entegrasyonlar, Görünüm, İletişim, Yapay zekâ ve otomasyon, Modül yönetimi, Sistem yönetimi). Gruplar ve sıra modül tanımlarından gelir; sol paneldeki Ayarlar alt menüsü aynı sırayı izler.
 
 ### 1.19.2 — Arayüz düzeltmeleri (#586)
 
@@ -88,10 +94,4 @@ _2026-11-24_
 
 - **İyileştirme:** hasLicensedFeature fonksiyonu modül sunucu sözleşmesine eklendi.
 
-### 1.18.1 — TAX_ADVISOR rolü izin tanımı
-
-_2026-11-23_
-
-- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
-
-Daha eski 31 herkese açık sürüm notu.
+Daha eski 32 herkese açık sürüm notu.

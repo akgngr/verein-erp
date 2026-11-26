@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.6.0 |
+| Sürüm | 1.6.1 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.6.1 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
 
 ### 1.6.0 — İki adımlı doğrulamayı sıfırlama
 
@@ -79,10 +85,4 @@ _2026-11-24_
 
 - **Yeni:** Kullanıcılar (ör. kasa denetçisi veya vergi danışmanı) e-postayla tek kullanımlık, 72 saat geçerli bir davet bağlantısı alır ve şifresini kendisi belirler. E-postada şifre veya mali veri yoktur.
 
-### 1.3.0 — Kullanıcı bazlı sol menü özelleştirme tercihi
-
-_2026-11-24_
-
-- **Yeni:** UserNavPreference modeli, /api/users/nav-preferences uç noktası ve DSGVO silme kancası eklendi.
-
-Daha eski 15 herkese açık sürüm notu.
+Daha eski 16 herkese açık sürüm notu.

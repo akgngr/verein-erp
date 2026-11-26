@@ -9,7 +9,16 @@ import { can } from "@/shared/permissions/define";
 
 import { LanguageSettingCard } from "../components/language-setting-card";
 import {
+  DEFAULT_MODULE_SETTINGS_GROUP,
+  groupSettingsEntries,
+  resolveSettingsGroup,
+  settingsPageOrder,
+  type SettingsEntryOrder,
+} from "@/shared/navigation/settings-groups";
+
+import {
   SettingsHub,
+  type SettingsHubItem,
   type SettingsHubSection,
 } from "../components/settings-hub";
 import { listUsableModuleKeys } from "../services/module-gate";
@@ -17,11 +26,15 @@ import { ThemeSettingCard } from "../components/theme-setting-card";
 
 /** Ayar merkezinin kendi adresi; listede tekrar gösterilmez. */
 const HUB_HREF = "/ayarlar";
+/** Grup bildirmeyen modül ayar sayfalarının grup içi sırası: modülün kendi grup sayfalarından sonra. */
+const MODULE_SETTINGS_ORDER = 1000;
 
 /**
- * Ayar merkezi. Kabuk hiçbir modülü tanımaz; liste registry'den kurulur:
- * - "Dernek ve sistem": `nav` içinde `group: "settings"` olan sayfalar,
- * - "Modül ayarları": `menu` içinde `key: "settings"` olan öğeler (örn. /muhasebe/ayarlar).
+ * Ayar merkezi. Kabuk hiçbir modülü tanımaz; liste registry'den kurulur (#611):
+ * - `nav` içinde `group: "settings"` olan sayfalar, `settingsGroup` grubunda (varsayılan "general"),
+ * - `menu` içinde `key: "settings"` olan öğeler (örn. /muhasebe/ayarlar), `settingsGroup` grubunda
+ *   (varsayılan "module-management").
+ * Yetki ve etkin modül süzgeci değişmedi; rotalar aynı kaldı.
  */
 export async function SettingsOverviewView() {
   const user = await requireUser();
@@ -33,45 +46,47 @@ export async function SettingsOverviewView() {
   const text = (key: string, fallback: string) =>
     tRoot.has(key) ? tRoot(key) : fallback;
 
-  const general = modules
-    .flatMap((mod) =>
-      mod.nav
-        .filter(
-          (item) =>
-            item.group === "settings" && !item.hidden && item.href !== HUB_HREF,
-        )
-        .filter((item) =>
-          can(user.role, item.permission.definition, item.permission.action),
-        )
-        .map((item) => ({ mod, item })),
-    )
-    .sort((a, b) => a.item.order - b.item.order)
-    .map(({ mod, item }) => {
-      const Icon = item.icon;
-      return {
-        key: item.href,
-        href: item.href,
-        icon: <Icon className="h-5 w-5" aria-hidden />,
-        title: text(`nav.${item.labelKey}`, item.label),
-        // #586: Kart başına kendi açıklaması; önceden aynı modülün 6+ kartı modül açıklamasını tekrarlıyordu.
-        description: t.has(`itemDescriptions.${item.labelKey}`)
-          ? t(`itemDescriptions.${item.labelKey}`)
-          : text(`${mod.key}.module.description`, mod.description ?? ""),
-      };
-    });
+  type Entry = SettingsHubItem & SettingsEntryOrder;
 
-  const generalHrefs = new Set(general.map((entry) => entry.href));
-  const moduleSettings = modules.flatMap((mod) => {
+  const pages: Entry[] = modules.flatMap((mod) =>
+    mod.nav
+      .filter(
+        (item) =>
+          item.group === "settings" && !item.hidden && item.href !== HUB_HREF,
+      )
+      .filter((item) =>
+        can(user.role, item.permission.definition, item.permission.action),
+      )
+      .map((item) => {
+        const Icon = item.icon;
+        return {
+          ...settingsPageOrder(item),
+          key: item.href,
+          icon: <Icon className="h-5 w-5" aria-hidden />,
+          title: text(`nav.${item.labelKey}`, item.label),
+          // #586: Kart başına kendi açıklaması; önceden aynı modülün 6+ kartı modül açıklamasını tekrarlıyordu.
+          description: t.has(`itemDescriptions.${item.labelKey}`)
+            ? t(`itemDescriptions.${item.labelKey}`)
+            : text(`${mod.key}.module.description`, mod.description ?? ""),
+        };
+      }),
+  );
+
+  const pageHrefs = new Set(pages.map((entry) => entry.href));
+  const moduleSettings: Entry[] = modules.flatMap((mod) => {
     const home = moduleHome(mod);
     const item = mod.menu?.find((entry) => entry.key === "settings");
-    // Ayar sayfası zaten "Dernek ve sistem" bölümündeyse (örn. E-posta) tekrar listelenmez.
-    if (!home || !item || generalHrefs.has(item.href)) return [];
+    // Ayar sayfası zaten bir grup sayfası olarak listelendiyse (örn. E-posta) tekrar listelenmez.
+    if (!home || !item || pageHrefs.has(item.href)) return [];
     const permission = item.permission ?? home.permission;
     if (!can(user.role, permission.definition, permission.action)) return [];
     const Icon = home.icon;
     const moduleName = text(`nav.${home.labelKey}`, home.label);
     return [
       {
+        group: resolveSettingsGroup(item.settingsGroup, DEFAULT_MODULE_SETTINGS_GROUP),
+        // Eski modüller: grup içinde ayar sayfalarından sonra, modül anahtarına göre (href eşitlik bozar).
+        order: item.settingsOrder ?? MODULE_SETTINGS_ORDER,
         key: item.href,
         href: item.href,
         icon: <Icon className="h-5 w-5" aria-hidden />,
@@ -84,20 +99,22 @@ export async function SettingsOverviewView() {
     ];
   });
 
-  const sections: SettingsHubSection[] = [
-    {
-      key: "general",
-      title: t("sections.general.title"),
-      description: t("sections.general.description"),
-      items: general,
-    },
-    {
-      key: "modules",
-      title: t("sections.modules.title"),
-      description: t("sections.modules.description"),
-      items: moduleSettings,
-    },
-  ];
+  // #611: Bölümler registry'deki `settingsGroup` bildirimlerinden kurulur; boş gruplar gösterilmez.
+  const sections: SettingsHubSection[] = groupSettingsEntries([
+    ...pages,
+    ...moduleSettings,
+  ]).map(({ group, items }) => ({
+    key: group,
+    title: t(`groups.${group}.title`),
+    description: t(`groups.${group}.description`),
+    items: items.map(({ key, href, icon, title, description }) => ({
+      key,
+      href,
+      icon,
+      title,
+      description,
+    })),
+  }));
 
   return (
     <div className="flex flex-col gap-8">

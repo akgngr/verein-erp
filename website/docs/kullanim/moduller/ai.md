@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.15.12 |
+| Sürüm | 1.15.13 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.13 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
 
 ### 1.15.12 — Arayüz düzeltmeleri (#586)
 
@@ -83,10 +89,4 @@ _2026-11-19_
 
 - **Düzeltme:** AI sohbet kutusunda Enter tuşuyla gönderim yapılırken IME kompozisyonu (Japonca, Çince, Korece vb.) denetimi eklendi; metin dönüşümü sırasındaki erken gönderimler engellendi.
 
-### 1.15.4 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 32 herkese açık sürüm notu.
+Daha eski 33 herkese açık sürüm notu.

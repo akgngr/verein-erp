@@ -6,7 +6,7 @@ import { usersPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "users",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.6.0",
+  version: "1.6.1",
   label: "Kullanıcılar",
   description:
     "Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.",
@@ -27,6 +27,8 @@ export const moduleConfig: ModuleConfig = {
       icon: UsersRound,
       group: "settings",
       order: 1,
+      settingsGroup: "users-access",
+      settingsOrder: 10,
       permission: { definition: usersPermissions, action: "view" },
     },
   ],
