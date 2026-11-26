@@ -22,7 +22,7 @@ export default async function GirisPage({
       <div className="fixed right-4 top-4 z-10">
         <LoginLocaleSwitcher />
       </div>
-      <LoginView passive={params.pasif === "1"} />
+      <LoginView passive={params.pasif === "1"} oauthDenied={params.oauth === "denied"} />
     </>
   );
 }

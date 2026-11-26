@@ -2762,6 +2762,13 @@
         "noEnrolment": "Önce kurulumu başlatın.",
         "codeInvalid": "Kod hatalı, süresi dolmuş veya daha önce kullanılmış."
       }
+    },
+    "oauthDenied": "Bu hesapla giriş yapılamadı. Hesap bağlı değilse, kapalıysa veya iki adımlı doğrulama açıksa e-posta ve şifrenizle giriş yapın.",
+    "oauth": {
+      "errors": {
+        "invalidLink": "Giriş bağlantısı geçersiz.",
+        "alreadyLinked": "Bu hesap başka bir kullanıcıya bağlı."
+      }
     }
   },
   "automation": {

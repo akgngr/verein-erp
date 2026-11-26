@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Dış giriş sağlayıcıları için platform",
+        "de": "Plattform für externe Anmeldeanbieter"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modüller giriş sağlayıcısı (OAuth/OIDC) ekleyebilir; sağlayıcılar istek anında yüklenir ve modül kapalıysa görünmez. Parola girişi değişmedi.",
+          "de": "Module können Anmeldeanbieter (OAuth/OIDC) bereitstellen; Anbieter werden pro Anfrage geladen und sind bei deaktiviertem Modul nicht sichtbar. Die Passwortanmeldung bleibt unverändert."
+        },
+        {
+          "type": "security",
+          "tr": "Dış sağlayıcıyla giriş yalnızca açıkça bağlanmış hesapla mümkündür; e-posta ile eşleme ve otomatik hesap oluşturma yoktur. İki adımlı doğrulaması açık hesaplar parola ile girer; yönlendirmeler yalnız aynı adrese yapılır.",
+          "de": "Die Anmeldung über einen externen Anbieter ist nur mit einem ausdrücklich verknüpften Konto möglich; kein Abgleich per E-Mail, keine automatische Kontoerstellung. Konten mit Zwei-Faktor-Authentifizierung melden sich mit Passwort an; Weiterleitungen erfolgen nur auf dieselbe Adresse."
+        }
+      ]
+    },
+    {
       "version": "1.3.0",
       "date": "2026-11-26",
       "title": {

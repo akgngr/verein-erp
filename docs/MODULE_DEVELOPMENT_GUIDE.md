@@ -588,6 +588,19 @@ pnpm db:deploy && pnpm build                       # ardından yayımla
 - Yalnızca daha yüksek sürüm kurulur; önceki sürüm `.module-backups/` altına alınır; doğrulama başarısızsa kurulum geri alınır.
 - Ayarlar → Modül paketleri: yükle ve doğrula (içerik çalıştırılmaz), kurulum komutunu kopyala.
 
+## 9g0. Giriş sağlayıcıları (`auth-providers.ts`, OAuth/OIDC)
+
+Modül, giriş ekranına bir dış sağlayıcı (Google, Microsoft …) ekleyebilir; auth modülü sağlayıcıları adıyla bilmez (#612):
+`export const authProviders = defineAuthProviders({ moduleKey: "<modül>", providers: [{ id, label, load }] })` (`@/shared/auth/providers`).
+`pnpm module:sync` bunları yalnız sunucuda kullanılan `src/auth-provider-registry.ts` içine yazar (elle düzenlenmez).
+
+- `id`: küçük harf, kalıcı ve benzersiz (`/^[a-z][a-z0-9-]{1,39}$/`). `credentials`, `email`, `webauthn` gibi ayrılmış adlar ve iki modülün aynı kimliği reddedilir (çakışmada ikisi de yüklenmez).
+- `load()`: istek anında Auth.js sağlayıcısını döndürür; kimlik bilgisi yoksa veya kapalıysa `null`. Hata ya da 3 sn'yi aşan yükleme sağlayıcıyı atlar; parola girişi her durumda çalışır. Sırları yalnız burada okuyun, loglamayın.
+- Modül kapalı, onaysız veya lisanssızsa sağlayıcı yüklenmez.
+- Giriş YALNIZ açıkça bağlanmış `(provider, subject)` ile olur: e-posta ile eşleme ve otomatik kullanıcı oluşturma yoktur. Bağlantı için `linkAuthIdentity` / `unlinkAuthIdentity` / `listAuthIdentities` (`@/modules/auth/server`) kullanılır; yetki denetimi (kullanıcının kendisi veya yönetici) çağırana aittir.
+- Pasif/kilitli hesap, zaman kutulu rol izni, `mustChangePassword` ve oturum sürümü (parola + "tüm cihazlardan çıkış") aynen uygulanır. İki adımlı doğrulaması açık hesaplar sağlayıcıyla giriş yapamaz (kapalı-güvenli) ve parola + kod ile girer.
+- Sağlayıcı profili (ad, e-posta, resim) oturuma taşınmaz; oturum iç kullanıcıdan kurulur. Giriş sonrası yönlendirme yalnız aynı kökene yapılır.
+
 ## 9g. Toplu e-posta alıcı kaynakları (`recipients.ts`)
 
 Modül, "Toplu e-posta" modülüne alıcı listesi sunar:
