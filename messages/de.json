@@ -152,6 +152,7 @@
     "youth-protection": "Jugendschutz"
   },
   "sidebar": {
+    "brandShort": "Verein ERP",
     "brand": "Vereinsverwaltung",
     "collapse": "Menü einklappen",
     "expand": "Menü ausklappen",
@@ -301,7 +302,32 @@
         "description": "Wirkt sich nur auf Ihre Oberfläche aus."
       }
     },
-    "moduleSettings": "Einstellungen: {module}"
+    "moduleSettings": "Einstellungen: {module}",
+    "itemDescriptions": {
+      "ai": "KI-Anbieter, Einwilligung und Regeln für die Datenweitergabe.",
+      "kullanicilar": "Benutzerkonten, Rollen und Einladungen.",
+      "automationMonitor": "Workflows, geplante Aufgaben und Ausführungsverlauf.",
+      "securityMonitor": "Sicherheitsprüfung der Installation und Warnungen.",
+      "denetimKaydi": "Wer hat wann was geändert: unveränderliches Protokoll.",
+      "mail": "Konto für ausgehende E-Mails und Versandeinstellungen.",
+      "gelenKutusu": "Verbundenes Postfach und Verarbeitung eingehender E-Mails.",
+      "notifications": "Benachrichtigungsarten, Kanäle und Ruhezeiten.",
+      "duyurular": "Mitteilungen nach Rollen an alle Benutzer senden.",
+      "aboneler": "Abonnenten der Benachrichtigungskanäle.",
+      "demoVeri": "Beispieldaten zum Ausprobieren laden oder entfernen.",
+      "widgetlar": "Widgets in der Kopfzeile und ihre Freigaben.",
+      "moduller": "Module aktivieren, deaktivieren und ihre Zugriffe freigeben.",
+      "modulSagligi": "Status- und Konfigurationsprüfung der Module.",
+      "modulPaketleri": "Vorgefertigte Modulpakete.",
+      "kurulum": "Die Schritte der Ersteinrichtung erneut ausführen.",
+      "lisans": "Lizenzinformationen und Nutzungsbedingungen.",
+      "privacyPresets": "Datenschutz-Voreinstellungen: welche Daten nach außen dürfen.",
+      "egressReport": "Bericht über Daten, die an externe Dienste gehen.",
+      "menuDuzeni": "Reihenfolge und Sichtbarkeit des Seitenmenüs.",
+      "surumNotlari": "Versionshinweise der App und der Module.",
+      "organization": "Vereinsname, Anschrift, Logo und Angaben zur Gemeinnützigkeit.",
+      "bankaBaglantisi": "Bankverbindung und Import von Kontoumsätzen."
+    }
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -2720,10 +2746,41 @@
       "deleted": "Zeitplan gelöscht.",
       "empty": "Noch keine geplanten Aufgaben.",
       "every": "Alle {hours} Stunden",
+      "everyMinutes": "Alle {minutes} Minuten",
+      "everyDays": "Alle {days} Tage",
       "next": "Nächster Lauf: {date}",
       "last": "Letzter Lauf: {date}",
       "enabled": "Aktiv",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "taskLabels": {
+        "ai": {
+          "cleanup_history": "KI-Verlauf bereinigen"
+        },
+        "calendar": {
+          "sync_external": "Externe Kalender synchronisieren"
+        },
+        "exports": {
+          "cleanup_files": "Abgelaufene Exportdateien löschen"
+        },
+        "meetings": {
+          "vote_purge": "Alte Abstimmungsdaten bereinigen"
+        },
+        "notifications": {
+          "purge": "Alte Benachrichtigungen bereinigen",
+          "dispatch": "Ausstehende Benachrichtigungen senden"
+        },
+        "secretary": {
+          "daily_briefing": "Tagesübersicht des Sekretärs",
+          "follow_up_reminders": "Wiedervorlage-Erinnerungen",
+          "migrate_notifications": "Sekretär-Benachrichtigungen migrieren"
+        },
+        "security-monitor": {
+          "run_tests": "Sicherheitsprüfung ausführen"
+        },
+        "youth-protection": {
+          "statutory_purge": "Einträge nach Ablauf der gesetzlichen Frist löschen"
+        }
+      }
     },
     "errors": {
       "notCancellable": "Diese Aufgabe kann nicht mehr abgebrochen werden.",
@@ -7271,7 +7328,11 @@
         "houseNumber": "Hausnummer",
         "postalCode": "Postleitzahl",
         "city": "Ort"
-      }
+      },
+      "stepUpRequest": "Per E-Mail bestätigen",
+      "stepUpSent": "Ein Bestätigungslink wurde an Ihre E-Mail-Adresse gesendet (15 Minuten gültig).",
+      "stepUpFailed": "Der Link konnte nicht gesendet werden; bitte später erneut versuchen.",
+      "stepUpRateLimited": "Zu viele Anfragen in kurzer Zeit. Der vorherige Link bleibt gültig; bitte in einigen Minuten erneut versuchen."
     },
     "corrections": {
       "title": "Korrekturvorschlag",
@@ -7309,7 +7370,7 @@
     "receipts": {
       "title": "Belege und Zuwendungsbestätigungen",
       "subtitle": "Für den PDF-Download sind Step-up und eine signierte Kurzzeit-Referenz erforderlich.",
-      "stepUpHint": "Bitte führen Sie zuerst ein Step-up mit Ihrem Passkey durch, um Belege herunterzuladen.",
+      "stepUpHint": "Bitte bestätigen Sie zuerst Ihre Identität per E-Mail (Schaltfläche oben), um Belege herunterzuladen.",
       "downloadButton": "PDF herunterladen",
       "empty": "Keine Belege vorhanden.",
       "kinds": {
@@ -7320,7 +7381,7 @@
     "art15": {
       "title": "DSGVO Art. 15 Datenauskunft",
       "subtitle": "Fordern Sie eine verschlüsselte Kopie Ihrer Daten an (7 Tage gültig, max. 1 offener Antrag).",
-      "stepUpHint": "Bitte führen Sie zuerst ein Step-up mit Ihrem Passkey durch, um einen Art.-15-Export anzufordern.",
+      "stepUpHint": "Bitte bestätigen Sie zuerst Ihre Identität per E-Mail (Schaltfläche oben), um einen Art.-15-Export anzufordern.",
       "requestButton": "Verschlüsselten Export anfordern",
       "createdNotice": "Ihr verschlüsselter Art.-15-Export steht bereit (7 Tage gültig).",
       "errorNotice": "Es liegt bereits ein offener Antrag vor oder ein Step-up ist erforderlich.",
@@ -7358,7 +7419,13 @@
       "subtitle": "Unterzeichnen Sie offene Online-Formulare direkt im Portal.",
       "empty": "Keine offenen Dokumente zur Signatur.",
       "signerNameLabel": "Name des Unterzeichners",
-      "signButton": "Dokument unterzeichnen"
+      "signButton": "Dokument unterzeichnen",
+      "useEmailLink": "Bitte öffnen Sie offene Formulare über den Link in Ihrer E-Mail, lesen Sie die Dokumente und unterschreiben Sie dort; das unterschriebene Dokument wird als PDF gespeichert."
+    },
+    "consentConfirm": {
+      "title": "Einwilligung bestätigen",
+      "text": "Möchten Sie Ihre Einwilligung für Mitteilungen über diesen Kanal bestätigen?",
+      "button": "Bestätigen"
     }
   },
   "members": {
@@ -8138,6 +8205,24 @@
       "preferencesTable": "Benachrichtigungsarten und Kanäle",
       "settingsTitle": "Ruhezeiten und Zusammenfassung",
       "type": "Benachrichtigungsart",
+      "typeLabels": {
+        "mail": {
+          "triage": "Neue E-Mail im Posteingang"
+        },
+        "meetings": {
+          "invited": "Als Teilnehmer zu einer Sitzung hinzugefügt"
+        },
+        "notifications": {
+          "announcement": "Mitteilungen"
+        },
+        "secretary": {
+          "daily-digest": "Tagesübersicht des Sekretärs",
+          "proposal": "Sekretär-Vorschläge zur Bestätigung"
+        },
+        "tasks": {
+          "assigned": "Mir zugewiesene Aufgaben"
+        }
+      },
       "inApp": "In der Anwendung (immer aktiv)",
       "loading": "Einstellungen werden geladen…",
       "preferencesError": "Einstellungen konnten nicht gespeichert werden.",
@@ -8321,7 +8406,8 @@
       "noEncryption": "Zum Verschlüsseln der Unterschriften ist kein Schlüssel eingerichtet (AUTH_SECRET).",
       "invalid": "Bitte prüfen Sie die markierten Felder.",
       "linkInvalid": "Der Link ist ungültig, abgelaufen oder wurde bereits verwendet.",
-      "textsChanged": "Die Formulartexte wurden inzwischen geändert. Bitte Seite neu laden, Text lesen und erneut unterschreiben."
+      "textsChanged": "Die Formulartexte wurden inzwischen geändert. Bitte Seite neu laden, Text lesen und erneut unterschreiben.",
+      "rateLimited": "Zu viele Versuche; bitte warten Sie kurz und versuchen Sie es erneut."
     },
     "validation": {
       "tooLong": "Zu lang.",
@@ -8333,7 +8419,9 @@
       "bic": "Bitte eine gültige BIC eingeben.",
       "signerName": "Bitte Vor- und Nachnamen eingeben.",
       "signature": "Bitte im Unterschriftsfeld unterschreiben.",
-      "privacy": "Die Datenschutzerklärung muss bestätigt werden."
+      "privacy": "Die Datenschutzerklärung muss bestätigt werden.",
+      "ibanRequired": "Für das SEPA-Mandat bitte die IBAN angeben.",
+      "accountHolderRequired": "Für das SEPA-Mandat bitte den Kontoinhaber angeben."
     },
     "public": {
       "title": "Anmeldeformular",
@@ -9627,6 +9715,10 @@
       "unlicensed": {
         "title": "Dieses Modul erfordert eine Lizenz",
         "description": "Diese Funktion ist nur mit einer gültigen Enterprise-Lizenz verfügbar. Admins können sie unter Einstellungen → Lizenz hinterlegen."
+      },
+      "public": {
+        "title": "Diese Seite ist derzeit nicht verfügbar",
+        "description": "Die gesuchte Seite ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Verein."
       }
     },
     "releases": {
@@ -9934,7 +10026,8 @@
         "accessGrantsPending": "Die von diesem Modul angeforderten Berechtigungen warten auf Administratorfreigabe.",
         "failedJobsDetected": "In der Hintergrund-Warteschlange wurden fehlgeschlagene Aufgaben festgestellt.",
         "notificationsNoChannel": "Für das Benachrichtigungsmodul ist kein aktiver Kanal (E-Mail, Telegram etc.) eingerichtet.",
-        "generalIssue": "Es liegen Konfigurations- oder Workflow-Hinweise für dieses Modul vor."
+        "generalIssue": "Es liegen Konfigurations- oder Workflow-Hinweise für dieses Modul vor.",
+        "portalDisabledByEnv": "Das Mitgliederportal ist aktiv, aber PORTAL_ENABLED=true ist auf dem Server nicht gesetzt; /portal ist für Besucher gesperrt (404)."
       }
     },
     "privacyUi": {

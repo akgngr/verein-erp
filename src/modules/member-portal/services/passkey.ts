@@ -50,12 +50,18 @@ export async function registerPortalPasskey(params: {
  * Grants a 5-minute step-up window and rotates the portal session token
  * after passkey verification (`userVerification: required`).
  */
+const PASSKEY_VERIFICATION_IMPLEMENTED = false as boolean;
+
 export async function completePasskeyStepUp(params: {
   sessionId: string;
   subjectRef: string;
   credentialId: string;
   now?: Date;
 }): Promise<{ ok: true; rawSessionToken: string } | { ok: false }> {
+  // #580: WebAuthn imza/challenge doğrulaması uygulanana kadar KAPALI (fail closed). Önceki sürüm yalnız
+  // kimlik bilgisinin var olduğuna bakıp ek doğrulama veriyordu. Ek doğrulama e-posta bağlantısıyladır
+  // (auth.ts requestPortalStepUpLink).
+  if (!PASSKEY_VERIFICATION_IMPLEMENTED) return { ok: false };
   const now = params.now ?? new Date();
   const db = getDb();
   const passkey = await db.portalPasskey.findUnique({ where: { credentialId: params.credentialId } });

@@ -13,7 +13,7 @@ e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve 
 |---|---|
 | Anahtar | `online-forms` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.4 |
+| Sürüm | 1.4.1 |
 | Sayfalar | `/online-formlar` |
 | Gerektirir | [Toplu e-posta](./mailings) |
 | Önerir | [Üyeler](./members), [Öğrenciler](./students) |
@@ -41,11 +41,20 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
-### 1.3.4 — Kanonik APP_URL form bağlantıları
+### 1.4.1 — Kanonik APP_URL form bağlantıları
 
 _2026-11-25_
 
 - **Güvenlik:** Çevrimiçi form paylaşım bağlantıları kanonik APP_URL kökü üzerinden oluşturuluyor (#574).
+
+### 1.4.0 — Üye SEPA yenileme, IBAN doğrulama, güvenlik
+
+_2026-11-25_
+
+- **Yeni:** Üye formlarında SEPA yetki yenileme için IBAN, BIC, hesap sahibi ve yetki onayı; onaylanınca üye kaydındaki yetki güncellenir.
+- **Güvenlik:** IBAN Mod-97 ile doğrulanır; herkese açık form gönderimi hız sınırlıdır; açılma zamanı GET'te değil tarayıcıda form gösterilince kaydedilir; portal içi imza (belgesiz/kanıtsız) kapatıldı.
+- **İyileştirme:** Belge silme onayı uygulamanın onay penceresiyle.
+- **Düzeltme:** Banka bilgisi veya SEPA onayı içeren üye formlarında imzalı kanıt PDF'i SEPA yetki metnini ve onay durumunu içerir.
 
 ### 1.3.3 — nav.json kategori ve alt modül tanımı
 
@@ -83,10 +92,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.2.3 — Doğum tarihi seçimi ortak SelectField katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Gün/ay/yıl doğum tarihi seçimleri ortak SelectField adapterına taşındı; doğrudan HeroUI Select/ListBox/Label bağımlılığı kaldırıldı.
-
-Daha eski 6 herkese açık sürüm notu.
+Daha eski 7 herkese açık sürüm notu.

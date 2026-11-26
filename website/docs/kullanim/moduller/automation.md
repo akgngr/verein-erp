@@ -13,7 +13,7 @@ Kalıcı arka plan görevleri ve iş akışları.
 |---|---|
 | Anahtar | `automation` |
 | Tür | Eklenti |
-| Sürüm | 0.10.18 |
+| Sürüm | 0.10.19 |
 | Sayfalar | `/automation`, `/automation/workflows` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Otomasyon | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | — | görüntüleme |
 
 ## Sürüm notları
+
+### 0.10.19 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Zamanlanmış görevler okunur adla ve doğru aralıkla (dakika/saat/gün) gösterilir; önceden "meetings.vote_purge" ve "Her 0.1 saatte" görünüyordu.
 
 ### 0.10.18 — Sağlık kokpiti için durum özeti
 
@@ -81,10 +87,4 @@ _2026-11-17_
 
 - **İyileştirme:** Workflow onay/red eylemleri ortak ActionButton/notify pattern'lerine taşındı; approvals panel artık HeroUI Button/Toast bileşenlerini doğrudan içe aktarmıyor.
 
-### 0.10.8 — Çalışma eylemleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Eylem butonları ve bildirimler ortak ActionButton/notify adapter katmanına taşındı; ilgili ekran artık bu kullanımda HeroUI Button/Toast implementasyonuna doğrudan bağlı değil.
-
-Daha eski 30 herkese açık sürüm notu.
+Daha eski 31 herkese açık sürüm notu.

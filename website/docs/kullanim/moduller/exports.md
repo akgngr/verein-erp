@@ -13,7 +13,7 @@ Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır.
 |---|---|
 | Anahtar | `exports` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 2.2.6 |
+| Sürüm | 2.2.7 |
 | Sayfalar | `/dosyalar` |
 
 ## Diğer modüllere erişim
@@ -43,11 +43,17 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
-### 2.2.6 — Dışa aktarım alt süreç ortam izolasyonu
+### 2.2.7 — Dışa aktarım alt süreç ortam izolasyonu
 
 _2026-11-25_
 
 - **Güvenlik:** Alt süreç oluşturma ortamında hassas ortam değişkenlerinin sızmasını önleyen beyaz liste uygulandı (#573).
+
+### 2.2.6 — Art. 15 anahtarı
+
+_2026-11-25_
+
+- **Güvenlik:** Art. 15 dışa aktarım şifrelemesinde sabit yedek anahtar kaldırıldı (anahtar yoksa fail closed).
 
 ### 2.2.5 — Vergi danışmanı rapor indirmesi
 
@@ -86,10 +92,4 @@ _2026-11-19_
 
 - **Yeni:** Merkezi dosya üretim hattı artık PDF belgeleri de üretir (çıktı doğrulaması, şifreli saklama, yayından önce yetki denetimi). İlk kullanan: sekreterin haftalık kurul raporu.
 
-### 2.1.11 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 15 herkese açık sürüm notu.
+Daha eski 16 herkese açık sürüm notu.

@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Input, Label, Select, Spinner, TextField, Button } from "@/shared/components/kit";
+import { DateInput, Input, Label, Select, Spinner, TextField, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -68,17 +68,7 @@ export function AssetForm() {
         <Label>{t("name")}</Label>
         <Input className={["h-9 text-sm"].filter(Boolean).join(" ")} />
       </TextField>
-      <TextField
-        value={date}
-        onChange={setDate}
-        className={["w-full"].filter(Boolean).join(" ")}
-      >
-        <Label>{t("date")}</Label>
-        <Input
-          type="date"
-          className={["h-9 text-sm"].filter(Boolean).join(" ")}
-        />
-      </TextField>
+      <DateInput label={t("date")} ariaLabel={t("date")} value={date} onChange={setDate} className="w-full" />
       <TextField
         value={cost}
         onChange={setCost}
@@ -227,17 +217,7 @@ export function FlatRateForm() {
               ),
             )}
       </Select>
-      <TextField
-        value={date}
-        onChange={setDate}
-        className={["w-full"].filter(Boolean).join(" ")}
-      >
-        <Label>{t("date")}</Label>
-        <Input
-          type="date"
-          className={["h-9 text-sm"].filter(Boolean).join(" ")}
-        />
-      </TextField>
+      <DateInput label={t("date")} ariaLabel={t("date")} value={date} onChange={setDate} className="w-full" />
       <TextField
         value={quantity}
         onChange={setQuantity}

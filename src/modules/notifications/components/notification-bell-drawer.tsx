@@ -74,7 +74,8 @@ export function NotificationBellDrawer({
         onPress={() => setOpen(true)} className="relative">
         <Bell className="h-4 w-4" aria-hidden />
         {count > 0 ? (
-          <span aria-hidden className="absolute -right-1 -top-1 rounded-full bg-accent px-1 text-[10px] text-white">
+          // #586: Rozet düğmenin içinde kalır; başlıktaki widget alanı (overflow-x-auto) taşan kısmı kesiyordu.
+          <span aria-hidden className="pointer-events-none absolute right-0 top-0 h-4 min-w-4 rounded-full bg-accent px-1 text-center text-[10px] font-semibold leading-4 text-white">
             {count > 99 ? "99+" : count}
           </span>
         ) : null}

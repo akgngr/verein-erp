@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.15.11 |
+| Sürüm | 1.15.12 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.12 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **İyileştirme:** Yüzen asistan çubuğu mobilde ve sağlayıcı yapılandırılmamışken küçük bir düğmeye dönüşür; açık diyalog veya çekmece varken gizlenir.
 
 ### 1.15.11 — Gizlilik ön ayarı sağlayıcı politikası
 
@@ -83,10 +89,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 1.15.2 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-Daha eski 31 herkese açık sürüm notu.
+Daha eski 32 herkese açık sürüm notu.

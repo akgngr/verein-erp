@@ -55,6 +55,8 @@ export async function AutomationMonitorView() {
     const details = log.details && typeof log.details === "object" ? (log.details as Record<string, unknown>) : {};
     return explainCode(details.errorCode);
   };
+  // #586: Görev çalıştırmaları anahtar yerine okunur adla (zamanlama listesiyle aynı çeviriler).
+  const tSchedules = await getTranslations("automation.schedules");
   const failed = executions.filter((item) => item.status === "FAILED").length;
   const running = executions.filter((item) => item.status === "RUNNING").length;
   const completed = executions.filter(
@@ -126,7 +128,9 @@ export async function AutomationMonitorView() {
                             (execution.context as Record<string, unknown>)
                               .workflowName,
                           )
-                        : execution.definitionKey}
+                        : tSchedules.has(`taskLabels.${execution.definitionKey}`)
+                          ? tSchedules(`taskLabels.${execution.definitionKey}` as never)
+                          : execution.definitionKey}
                     </p>
                     <p className="mt-1 break-all text-xs text-ink-500">
                       {execution.id}

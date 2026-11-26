@@ -4,12 +4,16 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { Button, Card, CardContent, CardHeader, Checkbox, Dialog, Input, Label, TextArea, TextField } from "@/shared/components/kit";
+import { useRoles } from "@/shared/components/roles/roles-provider";
 
 import { createAnnouncementAction } from "../actions/announcements";
 
 type RoleOption = { key: string; label: string };
 
 export function AnnouncementForm({ roles }: { roles: RoleOption[] }) {
+  // #586: Sistem/modül rolleri çevrilmiş adla (önceden "ADMIN", "TAX_ADVISOR" gibi anahtarlar görünüyordu).
+  const { label: translateRole } = useRoles();
+  const roleLabel = (role: RoleOption) => (role.label && role.label !== role.key ? role.label : translateRole(role.key));
   const t = useTranslations("notifications.ui.announcement");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -70,7 +74,7 @@ export function AnnouncementForm({ roles }: { roles: RoleOption[] }) {
             <div className="grid gap-3 sm:grid-cols-2">
               {roles.map((role) => (
                 <Checkbox key={role.key} isSelected={selected.includes(role.key)} onChange={() => toggle(role.key)} className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg border border-ink-200 px-3 py-2 text-sm">
-                  <span>{role.label}</span>
+                  <span>{roleLabel(role)}</span>
                 </Checkbox>
               ))}
             </div>
@@ -86,7 +90,7 @@ export function AnnouncementForm({ roles }: { roles: RoleOption[] }) {
             <Dialog.Header><Dialog.Heading>{t("confirmTitle")}</Dialog.Heading></Dialog.Header>
             <Dialog.Body>
               <p className="text-sm">{t("confirmMessage")}</p>
-              <p className="mt-2 text-sm font-semibold">{selected.length ? t("selectedRoles", { roles: roles.filter((role) => selected.includes(role.key)).map((role) => role.label).join(", ") }) : t("everyone")}</p>
+              <p className="mt-2 text-sm font-semibold">{selected.length ? t("selectedRoles", { roles: roles.filter((role) => selected.includes(role.key)).map(roleLabel).join(", ") }) : t("everyone")}</p>
               <p className="mt-3 break-words text-sm font-semibold">{title.trim()}</p>
             </Dialog.Body>
             <Dialog.Footer>

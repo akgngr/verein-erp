@@ -53,10 +53,10 @@ export async function SettingsOverviewView() {
         href: item.href,
         icon: <Icon className="h-5 w-5" aria-hidden />,
         title: text(`nav.${item.labelKey}`, item.label),
-        description: text(
-          `${mod.key}.module.description`,
-          mod.description ?? "",
-        ),
+        // #586: Kart başına kendi açıklaması; önceden aynı modülün 6+ kartı modül açıklamasını tekrarlıyordu.
+        description: t.has(`itemDescriptions.${item.labelKey}`)
+          ? t(`itemDescriptions.${item.labelKey}`)
+          : text(`${mod.key}.module.description`, mod.description ?? ""),
       };
     });
 

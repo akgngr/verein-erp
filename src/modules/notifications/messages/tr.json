@@ -100,6 +100,24 @@
     "preferencesTable": "Bildirim türü ve kanal tercihleri",
     "settingsTitle": "Saatler ve özet",
     "type": "Bildirim türü",
+    "typeLabels": {
+      "mail": {
+        "triage": "Gelen kutusunda yeni e-posta"
+      },
+      "meetings": {
+        "invited": "Toplantıya katılımcı olarak eklenme"
+      },
+      "notifications": {
+        "announcement": "Duyurular"
+      },
+      "secretary": {
+        "daily-digest": "Sekreter günlük özeti",
+        "proposal": "Onay bekleyen sekreter önerileri"
+      },
+      "tasks": {
+        "assigned": "Bana atanan görevler"
+      }
+    },
     "inApp": "Uygulama içi (her zaman açık)",
     "loading": "Bildirim tercihleri yükleniyor…",
     "preferencesError": "Bildirim tercihleri kaydedilemedi.",

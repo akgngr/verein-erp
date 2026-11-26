@@ -53,7 +53,11 @@
       "houseNumber": "Kapı No",
       "postalCode": "Posta Kodu",
       "city": "Şehir"
-    }
+    },
+    "stepUpRequest": "E-postayla doğrula",
+    "stepUpSent": "Doğrulama bağlantısı e-posta adresinize gönderildi (15 dakika geçerli).",
+    "stepUpFailed": "Bağlantı gönderilemedi; lütfen daha sonra tekrar deneyin.",
+    "stepUpRateLimited": "Kısa süre içinde çok fazla istek yapıldı. Önceki bağlantı hâlâ geçerli; birkaç dakika sonra tekrar deneyin."
   },
   "corrections": {
     "title": "Veri Düzeltme Talebi",
@@ -91,7 +95,7 @@
   "receipts": {
     "title": "Makbuzlar (Aidat ve Bağış)",
     "subtitle": "PDF indirme için ek doğrulama (Step-up) ve kısa ömürlü imzalı referans gerekir.",
-    "stepUpHint": "Makbuzları indirmek için önce geçiş anahtarı ile ek doğrulama yapın.",
+    "stepUpHint": "Makbuzları indirmek için önce e-postayla ek doğrulama yapın (üstteki düğme).",
     "downloadButton": "PDF İndir",
     "empty": "Henüz indirilebilir makbuz bulunmuyor.",
     "kinds": {
@@ -102,7 +106,7 @@
   "art15": {
     "title": "DSGVO Md. 15 Veri Dışa Aktarımı",
     "subtitle": "Kişisel verilerinizin şifreli kopyasını talep edin (7 gün geçerli, aynı anda en fazla 1 açık talep).",
-    "stepUpHint": "Md. 15 dışa aktarımı için önce geçiş anahtarı ile ek doğrulama yapın.",
+    "stepUpHint": "Md. 15 dışa aktarımı için önce e-postayla ek doğrulama yapın (üstteki düğme).",
     "requestButton": "Şifreli dışa aktarım talep et",
     "createdNotice": "Şifreli Md. 15 dosyanız hazırlandı (7 gün geçerli).",
     "errorNotice": "Zaten açık bir Md. 15 talebiniz var veya ek doğrulama gerekiyor.",
@@ -140,6 +144,12 @@
     "subtitle": "Bekleyen çevrimiçi formları portal üzerinden imzalayın.",
     "empty": "İmzalanacak bekleyen belge yok.",
     "signerNameLabel": "İmzalayan adı soyadı",
-    "signButton": "Belgeyi imzala"
+    "signButton": "Belgeyi imzala",
+    "useEmailLink": "Bekleyen formları e-postanızdaki bağlantıdan açıp belgeleri okuyarak imzalayın; imzalı belge PDF olarak saklanır."
+  },
+  "consentConfirm": {
+    "title": "İletişim izni onayı",
+    "text": "Bu kanaldan bilgilendirme almak için izninizi onaylıyor musunuz?",
+    "button": "Onaylıyorum"
   }
 }

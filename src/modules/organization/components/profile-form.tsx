@@ -201,7 +201,8 @@ export function ProfileForm({ profile }: { profile: OrganizationProfileData }) {
 
             {/* Faz 5 (§ 4): Gemeinnützigkeit (Kamu yararı) bölümü. */}
             <div className="mt-2 border-t border-ink-200 pt-4">
-              <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-500">
+              {/* #586: Karışık TR/DE başlık büyük harfe çevrilmez (Türkçe yerelde "GEMEİNNÜTZİGKEİT" oluyordu). */}
+              <h2 className="mb-3 text-sm font-semibold tracking-wide text-ink-500">
                 {t("charitableSection")}
               </h2>
               <div className="flex flex-col gap-4">

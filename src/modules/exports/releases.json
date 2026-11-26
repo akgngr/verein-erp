@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "2.2.6",
+      "version": "2.2.7",
       "date": "2026-11-25",
       "title": {
         "tr": "Dışa aktarım alt süreç ortam izolasyonu",
@@ -13,6 +13,21 @@
           "type": "security",
           "tr": "Alt süreç oluşturma ortamında hassas ortam değişkenlerinin sızmasını önleyen beyaz liste uygulandı (#573).",
           "de": "Allowlist für Kindprozess-Umgebungsvariablen zur Vermeidung von Secret-Lecks umgesetzt (#573)."
+        }
+      ]
+    },
+    {
+      "version": "2.2.6",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Art. 15 anahtarı",
+        "de": "Art.-15-Schlüssel"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Art. 15 dışa aktarım şifrelemesinde sabit yedek anahtar kaldırıldı (anahtar yoksa fail closed).",
+          "de": "Kein fester Ersatzschlüssel mehr für die Art.-15-Exportverschlüsselung (ohne Schlüssel fail closed)."
         }
       ]
     },

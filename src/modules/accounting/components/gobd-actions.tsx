@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Input, Label, Spinner, TextField, Button } from "@/shared/components/kit";
+import { DateInput, Input, Label, Spinner, TextField, Button } from "@/shared/components/kit";
 
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -60,18 +60,7 @@ export function CashClosingForm({
   const [busy, setBusy] = useState(false);
   return (
     <div className="flex flex-wrap items-end gap-2">
-      <TextField
-        value={date}
-        onChange={setDate}
-        className={["max-w-40"].filter(Boolean).join(" ")}
-      >
-        <Label>{t("date")}</Label>
-        <Input
-          type="date"
-          max={defaultDate}
-          className={["h-9 text-sm"].filter(Boolean).join(" ")}
-        />
-      </TextField>
+      <DateInput label={t("date")} ariaLabel={t("date")} value={date} onChange={setDate} maxValue={defaultDate} className="max-w-44" />
       <TextField
         value={counted}
         onChange={setCounted}

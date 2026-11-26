@@ -1,11 +1,12 @@
 import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 
+/**
+ * #580: Sabit yedek anahtar kaldırıldı (fail closed). Önceden hiçbir sır yokken bilinen bir değerle
+ * şifreliyordu. PORTAL_ART15_SECRET (yoksa AUTH_SECRET) en az 16 karakter olmalı.
+ */
 function getEncryptionKey(): Buffer {
-  const secret =
-    process.env.PORTAL_ART15_SECRET ||
-    process.env.AUTH_SECRET ||
-    process.env.NEXTAUTH_SECRET ||
-    "verein-erp-dev-art15-secret";
+  const secret = process.env.PORTAL_ART15_SECRET || process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "";
+  if (secret.length < 16) throw new Error("PORTAL_ART15_SECRET_MISSING");
   return createHash("sha256").update(secret).digest();
 }
 

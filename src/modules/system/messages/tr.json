@@ -115,6 +115,10 @@
     "unlicensed": {
       "title": "Bu modül lisans gerektiriyor",
       "description": "Bu özellik yalnız geçerli bir Enterprise lisansıyla kullanılabilir. Yönetici Ayarlar → Lisans'tan lisans girebilir."
+    },
+    "public": {
+      "title": "Bu sayfa şu anda kullanılamıyor",
+      "description": "Aradığınız sayfa geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin veya dernekle iletişime geçin."
     }
   },
   "releases": {
@@ -422,7 +426,8 @@
       "accessGrantsPending": "Bu modülün talep ettiği erişim izinleri yönetici onayı bekliyor.",
       "failedJobsDetected": "Arka plan iş kuyruğunda başarısız görevler tespit edildi.",
       "notificationsNoChannel": "Bildirim modülü için aktif bir dağıtım kanalı (E-posta, Telegram vb.) yapılandırılmamış.",
-      "generalIssue": "Modül yapılandırması veya iş akışında dikkat edilmesi gereken durumlar var."
+      "generalIssue": "Modül yapılandırması veya iş akışında dikkat edilmesi gereken durumlar var.",
+      "portalDisabledByEnv": "Üye portalı modülü açık, ancak sunucuda PORTAL_ENABLED=true ayarlı değil; /portal ziyaretçilere kapalı (404)."
     }
   },
   "privacyUi": {
