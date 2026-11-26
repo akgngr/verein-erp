@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { matchesLinkIntent, validLinkToken, validReturnPath } from "../../src/modules/auth/services/oauth-link-policy";
+import { linkCallbackDisposition, matchesLinkIntent, validLinkToken, validReturnPath } from "../../src/modules/auth/services/oauth-link-policy";
 
 const now = new Date("2026-11-26T12:00:00Z");
 const intent = { userId: "u1", provider: "google", sessionVersion: "v1", expiresAt: new Date(now.getTime() + 300000) };
@@ -19,4 +19,13 @@ test("link token is canonical base64url and redirect remains an internal path", 
   for (const path of ["//evil.example", "https://evil.example", "/../admin", "/%2f%2fevil.example", "/a?b=c", "/a\\evil"]) {
     assert.equal(validReturnPath(path), false);
   }
+});
+
+test("expired or missing link intent never becomes an ordinary login", () => {
+  const expired = matchesLinkIntent(intent, { ...input, now: intent.expiresAt });
+  assert.equal(linkCallbackDisposition({ cookiePresent: true, authenticated: true, intentMatches: expired }), "denied");
+  assert.equal(linkCallbackDisposition({ cookiePresent: true, authenticated: false, intentMatches: false }), "denied");
+  assert.equal(linkCallbackDisposition({ cookiePresent: false, authenticated: true, intentMatches: false }), "denied");
+  assert.equal(linkCallbackDisposition({ cookiePresent: false, authenticated: false, intentMatches: false }), "login");
+  assert.equal(linkCallbackDisposition({ cookiePresent: true, authenticated: true, intentMatches: true }), "link");
 });

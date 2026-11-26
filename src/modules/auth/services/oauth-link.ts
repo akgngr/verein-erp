@@ -9,10 +9,12 @@ import { authorize } from "./authorize";
 import { linkAuthIdentity } from "./oauth-identity";
 import { loadEnabledAuthProviders } from "./oauth-providers";
 import { isTwoFactorEnabled } from "./two-factor";
-import { validReturnPath, validLinkToken, matchesLinkIntent } from "./oauth-link-policy";
+import { validReturnPath, validLinkToken, matchesLinkIntent, linkCallbackDisposition } from "./oauth-link-policy";
 
 const COOKIE = "verein-oauth-link";
 const TTL_SECONDS = 300;
+// Keep evidence of the linking flow longer than its authorization lifetime.
+const COOKIE_TTL_SECONDS = 1800;
 const hash = (value: string) => createHash("sha256").update(value).digest("hex");
 
 
@@ -51,7 +53,7 @@ export async function prepareAuthIdentityLink(input: { provider: string; passwor
       expiresAt: new Date(now.getTime() + TTL_SECONDS * 1000),
     } });
   });
-  (await cookies()).set(COOKIE, token, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: TTL_SECONDS });
+  (await cookies()).set(COOKIE, token, { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", maxAge: COOKIE_TTL_SECONDS });
 }
 
 /**
@@ -61,10 +63,16 @@ export async function prepareAuthIdentityLink(input: { provider: string; passwor
 export async function completeAuthIdentityLink(provider: string, subject: string): Promise<string | null> {
   const jar = await cookies();
   const token = jar.get(COOKIE)?.value;
-  if (!token) return null;
-  jar.delete(COOKIE);
   let returnPath = "/profil";
   try {
+    if (token === undefined) {
+      // Even if the marker expired or was removed, never switch an authenticated session via OAuth.
+      const { auth } = await import("../server");
+      const session = await auth();
+      return linkCallbackDisposition({ cookiePresent: false, authenticated: Boolean(session?.user?.id), intentMatches: false }) === "login"
+        ? null : returnPath + "?oauthLink=denied";
+    }
+    jar.delete(COOKIE);
     if (!validLinkToken(token) || !subject) return returnPath + "?oauthLink=denied";
     const db = getDb();
     const tokenHash = hash(token);
@@ -75,7 +83,8 @@ export async function completeAuthIdentityLink(provider: string, subject: string
     const user = await requireUser();
     const session = await auth();
     const version = (session?.user as { sessionVersion?: string } | undefined)?.sessionVersion;
-    if (session?.user?.id !== user.id || !matchesLinkIntent(intent, { userId: user.id, provider, sessionVersion: version, twoFactorEnabled: await isTwoFactorEnabled(user.id), now: new Date() })) return returnPath + "?oauthLink=denied";
+    const intentMatches = matchesLinkIntent(intent, { userId: user.id, provider, sessionVersion: version, twoFactorEnabled: await isTwoFactorEnabled(user.id), now: new Date() });
+    if (linkCallbackDisposition({ cookiePresent: true, authenticated: session?.user?.id === user.id, intentMatches }) !== "link") return returnPath + "?oauthLink=denied";
     const claimed = await db.authOAuthLinkIntent.deleteMany({ where: {
       tokenHash, userId: user.id, provider, sessionVersion: version, expiresAt: { gt: new Date() },
     } });

@@ -11,3 +11,9 @@ export function matchesLinkIntent(intent: LinkIntentBinding, input: { userId: st
     intent.provider === input.provider && intent.sessionVersion === input.sessionVersion &&
     intent.expiresAt > input.now;
 }
+
+/** A callback carrying link evidence must never fall back to ordinary sign-in. */
+export function linkCallbackDisposition(input: { cookiePresent: boolean; authenticated: boolean; intentMatches: boolean }): "login" | "denied" | "link" {
+  if (!input.cookiePresent) return input.authenticated ? "denied" : "login";
+  return input.intentMatches && input.authenticated ? "link" : "denied";
+}
