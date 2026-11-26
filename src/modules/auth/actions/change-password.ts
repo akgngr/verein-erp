@@ -1,10 +1,12 @@
 "use server";
 
 import { getDb } from "@/shared/db";
+import { getEnv } from "@/shared/env";
 import { hashPassword, verifyPassword } from "@/shared/security/password";
 
 import { signIn } from "../auth";
 import { ActionError } from "../errors";
+import { createReissueTicket } from "../services/totp";
 import { changePasswordSchema } from "../schemas/change-password";
 import { createAction } from "../server";
 
@@ -56,6 +58,8 @@ export async function changePasswordAction(input: unknown) {
       await signIn("credentials", {
         email: dbUser.email,
         password: input.newPassword,
+        // #603: this session already passed the second factor; the ticket stands in for it (server-only).
+        reissue: createReissueTicket(dbUser.id, getEnv().AUTH_SECRET),
         redirect: false,
       });
 

@@ -15,6 +15,8 @@ const LOGIN_ERROR_MESSAGES: Record<string, string> = {
   invalid_credentials: "auth.errors.invalidCredentials",
   account_locked: "auth.errors.invalidCredentials",
   rate_limited: "auth.errors.rateLimited",
+  two_factor_required: "auth.errors.twoFactorRequired",
+  two_factor_invalid: "auth.errors.twoFactorInvalid",
 };
 
 export async function loginAction(input: unknown): Promise<ActionResult<null>> {
@@ -34,6 +36,7 @@ export async function loginAction(input: unknown): Promise<ActionResult<null>> {
     await signIn("credentials", {
       email: parsed.data.email.toLowerCase(),
       password: parsed.data.password,
+      ...(parsed.data.otp ? { otp: parsed.data.otp } : {}),
       redirectTo: "/",
     });
   } catch (error) {

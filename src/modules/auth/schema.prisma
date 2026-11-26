@@ -23,3 +23,30 @@ model UserProfile {
 
   @@map("user_profiles")
 }
+
+/// #603: Optional TOTP second factor (RFC 6238). `secretEnc` is sealed with the secret box (AES-256-GCM).
+/// `enabledAt` null = enrolment started but not confirmed yet (not required at login). `lastUsedStep` is the
+/// last accepted time step: a code is accepted once, and never an older one after it (replay protection).
+model UserTotp {
+  userId       String    @id // FK DEĞİL (yumuşak referans)
+  secretEnc    String
+  enabledAt    DateTime?
+  lastUsedStep Int?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("user_totp")
+}
+
+/// #603: One-time recovery codes for the TOTP second factor (SHA-256 hashes only; the plain codes are shown once).
+model UserTotpRecoveryCode {
+  id        String    @id @default(cuid())
+  userId    String // FK DEĞİL (yumuşak referans)
+  codeHash  String
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  @@unique([userId, codeHash])
+  @@index([userId])
+  @@map("user_totp_recovery_codes")
+}

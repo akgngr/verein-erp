@@ -44,7 +44,11 @@
     "revokeSessions": "Alle Sitzungen beenden",
     "revokeSessionsTitle": "Alle Sitzungen beenden?",
     "revokeSessionsConfirm": "{name} wird auf allen Geräten abgemeldet und muss sich neu anmelden.",
-    "sessionsRevoked": "Alle Sitzungen von {name} wurden beendet."
+    "sessionsRevoked": "Alle Sitzungen von {name} wurden beendet.",
+    "resetTwoFactor": "Zwei-Faktor-Anmeldung zurücksetzen",
+    "resetTwoFactorTitle": "Zwei-Faktor-Anmeldung zurücksetzen?",
+    "resetTwoFactorConfirm": "Authenticator-App und Wiederherstellungscodes von {name} werden entfernt, alle Sitzungen enden. Die Person meldet sich danach nur mit dem Passwort an und kann die Einrichtung wiederholen.",
+    "twoFactorReset": "Die Zwei-Faktor-Anmeldung von {name} wurde zurückgesetzt."
   },
   "form": {
     "name": "Vor- und Nachname",
@@ -80,7 +84,8 @@
     "roleUnavailable": "Diese Rolle kann nicht zugewiesen werden: Sie existiert nicht oder ihr Modul ist nicht aktiv.",
     "adminOnly": "Nur ein Administrator kann die Administratorrolle vergeben oder ändern.",
     "grantExceedsMaxDuration": "Die Zugriffsdauer darf höchstens 90 Tage betragen.",
-    "grantEndBeforeStart": "Das Enddatum muss nach dem Startdatum liegen."
+    "grantEndBeforeStart": "Das Enddatum muss nach dem Startdatum liegen.",
+    "twoFactorNotEnabled": "Für dieses Konto ist die Zwei-Faktor-Anmeldung nicht aktiv."
   },
   "validation": {
     "nameRequired": "Name ist erforderlich.",

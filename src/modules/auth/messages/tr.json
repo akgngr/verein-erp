@@ -33,7 +33,8 @@
       "currentPassword": "Mevcut şifre",
       "submit": "Diğer tüm cihazlardan çıkış yap",
       "done": "Diğer tüm cihazlardaki oturumlar sonlandırıldı."
-    }
+    },
+    "twoFactor": "İki adımlı doğrulama"
   },
   "errors": {
     "sessionInvalid": "Oturumunuz geçersiz. Lütfen tekrar giriş yapın.",
@@ -43,7 +44,9 @@
     "accountLocked": "Hesap geçici olarak kilitlendi, daha sonra tekrar deneyin.",
     "rateLimited": "Çok fazla giriş denemesi yapıldı. Lütfen daha sonra tekrar deneyin.",
     "loginFailed": "Giriş yapılamadı. Lütfen tekrar deneyin.",
-    "invalidLocale": "Geçersiz dil seçimi."
+    "invalidLocale": "Geçersiz dil seçimi.",
+    "twoFactorRequired": "Doğrulama uygulamanızdaki kodu girin.",
+    "twoFactorInvalid": "Kod hatalı, süresi dolmuş veya daha önce kullanılmış."
   },
   "validation": {
     "currentPasswordRequired": "Mevcut parolanızı girin.",
@@ -94,5 +97,44 @@
       "vatId": "Geçerli bir KDV kimlik numarası girin (ör. DE123456789)."
     }
   },
-  "forgotPassword": "Şifremi unuttum"
+  "forgotPassword": "Şifremi unuttum",
+  "twoFactorCode": "Doğrulama kodu",
+  "twoFactorCodeHint": "Doğrulama uygulamanızdaki 6 haneli kodu veya kurtarma kodlarınızdan birini girin.",
+  "twoFactorBack": "Başka bir hesapla giriş yap",
+  "twoFactor": {
+    "loading": "Yükleniyor…",
+    "off": "İki adımlı doğrulama kapalı.",
+    "on": "İki adımlı doğrulama açık — {count, plural, one {# kurtarma kodu} other {# kurtarma kodu}} kaldı.",
+    "hint": "Girişte parolanıza ek olarak bir doğrulama uygulamasındaki (örn. Google Authenticator, Microsoft Authenticator, 2FAS) kodu sorar. Yönetici ve sayman hesapları için önerilir.",
+    "manageHint": "Kapatmak veya yeni kurtarma kodları almak için uygulamanızdaki güncel kodu (ya da bir kurtarma kodunu) girin.",
+    "currentPassword": "Mevcut şifre",
+    "currentPasswordForDisable": "Mevcut şifre (kapatmak için)",
+    "code": "Kod",
+    "cancel": "Vazgeç",
+    "enabled": "İki adımlı doğrulama açıldı.",
+    "disabled": "İki adımlı doğrulama kapatıldı.",
+    "disable": "İki adımlı doğrulamayı kapat",
+    "error": "İşlem tamamlanamadı. Lütfen tekrar deneyin.",
+    "setup": {
+      "start": "Kurulumu başlat",
+      "step1": "1. Doğrulama uygulamanızda yeni hesap ekleyin ve aşağıdaki anahtarı girin (telefonda bağlantıya dokunarak da ekleyebilirsiniz).",
+      "manualKey": "Kurulum anahtarı",
+      "openApp": "Doğrulama uygulamasında aç",
+      "step2": "2. Uygulamanın gösterdiği 6 haneli kodu girin.",
+      "confirm": "Onayla ve aç"
+    },
+    "recovery": {
+      "title": "Kurtarma kodları",
+      "hint": "Telefonunuza erişemezseniz bu kodlarla giriş yapabilirsiniz; her kod bir kez çalışır. Kodları güvenli bir yere kaydedin — bir daha gösterilmeyecek.",
+      "copy": "Kodları kopyala",
+      "copied": "Kurtarma kodları kopyalandı.",
+      "done": "Kaydettim",
+      "replace": "Yeni kurtarma kodları oluştur"
+    },
+    "errors": {
+      "alreadyEnabled": "İki adımlı doğrulama zaten açık.",
+      "noEnrolment": "Önce kurulumu başlatın.",
+      "codeInvalid": "Kod hatalı, süresi dolmuş veya daha önce kullanılmış."
+    }
+  }
 }
