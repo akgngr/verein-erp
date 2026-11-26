@@ -43,6 +43,9 @@ export async function changePasswordAction(input: unknown) {
         where: { id: user.id },
         data: { passwordHash, mustChangePassword: false },
       });
+      // #603: Bekleyen şifre bağlantıları (sıfırlama/davet) yeni şifreyle geçersiz olur; eski bir bağlantı onu ezemez.
+      const { revokePendingPasswordLinks } = await import("@/modules/users/server");
+      await revokePendingPasswordLinks(user.id);
 
       // changes alanına parola değerleri ASLA yazılmaz (write-audit temizler).
       await audit({ action: "PASSWORD_CHANGE", entity: "User", entityId: user.id });

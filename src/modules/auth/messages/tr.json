@@ -11,7 +11,7 @@
   },
   "appTitle": "Dernek Yönetim Sistemi",
   "loginSubtitle": "Devam etmek için oturum açın",
-  "passiveNotice": "Oturumunuz sonlandırıldı. Hesabınız pasif duruma alınmış olabilir; lütfen yöneticinizle görüşün.",
+  "passiveNotice": "Oturumunuz sonlandırıldı (ör. şifre değişikliği, tüm cihazlardan çıkış veya hesabın pasife alınması). Lütfen yeniden giriş yapın; sorun sürerse yöneticinizle görüşün.",
   "profile": {
     "title": "Profil",
     "description": "Hesap bilgileriniz ve parola değişikliği.",
@@ -26,7 +26,14 @@
     "submit": "Parolayı güncelle",
     "updated": "Parolanız güncellendi.",
     "details": "Profil Bilgilerim",
-    "detailsHint": "İletişim, adres, ödeme ve fatura bilgileriniz. Yalnızca siz ve yetkili yöneticiler görebilir."
+    "detailsHint": "İletişim, adres, ödeme ve fatura bilgileriniz. Yalnızca siz ve yetkili yöneticiler görebilir.",
+    "sessions": {
+      "title": "Oturumlar",
+      "hint": "Hesabınızın açık olduğu diğer tüm cihaz ve tarayıcılardan çıkış yapın (örn. kayıp telefon, ortak bilgisayar). Bu cihazda oturumunuz açık kalır.",
+      "currentPassword": "Mevcut şifre",
+      "submit": "Diğer tüm cihazlardan çıkış yap",
+      "done": "Diğer tüm cihazlardaki oturumlar sonlandırıldı."
+    }
   },
   "errors": {
     "sessionInvalid": "Oturumunuz geçersiz. Lütfen tekrar giriş yapın.",
@@ -86,5 +93,6 @@
       "bic": "Geçerli bir BIC girin (8 veya 11 karakter).",
       "vatId": "Geçerli bir KDV kimlik numarası girin (ör. DE123456789)."
     }
-  }
+  },
+  "forgotPassword": "Şifremi unuttum"
 }

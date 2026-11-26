@@ -13,9 +13,16 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.1.2 |
+| Sürüm | 1.2.0 |
 
 ## Sürüm notları
+
+### 1.2.0 — Şifre sıfırlama ve oturum yönetimi
+
+_2026-11-26_
+
+- **Yeni:** Giriş sayfasında "Şifremi unuttum" bağlantısı; profilde "Diğer tüm cihazlardan çıkış yap" (mevcut şifreyle onay; bu cihaz açık kalır).
+- **Güvenlik:** Oturum sürümü kullanıcı başına bir sayaç içerir; sayaç artınca diğer tüm oturumlar anında düşer. Mevcut oturumlar güncellemeyle düşmez.
 
 ### 1.1.2 — Zorunlu parola değişimi kilidi ve oturum sertleştirmesi
 
@@ -59,10 +66,4 @@ _2026-11-14_
 
 - **Güvenlik:** Sunucu tarafından doğrulanan AI işlemleri, kapsamlı veri erişimi ve güvenilir yaşam döngüsü kontrolleri güncellendi.
 
-### 1.0.2 — Silinme hakkı
-
-_2026-11-07_
-
-- **Güvenlik:** Kullanıcı silinince silinir: Kullanıcı profili (banka, adres, iletişim).
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.

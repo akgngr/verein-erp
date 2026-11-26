@@ -17,15 +17,31 @@ const TOKEN = /^[A-Za-z0-9_-]{40,64}$/;
 
 export class InvitationError extends Error {}
 
-export async function createInvitation(userId: string, actorId: string, now = new Date()): Promise<{ token: string; expiresAt: Date }> {
+/** #603: INVITE = admin invitation (72 h); RESET = self-service password reset (30 min). Tokens never cross purposes. */
+export type PasswordLinkPurpose = "INVITE" | "RESET";
+export const RESET_TTL_MINUTES = 30;
+
+const ttlMs = (purpose: PasswordLinkPurpose) => (purpose === "RESET" ? RESET_TTL_MINUTES * 60_000 : INVITATION_TTL_HOURS * 3_600_000);
+
+export async function createInvitation(
+  userId: string,
+  actorId: string,
+  now = new Date(),
+  purpose: PasswordLinkPurpose = "INVITE",
+): Promise<{ token: string; expiresAt: Date }> {
   const db = getDb();
   const token = randomBytes(32).toString("base64url");
-  const expiresAt = new Date(now.getTime() + INVITATION_TTL_HOURS * 3_600_000);
+  const expiresAt = new Date(now.getTime() + ttlMs(purpose));
   await db.$transaction([
-    db.userInvitation.updateMany({ where: { userId, usedAt: null, revokedAt: null }, data: { revokedAt: now } }),
-    db.userInvitation.create({ data: { userId, tokenHash: sha(token), expiresAt, createdById: actorId } }),
+    db.userInvitation.updateMany({ where: { userId, purpose, usedAt: null, revokedAt: null }, data: { revokedAt: now } }),
+    db.userInvitation.create({ data: { userId, purpose, tokenHash: sha(token), expiresAt, createdById: actorId } }),
   ]);
   return { token, expiresAt };
+}
+
+/** #603: revoke every pending invitation/reset link of a user (called when the password changes in any flow). */
+export async function revokePendingPasswordLinks(userId: string, now = new Date()): Promise<void> {
+  await getDb().userInvitation.updateMany({ where: { userId, usedAt: null, revokedAt: null }, data: { revokedAt: now } });
 }
 
 /** Pure: link for the mail. */
@@ -40,19 +56,28 @@ export function invitationLink(appUrl: string, token: string): string | null {
 }
 
 /** Is the token currently usable? (used/expired/revoked/inactive user → null) */
-export async function findUsableInvitation(token: string, now = new Date()): Promise<{ id: string; userId: string; email: string; name: string } | null> {
+export async function findUsableInvitation(
+  token: string,
+  now = new Date(),
+  purpose: PasswordLinkPurpose = "INVITE",
+): Promise<{ id: string; userId: string; email: string; name: string } | null> {
   if (!TOKEN.test(token)) return null;
   const db = getDb();
   const invitation = await db.userInvitation.findUnique({ where: { tokenHash: sha(token) } });
-  if (!invitation || invitation.usedAt || invitation.revokedAt || invitation.expiresAt <= now) return null;
+  if (!invitation || invitation.purpose !== purpose || invitation.usedAt || invitation.revokedAt || invitation.expiresAt <= now) return null;
   const user = await db.user.findUnique({ where: { id: invitation.userId }, select: { id: true, email: true, name: true, isActive: true } });
   if (!user?.isActive) return null;
   return { id: invitation.id, userId: user.id, email: user.email, name: user.name };
 }
 
 /** Sets the invitee's password and consumes the invitation atomically (a second use fails). */
-export async function acceptInvitation(token: string, password: string, now = new Date()): Promise<{ userId: string }> {
-  const usable = await findUsableInvitation(token, now);
+export async function acceptInvitation(
+  token: string,
+  password: string,
+  now = new Date(),
+  purpose: PasswordLinkPurpose = "INVITE",
+): Promise<{ userId: string }> {
+  const usable = await findUsableInvitation(token, now, purpose);
   if (!usable) throw new InvitationError("users.invite.errors.invalid");
   const db = getDb();
   const passwordHash = await hashPassword(password);
@@ -60,10 +85,12 @@ export async function acceptInvitation(token: string, password: string, now = ne
     const targetUser = await tx.user.findUnique({ where: { id: usable.userId }, select: { isActive: true } });
     if (!targetUser?.isActive) throw new InvitationError("users.invite.errors.invalid");
     const consumed = await tx.userInvitation.updateMany({
-      where: { id: usable.id, usedAt: null, revokedAt: null, expiresAt: { gt: now } },
+      where: { id: usable.id, purpose, usedAt: null, revokedAt: null, expiresAt: { gt: now } },
       data: { usedAt: now },
     });
     if (consumed.count !== 1) throw new InvitationError("users.invite.errors.invalid");
+    // Diğer bekleyen bağlantılar (davet ve sıfırlama) parolayla birlikte geçersiz olur.
+    await tx.userInvitation.updateMany({ where: { userId: usable.userId, usedAt: null, revokedAt: null }, data: { revokedAt: now } });
     await tx.user.update({
       where: { id: usable.userId },
       data: { passwordHash, mustChangePassword: false, failedLoginCount: 0, lockedUntil: null },

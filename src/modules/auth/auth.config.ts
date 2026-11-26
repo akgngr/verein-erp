@@ -84,6 +84,8 @@ export const authConfig = {
 
       // Davet bağlantısı (users/invitations): oturumsuz açılır; belirteç sunucuda doğrulanır.
       if (path.startsWith("/davet/")) return true;
+      // #603: Şifre sıfırlama (oturumsuz): istek formu ve tek kullanımlık bağlantı sayfası.
+      if (path === "/sifremi-unuttum" || path.startsWith("/sifre-sifirla/")) return true;
 
       if (path === "/giris" && !isPassiveNotice) {
         return sessionUser ? NextResponse.redirect(new URL("/", nextUrl)) : true;

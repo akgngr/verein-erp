@@ -33,6 +33,8 @@ const PUBLIC_OR_CREDENTIAL_ACTIONS = new Set([
   "src/modules/auth/actions/logout.ts",
   "src/modules/meetings/actions/public-vote-actions.ts",
   "src/modules/online-forms/actions/public-actions.ts",
+  // #603: "Forgot password" request and reset (pre-login); guarded by rate limits and one-time hashed tokens.
+  "src/modules/users/actions/password-reset.ts",
 ]);
 
 test("SEC2: role × page & server-action authorization matrix is generated from permissionResources and enforces least privilege", () => {
