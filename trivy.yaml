@@ -1,0 +1,11 @@
+# Filesystem scan configuration for Trivy (#621).
+# Used strictly for `scan-type: fs` so test fixtures, docs site, and build caches
+# do not create noise; container image scans intentionally omit this config so
+# bundled runtime packages inside the image are scanned in full.
+scan:
+  skip-dirs:
+    - tests
+    - website
+    - storage
+    - .next
+    - node_modules
