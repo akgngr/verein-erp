@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.7.1 |
+| Sürüm | 2.7.2 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft` · `propose_dues_reminder_draft`
 
 ## Sürüm notları
+
+### 2.7.2 — Yerel tarih alanları
+
+_2026-11-26_
+
+- **İyileştirme:** Zamanlanmış gönderim tarihi/saati yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.
 
 ### 2.7.1 — Kanonik APP_URL kampanya bağlantıları
 
@@ -89,10 +95,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 2.4.7 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-Daha eski 21 herkese açık sürüm notu.
+Daha eski 22 herkese açık sürüm notu.

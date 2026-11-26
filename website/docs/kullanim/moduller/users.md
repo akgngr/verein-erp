@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.3 |
+| Sürüm | 1.4.4 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.4.4 — Yerel tarih alanları
+
+_2026-11-26_
+
+- **İyileştirme:** Harici erişim başlangıç ve bitiş zamanı (bitiş, başlangıçtan önce seçilemez) yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.
 
 ### 1.4.3 — ADMIN yetki denetimleri, davet hız sınırı ve harici erişim sertleştirmesi
 
@@ -77,10 +83,4 @@ _2026-11-23_
 
 - **Güvenlik:** Bir kullanıcı silindiğinde denetim kaydına artık adı ve e-posta adresi yazılmıyor; yalnız kimlik numarası ve rol tutuluyor.
 
-### 1.1.10 — Kullanıcı dizini
-
-_2026-11-20_
-
-- **İyileştirme:** Yönetici ekranları için ad/e-posta ile aranabilen, sayfalı kullanıcı dizini (ör. bildirim aboneleri).
-
-Daha eski 12 herkese açık sürüm notu.
+Daha eski 13 herkese açık sürüm notu.

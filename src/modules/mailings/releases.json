@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.7.2",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Yerel tarih alanları",
+        "de": "Lokale Datumsfelder"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Zamanlanmış gönderim tarihi/saati yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.",
+          "de": "Geplanter Versandzeitpunkt werden im lokalen Format (TT.MM.JJJJ, 24 h) mit Kalender gewählt statt im browserabhängigen Format mm/dd/yyyy."
+        }
+      ]
+    },
+    {
       "version": "2.7.1",
       "date": "2026-11-25",
       "title": {
@@ -38,7 +53,6 @@
           "type": "fix",
           "tr": "Sonradan gelen 'başarısız' teslim bildirimleri kampanya sayaçlarına yansır; programatik toplu e-posta worker kuyruğundan gönderilir.",
           "de": "Nachträgliche Fehlermeldungen der Anbieter aktualisieren die Kampagnenzähler; programmatischer Massenversand läuft über die Worker-Warteschlange."
-
         }
       ]
     },

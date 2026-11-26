@@ -13,7 +13,7 @@ Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
 |---|---|
 | Anahtar | `meetings` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.3 |
+| Sürüm | 1.4.4 |
 | Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
 
 ## Sürüm notları
+
+### 1.4.4 — Yerel tarih alanları
+
+_2026-11-26_
+
+- **İyileştirme:** Görev son tarihi yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.
 
 ### 1.4.3 — Gizli oylama kapanış yarış düzeltmesi ve tutanak korumaları
 
@@ -86,10 +92,4 @@ _2026-11-18_
 
 - **Yeni:** Yaklaşan toplantılar ve gündemi eksik toplantılar sekreter sabah özetinde görünür.
 
-### 1.3.13 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 15 herkese açık sürüm notu.
+Daha eski 16 herkese açık sürüm notu.
