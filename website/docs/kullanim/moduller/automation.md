@@ -13,7 +13,7 @@ Kalıcı arka plan görevleri ve iş akışları.
 |---|---|
 | Anahtar | `automation` |
 | Tür | Eklenti |
-| Sürüm | 0.10.20 |
+| Sürüm | 0.10.21 |
 | Sayfalar | `/automation`, `/automation/workflows` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Otomasyon | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | — | görüntüleme |
 
 ## Sürüm notları
+
+### 0.10.21 — i18next güvenlik güncellemesi
+
+_2026-11-27_
+
+- **Güvenlik:** Akış düzenleyicisinin çeviri kütüphanesi i18next 26.3.4 sürümüne yükseltildi (deepExtend prototip özyinelemesi düzeltmesi). Düzenleyici ve uygulama tek bir kopya kullanır; Türkçe/Almanca düzenleyici metinleri korunur.
 
 ### 0.10.20 — Ayar merkezi grubu
 
@@ -81,10 +87,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 0.10.10 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-Daha eski 32 herkese açık sürüm notu.
+Daha eski 33 herkese açık sürüm notu.
