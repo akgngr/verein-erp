@@ -16,6 +16,7 @@ import { listUsableModuleKeys } from "@/modules/system/server";
 
 import { accountingPermissions } from "../permissions";
 import { bankBookSchema, bankImportSchema, bankRuleIdSchema, bankStatusSchema } from "../schemas/bank";
+import { claimOpenBankTransaction } from "../services/bank-claim";
 import { importBankTransactions } from "../services/bank-import";
 import { BankParseError, detectFormat, parseStatement } from "../services/bank-parsers";
 import { applyInvoicePayment } from "../services/invoice-payment-service";
@@ -116,6 +117,9 @@ export async function bookBankTransactionAction(input: unknown): Promise<ActionR
           const row = await tx.accountingBankTransaction.findUnique({ where: { id: input.id } });
           if (!row) throw new ActionError("accounting.bank.errors.notFound");
           if (row.status !== "OPEN") throw new ActionError("accounting.bank.errors.notOpen");
+          if (!(await claimOpenBankTransaction(tx, row.id))) {
+            throw new ActionError("accounting.bank.errors.notOpen");
+          }
           let bookingNumber: string;
           let bookingIds: string[];
           let invoiceId: string | null = null;

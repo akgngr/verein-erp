@@ -266,3 +266,52 @@ test("bankBookSchema: memberDue, courseCharge ve donation modlarını doğrular"
   assert.equal(invalidDue.success, false);
 });
 
+test("claimOpenBankTransaction: eşzamanlı çağrılarda yalnızca ilk işlem OPEN satırı sahiplenir", async () => {
+  const { claimOpenBankTransaction } = await import("@/modules/accounting/services/bank-claim");
+  const { readFileSync } = await import("node:fs");
+  const { join } = await import("node:path");
+
+  // Simulate two concurrent callers racing for the same OPEN row in READ COMMITTED:
+  const rows = new Map<string, string>([["bank-tx-1", "OPEN"]]);
+  const mockTx = {
+    accountingBankTransaction: {
+      async updateMany({ where, data }: { where: { id: string; status: "OPEN" }; data: { status: "BOOKED" } }) {
+        const current = rows.get(where.id);
+        if (current !== where.status) return { count: 0 };
+        rows.set(where.id, data.status);
+        return { count: 1 };
+      },
+    },
+  };
+
+  const results = await Promise.all([
+    claimOpenBankTransaction(mockTx, "bank-tx-1"),
+    claimOpenBankTransaction(mockTx, "bank-tx-1"),
+  ]);
+
+  assert.equal(results.filter(Boolean).length, 1);
+  assert.equal(results.filter((ok) => !ok).length, 1);
+  assert.equal(rows.get("bank-tx-1"), "BOOKED");
+
+  // Structural guarantee: bookBankTransactionAction must invoke claimOpenBankTransaction
+  // BEFORE any downstream settlement helper so no duplicate payment/donation/booking can be created.
+  const src = readFileSync(
+    join(process.cwd(), "src/modules/accounting/actions/bank-actions.ts"),
+    "utf8",
+  );
+  const claimIdx = src.indexOf("await claimOpenBankTransaction(tx, row.id)");
+  assert.ok(claimIdx > 0, "bookBankTransactionAction must call claimOpenBankTransaction");
+  for (const helper of [
+    "applyInvoicePayment(",
+    "applyPayablePayment(",
+    "recordBankDuePayment(",
+    "recordBankCourseChargePayment(",
+    "recordBankDonation(",
+    "createSourcedBooking(",
+  ]) {
+    const helperIdx = src.indexOf(helper);
+    assert.ok(helperIdx > claimIdx, `${helper} must execute after claimOpenBankTransaction`);
+  }
+});
+
+
