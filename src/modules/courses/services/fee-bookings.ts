@@ -14,7 +14,7 @@ function accountKeyFor(method: CoursePaymentMethod): "cashAccountId" | "bankAcco
  * Tahsilatı muhasebeye gelir fişi olarak yazar (ödeme transaction'ı içinde). Açıklamada
  * kişi adı yerine DATEV Debitor numarası kullanılır (fiş listesinde kişisel veri azaltımı).
  */
-export async function bookCoursePayment(
+export async function bookCoursePaymentDetailed(
   tx: Prisma.TransactionClient,
   args: {
     actor: { id: string; label: string };
@@ -26,10 +26,12 @@ export async function bookCoursePayment(
     courseCode: string;
     debtorNumber: number | null;
     chargeLabel: string;
+    accountId?: string;
   },
-): Promise<string> {
+): Promise<{ bookingId: string; bookingNumber: string }> {
   if (!args.incomeCategoryId) throw new ActionError("courses.errors.categoryMissing");
-  const targets = await getPaymentAccountTargets();
+  const accountId =
+    args.accountId ?? (await getPaymentAccountTargets())[accountKeyFor(args.method)];
   const booking = await createSourcedBooking({
     tx,
     actor: args.actor,
@@ -37,13 +39,21 @@ export async function bookCoursePayment(
     sourceType: "COURSE_FEE",
     sourceId: args.paymentId,
     bookingDate: args.paidAt,
-    accountId: targets[accountKeyFor(args.method)],
+    accountId,
     categoryId: args.incomeCategoryId,
     amountCents: args.amountCents,
     description: `Kursgebühr ${args.courseCode} – ${args.chargeLabel}${args.debtorNumber ? ` – Debitor ${args.debtorNumber}` : ""}`,
     receiptReference: args.courseCode,
   });
-  return booking.bookingNumber;
+  return { bookingId: booking.id, bookingNumber: booking.bookingNumber };
+}
+
+export async function bookCoursePayment(
+  tx: Prisma.TransactionClient,
+  args: Parameters<typeof bookCoursePaymentDetailed>[1],
+): Promise<string> {
+  const { bookingNumber } = await bookCoursePaymentDetailed(tx, args);
+  return bookingNumber;
 }
 
 export async function reverseCoursePaymentBooking(

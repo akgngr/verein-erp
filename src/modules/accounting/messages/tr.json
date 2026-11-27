@@ -720,10 +720,12 @@
     }
   },
   "access": {
-    "members": "Üye aidat ödemelerini muhasebeye aktarmak için ödemeleri okur.",
+    "members": "Üye aidat ödemelerini muhasebeye aktarmak ve banka hareketleriyle açık aidatları eşleştirip kapatmak için üye aidatlarını okur ve öder.",
+    "courses": "Açık kurs ücretlerini banka hareketleriyle eşleştirip ödenmiş olarak işaretlemek için kurs ücretlerini okur ve günceller.",
+    "donations": "Gelen banka hareketlerini tek tıkla bağış olarak kaydetmek ve mevcut bağışçıları önermek için bağış modülünü okur ve yazar.",
     "organization": "PDF raporlarında dernek antetini kullanır.",
     "inventory": "Demirbaşları envanter eşyalarıyla senkron tutar (ad, tarih, bedel, hurdaya çıkarma).",
-    "system": "Envanter modülünün etkin olup olmadığını okur."
+    "system": "Envanter ve ilgili modüllerin etkin olup olmadığını okur."
   },
   "pdf": {
     "voucher": {
@@ -1084,7 +1086,7 @@
   },
   "bank": {
     "title": "Banka",
-    "description": "Ekstreleri içe aktarın (CAMT.053, MT940, CSV), önerileri onaylayarak fişe veya açık faturaya bağlayın.",
+    "description": "Ekstreleri içe aktarın (CAMT.053, MT940, CSV), önerileri onaylayarak fişe, açık faturaya, aidata, kurs ücretine veya bağışa bağlayın.",
     "import": {
       "title": "Ekstre içe aktar",
       "hint": "Bankanızın online bankacılığından CAMT.053 (XML), MT940 veya CSV dışa aktarımını yükleyin. Aynı satırlar ikinci kez eklenmez.",
@@ -1115,7 +1117,13 @@
       "invoiceNumber": "fatura no.",
       "amount": "tutar",
       "name": "ad",
-      "rule": "kural"
+      "rule": "kural",
+      "memberNumber": "üye no.",
+      "iban": "IBAN",
+      "courseCode": "kurs kodu",
+      "debtorNumber": "borçlu no.",
+      "donationKeyword": "bağış",
+      "donor": "bağışçı"
     },
     "actions": {
       "book": "Fişe bağla",
@@ -1136,8 +1144,21 @@
     "modal": {
       "title": "Banka hareketini fişe bağla",
       "invoice": "Açık fatura",
+      "memberDue": "Üye aidatı",
+      "courseCharge": "Kurs ücreti",
+      "donation": "Bağış",
       "category": "Kategori",
       "invoiceSelect": "Fatura",
+      "memberDueSelect": "Açık üye aidatı",
+      "courseChargeSelect": "Açık kurs ücreti",
+      "courseAmountMismatchHint": "Kurs ücretleri yalnızca tam tutarla eşleştirilebilir.",
+      "donorSelect": "Bağışçı",
+      "donorCreateNew": "+ Yeni bağışçı oluştur",
+      "newDonorName": "Bağışçı adı",
+      "newDonorType": "Bağışçı türü",
+      "donorPerson": "Kişi",
+      "donorOrganization": "Kurum / Firma",
+      "purposeNote": "Amaç / açıklama (isteğe bağlı)",
       "categorySelect": "Kategori",
       "taxRate": "KDV oranı",
       "learn": "Kural öğren",
@@ -1170,12 +1191,24 @@
       "notFound": "Hareket bulunamadı.",
       "notOpen": "Hareket artık açık değil.",
       "notBooked": "Yalnızca fişe bağlanmış banka hareketleri ters kaydedilebilir.",
-      "reverseInvoiceManaged": "Fatura veya gelen fatura ile eşleştirilmiş banka hareketleri ilgili fatura ekranından iptal edilmelidir.",
+      "reverseInvoiceManaged": "Fatura, aidat, kurs ücreti veya bağış ile eşleştirilmiş banka hareketleri ilgili modül ekranından iptal edilmelidir.",
       "invoiceRequired": "Fatura seçin.",
       "invoiceNeedsCredit": "Faturaya yalnızca gelen ödemeler bağlanabilir.",
       "payableRequired": "Gelen fatura seçin.",
       "payableNeedsDebit": "Gelen faturaya yalnızca giden ödemeler bağlanabilir.",
-      "creditNoteNeedsCredit": "Alacak dekontu yalnızca tedarikçiden gelen bir iadeyle (hesaba giriş) eşleştirilebilir."
+      "creditNoteNeedsCredit": "Alacak dekontu yalnızca tedarikçiden gelen bir iadeyle (hesaba giriş) eşleştirilebilir.",
+      "memberDueRequired": "Açık bir üye aidatı seçin.",
+      "memberDueNeedsCredit": "Üye aidatına yalnızca gelen ödemeler bağlanabilir.",
+      "memberDueNotFound": "Seçilen üye aidatı bulunamadı.",
+      "memberDueAlreadySettled": "Bu üye aidatı zaten tamamen ödenmiş.",
+      "memberDueOverpayment": "Banka tutarı seçilen aidatın açık bakiyesinden büyük.",
+      "courseChargeRequired": "Açık bir kurs ücreti seçin.",
+      "courseChargeNeedsCredit": "Kurs ücretine yalnızca gelen ödemeler bağlanabilir.",
+      "courseChargeNotFound": "Seçilen kurs ücreti bulunamadı.",
+      "courseChargeAlreadySettled": "Bu kurs ücreti zaten kapatılmış.",
+      "courseChargeAmountMismatch": "Banka tutarı seçilen kurs ücretiyle birebir aynı olmalıdır.",
+      "donationNeedsCredit": "Bağış olarak yalnızca gelen ödemeler kaydedilebilir.",
+      "donorRequired": "Mevcut bir bağışçı seçin veya yeni bağışçı adı girin."
     }
   },
   "payables": {

@@ -28,7 +28,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.27.6",
+  version: "1.28.0",
   label: "Muhasebe",
   description:
     "Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura ve bütçe yönetimi.",
@@ -38,7 +38,9 @@ export const moduleConfig: ModuleConfig = {
   access: [
     { module: "system", operations: ["read"] },
     { module: "inventory", operations: ["write"] },
-    { module: "members", operations: ["read"] },
+    { module: "members", operations: ["read", "write"] },
+    { module: "courses", operations: ["read", "write"] },
+    { module: "donations", operations: ["read", "write"] },
     { module: "organization", operations: ["read"] },
   ],
   dependencies: { "pdf-lib": "1.17.1" },
