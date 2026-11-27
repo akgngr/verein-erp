@@ -150,3 +150,55 @@ test("donationUpdateSchema enforces IN_KIND business rules identically", () => {
   });
   assert.equal(invalidUpdate.success, false);
 });
+
+test("checkSimplifiedProofReadiness blocks missing or expired exemption details and points to organization settings", async () => {
+  const { readFileSync } = await import("node:fs");
+  const { checkSimplifiedProofReadiness } = await import(
+    "@/modules/donations/services/confirmation-rules"
+  );
+
+  // Missing organization exemption fields must return ok=false
+  const missingOrg = checkSimplifiedProofReadiness([
+    { key: "organization", ok: false, label: "Vereinsprofil unvollständig: Steuernummer, Finanzamt", fixHref: "/ayarlar/dernek" },
+    { key: "validity", ok: false, label: "Datum des Freistellungsbescheids fehlt.", fixHref: "/ayarlar/dernek" },
+    { key: "template", ok: false, label: "Vorlagentext noch nicht freigegeben.", fixHref: "/bagislar/ayarlar" },
+  ]);
+  assert.equal(missingOrg.ok, false);
+  if (!missingOrg.ok) {
+    assert.equal(missingOrg.fixHref, "/ayarlar/dernek");
+    assert.equal(missingOrg.missing.length, 2);
+  }
+
+  // Expired exemption notice must also return ok=false
+  const expired = checkSimplifiedProofReadiness([
+    { key: "organization", ok: true, label: "OK", fixHref: null },
+    { key: "validity", ok: false, label: "Freistellungsbescheid abgelaufen.", fixHref: "/ayarlar/dernek" },
+    { key: "template", ok: false, label: "Not confirmed", fixHref: "/bagislar/ayarlar" },
+  ]);
+  assert.equal(expired.ok, false);
+
+  // Valid organization + validity passes even if BMF template confirmation is pending
+  const ready = checkSimplifiedProofReadiness([
+    { key: "organization", ok: true, label: "OK", fixHref: null },
+    { key: "validity", ok: true, label: "OK", fixHref: null },
+    { key: "template", ok: false, label: "Not confirmed", fixHref: "/bagislar/ayarlar" },
+    { key: "membershipFees", ok: false, label: "Off", fixHref: "/ayarlar/dernek" },
+  ]);
+  assert.equal(ready.ok, true);
+
+  // Structural guard: simplified-proof-pdf handler enforces getReadiness + checkSimplifiedProofReadiness before renderToBuffer
+  const handlerSrc = readFileSync(
+    "src/modules/donations/handlers/simplified-proof-pdf.tsx",
+    "utf8",
+  );
+  assert.ok(handlerSrc.includes("getReadiness("), "handler must call getReadiness");
+  assert.ok(
+    handlerSrc.includes("checkSimplifiedProofReadiness("),
+    "handler must validate readiness before rendering PDF",
+  );
+  assert.ok(
+    handlerSrc.indexOf("checkSimplifiedProofReadiness(") <
+      handlerSrc.indexOf("renderToBuffer("),
+    "readiness check must run strictly before renderToBuffer",
+  );
+});

@@ -20,11 +20,14 @@ import {
 } from "../pdf/simplified-proof-document";
 import type { ExemptionDocumentTypeKey } from "../pdf/template-de";
 import { donationsPermissions } from "../permissions";
+import { checkSimplifiedProofReadiness } from "../services/confirmation-rules";
+import { getReadiness } from "../services/issue-guards";
 
 /**
  * GET /api/donations/simplified-proof/pdf[?donationId=...] (#618)
  *
  * § 50 Abs. 4 Satz 1 Nr. 2 EStDV vereinfachter Spendennachweis (<= 300 EUR).
+ * - Validates issuer organization & tax exemption readiness via `getReadiness()` first.
  * - Without `donationId`: downloads the organization's generic notice (with optional open-amount EPC-QR).
  * - With `donationId`: validates the donation is active, monetary (not IN_KIND), and <= 300 EUR,
  *   then includes donation summary + pre-filled EPC-QR (when IBAN is configured).
@@ -47,6 +50,21 @@ export async function simplifiedProofPdfHandler(request: Request): Promise<Respo
     return NextResponse.json(
       { ok: false, error: await translateMessage("common.errors.forbidden") },
       { status: 403 },
+    );
+  }
+
+  const now = new Date();
+  const readiness = await getReadiness(now);
+  const readinessCheck = checkSimplifiedProofReadiness(readiness.items);
+  if (!readinessCheck.ok) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: await translateMessage("donations.errors.simplifiedProofIncompleteExemption"),
+        missing: readinessCheck.missing,
+        fixHref: readinessCheck.fixHref,
+      },
+      { status: 400 },
     );
   }
 
@@ -127,7 +145,7 @@ export async function simplifiedProofPdfHandler(request: Request): Promise<Respo
     membershipFeesDeductible: profile.membershipFeesDeductible,
     donation: donationSummary,
     creditor,
-    issuedAt: new Date(),
+    issuedAt: now,
   };
 
   registerSharedPdfFonts();

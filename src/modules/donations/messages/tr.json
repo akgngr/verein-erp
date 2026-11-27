@@ -395,7 +395,8 @@
     "inKindDetailsMissing": "Ayni bağış bildirimi için eşya tanımı ve malvarlığı kaynağı zorunludur.",
     "inKindNoCollective": "Ayni bağışlar ({number}) Sammelbestätigung (toplu bildirim) içine alınamaz; tekil bildirim oluşturun.",
     "simplifiedProofNotInKind": "Basitleştirilmiş bağış kanıtı (§ 50 Abs. 4 Nr. 2 EStDV) yalnızca nakdi bağışlar içindir; ayni bağışta geçerli değildir.",
-    "simplifiedProofLimit": "Basitleştirilmiş bağış kanıtı yalnızca 300,00 € ve altındaki bağışlar için geçerlidir."
+    "simplifiedProofLimit": "Basitleştirilmiş bağış kanıtı yalnızca 300,00 € ve altındaki bağışlar için geçerlidir.",
+    "simplifiedProofIncompleteExemption": "Basitleştirilmiş bağış kanıtı üretilemedi: Dernek Bilgileri (/ayarlar/dernek) sayfasında muafiyet belgesi (Freistellungsbescheid), vergi numarası ve geçerlilik bilgilerini tamamlayın."
   },
   "validation": {
     "periodStartInvalid": "Geçerli bir dönem başlangıcı girin.",

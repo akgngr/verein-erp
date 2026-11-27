@@ -5137,7 +5137,8 @@
       "inKindDetailsMissing": "Für eine Sachzuwendungsbestätigung sind Gegenstandsbeschreibung und Herkunft erforderlich.",
       "inKindNoCollective": "Sachzuwendungen ({number}) dürfen nicht in einer Sammelbestätigung zusammengefasst werden; bitte als Einzelbestätigung ausstellen.",
       "simplifiedProofNotInKind": "Der vereinfachte Spendennachweis (§ 50 Abs. 4 Nr. 2 EStDV) gilt nur für Geldzuwendungen, nicht für Sachzuwendungen.",
-      "simplifiedProofLimit": "Der vereinfachte Spendennachweis gilt nur für Zuwendungen bis 300,00 €."
+      "simplifiedProofLimit": "Der vereinfachte Spendennachweis gilt nur für Zuwendungen bis 300,00 €.",
+      "simplifiedProofIncompleteExemption": "Vereinfachter Spendennachweis kann nicht erstellt werden: Bitte vervollständigen Sie die Angaben zur Gemeinnützigkeit (Freistellungsbescheid, Steuernummer, Datum) unter Vereinsdaten (/ayarlar/dernek)."
     },
     "validation": {
       "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",

@@ -10,7 +10,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm, type Resolver, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
@@ -99,6 +99,12 @@ export function DonationForm({
     Number((amount ?? "0").replace(",", ".").replace(/[^\d.]/g, "")) * 100 || 0;
   const showSmallHint = !isInKind && cents > 0 && cents <= SMALL_DONATION_LIMIT_CENTS;
   const waived = useWatch({ control: form.control, name: "waivedReimbursement" });
+
+  useEffect(() => {
+    if (isInKind && form.getValues("waivedReimbursement")) {
+      form.setValue("waivedReimbursement", false, { shouldValidate: true });
+    }
+  }, [isInKind, form]);
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
