@@ -30,3 +30,6 @@ overrides:
   "@internationalized/date": 3.12.4
   # GHSA-7589-6fvf-x4pw (ReDoS, effect <= 3.22.0): @hookform/resolvers ve prisma üzerinden gelir.
   effect: 3.22.4
+  # #602: @workflowbuilder/sdk declares i18next ^24 itself. Force the single patched copy (deepExtend fix)
+  # so the editor and sdk-i18n.ts share one default instance and the TR/DE editor strings keep working.
+  i18next: 26.3.4
