@@ -30,8 +30,13 @@ export function planPayablePayment(
   const basis = normalizedTotal > 0
     ? normalized
     : groups.map((group) => ({ rate: group.rate, netCents: Math.abs(group.netCents), taxCents: Math.abs(group.taxCents) }));
-  const parts = allocatePayment(basis, amountAbs)
+  const allocated = allocatePayment(basis, amountAbs)
     .filter((part) => part.netCents + part.taxCents !== 0)
     .map((part) => ({ rate: part.rate, netCents: signed(part.netCents), taxCents: signed(part.taxCents) }));
+  // Each part becomes its own booking and a cash account is checked after every booking: cash-increasing parts
+  // (negative amounts) go first, so an offset is never booked after the expense it reduces. Otherwise the original
+  // order is kept (same booking order as before for single-sign documents).
+  const gross = (part: RateGroup) => part.netCents + part.taxCents;
+  const parts = [...allocated.filter((part) => gross(part) < 0), ...allocated.filter((part) => gross(part) >= 0)];
   return { amountCents: sign * amountAbs, parts, settled: amountAbs === openAbs };
 }
