@@ -54,6 +54,7 @@
     "widgetlar": "Widget ayarları",
     "privacyPresets": "Gizlilik ön ayarları",
     "egressReport": "Veri çıkışı raporu",
+    "yedekleme": "Yedekleme ve kurtarma",
     "menuDuzeni": "Menü düzeni"
   },
   "meta": {
@@ -518,5 +519,103 @@
     "yes": "Evet",
     "no": "Hayır",
     "unknown": "Belirtilmemiş"
+  },
+  "backups": {
+    "title": "Yedekleme ve kurtarma doğrulaması",
+    "subtitle": "PostgreSQL veritabanı ve UPLOAD_DIR belgelerini AES-256-GCM ile şifreleyip bütünlük ve geri yükleme uyumluluğunu doğrulayın.",
+    "encryptionMissingTitle": "Şifreleme anahtarı yapılandırılmamış",
+    "encryptionMissingBody": "Veri şifreleme anahtarı (DATA_ENCRYPTION_KEYS veya AUTH_SECRET) bulunamadığı için şifreli yedekleme ve doğrulama güvenlik gereği kapalıdır.",
+    "stats": {
+      "encryption": "Şifreleme durumu",
+      "encryptionReady": "Hazır",
+      "encryptionUnavailable": "Anahtar eksik",
+      "cipherLabel": "AES-256-GCM + SHA-256 manifest",
+      "lastBackup": "Son yedek",
+      "never": "Henüz yok",
+      "readySummary": "{count} hazır yedek · {size}",
+      "lastVerification": "Son doğrulama",
+      "notVerifiedYet": "Henüz doğrulanmadı",
+      "schemaVersion": "Canlı şema sürümü",
+      "unknown": "Bilinmiyor",
+      "migrationCount": "{count} migration uygulandı"
+    },
+    "manual": {
+      "title": "Anlık şifreli yedek oluştur",
+      "description": "Veritabanı anlık görüntüsü, yüklenen belgeler (UPLOAD_DIR) ve SHA-256 manifesti tek şifreli .vbak arşivinde paketlenir ve anında kendi kendini doğrular.",
+      "cta": "Şifreli yedek al",
+      "running": "Yedekleniyor ve doğrulanıyor..."
+    },
+    "policy": {
+      "title": "Otomatik yedekleme ve saklama politikası",
+      "description": "Otomasyon çalışanı (system.run_backup) belirlenen aralıkta yedek alır ve saklama sınırını aşan eski yedekleri temizler.",
+      "enabled": "Zamanlanmış otomatik yedeklemeyi etkinleştir",
+      "retentionCount": "Saklanacak yedek adedi (1–90)",
+      "intervalHours": "Yedekleme aralığı (saat, 6–168)",
+      "save": "Politikayı kaydet",
+      "saving": "Kaydediliyor..."
+    },
+    "uploadVerify": {
+      "title": "Harici arşiv geri yükleme provası (salt okunur)",
+      "description": "İndirdiğiniz bir .vbak arşivini yükleyerek canlı veriye dokunmadan şifre çözme, dosya bütünlüğü ve şema uyumluluğunu doğrulayın.",
+      "cta": ".vbak arşivi seç ve doğrula",
+      "running": "Arşiv doğrulanıyor..."
+    },
+    "verifyDetail": {
+      "passedHeading": "Kurtarma doğrulaması başarılı — arşiv sağlam ve çözülebilir.",
+      "failedHeading": "Kurtarma doğrulaması başarısız ({code}).",
+      "archiveSha": "Arşiv SHA-256",
+      "dbIntegrity": "Veritabanı bütünlüğü",
+      "filesChecked": "Doğrulanan dosya",
+      "schemaCompatibility": "Şema uyumluluğu",
+      "ok": "Geçti",
+      "failed": "Hatalı"
+    },
+    "schemaCompatibility": {
+      "compatible": "Tam uyumlu",
+      "older": "Eski şema (migration gerekir)",
+      "newer": "Daha yeni şema (uygulama güncellemesi gerekir)",
+      "unknown": "Belirsiz"
+    },
+    "status": {
+      "ready": "Hazır",
+      "failed": "Başarısız",
+      "verifiedPassed": "Doğrulandı",
+      "verifiedFailed": "Doğrulama başarısız"
+    },
+    "trigger": {
+      "manual": "Elle",
+      "scheduled": "Zamanlanmış"
+    },
+    "list": {
+      "title": "Yedek geçmişi",
+      "empty": "Henüz alınmış bir sistem yedeği bulunmuyor.",
+      "date": "Tarih / Tetikleyici",
+      "status": "Durum",
+      "contents": "İçerik",
+      "size": "Boyut / SHA-256",
+      "verification": "Doğrulama",
+      "actions": "İşlemler",
+      "dbSummary": "{tables} tablo · {rows} satır",
+      "uploadSummary": "{files} belge dosyası"
+    },
+    "actions": {
+      "verify": "Doğrula",
+      "download": "İndir",
+      "delete": "Sil"
+    },
+    "messages": {
+      "created": "Şifreli yedek oluşturuldu ve bütünlüğü doğrulandı.",
+      "createdWithPrune": "Şifreli yedek oluşturuldu, doğrulandı ve saklama politikasına göre {count} eski yedek temizlendi.",
+      "createFailed": "Yedek oluşturulurken hata oluştu.",
+      "configSaved": "Yedekleme politikası kaydedildi.",
+      "configFailed": "Yedekleme politikası kaydedilemedi.",
+      "verifyPassed": "Arşiv çözüldü, tüm SHA-256 özetleri ve veritabanı bütünlüğü doğrulandı.",
+      "uploadVerifyPassed": "Yüklenen arşiv başarıyla çözüldü ve doğrulandı (canlı veri değiştirilmedi).",
+      "verifyFailed": "Arşiv doğrulaması başarısız oldu: {code}",
+      "verifyError": "Doğrulama sırasında beklenmeyen bir hata oluştu.",
+      "deleteConfirm": "Bu şifreli yedek arşivi diskten ve geçmişten kalıcı olarak silinsin mi?",
+      "deleted": "Yedek arşivi silindi.",
+      "deleteFailed": "Yedek arşivi silinemedi."
+    }
   }
 }

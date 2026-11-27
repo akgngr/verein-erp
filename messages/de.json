@@ -147,6 +147,7 @@
     "widgetlar": "Widget-Einstellungen",
     "privacyPresets": "Datenschutzprofile",
     "egressReport": "Datenausgangsbericht",
+    "yedekleme": "Datensicherung & Prüfung",
     "tasks": "Aufgaben",
     "kullanicilar": "Benutzer",
     "weather": "Wetter",
@@ -316,6 +317,7 @@
       "lisans": "Lizenzinformationen und Nutzungsbedingungen.",
       "privacyPresets": "Datenschutz-Voreinstellungen: welche Daten nach außen dürfen.",
       "egressReport": "Bericht über Daten, die an externe Dienste gehen.",
+      "yedekleme": "Verschlüsselte Datenbank- und Dateisicherungen sowie Wiederherstellungsprüfung.",
       "menuDuzeni": "Reihenfolge und Sichtbarkeit des Seitenmenüs.",
       "surumNotlari": "Versionshinweise der App und der Module.",
       "organization": "Vereinsname, Anschrift, Logo und Angaben zur Gemeinnützigkeit.",
@@ -10345,6 +10347,104 @@
       "yes": "Ja",
       "no": "Nein",
       "unknown": "Nicht angegeben"
+    },
+    "backups": {
+      "title": "Datensicherung & Wiederherstellungsprüfung",
+      "subtitle": "Sichern Sie PostgreSQL-Datenbank und UPLOAD_DIR-Dokumente verschlüsselt mit AES-256-GCM und prüfen Sie Integrität sowie Schemakompatibilität.",
+      "encryptionMissingTitle": "Verschlüsselungsschlüssel nicht konfiguriert",
+      "encryptionMissingBody": "Da kein Datenverschlüsselungsschlüssel (DATA_ENCRYPTION_KEYS oder AUTH_SECRET) verfügbar ist, sind verschlüsselte Sicherungen und Prüfungen aus Sicherheitsgründen deaktiviert.",
+      "stats": {
+        "encryption": "Verschlüsselungsstatus",
+        "encryptionReady": "Bereit",
+        "encryptionUnavailable": "Schlüssel fehlt",
+        "cipherLabel": "AES-256-GCM + SHA-256-Manifest",
+        "lastBackup": "Letzte Sicherung",
+        "never": "Noch keine",
+        "readySummary": "{count} bereite Sicherungen · {size}",
+        "lastVerification": "Letzte Prüfung",
+        "notVerifiedYet": "Noch nicht geprüft",
+        "schemaVersion": "Aktive Schemaversion",
+        "unknown": "Unbekannt",
+        "migrationCount": "{count} Migrationen angewendet"
+      },
+      "manual": {
+        "title": "Verschlüsselte Sicherung jetzt erstellen",
+        "description": "Datenbank-Schnappschuss, hochgeladene Dokumente (UPLOAD_DIR) und SHA-256-Manifest werden in ein verschlüsseltes .vbak-Archiv verpackt und sofort selbst geprüft.",
+        "cta": "Verschlüsselte Sicherung erstellen",
+        "running": "Wird gesichert und geprüft..."
+      },
+      "policy": {
+        "title": "Automatische Sicherung & Aufbewahrung",
+        "description": "Der Automatisierungs-Worker (system.run_backup) erstellt regelmäßig Sicherungen und bereinigt ältere Archive gemäß der Aufbewahrungsanzahl.",
+        "enabled": "Geplante automatische Sicherung aktivieren",
+        "retentionCount": "Aufzubewahrende Sicherungen (1–90)",
+        "intervalHours": "Sicherungsintervall (Stunden, 6–168)",
+        "save": "Richtlinie speichern",
+        "saving": "Wird gespeichert..."
+      },
+      "uploadVerify": {
+        "title": "Externes Archiv zerstörungsfrei prüfen (Probelauf)",
+        "description": "Laden Sie ein heruntergeladenes .vbak-Archiv hoch, um Entschlüsselung, Datei-Prüfsummen und Schemakompatibilität ohne Änderung der Live-Daten zu prüfen.",
+        "cta": ".vbak-Archiv wählen und prüfen",
+        "running": "Archiv wird geprüft..."
+      },
+      "verifyDetail": {
+        "passedHeading": "Wiederherstellungsprüfung bestanden — Archiv ist intakt und entschlüsselbar.",
+        "failedHeading": "Wiederherstellungsprüfung fehlgeschlagen ({code}).",
+        "archiveSha": "Archiv-SHA-256",
+        "dbIntegrity": "Datenbankintegrität",
+        "filesChecked": "Geprüfte Dateien",
+        "schemaCompatibility": "Schemakompatibilität",
+        "ok": "Bestanden",
+        "failed": "Fehlerhaft"
+      },
+      "schemaCompatibility": {
+        "compatible": "Vollständig kompatibel",
+        "older": "Älteres Schema (Migration erforderlich)",
+        "newer": "Neueres Schema (App-Update erforderlich)",
+        "unknown": "Unklar"
+      },
+      "status": {
+        "ready": "Bereit",
+        "failed": "Fehlgeschlagen",
+        "verifiedPassed": "Geprüft",
+        "verifiedFailed": "Prüfung fehlgeschlagen"
+      },
+      "trigger": {
+        "manual": "Manuell",
+        "scheduled": "Geplant"
+      },
+      "list": {
+        "title": "Sicherungsverlauf",
+        "empty": "Es wurden noch keine Systemsicherungen erstellt.",
+        "date": "Datum / Auslöser",
+        "status": "Status",
+        "contents": "Inhalt",
+        "size": "Größe / SHA-256",
+        "verification": "Prüfung",
+        "actions": "Aktionen",
+        "dbSummary": "{tables} Tabellen · {rows} Zeilen",
+        "uploadSummary": "{files} Dokumentdateien"
+      },
+      "actions": {
+        "verify": "Prüfen",
+        "download": "Herunterladen",
+        "delete": "Löschen"
+      },
+      "messages": {
+        "created": "Verschlüsselte Sicherung erstellt und erfolgreich geprüft.",
+        "createdWithPrune": "Verschlüsselte Sicherung erstellt, geprüft und {count} ältere Sicherungen gemäß Richtlinie bereinigt.",
+        "createFailed": "Fehler beim Erstellen der Sicherung.",
+        "configSaved": "Sicherungsrichtlinie gespeichert.",
+        "configFailed": "Sicherungsrichtlinie konnte nicht gespeichert werden.",
+        "verifyPassed": "Archiv entschlüsselt, alle SHA-256-Prüfsummen und Datenbankintegrität bestätigt.",
+        "uploadVerifyPassed": "Hochgeladenes Archiv erfolgreich entschlüsselt und geprüft (Live-Daten unverändert).",
+        "verifyFailed": "Archivprüfung fehlgeschlagen: {code}",
+        "verifyError": "Unerwarteter Fehler bei der Prüfung.",
+        "deleteConfirm": "Dieses verschlüsselte Sicherungsarchiv dauerhaft vom Datenträger und aus dem Verlauf löschen?",
+        "deleted": "Sicherungsarchiv gelöscht.",
+        "deleteFailed": "Sicherungsarchiv konnte nicht gelöscht werden."
+      }
     }
   },
   "tasks": {

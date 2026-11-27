@@ -70,3 +70,34 @@ model SystemEgressLedger {
   @@index([provider, occurredAt])
   @@map("system_egress_ledger")
 }
+
+/// Şifreli sistem yedeği (PostgreSQL + UPLOAD_DIR) ve geri yükleme doğrulama geçmişi (#617).
+model SystemBackup {
+  id                   String    @id @default(cuid())
+  status               String
+  trigger              String
+  storagePath          String?
+  archiveSizeBytes     Int       @default(0)
+  archiveSha256        String?
+  manifestSha256       String?
+  dbMode               String?
+  dbTableCount         Int       @default(0)
+  dbRowCount           Int       @default(0)
+  uploadFileCount      Int       @default(0)
+  uploadTotalBytes     Int       @default(0)
+  appVersion           String?
+  schemaVersion        String?
+  migrationCount       Int       @default(0)
+  encryptionKeyVersion String?
+  verifiedAt           DateTime?
+  verificationStatus   String?
+  verificationDetails  Json?
+  errorCode            String?
+  createdById          String?
+  createdByLabel       String?
+  createdAt            DateTime  @default(now())
+
+  @@index([createdAt])
+  @@index([status, createdAt])
+  @@map("system_backups")
+}
