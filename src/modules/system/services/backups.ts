@@ -16,6 +16,8 @@ import { canEncryptSecrets } from "@/shared/security/secret-box";
 import {
   BACKUP_STORAGE_PREFIX,
   decryptAndVerifyBackupArchive,
+  extractReferencedUploadPathsFromDbDump,
+  findMissingReferencedUploads,
   isSafeBackupRelativePath,
   packAndEncryptBackup,
   type BackupUploadEntry,
@@ -393,6 +395,41 @@ export async function pruneExpiredBackups(
   return toPrune.length;
 }
 
+/**
+ * Captures the database snapshot FIRST and UPLOAD_DIR SECOND sequentially so every
+ * upload file referenced by the captured DB snapshot already exists on disk (uploads
+ * are persisted before DB commit; extra newly uploaded files are harmless on restore).
+ * Then verifies every DB-referenced upload path is present in the collected uploads.
+ */
+export async function captureConsistentBackupInputs<
+  TDb extends { dbMode: "pg_dump" | "pg_logical"; dbDump: Buffer },
+>(deps: {
+  collectDatabase: () => Promise<TDb>;
+  collectUploads: () => Promise<BackupUploadEntry[]>;
+}): Promise<{
+  dbSnapshot: TDb;
+  uploadFiles: BackupUploadEntry[];
+  verifiedReferencedUploads: number;
+}> {
+  const dbSnapshot = await deps.collectDatabase();
+  const uploadFiles = await deps.collectUploads();
+
+  const referencedPaths = extractReferencedUploadPathsFromDbDump(
+    dbSnapshot.dbMode,
+    dbSnapshot.dbDump,
+  );
+  const missingUploads = findMissingReferencedUploads(referencedPaths, uploadFiles);
+  if (missingUploads.length > 0) {
+    throw new Error("BACKUP_CONSISTENCY_MISSING_UPLOADS");
+  }
+
+  return {
+    dbSnapshot,
+    uploadFiles,
+    verifiedReferencedUploads: referencedPaths.length,
+  };
+}
+
 export async function createSystemBackup(options: {
   trigger: "manual" | "scheduled";
   actor: BackupActor;
@@ -417,10 +454,10 @@ export async function createSystemBackup(options: {
   const appVersion = getAppVersion();
 
   try {
-    const [dbSnapshot, uploadFiles] = await Promise.all([
-      collectDatabaseSnapshot(),
-      collectUploadFiles(),
-    ]);
+    const { dbSnapshot, uploadFiles } = await captureConsistentBackupInputs({
+      collectDatabase: collectDatabaseSnapshot,
+      collectUploads: () => collectUploadFiles(),
+    });
 
     const packed = packAndEncryptBackup({
       appVersion,
@@ -771,20 +808,50 @@ function serializeBackupRecord(record: {
 }
 
 export async function getBackupOverview(): Promise<BackupOverview> {
-  const [config, schemaMeta, rows] = await Promise.all([
+  const db = getDb();
+  const [
+    config,
+    schemaMeta,
+    totalCount,
+    readyAggregate,
+    latestReadyRow,
+    latestVerifiedRow,
+    readyRows,
+    nonReadyRows,
+  ] = await Promise.all([
     getBackupConfig(),
     getCurrentSchemaMetadata(),
-    getDb().systemBackup.findMany({
+    db.systemBackup.count(),
+    db.systemBackup.aggregate({
+      where: { status: "READY" },
+      _count: { _all: true },
+      _sum: { archiveSizeBytes: true },
+    }),
+    db.systemBackup.findFirst({
+      where: { status: "READY" },
+      orderBy: { createdAt: "desc" },
+      select: { createdAt: true },
+    }),
+    db.systemBackup.findFirst({
+      where: { verifiedAt: { not: null } },
+      orderBy: { verifiedAt: "desc" },
+      select: { verifiedAt: true, verificationStatus: true },
+    }),
+    db.systemBackup.findMany({
+      where: { status: "READY" },
+      orderBy: { createdAt: "desc" },
+      take: 365,
+    }),
+    db.systemBackup.findMany({
+      where: { status: { not: "READY" } },
       orderBy: { createdAt: "desc" },
       take: 50,
     }),
   ]);
 
-  const backups = rows.map(serializeBackupRecord);
-  const readyBackups = backups.filter((b) => b.status === "READY");
-  const totalBytes = readyBackups.reduce((sum, b) => sum + b.archiveSizeBytes, 0);
-  const latestReady = readyBackups[0] ?? null;
-  const latestVerified = backups.find((b) => b.verifiedAt !== null) ?? null;
+  const backups = [...readyRows, ...nonReadyRows]
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+    .map(serializeBackupRecord);
 
   return {
     encryptionReady: canEncryptSecrets(),
@@ -793,12 +860,12 @@ export async function getBackupOverview(): Promise<BackupOverview> {
     currentMigrationCount: schemaMeta.migrationCount,
     config,
     stats: {
-      totalCount: backups.length,
-      readyCount: readyBackups.length,
-      totalBytes,
-      lastBackupAt: latestReady?.createdAt ?? null,
-      lastVerifiedAt: latestVerified?.verifiedAt ?? null,
-      lastVerificationStatus: latestVerified?.verificationStatus ?? null,
+      totalCount,
+      readyCount: readyAggregate._count._all,
+      totalBytes: readyAggregate._sum.archiveSizeBytes ?? 0,
+      lastBackupAt: latestReadyRow?.createdAt.toISOString() ?? null,
+      lastVerifiedAt: latestVerifiedRow?.verifiedAt?.toISOString() ?? null,
+      lastVerificationStatus: latestVerifiedRow?.verificationStatus ?? null,
     },
     backups,
   };

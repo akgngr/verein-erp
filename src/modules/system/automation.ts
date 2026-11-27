@@ -19,7 +19,7 @@ export const systemBackupTask = defineTask({
   schedule: {
     input: () => ({}),
     minIntervalMinutes: 60,
-    automaticIntervalMinutes: 24 * 60,
+    automaticIntervalMinutes: 60,
   },
   handler: async () => {
     const { runScheduledBackupIfDue } = await import("./services/backups");

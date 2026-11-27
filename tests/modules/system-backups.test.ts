@@ -7,10 +7,16 @@ import path from "node:path";
 import {
   compareSchemaVersions,
   decryptAndVerifyBackupArchive,
+  extractReferencedUploadPathsFromDbDump,
+  findMissingReferencedUploads,
   isSafeBackupRelativePath,
   packAndEncryptBackup,
 } from "../../src/modules/system/services/backup-bundle";
-import { collectUploadFiles } from "../../src/modules/system/services/backups";
+import {
+  captureConsistentBackupInputs,
+  collectUploadFiles,
+} from "../../src/modules/system/services/backups";
+import { systemBackupTask } from "../../src/modules/system/automation";
 
 const SAVED_ENV_KEYS = [
   "DATA_ENCRYPTION_KEYS",
@@ -181,5 +187,131 @@ describe("System encrypted backup & restore verification (#617)", () => {
     } finally {
       await rm(tmpDir, { recursive: true, force: true });
     }
+  });
+
+  it("extracts referenced upload paths from pg_logical and pg_dump while excluding system_backups", () => {
+    const logicalDump = Buffer.from(
+      JSON.stringify({
+        tables: {
+          DocumentFile: {
+            rows: [
+              { id: "d1", storagePath: "documents/2026/d1.pdf" },
+              { id: "d2", storagePath: null },
+            ],
+          },
+          DonationConfirmation: {
+            rows: [{ id: "c1", pdfStoragePath: "donations/2026/c1.pdf" }],
+          },
+          OrganizationSettings: {
+            rows: [{ id: "org", logoPath: "org/logo.png" }],
+          },
+          system_backups: {
+            rows: [{ id: "bk_1", storagePath: "backups/bk_1.vbak" }],
+          },
+        },
+      }),
+      "utf8",
+    );
+
+    assert.deepEqual(
+      extractReferencedUploadPathsFromDbDump("pg_logical", logicalDump),
+      ["documents/2026/d1.pdf", "donations/2026/c1.pdf", "org/logo.png"],
+    );
+
+    const sqlDump = Buffer.from(
+      [
+        "-- PostgreSQL database dump",
+        'COPY public."DocumentFile" (id, "storagePath") FROM stdin;',
+        "d1\tdocuments/2026/sql-doc.pdf",
+        "d2\t\\N",
+        "\\.",
+        'COPY public.system_backups (id, "storagePath") FROM stdin;',
+        "bk_1\tbackups/bk_1.vbak",
+        "\\.",
+        'COPY public."OrganizationSettings" (id, "logoPath") FROM stdin;',
+        "org\torg/crest.png",
+        "\\.",
+      ].join("\n"),
+      "utf8",
+    );
+
+    assert.deepEqual(
+      extractReferencedUploadPathsFromDbDump("pg_dump", sqlDump),
+      ["documents/2026/sql-doc.pdf", "org/crest.png"],
+    );
+
+    assert.deepEqual(
+      findMissingReferencedUploads(
+        ["documents/2026/sql-doc.pdf", "org/crest.png"],
+        [{ path: "org/crest.png" }],
+      ),
+      ["documents/2026/sql-doc.pdf"],
+    );
+  });
+
+  it("captures DB strictly before UPLOAD_DIR and fails when a DB-referenced upload is missing", async () => {
+    const events: string[] = [];
+    const consistentDump = Buffer.from(
+      JSON.stringify({
+        tables: {
+          DocumentFile: {
+            rows: [{ id: "d1", storagePath: "documents/2026/receipt.pdf" }],
+          },
+        },
+      }),
+      "utf8",
+    );
+
+    const okResult = await captureConsistentBackupInputs({
+      collectDatabase: async () => {
+        events.push("db:start");
+        await new Promise((r) => setTimeout(r, 15));
+        events.push("db:end");
+        return { dbMode: "pg_logical" as const, dbDump: consistentDump };
+      },
+      collectUploads: async () => {
+        events.push("uploads:start");
+        return [
+          { path: "documents/2026/receipt.pdf", data: Buffer.from("pdf") },
+          { path: "documents/2026/newer-extra.pdf", data: Buffer.from("extra") },
+        ];
+      },
+    });
+
+    assert.deepEqual(events, ["db:start", "db:end", "uploads:start"]);
+    assert.equal(okResult.verifiedReferencedUploads, 1);
+
+    await assert.rejects(
+      () =>
+        captureConsistentBackupInputs({
+          collectDatabase: async () => ({
+            dbMode: "pg_logical" as const,
+            dbDump: consistentDump,
+          }),
+          collectUploads: async () => [],
+        }),
+      /BACKUP_CONSISTENCY_MISSING_UPLOADS/,
+    );
+
+    // Archive verification also detects missing DB-referenced uploads inside a bundle.
+    const packedMissing = packAndEncryptBackup({
+      appVersion: "0.41.0",
+      schemaVersion: "20270116090000_system_backups",
+      migrationCount: 1,
+      dbMode: "pg_logical",
+      dbDump: consistentDump,
+      dbTableCount: 1,
+      dbRowCount: 1,
+      uploadFiles: [],
+    });
+    const verified = decryptAndVerifyBackupArchive(packedMissing.encryptedArchive);
+    assert.equal(verified.ok, false);
+    assert.equal(verified.errorCode, "MISSING_UPLOAD_FILES");
+    assert.deepEqual(verified.missingFiles, ["documents/2026/receipt.pdf"]);
+  });
+
+  it("polls scheduled backups hourly so 6h and 12h intervals run on time", () => {
+    assert.equal(systemBackupTask.schedule?.automaticIntervalMinutes, 60);
+    assert.equal(systemBackupTask.schedule?.minIntervalMinutes, 60);
   });
 });

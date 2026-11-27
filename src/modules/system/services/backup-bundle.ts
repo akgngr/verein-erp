@@ -412,6 +412,19 @@ export function decryptAndVerifyBackupArchive(
     }
   }
 
+  const referencedMissing =
+    dbIntegrityOk && dbBuf
+      ? findMissingReferencedUploads(
+          extractReferencedUploadPathsFromDbDump(parsedManifest.dbMode, dbBuf),
+          parsedManifest.files,
+        )
+      : [];
+  for (const refPath of referencedMissing) {
+    if (!missingFiles.includes(refPath)) {
+      missingFiles.push(refPath);
+    }
+  }
+
   const allOk =
     dbIntegrityOk &&
     mismatchedFiles.length === 0 &&
@@ -444,3 +457,142 @@ export function decryptAndVerifyBackupArchive(
     dbIntegrityOk,
   };
 }
+
+const UPLOAD_PATH_COLUMNS = new Set([
+  "storagePath",
+  "pdfStoragePath",
+  "logoPath",
+  "screenshotPath",
+]);
+
+const EXCLUDED_UPLOAD_TABLES = new Set([
+  "system_backups",
+  "SystemBackup",
+]);
+
+function unquotePgIdentifier(ident: string): string {
+  const trimmed = ident.trim();
+  if (trimmed.startsWith('"') && trimmed.endsWith('"') && trimmed.length >= 2) {
+    return trimmed.slice(1, -1).replace(/""/g, '"');
+  }
+  return trimmed;
+}
+
+function unescapePgCopyField(raw: string): string {
+  return raw.replace(/\\(.)/g, (_match, ch: string) => {
+    switch (ch) {
+      case "t":
+        return "\t";
+      case "n":
+        return "\n";
+      case "r":
+        return "\r";
+      case "b":
+        return "\b";
+      case "f":
+        return "\f";
+      case "\\":
+        return "\\";
+      default:
+        return ch;
+    }
+  });
+}
+
+/**
+ * Extracts UPLOAD_DIR-relative file paths referenced by the captured DB dump
+ * (excluding `system_backups` archives themselves) so backup creation and restore
+ * verification can prove DB ↔ UPLOAD_DIR referential completeness.
+ */
+export function extractReferencedUploadPathsFromDbDump(
+  dbMode: "pg_dump" | "pg_logical",
+  dbDump: Buffer,
+): string[] {
+  const referenced = new Set<string>();
+
+  if (dbMode === "pg_logical") {
+    try {
+      const parsed = JSON.parse(dbDump.toString("utf8")) as {
+        tables?: Record<string, { rows?: Array<Record<string, unknown>> }>;
+      };
+      const tables = parsed?.tables;
+      if (!tables || typeof tables !== "object") return [];
+
+      for (const [tableName, tableEntry] of Object.entries(tables)) {
+        if (EXCLUDED_UPLOAD_TABLES.has(tableName)) continue;
+        const rows = tableEntry?.rows;
+        if (!Array.isArray(rows)) continue;
+        for (const row of rows) {
+          if (!row || typeof row !== "object") continue;
+          for (const col of UPLOAD_PATH_COLUMNS) {
+            const val = row[col];
+            if (typeof val === "string") {
+              const trimmed = val.trim();
+              if (trimmed.length > 0 && isSafeBackupRelativePath(trimmed)) {
+                referenced.add(trimmed);
+              }
+            }
+          }
+        }
+      }
+    } catch {
+      return [];
+    }
+    return [...referenced].sort((a, b) => a.localeCompare(b));
+  }
+
+  // Plain SQL pg_dump: scan `COPY public.<table> (<cols>) FROM stdin;` blocks.
+  const lines = dbDump.toString("utf8").split(/\r?\n/);
+  let activeIndices: number[] | null = null;
+
+  for (const line of lines) {
+    if (activeIndices !== null) {
+      if (line === "\\.") {
+        activeIndices = null;
+        continue;
+      }
+      if (activeIndices.length === 0) continue;
+      const fields = line.split("\t");
+      for (const idx of activeIndices) {
+        const raw = fields[idx];
+        if (raw === undefined || raw === "\\N") continue;
+        const val = unescapePgCopyField(raw).trim();
+        if (val.length > 0 && isSafeBackupRelativePath(val)) {
+          referenced.add(val);
+        }
+      }
+      continue;
+    }
+
+    if (!line.startsWith("COPY ")) continue;
+    const match = /^COPY\s+(?:[a-zA-Z0-9_"]+\.)?("[^"]+"|[^\s(]+)\s*\(([^)]+)\)\s+FROM\s+stdin;\s*$/.exec(
+      line,
+    );
+    if (!match) continue;
+    const tableName = unquotePgIdentifier(match[1] ?? "");
+    if (EXCLUDED_UPLOAD_TABLES.has(tableName)) {
+      activeIndices = [];
+      continue;
+    }
+    const cols = (match[2] ?? "").split(",").map(unquotePgIdentifier);
+    const indices: number[] = [];
+    for (let i = 0; i < cols.length; i += 1) {
+      if (UPLOAD_PATH_COLUMNS.has(cols[i] ?? "")) {
+        indices.push(i);
+      }
+    }
+    activeIndices = indices;
+  }
+
+  return [...referenced].sort((a, b) => a.localeCompare(b));
+}
+
+export function findMissingReferencedUploads(
+  referencedPaths: readonly string[],
+  uploadFiles: ReadonlyArray<{ path: string }>,
+): string[] {
+  if (referencedPaths.length === 0) return [];
+  const captured = new Set(uploadFiles.map((f) => f.path));
+  return referencedPaths.filter((p) => !captured.has(p));
+}
+
