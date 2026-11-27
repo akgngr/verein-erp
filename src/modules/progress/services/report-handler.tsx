@@ -2,10 +2,12 @@ import "server-only";
 
 import { renderToBuffer } from "@react-pdf/renderer";
 
+import { writeAudit } from "@/shared/audit/write-audit";
 import { translateMessage } from "@/shared/i18n/translate-message";
 import { registerSharedPdfFonts } from "@/shared/pdf/fonts";
 import { resolvePdfLang } from "@/shared/pdf/i18n";
 import { can } from "@/shared/permissions/define";
+import { buildUserLabel } from "@/shared/utils";
 
 import { ActionError, requireUser, UnauthorizedError } from "@/modules/auth/server";
 import { getOrganizationLogoDataUri, getOrganizationProfile } from "@/modules/organization/server";
@@ -77,6 +79,14 @@ export async function progressReportHandler(request: Request): Promise<Response>
       }}
     />,
   );
+  await writeAudit({
+    userId: user.id,
+    userLabel: buildUserLabel(user.name, user.email),
+    action: "EXPORT",
+    entity: "CourseEnrollment",
+    entityId: enrollment.id,
+    after: { course: roster.course.code, studentNumber: enrollment.studentNumber, format: "pdf", lang },
+  });
   const filename = `${lang === "de" ? "lernstandsbericht" : "gelisim-raporu"}-${enrollment.studentNumber}-${roster.course.code}.pdf`;
   return new Response(new Uint8Array(buffer), {
     headers: { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="${filename}"`, "Cache-Control": "no-store" },

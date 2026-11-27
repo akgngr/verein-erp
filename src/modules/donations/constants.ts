@@ -16,8 +16,8 @@ export const CONFIRMATION_NUMBER_PREFIX = "ZB"; // ZB-2026-0001
 /** 300 € altı bağışlar için resmi bildirim zorunlu değildir (uyarı, engel değil). */
 export const SMALL_DONATION_LIMIT_CENTS = 30_000;
 
-/** Bildirim nüshaları (Doppel) fiş olarak saklanır: yıl sonundan itibaren 8 yıl. */
-export const CONFIRMATION_RETENTION_YEARS = 8;
+/** Bildirim nüshaları (Doppel) § 50 Abs. 7 EStDV uyarınca yıl sonundan itibaren 10 yıl saklanır. */
+export const CONFIRMATION_RETENTION_YEARS = 10;
 
 /** Maksimum tutar (§ 10 Donation.amount üst sınırı): 9.999.999,99 €. */
 export const MAX_DONATION_CENTS = 999_999_999;
@@ -31,14 +31,35 @@ export const BATCH_ISSUE_MAX_RECIPIENTS = 200;
 /** Etiket sözlükleri (sunucu içi: audit/export/PDF TR satırları). */
 export const DONOR_TYPE_VALUES: DonorType[] = ["PERSON", "ORGANIZATION"];
 
-export const DONATION_METHOD_VALUES: DonationMethod[] = ["CASH", "BANK_TRANSFER", "CARD", "PAYPAL", "REIMBURSEMENT_WAIVER", "OTHER"];
+export const DONATION_METHOD_VALUES: DonationMethod[] = [
+  "CASH",
+  "BANK_TRANSFER",
+  "CARD",
+  "PAYPAL",
+  "REIMBURSEMENT_WAIVER",
+  "IN_KIND",
+  "OTHER",
+];
 
 /** KARAR (§ 11 md. 4): Aufwandsspende yöntemi ZORUNLU olarak REIMBURSEMENT_WAIVER. */
 export const WAIVER_METHOD: DonationMethod = "REIMBURSEMENT_WAIVER";
 
+/** Ayni bağış (Sachzuwendung; #618): nakit/banka fişi açılmaz, yalnız tek bildirim (SINGLE). */
+export const IN_KIND_METHOD: DonationMethod = "IN_KIND";
+
+export const IN_KIND_ORIGIN_VALUES = [
+  "BUSINESS_ASSETS",
+  "PRIVATE_ASSETS",
+  "UNKNOWN",
+] as const;
+
 export const CONFIRMATION_KIND_VALUES: ConfirmationKind[] = ["SINGLE", "COLLECTIVE"];
 
-export const CONFIRMATION_CONTENT_VALUES: ConfirmationContent[] = ["DONATION", "MEMBERSHIP_FEE"];
+export const CONFIRMATION_CONTENT_VALUES: ConfirmationContent[] = [
+  "DONATION",
+  "IN_KIND_DONATION",
+  "MEMBERSHIP_FEE",
+];
 
 export const CONFIRMATION_STATUS_VALUES: ConfirmationStatus[] = ["ISSUED", "CANCELLED"];
 

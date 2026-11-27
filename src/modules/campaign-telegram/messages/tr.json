@@ -10,7 +10,7 @@
     }
   },
   "access": {
-    "mailings": "Webhook'ta bot ayarlarını (şifreli) okumak için."
+    "mailings": "Webhook'ta bot ayarlarını (şifreli) okumak ve /start, /stop ile verilen/geri alınan Telegram rızasını kişinin kaydına yazmak için."
   },
   "replies": {
     "linked": "✅ Abonelik onaylandı. Ayrılmak için /stop yazın.",

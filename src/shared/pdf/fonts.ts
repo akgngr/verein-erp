@@ -3,14 +3,13 @@ import path from "node:path";
 import { Font } from "@react-pdf/renderer";
 
 /**
- * Ortak PDF font kaydı (Faz 4): standart PDF fontları Türkçe karakterleri
+ * Ortak PDF font kaydı (Faz 4 / #577): standart PDF fontları Türkçe karakterleri
  * (ğ, Ğ, ş, Ş, İ, ı) render edemediği için Noto Sans (SIL OFL 1.1) kullanılır.
- * Dosyalar src/shared/pdf/fonts/ altındadır (Faz 4 Adım 6'da meetings/assets'ten
- * kopyalandı; KARAR: her yeni PDF modülü kendi font kopyasını taşımaz — tek
- * ortak kayıt kullanılır. Tutanak PDF'i kendi kaydını korur; içerik aynıdır).
+ * Dosyalar src/shared/pdf/fonts/ altındadır; tüm PDF modülleri (tutanak dahil)
+ * tek ortak Font.register çağrısını paylaşır.
  *
  * KARAR: Yol process.cwd() üzerinden çözülür — dev sunucuda ve standalone çıktıda
- * aynı göreli düzen korunur (next.config outputFileTracingIncludes fontları kopyalar).
+ * aynı göreli düzen korunur (next.config outputFileTracingIncludes "/api/**" fontları kopyalar).
  */
 
 const FONTS_DIR = path.join(process.cwd(), "src/shared/pdf/fonts");
@@ -33,5 +32,8 @@ export function registerSharedPdfFonts(): void {
       },
     ],
   });
+  // Disable @react-pdf/renderer's English hyphenation rules which split German/Turkish words
+  // mid-syllable without visible hyphens (e.g. "Kö|rperschaftsteuergesetzes", "StNr. 00|7").
+  Font.registerHyphenationCallback((word) => [word]);
   registered = true;
 }

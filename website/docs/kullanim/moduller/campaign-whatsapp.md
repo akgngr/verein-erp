@@ -1,5 +1,5 @@
 ---
-sidebar_position: 43
+sidebar_position: 44
 title: "WhatsApp"
 description: "Kampanyalar için WhatsApp kanalı (Meta Cloud API, onaylı şablonla). Yalnız WhatsApp izni verenlere gider."
 slug: /kullanim/moduller/campaign-whatsapp
@@ -13,7 +13,7 @@ Kampanyalar için WhatsApp kanalı (Meta Cloud API, onaylı şablonla). Yalnız 
 |---|---|
 | Anahtar | `campaign-whatsapp` |
 | Tür | Eklenti |
-| Sürüm | 1.1.2 |
+| Sürüm | 1.2.0 |
 | Gerektirir | [Toplu e-posta](./mailings) |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | WhatsApp | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.2.0 — Webhook doğrulama, şablon değişkeni, işlem şablonu
+
+_2026-11-25_
+
+- **Düzeltme:** Doğrulama belirteci UTF-8 bayt uzunluğuyla karşılaştırılır (çok baytlı belirteçte 500 hatası giderildi); gövde okunurken sınır uygulanır.
+- **Düzeltme:** Şablon değişkenindeki sekme, satır sonu ve art arda boşluklar temizlenir (Meta hata 132018).
+- **Yeni:** E-imza bağlantısı gibi işlem mesajları ayrı 'utility' şablonuyla gider; pazarlama şablonu kullanılmaz.
 
 ### 1.1.2 — TAX_ADVISOR rolü izin tanımı
 

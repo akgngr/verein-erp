@@ -13,7 +13,7 @@ Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketle
 |---|---|
 | Anahtar | `banking` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.8 |
+| Sürüm | 1.1.10 |
 | Sayfalar | `/ayarlar/banka-baglantisi` |
 | Gerektirir | [Muhasebe](./accounting) |
 
@@ -34,6 +34,18 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Banka bağlantısı | görüntüleme, düzenleme, onay | görüntüleme | — | görüntüleme, düzenleme, onay | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.10 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
+
+### 1.1.9 — Callback tekrar koruma ve GoCardless belirteç sertleştirmesi
+
+_2026-11-25_
+
+- **Güvenlik:** Banka callback tekrar oynatma koruması, kanonik APP_URL doğrulaması ve GoCardless belirteç önbelleği / 401-429 hata yönetimi eklendi (#574).
 
 ### 1.1.8 — TAX_ADVISOR rolü izin tanımı
 
@@ -71,15 +83,4 @@ _2026-11-06_
 
 - **Düzeltme:** Banka bağlantısı ayarlarındaki sağlayıcı seçiminde oluşan hydration hatası giderildi.
 
-### 1.1.0 — Bağımlılık
-
-_2026-11-01_
-
-- **İyileştirme:** Zorunlu: Muhasebe.
-
-### 1.0.0 — Banka bağlantısı (PSD2)
-
-_2026-11-01_
-
-- **Yeni:** Lisanslı PSD2 sağlayıcısı (GoCardless Bank Account Data) ile banka bağlama; hesap eşleme ve hareket çekme. Hareketler Muhasebe → Banka eşleştirmesine düşer.
-- **Güvenlik:** Banka giriş bilgileri uygulamaya gelmez; erişim salt okunur ve 90 günle sınırlı. Sağlayıcı anahtarları şifreli saklanır; IBAN ekranda maskelenir.
+Daha eski 2 herkese açık sürüm notu.

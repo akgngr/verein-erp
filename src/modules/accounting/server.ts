@@ -25,6 +25,7 @@ export { createBookingAction, updateBookingAction, reverseBookingAction } from "
 export {
   createSourcedBooking,
   reverseSourcedBooking,
+  nextVersionedSourcedBookingId,
   getDonationBookingTargets,
   donationAccountKeyFor,
   listActiveCategoryOptions,

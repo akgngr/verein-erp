@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 import { isPortalEnabled, PORTAL_NONCE_COOKIE, PORTAL_SESSION_COOKIE } from "../../services/auth-core";
 import { getActivePortalSession, signOutEverywhere } from "../../services/auth";
+import { clearHostCookie } from "../../services/portal-guard";
 
 export async function POST(req: NextRequest) {
   if (!isPortalEnabled()) {
@@ -15,7 +16,7 @@ export async function POST(req: NextRequest) {
   }
 
   const res = NextResponse.redirect(new URL("/portal/giris", req.nextUrl.origin), 303);
-  res.cookies.delete(PORTAL_SESSION_COOKIE);
-  res.cookies.delete(PORTAL_NONCE_COOKIE);
+  clearHostCookie(res, PORTAL_SESSION_COOKIE);
+  clearHostCookie(res, PORTAL_NONCE_COOKIE);
   return res;
 }

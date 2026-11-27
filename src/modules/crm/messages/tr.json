@@ -90,7 +90,10 @@
     "sourceMissing": "Kaynak kayıt bulunamadı veya modül kapalı.",
     "notFound": "Kayıt bulunamadı.",
     "summary": "En az 2 karakter girin.",
-    "title": "Başlık en az 2 karakter olmalıdır."
+    "title": "Başlık en az 2 karakter olmalıdır.",
+    "sourceForbidden": "Bu kaynaktaki kişileri görme yetkiniz yok.",
+    "amount": "Tutar negatif olamaz.",
+    "amountMax": "Tutar en çok 20.000.000 € olabilir."
   },
   "access": {
     "members": "CRM kişilerinin adını ve iletişim bilgisini üye kaydından okur (kopyalamaz).",
@@ -126,5 +129,6 @@
         }
       }
     }
-  }
+  },
+  "restricted": "Kısıtlı (kaynak modülü görme yetkiniz yok)"
 }

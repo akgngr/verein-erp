@@ -7,7 +7,7 @@ import { automationPermissions } from "./permissions";
 /** Kalıcı arka plan işleri ve workflow altyapısı. */
 export const moduleConfig: ModuleConfig = {
   key: "automation",
-  version: "0.10.16",
+  version: "0.10.21",
   label: "Otomasyon",
   description: "Kalıcı arka plan görevleri ve iş akışları.",
   category: "EXTENSION",
@@ -22,7 +22,7 @@ export const moduleConfig: ModuleConfig = {
     "@workflowbuilder/sdk": "3.0.0",
     "@xyflow/react": "12.12.1",
     zustand: "5.1.0",
-    i18next: "24.2.3",
+    i18next: "26.3.4",
   },
   basePath: "/automation",
   nav: [
@@ -33,6 +33,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Activity,
       group: "settings",
       order: 30,
+      settingsGroup: "ai-automation",
+      settingsOrder: 20,
       permission: { definition: automationPermissions, action: "view" },
     },
     {

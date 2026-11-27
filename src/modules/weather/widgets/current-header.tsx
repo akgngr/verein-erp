@@ -1,19 +1,19 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Cloud, CloudRain, CloudSun, MapPin, Moon, RefreshCw, Sun, Wind, Droplets } from "lucide-react";
+import { Cloud, CloudRain, CloudSun, MapPin, Moon, RefreshCw, Sun, Wind, Droplets, Snowflake } from "lucide-react";
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 
-import { searchCityWeatherAction } from "../actions/weather-actions";
+import { fetchOrganizationWeatherAction } from "../actions/weather-actions";
 import type { WeatherData } from "../services/weather";
 
 /** Explicit fixed city, not a claim to know the user's position. The weather page supports geolocation. */
-const CITY = "Frankfurt am Main";
 
 function WeatherIcon({ value }: { value: WeatherData }) {
   const code = value.weatherCode;
-  const Icon = [51,53,55,61,63,65,71,73,75,80,81,82,85,86,95,96,99].includes(code)
+  const Icon = [71,73,75,77,85,86].includes(code)
+    ? Snowflake : [51,53,55,61,63,65,80,81,82,95,96,99].includes(code)
     ? CloudRain : code >= 2 ? Cloud : !value.isDay ? Moon : code === 1 ? CloudSun : Sun;
   return <Icon className="size-5 text-sky-600 transition-transform duration-300 motion-safe:group-hover:-translate-y-0.5 dark:text-sky-300" aria-hidden="true" />;
 }
@@ -28,7 +28,8 @@ export default function CurrentWeatherHeaderWidget() {
 
   const refresh = useCallback(async (active: () => boolean) => {
     try {
-      const result = await searchCityWeatherAction({ query: CITY });
+      // #585: Derneğin şehri (kurum profili); önceden sabit bir şehir kullanılıyordu.
+      const result = await fetchOrganizationWeatherAction();
       if (!active()) return;
       if (result.ok && result.data) {
         setWeather(result.data);
@@ -55,13 +56,13 @@ export default function CurrentWeatherHeaderWidget() {
       <button type="button" aria-label={translate("title")} aria-expanded={expanded} onClick={() => setExpanded((x) => !x)}
         className="group inline-flex h-9 items-center gap-2 rounded-xl border border-sky-500/20 bg-gradient-to-r from-sky-500/10 to-indigo-500/5 px-3 text-xs font-semibold text-ink-800 transition-colors duration-200 hover:border-sky-500/40 hover:bg-sky-500/15 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-sky-500 dark:text-ink-100">
         {weather ? <WeatherIcon value={weather} /> : <CloudSun className="size-5 text-sky-500" aria-hidden="true" />}
-        <span>{weather ? `${Math.round(weather.temperature)}° · ${weather.city}` : CITY}</span>
+        <span>{weather ? `${Math.round(weather.temperature)}° · ${weather.city}` : "—"}</span>
         {busy && <RefreshCw className="size-3 animate-spin motion-reduce:animate-none" aria-hidden="true" />}
       </button>
       {expanded && (
         <section aria-label={translate("title")} className="absolute right-0 top-full z-50 mt-2 w-64 max-w-[90vw] rounded-2xl border border-sky-500/20 bg-surface p-4 text-ink-900 shadow-xl dark:text-ink-100">
           <div className="flex items-center justify-between">
-            <span className="flex items-center gap-1.5 text-xs font-semibold"><MapPin className="size-3.5 text-sky-500" aria-hidden="true" />{CITY}</span>
+            <span className="flex items-center gap-1.5 text-xs font-semibold"><MapPin className="size-3.5 text-sky-500" aria-hidden="true" />{weather?.city ?? "—"}</span>
             <button type="button" disabled={busy} onClick={() => { setBusy(true); void refresh(() => true); }} aria-label={translate("refresh")} title={translate("refresh")}
               className="rounded-lg p-1.5 text-ink-500 transition-colors hover:bg-sky-500/10 focus-visible:outline-2 focus-visible:outline-sky-500 disabled:opacity-50">
               <RefreshCw className={`size-4 ${busy ? "animate-spin motion-reduce:animate-none" : ""}`} aria-hidden="true" />

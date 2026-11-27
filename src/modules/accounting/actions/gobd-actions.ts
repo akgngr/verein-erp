@@ -12,13 +12,14 @@ import { ActionError, createAction } from "@/modules/auth/server";
 
 import { accountingPermissions, accountingSetupPermissions } from "../permissions";
 import { accountBalanceAt } from "../services/balances";
+import { isYearLocked } from "../services/booking-guards";
 import { recordJournal } from "../services/journal";
 import { berlinToday, parseDateOnly } from "../utils";
 
 const closingSchema = z.object({
   accountId: z.string().min(1),
   date: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "accounting.validation.bookingDateInvalid"),
-  counted: z.string().trim().regex(/^-?\d{1,9}([.,]\d{1,2})?$/, "accounting.invoices.validation.price"),
+  counted: z.string().trim().regex(/^\d{1,9}([.,]\d{1,2})?$/, "accounting.invoices.validation.price"),
   note: z.string().trim().max(300).default(""),
 });
 
@@ -33,14 +34,26 @@ export async function createCashClosingAction(input: unknown): Promise<ActionRes
     handler: async ({ input, user, audit }) => {
       const date = parseDateOnly(input.date);
       if (!date || date > berlinToday()) throw new ActionError("accounting.gobd.errors.closingDate");
+      const year = date.getUTCFullYear();
       const result = await getDb().$transaction(async (tx) => {
-        const account = await tx.accountingAccount.findUnique({ where: { id: input.accountId }, select: { type: true } });
+        if (await isYearLocked(year, tx)) {
+          throw new ActionError("accounting.errors.yearLocked", undefined, { year });
+        }
+        const account = await tx.accountingAccount.findUnique({
+          where: { id: input.accountId },
+          select: { type: true, openingDate: true },
+        });
         if (account?.type !== "CASH") throw new ActionError("accounting.gobd.errors.notCash");
+        if (date.getTime() < account.openingDate.getTime()) {
+          throw new ActionError("accounting.errors.beforeOpening");
+        }
         const last = await tx.accountingCashClosing.findFirst({ where: { accountId: input.accountId }, orderBy: { closingDate: "desc" } });
         if (last && last.closingDate >= date) throw new ActionError("accounting.gobd.errors.alreadyClosed");
         const book = await accountBalanceAt(input.accountId, date, tx);
-        const counted = toCents(input.counted.replace("-", "")) ?? 0;
-        const countedCents = input.counted.trim().startsWith("-") ? -counted : counted;
+        const countedCents = toCents(input.counted);
+        if (countedCents === null || countedCents < 0) {
+          throw new ActionError("accounting.invoices.validation.price");
+        }
         const created = await tx.accountingCashClosing.create({
           data: {
             accountId: input.accountId,

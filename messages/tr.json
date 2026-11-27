@@ -135,6 +135,7 @@
     "progress": "Öğrenci takibi",
     "secretary": "Sekreter",
     "securityMonitor": "Güvenlik İzleme",
+    "socialLogin": "Sosyal Giriş",
     "students": "Öğrenciler",
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi",
@@ -146,12 +147,14 @@
     "widgetlar": "Widget ayarları",
     "privacyPresets": "Gizlilik ön ayarları",
     "egressReport": "Veri çıkışı raporu",
+    "yedekleme": "Yedekleme ve kurtarma",
     "tasks": "Görevler",
     "kullanicilar": "Kullanıcılar",
     "weather": "Hava Durumu",
     "youth-protection": "Çocuk Koruma"
   },
   "sidebar": {
+    "brandShort": "Dernek ERP",
     "brand": "Dernek Yönetim",
     "collapse": "Menüyü daralt",
     "expand": "Menüyü genişlet",
@@ -288,20 +291,76 @@
     "noResults": "Aramanızla eşleşen ayar yok.",
     "open": "Aç",
     "sections": {
-      "general": {
-        "title": "Dernek ve sistem",
-        "description": "Dernek bilgileri, kullanıcılar ve sistem yönetimi."
-      },
-      "modules": {
-        "title": "Modül ayarları",
-        "description": "Modüllerin kendi yapılandırma sayfaları."
-      },
       "personal": {
         "title": "Kişisel tercihler",
         "description": "Yalnızca sizin arayüzünüzü etkiler."
       }
     },
-    "moduleSettings": "{module} ayarları"
+    "moduleSettings": "{module} ayarları",
+    "itemDescriptions": {
+      "ai": "Yapay zekâ sağlayıcısı, rıza ve veri paylaşım kuralları.",
+      "kullanicilar": "Kullanıcı hesapları, roller ve davetler.",
+      "automationMonitor": "İş akışları, zamanlanmış görevler ve çalıştırma geçmişi.",
+      "securityMonitor": "Kurulumun güvenlik denetimi ve uyarılar.",
+      "denetimKaydi": "Kim, ne zaman, neyi değiştirdi: değiştirilemez kayıt.",
+      "mail": "Giden e-posta hesabı ve gönderim ayarları.",
+      "gelenKutusu": "Bağlı posta kutusu ve gelen e-postaların işlenmesi.",
+      "notifications": "Bildirim türleri, kanallar ve sessiz saatler.",
+      "duyurular": "Rollere göre tüm kullanıcılara duyuru gönderin.",
+      "aboneler": "Bildirim kanallarına bağlı aboneler.",
+      "demoVeri": "Deneme için örnek veri yükleyin veya kaldırın.",
+      "widgetlar": "Başlık çubuğundaki widget'lar ve izinleri.",
+      "moduller": "Modülleri etkinleştirin, devre dışı bırakın ve erişimlerini onaylayın.",
+      "modulSagligi": "Modüllerin durum ve yapılandırma denetimi.",
+      "modulPaketleri": "Hazır modül paketleri.",
+      "kurulum": "İlk kurulum adımlarını yeniden çalıştırın.",
+      "lisans": "Lisans bilgileri ve kullanım koşulları.",
+      "privacyPresets": "Gizlilik ön ayarları: hangi verinin dışarı çıkabileceği.",
+      "egressReport": "Harici hizmetlere giden verilerin raporu.",
+      "yedekleme": "Şifreli veritabanı ve dosya yedekleme ile geri yükleme doğrulaması.",
+      "menuDuzeni": "Kenar çubuğu menüsünün sırası ve görünürlüğü.",
+      "surumNotlari": "Uygulama ve modül sürüm notları.",
+      "organization": "Dernek adı, adres, logo ve kamu yararı bilgileri.",
+      "bankaBaglantisi": "Banka hesabı bağlantısı ve hesap hareketleri aktarımı."
+    },
+    "groups": {
+      "general": {
+        "title": "Genel",
+        "description": "Dernek bilgileri, kurulum, lisans ve sürüm notları."
+      },
+      "users-access": {
+        "title": "Kullanıcılar ve erişim",
+        "description": "Kullanıcılar, roller ve davetler."
+      },
+      "security-privacy": {
+        "title": "Güvenlik ve gizlilik",
+        "description": "Gizlilik ayarları, veri çıkışı, denetim kaydı ve güvenlik izleme."
+      },
+      "integrations": {
+        "title": "Entegrasyonlar",
+        "description": "Banka bağlantısı ve dış hizmetler."
+      },
+      "appearance": {
+        "title": "Görünüm",
+        "description": "Pano widget'ları ve menü düzeni."
+      },
+      "communication": {
+        "title": "İletişim",
+        "description": "E-posta, gelen kutusu ve bildirim kanalları."
+      },
+      "ai-automation": {
+        "title": "Yapay zekâ ve otomasyon",
+        "description": "Yapay zekâ asistanı ve otomasyon izleme."
+      },
+      "module-management": {
+        "title": "Modül yönetimi",
+        "description": "Modüller, sağlık durumu, paketler ve modüllerin kendi ayarları."
+      },
+      "system-management": {
+        "title": "Sistem yönetimi",
+        "description": "Demo verisi ve bakım araçları."
+      }
+    }
   },
   "roles": {
     "ADMIN": "Yönetici",
@@ -920,7 +979,10 @@
       "bookingNotFound2": "Fiş bulunamadı.",
       "reversedNoFile": "İptal edilmiş fişe belge eklenemez.",
       "reversedSuffix": "İPTAL EDİLDİ",
-      "cashClosed": "Kasa {date} tarihinde kapatıldı; o güne veya öncesine bu kasada işlem yapılamaz."
+      "cashClosed": "Kasa {date} tarihinde kapatıldı; o güne veya öncesine bu kasada işlem yapılamaz.",
+      "yearNotFinished": "{year} mali yılı henüz tamamlanmadığı için kapatılamaz.",
+      "yearCloseGobdFailed": "GoBD günlük bütünlüğü doğrulaması başarısız; yıl kapatılmadan önce sorun giderilmelidir.",
+      "unlockRequiresOtherApprover": "Kilit açma işlemi, yılı kapatan kullanıcı dışında başka bir yetkili veya yönetici tarafından onaylanmalıdır."
     },
     "settings": {
       "donationShort": "Bağış"
@@ -1047,10 +1109,12 @@
       }
     },
     "access": {
-      "members": "Üye aidat ödemelerini muhasebeye aktarmak için ödemeleri okur.",
+      "members": "Üye aidat ödemelerini muhasebeye aktarmak ve banka hareketleriyle açık aidatları eşleştirip kapatmak için üye aidatlarını okur ve öder.",
+      "courses": "Açık kurs ücretlerini banka hareketleriyle eşleştirip ödenmiş olarak işaretlemek için kurs ücretlerini okur ve günceller.",
+      "donations": "Gelen banka hareketlerini tek tıkla bağış olarak kaydetmek ve mevcut bağışçıları önermek için bağış modülünü okur ve yazar.",
       "organization": "PDF raporlarında dernek antetini kullanır.",
       "inventory": "Demirbaşları envanter eşyalarıyla senkron tutar (ad, tarih, bedel, hurdaya çıkarma).",
-      "system": "Envanter modülünün etkin olup olmadığını okur."
+      "system": "Envanter ve ilgili modüllerin etkin olup olmadığını okur."
     },
     "pdf": {
       "voucher": {
@@ -1411,7 +1475,7 @@
     },
     "bank": {
       "title": "Banka",
-      "description": "Ekstreleri içe aktarın (CAMT.053, MT940, CSV), önerileri onaylayarak fişe veya açık faturaya bağlayın.",
+      "description": "Ekstreleri içe aktarın (CAMT.053, MT940, CSV), önerileri onaylayarak fişe, açık faturaya, aidata, kurs ücretine veya bağışa bağlayın.",
       "import": {
         "title": "Ekstre içe aktar",
         "hint": "Bankanızın online bankacılığından CAMT.053 (XML), MT940 veya CSV dışa aktarımını yükleyin. Aynı satırlar ikinci kez eklenmez.",
@@ -1442,20 +1506,48 @@
         "invoiceNumber": "fatura no.",
         "amount": "tutar",
         "name": "ad",
-        "rule": "kural"
+        "rule": "kural",
+        "memberNumber": "üye no.",
+        "iban": "IBAN",
+        "courseCode": "kurs kodu",
+        "debtorNumber": "borçlu no.",
+        "donationKeyword": "bağış",
+        "donor": "bağışçı"
       },
       "actions": {
         "book": "Fişe bağla",
         "private": "Özel",
         "ignore": "Yok say",
         "reopen": "Geri aç",
-        "openBooking": "Fişi aç"
+        "openBooking": "Fişi aç",
+        "reverse": "Ters kayıt (Storno)"
+      },
+      "reversed": "Banka fişi ters kaydedildi ve hareket yeniden eşleştirme için açıldı.",
+      "reverseModal": {
+        "title": "Banka fişini ters kaydet",
+        "description": "Bağlı muhasebe fişi GoBD uyumlu olarak ters kaydedilir ve bu banka satırı yeniden eşleştirme için açık duruma alınır.",
+        "reasonLabel": "İptal gerekçesi",
+        "reasonPlaceholder": "Örn. yanlış kategoriye işlendi",
+        "submit": "Ters kaydet"
       },
       "modal": {
         "title": "Banka hareketini fişe bağla",
         "invoice": "Açık fatura",
+        "memberDue": "Üye aidatı",
+        "courseCharge": "Kurs ücreti",
+        "donation": "Bağış",
         "category": "Kategori",
         "invoiceSelect": "Fatura",
+        "memberDueSelect": "Açık üye aidatı",
+        "courseChargeSelect": "Açık kurs ücreti",
+        "courseAmountMismatchHint": "Kurs ücretleri yalnızca tam tutarla eşleştirilebilir.",
+        "donorSelect": "Bağışçı",
+        "donorCreateNew": "+ Yeni bağışçı oluştur",
+        "newDonorName": "Bağışçı adı",
+        "newDonorType": "Bağışçı türü",
+        "donorPerson": "Kişi",
+        "donorOrganization": "Kurum / Firma",
+        "purposeNote": "Amaç / açıklama (isteğe bağlı)",
         "categorySelect": "Kategori",
         "taxRate": "KDV oranı",
         "learn": "Kural öğren",
@@ -1487,10 +1579,25 @@
         "currency": "Yalnızca EUR hareketleri desteklenir.",
         "notFound": "Hareket bulunamadı.",
         "notOpen": "Hareket artık açık değil.",
+        "notBooked": "Yalnızca fişe bağlanmış banka hareketleri ters kaydedilebilir.",
+        "reverseInvoiceManaged": "Fatura, aidat, kurs ücreti veya bağış ile eşleştirilmiş banka hareketleri ilgili modül ekranından iptal edilmelidir.",
         "invoiceRequired": "Fatura seçin.",
         "invoiceNeedsCredit": "Faturaya yalnızca gelen ödemeler bağlanabilir.",
         "payableRequired": "Gelen fatura seçin.",
-        "payableNeedsDebit": "Gelen faturaya yalnızca giden ödemeler bağlanabilir."
+        "payableNeedsDebit": "Gelen faturaya yalnızca giden ödemeler bağlanabilir.",
+        "creditNoteNeedsCredit": "Alacak dekontu yalnızca tedarikçiden gelen bir iadeyle (hesaba giriş) eşleştirilebilir.",
+        "memberDueRequired": "Açık bir üye aidatı seçin.",
+        "memberDueNeedsCredit": "Üye aidatına yalnızca gelen ödemeler bağlanabilir.",
+        "memberDueNotFound": "Seçilen üye aidatı bulunamadı.",
+        "memberDueAlreadySettled": "Bu üye aidatı zaten tamamen ödenmiş.",
+        "memberDueOverpayment": "Banka tutarı seçilen aidatın açık bakiyesinden büyük.",
+        "courseChargeRequired": "Açık bir kurs ücreti seçin.",
+        "courseChargeNeedsCredit": "Kurs ücretine yalnızca gelen ödemeler bağlanabilir.",
+        "courseChargeNotFound": "Seçilen kurs ücreti bulunamadı.",
+        "courseChargeAlreadySettled": "Bu kurs ücreti zaten kapatılmış.",
+        "courseChargeAmountMismatch": "Banka tutarı seçilen kurs ücretiyle birebir aynı olmalıdır.",
+        "donationNeedsCredit": "Bağış olarak yalnızca gelen ödemeler kaydedilebilir.",
+        "donorRequired": "Mevcut bir bağışçı seçin veya yeni bağışçı adı girin."
       }
     },
     "payables": {
@@ -1785,7 +1892,8 @@
       },
       "errors": {
         "gwgLimit": "GWG yalnızca net 800 €'ya kadar.",
-        "poolRange": "Sammelposten yalnızca net 250,01–1.000 € arası."
+        "poolRange": "Sammelposten yalnızca net 250,01–1.000 € arası.",
+        "disposalBeforeAcquisition": "Çıkış tarihi alış tarihinden önce olamaz."
       }
     },
     "einvoice": {
@@ -2103,7 +2211,8 @@
       "reportNotFound": "Rapor bulunamadı.",
       "staleProposal": "Kayıt değişti veya önerinin süresi doldu. Lütfen yeni bir öneri oluşturun.",
       "cloudIntentRequired": "Bulut sağlayıcıda yalnızca “Üye sayısı 2026”, “Bağış özeti 2026” veya “Aidat dosyası 2026” gibi hazır istekler kullanılabilir. Serbest metin için yerel sağlayıcıyı seçin.",
-      "cloudDisabled": "Bulut işleme kapalı. Yönetici yerel bir model seçebilir veya Ayarlar → AI asistanı → Bulut veri politikası'nı değiştirebilir."
+      "cloudDisabled": "Bulut işleme kapalı. Yönetici yerel bir model seçebilir veya Ayarlar → AI asistanı → Bulut veri politikası'nı değiştirebilir.",
+      "providerNotAllowed": "Bu sağlayıcı, uygulanan gizlilik ön ayarı tarafından izin verilmiyor (Ayarlar → Gizlilik)."
     },
     "panel": {
       "title": "Asistan",
@@ -2539,6 +2648,16 @@
         "label": "Güvenlik & Değişiklik Günlüğü",
         "description": "Değiştirilemez sistemsel denetim izleri ve güvenlik kayıtları."
       }
+    },
+    "details": {
+      "open": "Ayrıntılar",
+      "title": "Değişiklik ayrıntısı",
+      "before": "Önce",
+      "after": "Sonra",
+      "none": "Kayıt yok"
+    },
+    "errors": {
+      "notFound": "Denetim kaydı bulunamadı."
     }
   },
   "auth": {
@@ -2548,12 +2667,13 @@
     "loginButton": "Giriş yap",
     "logout": "Çıkış yap",
     "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur",
+    "mustChangePasswordHint": "Güvenliğiniz için devam etmeden önce aşağıdan yeni bir parola belirlemeniz gerekir.",
     "meta": {
       "profile": "Profil"
     },
     "appTitle": "Dernek Yönetim Sistemi",
     "loginSubtitle": "Devam etmek için oturum açın",
-    "passiveNotice": "Oturumunuz sonlandırıldı. Hesabınız pasif duruma alınmış olabilir; lütfen yöneticinizle görüşün.",
+    "passiveNotice": "Oturumunuz sonlandırıldı (ör. şifre değişikliği, tüm cihazlardan çıkış veya hesabın pasife alınması). Lütfen yeniden giriş yapın; sorun sürerse yöneticinizle görüşün.",
     "profile": {
       "title": "Profil",
       "description": "Hesap bilgileriniz ve parola değişikliği.",
@@ -2564,21 +2684,36 @@
       "changePassword": "Parola Değiştir",
       "currentPassword": "Mevcut parola",
       "newPassword": "Yeni parola",
+      "confirmPassword": "Yeni parola (tekrar)",
       "submit": "Parolayı güncelle",
       "updated": "Parolanız güncellendi.",
       "details": "Profil Bilgilerim",
-      "detailsHint": "İletişim, adres, ödeme ve fatura bilgileriniz. Yalnızca siz ve yetkili yöneticiler görebilir."
+      "detailsHint": "İletişim, adres, ödeme ve fatura bilgileriniz. Yalnızca siz ve yetkili yöneticiler görebilir.",
+      "sessions": {
+        "title": "Oturumlar",
+        "hint": "Hesabınızın açık olduğu diğer tüm cihaz ve tarayıcılardan çıkış yapın (örn. kayıp telefon, ortak bilgisayar). Bu cihazda oturumunuz açık kalır.",
+        "currentPassword": "Mevcut şifre",
+        "submit": "Diğer tüm cihazlardan çıkış yap",
+        "done": "Diğer tüm cihazlardaki oturumlar sonlandırıldı."
+      },
+      "twoFactor": "İki adımlı doğrulama"
     },
     "errors": {
       "sessionInvalid": "Oturumunuz geçersiz. Lütfen tekrar giriş yapın.",
       "currentPasswordWrong": "Mevcut parolanız hatalı.",
+      "samePassword": "Yeni parola mevcut parolanızla aynı olamaz.",
       "invalidCredentials": "E-posta veya parola hatalı.",
       "accountLocked": "Hesap geçici olarak kilitlendi, daha sonra tekrar deneyin.",
+      "rateLimited": "Çok fazla giriş denemesi yapıldı. Lütfen daha sonra tekrar deneyin.",
       "loginFailed": "Giriş yapılamadı. Lütfen tekrar deneyin.",
-      "invalidLocale": "Geçersiz dil seçimi."
+      "invalidLocale": "Geçersiz dil seçimi.",
+      "twoFactorRequired": "Doğrulama uygulamanızdaki kodu girin.",
+      "twoFactorInvalid": "Kod hatalı, süresi dolmuş veya daha önce kullanılmış."
     },
     "validation": {
       "currentPasswordRequired": "Mevcut parolanızı girin.",
+      "confirmPasswordRequired": "Yeni parolanızı tekrar girin.",
+      "passwordsMismatch": "Yeni parolalar eşleşmiyor.",
       "emailRequired": "E-posta zorunludur.",
       "passwordRequired": "Parola zorunludur."
     },
@@ -2623,7 +2758,55 @@
         "bic": "Geçerli bir BIC girin (8 veya 11 karakter).",
         "vatId": "Geçerli bir KDV kimlik numarası girin (ör. DE123456789)."
       }
-    }
+    },
+    "forgotPassword": "Şifremi unuttum",
+    "twoFactorCode": "Doğrulama kodu",
+    "twoFactorCodeHint": "Doğrulama uygulamanızdaki 6 haneli kodu veya kurtarma kodlarınızdan birini girin.",
+    "twoFactorBack": "Başka bir hesapla giriş yap",
+    "twoFactor": {
+      "loading": "Yükleniyor…",
+      "off": "İki adımlı doğrulama kapalı.",
+      "on": "İki adımlı doğrulama açık — {count, plural, one {# kurtarma kodu} other {# kurtarma kodu}} kaldı.",
+      "hint": "Girişte parolanıza ek olarak bir doğrulama uygulamasındaki (örn. Google Authenticator, Microsoft Authenticator, 2FAS) kodu sorar. Yönetici ve sayman hesapları için önerilir.",
+      "manageHint": "Kapatmak veya yeni kurtarma kodları almak için uygulamanızdaki güncel kodu (ya da bir kurtarma kodunu) girin.",
+      "currentPassword": "Mevcut şifre",
+      "currentPasswordForDisable": "Mevcut şifre (kapatmak için)",
+      "code": "Kod",
+      "cancel": "Vazgeç",
+      "enabled": "İki adımlı doğrulama açıldı.",
+      "disabled": "İki adımlı doğrulama kapatıldı.",
+      "disable": "İki adımlı doğrulamayı kapat",
+      "error": "İşlem tamamlanamadı. Lütfen tekrar deneyin.",
+      "setup": {
+        "start": "Kurulumu başlat",
+        "step1": "1. Doğrulama uygulamanızda yeni hesap ekleyin ve aşağıdaki anahtarı girin (telefonda bağlantıya dokunarak da ekleyebilirsiniz).",
+        "manualKey": "Kurulum anahtarı",
+        "openApp": "Doğrulama uygulamasında aç",
+        "step2": "2. Uygulamanın gösterdiği 6 haneli kodu girin.",
+        "confirm": "Onayla ve aç"
+      },
+      "recovery": {
+        "title": "Kurtarma kodları",
+        "hint": "Telefonunuza erişemezseniz bu kodlarla giriş yapabilirsiniz; her kod bir kez çalışır. Kodları güvenli bir yere kaydedin — bir daha gösterilmeyecek.",
+        "copy": "Kodları kopyala",
+        "copied": "Kurtarma kodları kopyalandı.",
+        "done": "Kaydettim",
+        "replace": "Yeni kurtarma kodları oluştur"
+      },
+      "errors": {
+        "alreadyEnabled": "İki adımlı doğrulama zaten açık.",
+        "noEnrolment": "Önce kurulumu başlatın.",
+        "codeInvalid": "Kod hatalı, süresi dolmuş veya daha önce kullanılmış."
+      }
+    },
+    "oauthDenied": "Bu hesapla giriş yapılamadı. Hesap bağlı değilse, kapalıysa veya iki adımlı doğrulama açıksa e-posta ve şifrenizle giriş yapın.",
+    "oauth": {
+      "errors": {
+        "invalidLink": "Giriş bağlantısı geçersiz.",
+        "alreadyLinked": "Bu hesap başka bir kullanıcıya bağlı."
+      }
+    },
+    "externalLogin": "{provider} ile giriş yap"
   },
   "automation": {
     "module": {
@@ -2666,7 +2849,8 @@
       "cancel": "İptal et",
       "retry": "Yeniden dene",
       "cancelled": "Görev iptal edildi.",
-      "retried": "Görev yeniden kuyruğa alındı."
+      "retried": "Görev yeniden kuyruğa alındı.",
+      "detailsHidden": "Teknik ayrıntılar yalnız otomasyonu yönetebilen rollere gösterilir."
     },
     "access": {
       "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için.",
@@ -2687,10 +2871,41 @@
       "deleted": "Zamanlama silindi.",
       "empty": "Henüz zamanlanmış görev yok.",
       "every": "Her {hours} saatte",
+      "everyMinutes": "Her {minutes} dakikada",
+      "everyDays": "Her {days} günde",
       "next": "Sonraki: {date}",
       "last": "Son: {date}",
       "enabled": "Etkin",
-      "delete": "Sil"
+      "delete": "Sil",
+      "taskLabels": {
+        "ai": {
+          "cleanup_history": "AI geçmişini temizle"
+        },
+        "calendar": {
+          "sync_external": "Harici takvimleri eşitle"
+        },
+        "exports": {
+          "cleanup_files": "Süresi dolan dışa aktarım dosyalarını sil"
+        },
+        "meetings": {
+          "vote_purge": "Eski oy kayıtlarını temizle"
+        },
+        "notifications": {
+          "purge": "Eski bildirimleri temizle",
+          "dispatch": "Bekleyen bildirimleri gönder"
+        },
+        "secretary": {
+          "daily_briefing": "Sekreter günlük özeti",
+          "follow_up_reminders": "Takip hatırlatmaları",
+          "migrate_notifications": "Sekreter bildirimlerini taşı"
+        },
+        "security-monitor": {
+          "run_tests": "Güvenlik denetimini çalıştır"
+        },
+        "youth-protection": {
+          "statutory_purge": "Yasal saklama süresi dolan kayıtları sil"
+        }
+      }
     },
     "errors": {
       "notCancellable": "Bu görev artık iptal edilemez.",
@@ -3083,6 +3298,9 @@
     "errors": {
       "credentials": "Sağlayıcı anahtarları reddedildi. Ayarları kontrol edin.",
       "provider": "Banka sağlayıcısına ulaşılamadı veya istek reddedildi. Daha sonra tekrar deneyin.",
+      "rateLimit": "Banka sağlayıcısı istek sınırına ulaştı. Lütfen kısa bir süre sonra tekrar deneyin.",
+      "invalidAccount": "Yalnızca aktif bir banka hesabı eşlenebilir.",
+      "appUrlRequired": "Banka bağlantısı için genel uygulama adresi (APP_URL) tanımlanmalıdır.",
       "notConfigured": "Sağlayıcı ayarlanmamış.",
       "mockDisabled": "Test sağlayıcısı bu ortamda kullanılamaz."
     },
@@ -3369,7 +3587,7 @@
       }
     },
     "access": {
-      "mailings": "Webhook'ta bot ayarlarını (şifreli) okumak için."
+      "mailings": "Webhook'ta bot ayarlarını (şifreli) okumak ve /start, /stop ile verilen/geri alınan Telegram rızasını kişinin kaydına yazmak için."
     },
     "replies": {
       "linked": "✅ Abonelik onaylandı. Ayrılmak için /stop yazın.",
@@ -3456,7 +3674,9 @@
     "errors": {
       "unknownRule": "Kural bulunamadı.",
       "noTask": "Bu kural için görev önerisi yok.",
-      "noFinding": "Güncel bir bulgu yok; sayfayı yenileyin."
+      "noFinding": "Güncel bir bulgu yok; sayfayı yenileyin.",
+      "tasksUnavailable": "Görevler modülü açık değil; önce Modül Yönetimi'nden etkinleştirin.",
+      "tasksForbidden": "Görev oluşturma yetkiniz yok."
     },
     "ui": {
       "yearLabel": "Yıl",
@@ -3468,7 +3688,9 @@
       "downloadExport": "{format} indir",
       "computedValue": "Hesaplanan değer",
       "askAdvisorLink": "Vergi danışmanı erişimi"
-    }
+    },
+    "draftOnly": "Kontrol kuralları henüz hukuki incelemeden geçmedi; yönetici onayladıktan sonra burada görünecek.",
+    "draftOnlyAdmin": "Tüm kurallar taslak durumunda (hukuki inceleme bekliyor). Önizleme ile sonuçları görebilirsiniz; kurallar incelenip onaylanınca herkese gösterilir."
   },
   "courses": {
     "module": {
@@ -3785,7 +4007,8 @@
       "chargeNotOpen": "Bu kalem açık değil.",
       "paymentNotFound": "Tahsilat bulunamadı ya da zaten geri alınmış.",
       "categoryMissing": "Kurs ayarlarında muhasebe gelir kategorisi seçilmemiş.",
-      "teacherHasAccount": "Bu öğretmenin zaten bir hesabı var."
+      "teacherHasAccount": "Bu öğretmenin zaten bir hesabı var.",
+      "sessionInLockedPayout": "Bu ders onaylanmış veya ödenmiş bir öğretmen hakedişinde yer aldığı için silinemez."
     },
     "validation": {
       "textMax": "Metin çok uzun.",
@@ -3836,7 +4059,8 @@
       "mail": "Öğretmen davet e-postası gönderir.",
       "students": "Kursa kaydedilecek öğrencileri ve ödeme sorumlularını okur.",
       "users": "Davet edilen öğretmen için Öğretmen rolünde kullanıcı hesabı açar; hesabı olan öğretmenin ad ve e-postasını kullanıcı kaydından okur.",
-      "organization": "Öğretmen hakediş PDF'inin antetinde dernek bilgilerini ve logosunu okur."
+      "organization": "Öğretmen hakediş PDF'inin antetinde dernek bilgilerini ve logosunu okur.",
+      "progress": "Bir kurs dersi silindiğinde o derse ait yetim yoklama kayıtlarını temizler."
     },
     "ai": {
       "create": {
@@ -4044,7 +4268,10 @@
       "sourceMissing": "Kaynak kayıt bulunamadı veya modül kapalı.",
       "notFound": "Kayıt bulunamadı.",
       "summary": "En az 2 karakter girin.",
-      "title": "Başlık en az 2 karakter olmalıdır."
+      "title": "Başlık en az 2 karakter olmalıdır.",
+      "sourceForbidden": "Bu kaynaktaki kişileri görme yetkiniz yok.",
+      "amount": "Tutar negatif olamaz.",
+      "amountMax": "Tutar en çok 20.000.000 € olabilir."
     },
     "access": {
       "members": "CRM kişilerinin adını ve iletişim bilgisini üye kaydından okur (kopyalamaz).",
@@ -4080,7 +4307,8 @@
           }
         }
       }
-    }
+    },
+    "restricted": "Kısıtlı (kaynak modülü görme yetkiniz yok)"
   },
   "demo": {
     "module": {
@@ -4604,6 +4832,7 @@
       "donorFromMember": "Üyeden oluştur",
       "date": "Bağış tarihi (Tag der Zuwendung)",
       "amount": "Tutar (€)",
+      "inKindValue": "Değerleme tutarı (€)",
       "amountHint": "300 € ve altındaki bağışlar için resmi bildirim zorunlu değildir (banka dekontu yeterlidir).",
       "methodLabel": "Yöntem",
       "method": {
@@ -4611,9 +4840,19 @@
         "BANK_TRANSFER": "Banka havalesi (Überweisung)",
         "CARD": "Kart (Kartenzahlung)",
         "PAYPAL": "PayPal",
+        "IN_KIND": "Ayni bağış (Sachzuwendung)",
         "REIMBURSEMENT_WAIVER": "Aufwandsspende",
         "OTHER": "Diğer (Sonstige)"
       },
+      "inKindNotice": "Ayni bağışlar (Sachzuwendung) nakit/banka akışı oluşturmadığı için muhasebe gelir fişi açılmaz. BMF Anlage 4 uyumlu tekil bağış bildirimi düzenlenebilir.",
+      "itemDescription": "Eşyanın ayrıntılı tanımı (yaş, durum, alış fiyatı vb.)",
+      "inKindOrigin": "Malvarlığı kaynağı (BMF)",
+      "origin": {
+        "BUSINESS_ASSETS": "Ticari malvarlığı (Betriebsvermögen)",
+        "PRIVATE_ASSETS": "Özel malvarlığı (Privatvermögen)",
+        "UNKNOWN": "Kaynak belirtilmedi (Keine Angabe)"
+      },
+      "valuationRecordsAvailable": "Değerleme belgeleri (fatura, ekspertiz vb.) mevcut",
       "paypalHint": "Yalnızca derneğe net ulaşan tutarı girin (PayPal komisyonu bağış değildir).",
       "reference": "Referans",
       "purposeNote": "Amaç notu",
@@ -4637,6 +4876,9 @@
         "method": "Yöntem",
         "reference": "Referans",
         "purposeNote": "Amaç notu",
+        "itemDescription": "Ayni bağış tanımı",
+        "inKindOrigin": "Malvarlığı kaynağı",
+        "valuationRecordsAvailable": "Değerleme belgesi mevcut",
         "waived": "Aufwandsspende",
         "claimBasis": "Talep dayanağı",
         "waiverDeclaredAt": "Beyan tarihi",
@@ -4653,7 +4895,8 @@
       "cancelReason": "İptal nedeni (5-300 karakter)",
       "cancelHint": "Muhasebe fişleri ters kayıt edilir; iptal edilmiş bağış üstü çizili görünür ve istatistiklerden hariç tutulur.",
       "toastCancelled": "Bağış iptal edildi.",
-      "issue": "Bildirim oluştur"
+      "issue": "Bildirim oluştur",
+      "simplifiedProofPdf": "≤ 300 € Basitleştirilmiş Kanıt (PDF)"
     },
     "donors": {
       "title": "Bağışçılar (Spender)",
@@ -4684,6 +4927,8 @@
         "note": "Not",
         "fromMember": "Üyeden bağışçı oluştur",
         "fromMemberHint": "Üyenin adı ve adresi bir kez kopyalanır; üye kaydıyla canlı bağlantı kurulmaz.",
+        "duplicateWarning": "Benzer bir bağışçı zaten kayıtlı ({number}). Yine de yeni bağışçı oluşturmak istiyorsanız aşağıdan onaylayın.",
+        "confirmCreateDuplicate": "Yine de kaydet",
         "save": "Kaydet",
         "cancel": "Vazgeç",
         "toastSaved": "Bağışçı kaydedildi: {number}"
@@ -4718,6 +4963,7 @@
       },
       "content": {
         "DONATION": "Bağış",
+        "IN_KIND_DONATION": "Ayni bağış (Sachzuwendung)",
         "MEMBERSHIP_FEE": "Aidat"
       },
       "status": {
@@ -4829,9 +5075,11 @@
       "readiness": "Hazır olma kontrolü",
       "preview": "Şablon önizlemeleri (MUSTER)",
       "previewSingleDonation": "Tek bağış",
+      "previewSingleInKind": "Tek ayni bağış (Sachzuwendung — BMF Anlage 4)",
       "previewCollectiveDonation": "Toplu bağış (Sammelbestätigung + Anlage)",
       "previewSingleFee": "Tek aidat",
       "previewCollectiveFee": "Toplu aidat",
+      "simplifiedProofDownload": "≤ 300 € Basitleştirilmiş Bağış Kanıtı (§ 50 Abs. 4 Nr. 2 EStDV + GiroCode)",
       "bmflink": "BMF amtliche Muster (Formularcenter)",
       "bmflinkHref": "https://www.bundesfinanzministerium.de/Formularcenter",
       "confirmLabel": "Preview'deki metni BMF'nin resmi örneğiyle karşılaştırdım; derneğimizin durumuna uygun",
@@ -4913,13 +5161,19 @@
       "reversedDonation": "İptal edilmiş bağışa bildirim düzenlenemez.",
       "someDonationsMissing": "Seçilen bağışlardan bazıları bulunamadı.",
       "periodSingleYear": "Sammelbestätigung dönemi tek takvim yılı içinde olmalıdır.",
+      "periodOrderInvalid": "Dönem başlangıç tarihi bitiş tarihinden sonra olamaz.",
       "donationReversed": "{number} iptal edilmiş.",
       "donationOutsidePeriod": "{number} dönem yılı dışında.",
       "noFeePayments": "Bu üye ve yıl için bildirilebilir ödeme yok.",
       "feePaymentsCovered": "Tüm ödemeler zaten aktif bir bildirimde.",
       "noDonationsInYear": "Bu bağışçının o yıl için bildirilebilir bağışı yok.",
       "replaceNotCancelled": "Yalnızca iptal edilmiş bir bildirimin yerine yenisi oluşturulabilir.",
-      "alreadyReplaced": "Bu bildirimin yerine zaten yenisi oluşturulmuş."
+      "alreadyReplaced": "Bu bildirimin yerine zaten yenisi oluşturulmuş.",
+      "inKindDetailsMissing": "Ayni bağış bildirimi için eşya tanımı ve malvarlığı kaynağı zorunludur.",
+      "inKindNoCollective": "Ayni bağışlar ({number}) Sammelbestätigung (toplu bildirim) içine alınamaz; tekil bildirim oluşturun.",
+      "simplifiedProofNotInKind": "Basitleştirilmiş bağış kanıtı (§ 50 Abs. 4 Nr. 2 EStDV) yalnızca nakdi bağışlar içindir; ayni bağışta geçerli değildir.",
+      "simplifiedProofLimit": "Basitleştirilmiş bağış kanıtı yalnızca 300,00 € ve altındaki bağışlar için geçerlidir.",
+      "simplifiedProofIncompleteExemption": "Basitleştirilmiş bağış kanıtı üretilemedi: Dernek Bilgileri (/ayarlar/dernek) sayfasında muafiyet belgesi (Freistellungsbescheid), vergi numarası ve geçerlilik bilgilerini tamamlayın."
     },
     "validation": {
       "periodStartInvalid": "Geçerli bir dönem başlangıcı girin.",
@@ -4934,6 +5188,11 @@
       "amountTooLarge": "Tutar çok büyük.",
       "referenceMax": "Referans en fazla 100 karakter olabilir.",
       "purposeMax": "Amaç notu en fazla 300 karakter olabilir.",
+      "itemDescriptionRequired": "Ayni bağış tanımı zorunludur (en az 5 karakter).",
+      "itemDescriptionMax": "Ayni bağış tanımı en fazla 500 karakter olabilir.",
+      "inKindOriginRequired": "Ayni bağış için malvarlığı kaynağı seçin.",
+      "inKindNoWaiver": "Ayni bağışlarda Aufwandsspende (gider vazgeçimi) seçilemez.",
+      "waiverMethodRequired": "Aufwandsspende için yöntem 'Aufwandsspende' olmalıdır.",
       "basisMax": "Dayanak en fazla 300 karakter olabilir.",
       "basisRequired": "Önceden doğmuş talebin dayanağı zorunludur (en az 5 karakter).",
       "waiverDateRequired": "Vazgeçimin beyan tarihi zorunludur.",
@@ -4977,6 +5236,7 @@
         },
         "contents": {
           "DONATION": "Geldspende (Bağış)",
+          "IN_KIND_DONATION": "Sachzuwendung (Ayni bağış)",
           "MEMBERSHIP_FEE": "Mitgliedsbeitrag (Aidat)"
         }
       },
@@ -5000,6 +5260,7 @@
           "BANK_TRANSFER": "Banka havalesi (Überweisung)",
           "CARD": "Kart (Kartenzahlung)",
           "PAYPAL": "PayPal",
+          "IN_KIND": "Ayni bağış (Sachzuwendung)",
           "REIMBURSEMENT_WAIVER": "Aufwandsspende (gider vazgeçimi)",
           "OTHER": "Diğer (Sonstige)"
         }
@@ -5052,6 +5313,7 @@
               "BANK_TRANSFER": "Havale",
               "CARD": "Kart",
               "PAYPAL": "PayPal",
+              "IN_KIND": "Ayni bağış",
               "REIMBURSEMENT_WAIVER": "Gider vazgeçimi",
               "OTHER": "Diğer"
             }
@@ -5665,7 +5927,8 @@
       "amount": "Tutar",
       "receipt": "Belge",
       "narrative": "Faaliyet raporu (Sachbericht)",
-      "narrativePlaceholder": "Yapılan faaliyetler, ulaşılan hedefler, katılımcı sayıları, plandan sapmaların gerekçeleri …"
+      "narrativePlaceholder": "Yapılan faaliyetler, ulaşılan hedefler, katılımcı sayıları, plandan sapmaların gerekçeleri …",
+      "detailsHidden": "Fiş ayrıntıları muhasebe verisidir ve yalnız muhasebe görme yetkisiyle gösterilir. Yukarıdaki toplamlar tüm fişleri içerir."
     },
     "financing": {
       "approvedCents": "Onaylanan hibe",
@@ -5795,7 +6058,8 @@
       "forbidden": "Bu işlem için yetkiniz yok.",
       "validation": "Girilen bilgiler geçersiz. Lütfen formu kontrol edin.",
       "notFound": "Demirbaş kaydı bulunamadı. Silinmiş olabilir.",
-      "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+      "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin.",
+      "assetForbidden": "Bu eşya muhasebede demirbaş (AfA) olarak izleniyor. Ad, bedel, tarih, hurda durumu veya izleme işaretini değiştirmek için muhasebe yazma yetkisi gerekir."
     },
     "export": {
       "filePrefix": "envanter"
@@ -6341,7 +6605,8 @@
         "templateLanguage": "Şablon dili",
         "countryCode": "Varsayılan ülke kodu",
         "appSecret": "App Secret (bildirim imzası)",
-        "verifyToken": "Doğrulama belirteci (Meta'ya da aynısını girin, en az 8 karakter)"
+        "verifyToken": "Doğrulama belirteci (Meta'ya da aynısını girin, en az 8 karakter)",
+        "utilityTemplateName": "İşlem mesajı şablonu (Utility; e-imza bağlantısı gibi tek kişiye mesajlar, gövdede tek değişken '{{1}}')"
       },
       "telegram": {
         "botToken": "Bot anahtarı (BotFather)",
@@ -6450,6 +6715,14 @@
       "columnsHelp": "İçerik eklemek için tuvalde bir sütuna tıklayın, sonra soldan bileşen seçin. Mobilde sütunlar alt alta dizilir.",
       "designSettings": "Genel tasarım",
       "selectHint": "Bir bloğu düzenlemek için tuvalde üzerine tıklayın."
+    },
+    "unsubscribe": {
+      "title": "Bültenden çık",
+      "confirm": "Artık e-posta ile toplu duyuru almak istemiyor musunuz?",
+      "button": "Aboneliği bitir",
+      "done": "Aboneliğiniz bitirildi; artık e-posta ile toplu duyuru almayacaksınız.",
+      "unknown": "Bu çıkış bağlantısı geçersiz.",
+      "unsupported": "Çıkış otomatik kaydedilemedi. Lütfen derneğe başvurun."
     }
   },
   "meetings": {
@@ -6905,7 +7178,8 @@
       "notEditable": "Toplantı düzenlenemez.",
       "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş.",
       "membersAlreadyAdded": "Seçilen üyeler bu toplantıda zaten mevcut.",
-      "assigneeNotAttendee": "Seçilen sorumlu bu toplantının katılımcısı değil."
+      "assigneeNotAttendee": "Seçilen sorumlu bu toplantının katılımcısı değil.",
+      "approveHasOpenVotes": "Açık gizli oylama varken toplantı tutanağı onaylanamaz; önce tüm oylamaları kapatın."
     },
     "validation": {
       "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
@@ -6926,6 +7200,7 @@
       "votesRange": "Oy sayısı 0-1000 arasında olmalıdır.",
       "decisionMin": "Karar metni en az 3 karakter olmalıdır.",
       "decisionMax": "Karar metni en fazla 3000 karakter olabilir.",
+      "decisionRequired": "Geçerli bir karar seçin.",
       "titleMin": "Başlık en az 3 karakter olmalıdır.",
       "titleMax": "Başlık en fazla 200 karakter olabilir.",
       "dateRequired": "Toplantı tarihi zorunludur.",
@@ -7209,7 +7484,11 @@
         "houseNumber": "Kapı No",
         "postalCode": "Posta Kodu",
         "city": "Şehir"
-      }
+      },
+      "stepUpRequest": "E-postayla doğrula",
+      "stepUpSent": "Doğrulama bağlantısı e-posta adresinize gönderildi (15 dakika geçerli).",
+      "stepUpFailed": "Bağlantı gönderilemedi; lütfen daha sonra tekrar deneyin.",
+      "stepUpRateLimited": "Kısa süre içinde çok fazla istek yapıldı. Önceki bağlantı hâlâ geçerli; birkaç dakika sonra tekrar deneyin."
     },
     "corrections": {
       "title": "Veri Düzeltme Talebi",
@@ -7247,7 +7526,7 @@
     "receipts": {
       "title": "Makbuzlar (Aidat ve Bağış)",
       "subtitle": "PDF indirme için ek doğrulama (Step-up) ve kısa ömürlü imzalı referans gerekir.",
-      "stepUpHint": "Makbuzları indirmek için önce geçiş anahtarı ile ek doğrulama yapın.",
+      "stepUpHint": "Makbuzları indirmek için önce e-postayla ek doğrulama yapın (üstteki düğme).",
       "downloadButton": "PDF İndir",
       "empty": "Henüz indirilebilir makbuz bulunmuyor.",
       "kinds": {
@@ -7258,7 +7537,7 @@
     "art15": {
       "title": "DSGVO Md. 15 Veri Dışa Aktarımı",
       "subtitle": "Kişisel verilerinizin şifreli kopyasını talep edin (7 gün geçerli, aynı anda en fazla 1 açık talep).",
-      "stepUpHint": "Md. 15 dışa aktarımı için önce geçiş anahtarı ile ek doğrulama yapın.",
+      "stepUpHint": "Md. 15 dışa aktarımı için önce e-postayla ek doğrulama yapın (üstteki düğme).",
       "requestButton": "Şifreli dışa aktarım talep et",
       "createdNotice": "Şifreli Md. 15 dosyanız hazırlandı (7 gün geçerli).",
       "errorNotice": "Zaten açık bir Md. 15 talebiniz var veya ek doğrulama gerekiyor.",
@@ -7296,7 +7575,13 @@
       "subtitle": "Bekleyen çevrimiçi formları portal üzerinden imzalayın.",
       "empty": "İmzalanacak bekleyen belge yok.",
       "signerNameLabel": "İmzalayan adı soyadı",
-      "signButton": "Belgeyi imzala"
+      "signButton": "Belgeyi imzala",
+      "useEmailLink": "Bekleyen formları e-postanızdaki bağlantıdan açıp belgeleri okuyarak imzalayın; imzalı belge PDF olarak saklanır."
+    },
+    "consentConfirm": {
+      "title": "İletişim izni onayı",
+      "text": "Bu kanaldan bilgilendirme almak için izninizi onaylıyor musunuz?",
+      "button": "Onaylıyorum"
     }
   },
   "members": {
@@ -7671,7 +7956,24 @@
       "paymentNotSpecified": "Ödeme belirtilmedi.",
       "paymentNotFound2": "Ödeme bulunamadı.",
       "datesInvalid": "Tarihler tutarlı değil; işaretli alanları kontrol edin.",
-      "exitDateRequired": "Ayrılan veya vefat eden üye için ayrılış tarihi girin."
+      "exitDateRequired": "Ayrılan veya vefat eden üye için ayrılış tarihi girin.",
+      "paymentExceedsOpenDue": "Ödeme tutarı kalan açık aidat tutarını ({remaining} €) aşamaz."
+    },
+    "corrections": {
+      "title": "Bekleyen üye düzeltme talepleri",
+      "description": "Üye portalından gönderilen iletişim/adres değişiklik önerilerini inceleyip onaylayın veya reddedin.",
+      "pendingCount": "{count} bekliyor",
+      "emptyValue": "—",
+      "noteLabel": "İnceleme notu",
+      "notePlaceholder": "İsteğe bağlı not",
+      "approve": "Onayla",
+      "reject": "Reddet",
+      "approved": "Düzeltme talebi onaylandı ve üye kartı güncellendi.",
+      "rejected": "Düzeltme talebi reddedildi."
+    },
+    "duplicateWarning": {
+      "title": "Benzer üye kaydı bulundu",
+      "description": "Aynı e-posta veya ad/soyad/doğum tarihi ile eşleşen mevcut kayıtlar: {matches}. Yine de yeni üye oluşturmak için tekrar Kaydet'e basın."
     },
     "validation": {
       "yearMinPrev": "Yıl en fazla bir önceki yıl olabilir.",
@@ -7718,6 +8020,7 @@
       "voidReasonMax": "İptal nedeni en fazla 300 karakter olabilir.",
       "exitDateRequired": "Ayrılış tarihi zorunlu.",
       "amountBelowPaid": "Tutar en az ödenen tutar kadar olmalıdır.",
+      "paymentExceedsOpenDue": "Ödeme tutarı kalan açık aidatı aşamaz.",
       "amountInvalid": "0'dan büyük bir tutar girin (en fazla 2 ondalık).",
       "annualDueInvalid": "Geçerli bir tutar girin (en fazla 2 ondalık, negatif olamaz).",
       "birthDateFuture": "Doğum tarihi bugünden sonra olamaz.",
@@ -7800,11 +8103,23 @@
         "caption": "{collected} / {expected}",
         "open": "Açık",
         "overdue": "Gecikmiş"
+      },
+      "celebrations": {
+        "title": "Doğum günleri ve yıldönümleri",
+        "description": "Önümüzdeki 30 gündeki doğum günleri ve 10/25/40/50/60. üyelik yılları.",
+        "empty": "Önümüzdeki 30 günde doğum günü veya yıldönümü yok.",
+        "colName": "Üye",
+        "colOccasion": "Vesile",
+        "colDate": "Tarih",
+        "birthday": "{years}. doğum günü",
+        "anniversary": "{years}. üyelik yılı",
+        "today": "Bugün"
       }
     },
     "access": {
       "organization": "Makbuz ve belgelerde dernek antetini kullanır.",
-      "online-forms": "Üye sayfasından e-imza/uzaktan form bağlantısı göndermek ve imzalı belgeleri göstermek için."
+      "online-forms": "Üye sayfasından e-imza/uzaktan form bağlantısı göndermek, imzalı belgeleri göstermek ve üye silindiğinde bekleyen davetleri iptal etmek için.",
+      "member-portal": "Üye silindiğinde o üyeye ait aktif üye portalı oturumlarını iptal eder."
     },
     "permissions": {
       "memberPayments": {
@@ -8057,6 +8372,24 @@
       "preferencesTable": "Bildirim türü ve kanal tercihleri",
       "settingsTitle": "Saatler ve özet",
       "type": "Bildirim türü",
+      "typeLabels": {
+        "mail": {
+          "triage": "Gelen kutusunda yeni e-posta"
+        },
+        "meetings": {
+          "invited": "Toplantıya katılımcı olarak eklenme"
+        },
+        "notifications": {
+          "announcement": "Duyurular"
+        },
+        "secretary": {
+          "daily-digest": "Sekreter günlük özeti",
+          "proposal": "Onay bekleyen sekreter önerileri"
+        },
+        "tasks": {
+          "assigned": "Bana atanan görevler"
+        }
+      },
       "inApp": "Uygulama içi (her zaman açık)",
       "loading": "Bildirim tercihleri yükleniyor…",
       "preferencesError": "Bildirim tercihleri kaydedilemedi.",
@@ -8158,6 +8491,46 @@
         "prevPage": "Önceki",
         "nextPage": "Sonraki",
         "pageInfo": "Sayfa {page} / {totalPages} ({total} kayıt)"
+      },
+      "phoneLink": {
+        "title": {
+          "sms": "SMS numarası",
+          "whatsapp": "WhatsApp numarası"
+        },
+        "loading": "Yükleniyor…",
+        "linked": "Bağlı numara: {number}",
+        "pending": "Doğrulama kodu {number} numarasına gönderildi; 15 dakika geçerli.",
+        "none": "Bağlı numara yok. Bildirimleri bu kanaldan almak için numaranızı doğrulayın.",
+        "revoke": "Bağlantıyı kaldır",
+        "revoked": "Numara bağlantısı kaldırıldı.",
+        "phone": "Telefon numarası",
+        "sendCode": "Kod gönder",
+        "codeSent": "Doğrulama kodu gönderildi.",
+        "code": "6 haneli kod",
+        "confirm": "Doğrula",
+        "confirmed": "Numara doğrulandı.",
+        "error": "İşlem tamamlanamadı."
+      },
+      "channelAdmin": {
+        "smsTitle": "SMS kanalı (yönetici)",
+        "whatsappTitle": "WhatsApp kanalı (yönetici)",
+        "whatsappHint": "Meta WhatsApp Cloud API. Etkinleştirmek için erişim anahtarı, telefon numarası kimliği, onaylı bildirim şablonu ve Meta onayının teyidi gerekir. Numara doğrulaması için ayrıca onaylı bir kimlik doğrulama (authentication) şablonu girin.",
+        "enabled": "Kanal etkin",
+        "provider": "Sağlayıcı",
+        "apiKey": "API anahtarı",
+        "accountSid": "Twilio Account SID",
+        "sender": "Gönderen adı/numarası",
+        "accessToken": "Kalıcı erişim anahtarı",
+        "phoneNumberId": "Telefon numarası kimliği",
+        "templateLanguage": "Şablon dili (ör. de, tr)",
+        "templateName": "Bildirim şablonu (utility)",
+        "verifyTemplateName": "Doğrulama şablonu (authentication)",
+        "templateApproved": "Meta bildirim şablonunu onayladı",
+        "save": "Kaydet",
+        "saved": "Kanal ayarları kaydedildi.",
+        "error": "Ayarlar kaydedilemedi.",
+        "secretStored": "Anahtar kayıtlı (gösterilmez; değiştirmek için yenisini girin).",
+        "secretMissing": "Henüz anahtar kayıtlı değil."
       }
     },
     "widget": {
@@ -8240,7 +8613,8 @@
       "noEncryption": "İmzaları şifrelemek için anahtar ayarlı değil (AUTH_SECRET).",
       "invalid": "Lütfen işaretli alanları kontrol edin.",
       "linkInvalid": "Bağlantı geçersiz, süresi dolmuş veya zaten kullanılmış.",
-      "textsChanged": "Form metinleri bu arada güncellendi. Lütfen sayfayı yenileyip metni okuyarak yeniden imzalayın."
+      "textsChanged": "Form metinleri bu arada güncellendi. Lütfen sayfayı yenileyip metni okuyarak yeniden imzalayın.",
+      "rateLimited": "Çok fazla deneme yapıldı; lütfen biraz bekleyip tekrar deneyin."
     },
     "validation": {
       "tooLong": "Çok uzun.",
@@ -8252,7 +8626,9 @@
       "bic": "Geçerli bir BIC girin.",
       "signerName": "Adınızı ve soyadınızı yazın.",
       "signature": "Lütfen imza alanına imzanızı atın.",
-      "privacy": "Datenschutz onayı zorunludur."
+      "privacy": "Datenschutz onayı zorunludur.",
+      "ibanRequired": "SEPA yetkisi için IBAN girin.",
+      "accountHolderRequired": "SEPA yetkisi için hesap sahibini girin."
     },
     "public": {
       "title": "Kayıt formu",
@@ -8511,7 +8887,9 @@
         "label": "Dernek Ana Bilgileri",
         "description": "Resmi dernek sicil no, vergi no, banka hesapları ve antet logosu."
       }
-    }
+    },
+    "yes": "Evet",
+    "no": "Hayır"
   },
   "progress": {
     "module": {
@@ -8617,6 +8995,8 @@
       "assessmentNotFound": "Değerlendirme bulunamadı.",
       "pointsAboveMax": "Puan en yüksek puanı ({max}) aşamaz.",
       "enrollmentNotFound": "Öğrenci bu kursta kayıtlı değil.",
+      "sessionCancelled": "İptal edilen derse yoklama kaydedilemez.",
+      "enrollmentWithdrawn": "Kurstan ayrılmış öğrenciye yoklama kaydedilemez.",
       "noteNotFound": "Not bulunamadı.",
       "noteNotYours": "Yalnızca kendi yazdığınız notu silebilirsiniz."
     },
@@ -8999,6 +9379,16 @@
           }
         }
       }
+    },
+    "checks": {
+      "authSecret": "Uygulama sırrı (AUTH_SECRET) en az 32 karakter",
+      "secretEncryption": "Kayıtlı sırlar şifrelenebiliyor",
+      "appUrlHttps": "Genel adres (APP_URL) tanımlı ve üretimde HTTPS",
+      "uploadsNotPublic": "Yüklemeler herkese açık klasörde değil",
+      "auditAppendOnly": "Denetim kaydı değiştirilemez (veritabanı tetikleyicileri)",
+      "migrations": "Başarısız veritabanı göçü yok",
+      "productionMode": "Üretim modunda çalışıyor",
+      "RUNTIME_CHECKS_FAILED": "Denetimler çalıştırılamadı (sunucu günlüğüne bakın)"
     }
   },
   "sepa": {
@@ -9032,6 +9422,8 @@
       "noMandate": "SEPA yetkisi yok",
       "invalidIban": "IBAN geçersiz",
       "alreadyInRun": "Açık bir tahsilatta zaten var",
+      "futureSignatureDate": "Yetki imza tarihi gelecekte",
+      "missingDebtorName": "Borçlu / hesap sahibi adı geçersiz veya boş",
       "dormant": "Yetki 36 aydır kullanılmadı",
       "renewAfterReturn": "İade sonrası yeni yetki gerekli",
       "pausedAfterReturns": "Tekrarlayan iadeler nedeniyle duraklatıldı"
@@ -9085,6 +9477,8 @@
       "date": "Geçerli bir tarih girin.",
       "year": "Geçerli bir yıl girin.",
       "pastDate": "Tahsilat tarihi geçmişte olamaz.",
+      "invalidCollectionDate": "Tahsilat tarihi en az 1 TARGET2 banka iş günü sonrası (hafta sonu ve TARGET2 tatilleri hariç) olmalıdır.",
+      "invalidName": "Alacaklı veya borçlu adı SEPA karakter kümesinde boş olamaz.",
       "nothingToCollect": "Tahsil edilecek kalem yok.",
       "notOpen": "Tahsilat açık değil.",
       "notCollected": "Kalem tahsil edilmiş değil.",
@@ -9192,6 +9586,59 @@
         "EXPIRED": "Bağlantının süresi doldu ({date})"
       }
     }
+  },
+  "social-login": {
+    "module": {
+      "label": "Sosyal Giriş",
+      "description": "Harici kimlik sağlayıcıları."
+    },
+    "meta": {
+      "title": "Sosyal Giriş"
+    },
+    "title": "Sosyal Giriş",
+    "description": "Harici giriş isteğe bağlıdır; sağlayıcıya kimlik doğrulama verileri aktarılır.",
+    "permissions": {
+      "socialLogin": {
+        "label": "Sosyal giriş",
+        "description": "Bağlantıları görüntüleme ve sağlayıcı ayarlarını yönetme."
+      }
+    },
+    "access": {
+      "system": "Modülün etkinliğini doğrular."
+    },
+    "providers": {
+      "google": "Google",
+      "microsoft-entra-id": "Microsoft Entra ID",
+      "twitter": "X",
+      "facebook": "Facebook"
+    },
+    "enabled": "Etkin",
+    "clientId": "Client ID",
+    "tenantId": "Tenant ID",
+    "secret": "Client Secret",
+    "stored": "Kayıtlı; değiştirmek için girin",
+    "callback": "Callback",
+    "save": "Kaydet",
+    "saved": "Kaydedildi",
+    "errors": {
+      "invalid": "Ayarları kontrol edin.",
+      "unavailable": "Modül kullanılamıyor.",
+      "applicationImmutable": "Mevcut OAuth uygulama kimliği değiştirilemez."
+    },
+    "linkedAccounts": "Bağlı hesaplarım",
+    "noLinkedAccounts": "Bağlı sosyal hesabınız yok.",
+    "confirmUnlink": "Bağlantı kaldırılsın mı? Tüm oturumlar sonlandırılır.",
+    "unlink": "Bağlantıyı kaldır",
+    "cancel": "Vazgeç",
+    "unlinked": "Bağlantı kaldırıldı.",
+    "link": "{provider} hesabını bağla",
+    "password": "Mevcut ERP parolanız",
+    "linkHint": "Sağlayıcıda hesabınızı doğrulayacaksınız. İki adımlı doğrulama açık hesaplarda sosyal giriş kullanılamaz.",
+    "continue": "Devam et",
+    "linkSuccess": "Hesap bağlandı.",
+    "linkDenied": "Hesap bağlanamadı. Yeniden deneyin.",
+    "otp": "Doğrulama kodu (iki adımlı doğrulama açıksa)",
+    "applicationLocked": "Kimlik eşleştirmelerini korumak için kayıtlı uygulama kimliği sabittir; gizli anahtar yenilenebilir."
   },
   "students": {
     "module": {
@@ -9511,7 +9958,9 @@
       "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır).",
       "users": "Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir.",
       "ai": "Gizlilik ön ayarları ve aylık veri çıkışı raporu için yapılandırılmış yapay zekâ sağlayıcılarının durumu okunur.",
-      "widgets": "Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder."
+      "widgets": "Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder.",
+      "automation": "Modül sağlık kokpitinde başarısız arka plan işleri ve worker kalp atışı okunur (girdi/sonuç verisi okunmaz).",
+      "notifications": "Modül sağlık kokpitinde hangi bildirim kanallarının etkin olduğu okunur (sır ve ayar okunmaz)."
     },
     "gate": {
       "manage": "Modül yönetimine git",
@@ -9526,6 +9975,10 @@
       "unlicensed": {
         "title": "Bu modül lisans gerektiriyor",
         "description": "Bu özellik yalnız geçerli bir Enterprise lisansıyla kullanılabilir. Yönetici Ayarlar → Lisans'tan lisans girebilir."
+      },
+      "public": {
+        "title": "Bu sayfa şu anda kullanılamıyor",
+        "description": "Aradığınız sayfa geçici olarak kullanılamıyor. Lütfen daha sonra tekrar deneyin veya dernekle iletişime geçin."
       }
     },
     "releases": {
@@ -9612,7 +10065,9 @@
         "smallBusinessOff": "normal KDV",
         "presetOn": "kategoriler ve hesaplar eklenecek",
         "presetOff": "yok",
-        "note": "Listede olmayan isteğe bağlı modüller kapatılır (veriler silinmez)."
+        "note": "Seçilmeyen modüllerin verileri silinmez; kapatma yalnız aşağıda onaylarsanız yapılır.",
+        "willDisable": "Şu an açık olan ve seçmediğiniz modüller: {modules}.",
+        "confirmDisable": "Bu modülleri kapat (onaylamazsanız açık kalırlar)"
       },
       "back": "Geri",
       "next": "İleri",
@@ -9625,7 +10080,10 @@
         "profile": "Kurum bilgilerini gir",
         "accountingSettings": "Muhasebe ayarları",
         "modulesPage": "Modül Yönetimi",
-        "dashboard": "Panele dön"
+        "dashboard": "Panele dön",
+        "kept": "Onaylanmadığı için açık bırakılan modüller: {modules}",
+        "mapped": "Muhasebe ayarlarındaki boş varsayılanlar (nakit/banka hesabı, bağış ve aidat kategorisi) dolduruldu.",
+        "mappingFailed": "Muhasebe varsayılanları otomatik eşlenemedi; Muhasebe → Ayarlar sayfasından tamamlayın."
       },
       "errors": {
         "accountingOff": "Muhasebe hazırlığı için Muhasebe modülü seçili olmalı."
@@ -9766,7 +10224,11 @@
             "right": "Üst çubuk · sağ"
           }
         },
-        "resetSuccess": "Varsayılan ayarlar geri yüklendi."
+        "resetSuccess": "Varsayılan ayarlar geri yüklendi.",
+        "policy": {
+          "label": "Herkese açık",
+          "toggle": "{title} widget'ını tüm kullanıcılar için aç/kapat"
+        }
       }
     },
     "readiness": {
@@ -9824,7 +10286,8 @@
         "accessGrantsPending": "Bu modülün talep ettiği erişim izinleri yönetici onayı bekliyor.",
         "failedJobsDetected": "Arka plan iş kuyruğunda başarısız görevler tespit edildi.",
         "notificationsNoChannel": "Bildirim modülü için aktif bir dağıtım kanalı (E-posta, Telegram vb.) yapılandırılmamış.",
-        "generalIssue": "Modül yapılandırması veya iş akışında dikkat edilmesi gereken durumlar var."
+        "generalIssue": "Modül yapılandırması veya iş akışında dikkat edilmesi gereken durumlar var.",
+        "portalDisabledByEnv": "Üye portalı modülü açık, ancak sunucuda PORTAL_ENABLED=true ayarlı değil; /portal ziyaretçilere kapalı (404)."
       }
     },
     "privacyUi": {
@@ -9867,7 +10330,15 @@
       "apply": "Onayla ve uygula",
       "applying": "Uygulanıyor…",
       "noChanges": "Bu profil zaten geçerli; değişiklik yok.",
-      "readOnly": "Bu ayarları değiştirmek için sistem yöneticisi izni gerekir."
+      "readOnly": "Bu ayarları değiştirmek için sistem yöneticisi izni gerekir.",
+      "blocked": "Ön ayar uygulanamadı: bazı modül değişiklikleri bağımlılık veya erişim izni nedeniyle engelleniyor.",
+      "blockersTitle": "Uygulamadan önce çözülmesi gerekenler",
+      "blockers": {
+        "requires": "{module} açılacak ama zorunlu bağımlılıkları kapalı kalıyor: {modules}.",
+        "missing": "{module} için gerekli modül kurulu değil veya sürümü yetersiz: {modules}.",
+        "approval": "{module} modülünün erişim izni onaylı değil; önce Modül Yönetimi'nden onaylayın.",
+        "dependents": "{module} kapanacak ama ona bağlı modüller açık kalıyor: {modules}."
+      }
     },
     "egressUi": {
       "title": "Aylık veri çıkışı raporu",
@@ -9907,6 +10378,104 @@
       "yes": "Evet",
       "no": "Hayır",
       "unknown": "Belirtilmemiş"
+    },
+    "backups": {
+      "title": "Yedekleme ve kurtarma doğrulaması",
+      "subtitle": "PostgreSQL veritabanı ve UPLOAD_DIR belgelerini AES-256-GCM ile şifreleyip bütünlük ve geri yükleme uyumluluğunu doğrulayın.",
+      "encryptionMissingTitle": "Şifreleme anahtarı yapılandırılmamış",
+      "encryptionMissingBody": "Veri şifreleme anahtarı (DATA_ENCRYPTION_KEYS veya AUTH_SECRET) bulunamadığı için şifreli yedekleme ve doğrulama güvenlik gereği kapalıdır.",
+      "stats": {
+        "encryption": "Şifreleme durumu",
+        "encryptionReady": "Hazır",
+        "encryptionUnavailable": "Anahtar eksik",
+        "cipherLabel": "AES-256-GCM + SHA-256 manifest",
+        "lastBackup": "Son yedek",
+        "never": "Henüz yok",
+        "readySummary": "{count} hazır yedek · {size}",
+        "lastVerification": "Son doğrulama",
+        "notVerifiedYet": "Henüz doğrulanmadı",
+        "schemaVersion": "Canlı şema sürümü",
+        "unknown": "Bilinmiyor",
+        "migrationCount": "{count} migration uygulandı"
+      },
+      "manual": {
+        "title": "Anlık şifreli yedek oluştur",
+        "description": "Veritabanı anlık görüntüsü, yüklenen belgeler (UPLOAD_DIR) ve SHA-256 manifesti tek şifreli .vbak arşivinde paketlenir ve anında kendi kendini doğrular.",
+        "cta": "Şifreli yedek al",
+        "running": "Yedekleniyor ve doğrulanıyor..."
+      },
+      "policy": {
+        "title": "Otomatik yedekleme ve saklama politikası",
+        "description": "Otomasyon çalışanı (system.run_backup) belirlenen aralıkta yedek alır ve saklama sınırını aşan eski yedekleri temizler.",
+        "enabled": "Zamanlanmış otomatik yedeklemeyi etkinleştir",
+        "retentionCount": "Saklanacak yedek adedi (1–90)",
+        "intervalHours": "Yedekleme aralığı (saat, 6–168)",
+        "save": "Politikayı kaydet",
+        "saving": "Kaydediliyor..."
+      },
+      "uploadVerify": {
+        "title": "Harici arşiv geri yükleme provası (salt okunur)",
+        "description": "İndirdiğiniz bir .vbak arşivini yükleyerek canlı veriye dokunmadan şifre çözme, dosya bütünlüğü ve şema uyumluluğunu doğrulayın.",
+        "cta": ".vbak arşivi seç ve doğrula",
+        "running": "Arşiv doğrulanıyor..."
+      },
+      "verifyDetail": {
+        "passedHeading": "Kurtarma doğrulaması başarılı — arşiv sağlam ve çözülebilir.",
+        "failedHeading": "Kurtarma doğrulaması başarısız ({code}).",
+        "archiveSha": "Arşiv SHA-256",
+        "dbIntegrity": "Veritabanı bütünlüğü",
+        "filesChecked": "Doğrulanan dosya",
+        "schemaCompatibility": "Şema uyumluluğu",
+        "ok": "Geçti",
+        "failed": "Hatalı"
+      },
+      "schemaCompatibility": {
+        "compatible": "Tam uyumlu",
+        "older": "Eski şema (migration gerekir)",
+        "newer": "Daha yeni şema (uygulama güncellemesi gerekir)",
+        "unknown": "Belirsiz"
+      },
+      "status": {
+        "ready": "Hazır",
+        "failed": "Başarısız",
+        "verifiedPassed": "Doğrulandı",
+        "verifiedFailed": "Doğrulama başarısız"
+      },
+      "trigger": {
+        "manual": "Elle",
+        "scheduled": "Zamanlanmış"
+      },
+      "list": {
+        "title": "Yedek geçmişi",
+        "empty": "Henüz alınmış bir sistem yedeği bulunmuyor.",
+        "date": "Tarih / Tetikleyici",
+        "status": "Durum",
+        "contents": "İçerik",
+        "size": "Boyut / SHA-256",
+        "verification": "Doğrulama",
+        "actions": "İşlemler",
+        "dbSummary": "{tables} tablo · {rows} satır",
+        "uploadSummary": "{files} belge dosyası"
+      },
+      "actions": {
+        "verify": "Doğrula",
+        "download": "İndir",
+        "delete": "Sil"
+      },
+      "messages": {
+        "created": "Şifreli yedek oluşturuldu ve bütünlüğü doğrulandı.",
+        "createdWithPrune": "Şifreli yedek oluşturuldu, doğrulandı ve saklama politikasına göre {count} eski yedek temizlendi.",
+        "createFailed": "Yedek oluşturulurken hata oluştu.",
+        "configSaved": "Yedekleme politikası kaydedildi.",
+        "configFailed": "Yedekleme politikası kaydedilemedi.",
+        "verifyPassed": "Arşiv çözüldü, tüm SHA-256 özetleri ve veritabanı bütünlüğü doğrulandı.",
+        "uploadVerifyPassed": "Yüklenen arşiv başarıyla çözüldü ve doğrulandı (canlı veri değiştirilmedi).",
+        "verifyFailed": "Arşiv doğrulaması başarısız oldu: {code}",
+        "verifyError": "Doğrulama sırasında beklenmeyen bir hata oluştu.",
+        "deleteConfirm": "Bu şifreli yedek arşivi diskten ve geçmişten kalıcı olarak silinsin mi?",
+        "deleted": "Yedek arşivi silindi.",
+        "deleteFailed": "Yedek arşivi silinemedi."
+      }
     }
   },
   "tasks": {
@@ -10106,7 +10675,15 @@
       "delete": "Kalıcı olarak sil",
       "deleted": "Kullanıcı silindi.",
       "deleteTitle": "Kullanıcıyı kalıcı olarak sil",
-      "deleteConfirm": "\"{name}\" kullanıcısı kalıcı olarak silinecek ve geri alınamaz. Diğer kayıtlarda adı görünmeye devam eder. Yalnızca erişimi durdurmak istiyorsanız pasife almayı tercih edin. Onaylıyor musunuz?"
+      "deleteConfirm": "\"{name}\" kullanıcısı kalıcı olarak silinecek ve geri alınamaz. Diğer kayıtlarda adı görünmeye devam eder. Yalnızca erişimi durdurmak istiyorsanız pasife almayı tercih edin. Onaylıyor musunuz?",
+      "revokeSessions": "Tüm oturumları sonlandır",
+      "revokeSessionsTitle": "Tüm oturumlar sonlandırılsın mı?",
+      "revokeSessionsConfirm": "{name} kullanıcısı tüm cihazlarda oturumdan çıkarılacak ve yeniden giriş yapması gerekecek.",
+      "sessionsRevoked": "{name} kullanıcısının tüm oturumları sonlandırıldı.",
+      "resetTwoFactor": "İki adımlı doğrulamayı sıfırla",
+      "resetTwoFactorTitle": "İki adımlı doğrulama sıfırlansın mı?",
+      "resetTwoFactorConfirm": "{name} kullanıcısının doğrulama uygulaması ve kurtarma kodları kaldırılacak; tüm oturumları sonlanır. Yeniden yalnızca parolasıyla giriş yapıp kurulumu tekrarlayabilir.",
+      "twoFactorReset": "{name} kullanıcısının iki adımlı doğrulaması sıfırlandı."
     },
     "form": {
       "name": "Ad Soyad",
@@ -10142,7 +10719,8 @@
       "roleUnavailable": "Bu rol atanamaz: rol yok ya da modülü etkin değil.",
       "adminOnly": "Yönetici rolünü yalnızca bir yönetici atayabilir veya değiştirebilir.",
       "grantExceedsMaxDuration": "Erişim süresi en fazla 90 gün olabilir.",
-      "grantEndBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır."
+      "grantEndBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.",
+      "twoFactorNotEnabled": "Bu kullanıcı için iki adımlı doğrulama açık değil."
     },
     "validation": {
       "nameRequired": "Ad soyad zorunludur.",
@@ -10371,6 +10949,7 @@
       "empty": "Henüz tanımlı erişim penceresi yok.",
       "statuses": {
         "active": "Aktif",
+        "scheduled": "Planlandı",
         "expired": "Süresi doldu",
         "revoked": "İptal edildi"
       }
@@ -10387,11 +10966,31 @@
       "toLogin": "Girişe git",
       "errors": {
         "invalid": "Bu davet bağlantısı geçersiz, süresi dolmuş veya daha önce kullanılmış. Yöneticinizden yeni bir davet isteyin.",
+        "rateLimited": "Çok fazla deneme yapıldı. Lütfen daha sonra tekrar deneyin.",
         "inactive": "Pasif kullanıcıya davet gönderilemez.",
         "mailNotConfigured": "E-posta gönderimi yapılandırılmamış (Ayarlar → E-posta).",
         "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",
         "sendFailed": "Davet e-postası gönderilemedi.",
         "mismatch": "Şifreler eşleşmiyor."
+      }
+    },
+    "passwordReset": {
+      "requestTitle": "Şifremi unuttum",
+      "requestIntro": "Hesabınızın e-posta adresini girin. Hesap varsa 30 dakika geçerli, tek kullanımlık bir sıfırlama bağlantısı gönderilir.",
+      "email": "E-posta",
+      "submitRequest": "Sıfırlama bağlantısı gönder",
+      "sent": "Bu adrese ait etkin bir hesap varsa sıfırlama bağlantısı gönderildi. Lütfen e-postanızı (ve istenmeyen klasörünü) kontrol edin.",
+      "toLogin": "Girişe dön",
+      "resetTitle": "Yeni şifre belirle",
+      "resetIntro": "{email} hesabı için yeni bir şifre belirleyin. Diğer tüm oturumlar sonlandırılır.",
+      "password": "Yeni şifre",
+      "confirm": "Yeni şifre (tekrar)",
+      "submitReset": "Şifreyi kaydet",
+      "done": "Şifreniz güncellendi. Yeni şifrenizle giriş yapabilirsiniz.",
+      "errors": {
+        "email": "Geçerli bir e-posta adresi girin.",
+        "rateLimited": "Çok fazla deneme yapıldı. Lütfen biraz sonra tekrar deneyin.",
+        "invalid": "Bu bağlantı geçersiz, süresi dolmuş veya daha önce kullanılmış. Yeni bir sıfırlama bağlantısı isteyin."
       }
     }
   },
@@ -10459,6 +11058,7 @@
       "71": "Hafif Kar Yağışlı",
       "73": "Kar Yağışlı",
       "75": "Yoğun Kar Yağışlı",
+      "77": "Kar Taneleri",
       "80": "Hafif Sağanak",
       "81": "Sağanak Yağış",
       "82": "Şiddetli Sağanak",
@@ -10570,7 +11170,11 @@
       "save": "Kaydet",
       "cancel": "Vazgeç",
       "created": "İbraz kaydı oluşturuldu.",
-      "updated": "İbraz kaydı güncellendi."
+      "updated": "İbraz kaydı güncellendi.",
+      "member": "Üye (isteğe bağlı)",
+      "memberNone": "Üyeyle ilişkilendirme yok",
+      "memberHistorical": "Önceki üye bağlantısı (artık etkin değil)",
+      "memberHelp": "Kişi derneğin üyesiyse seçin; ad alanı boşsa üyenin adıyla doldurulur."
     },
     "letter": {
       "title": "Harç Muafiyet Belgesi Şablonu",
@@ -10597,7 +11201,8 @@
       "dueCount": "{count, plural, one {# eğitmen/gönüllünün adli sicil ibraz süresi doldu veya 3 ay içinde dolacak.} other {# eğitmen/gönüllünün adli sicil ibraz süresi doldu veya 3 ay içinde dolacak.}}"
     },
     "errors": {
-      "notFound": "İbraz kaydı bulunamadı."
+      "notFound": "İbraz kaydı bulunamadı.",
+      "memberNotFound": "Seçilen üye bulunamadı veya etkin değil."
     },
     "validation": {
       "personNameRequired": "Ad soyad alanı zorunludur.",
@@ -10609,6 +11214,10 @@
       "nextDueDateInvalid": "Geçerli bir gelecek ibraz tarihi seçiniz (YYYY-AA-GG).",
       "activityEndedAtInvalid": "Geçerli bir faaliyet bitiş tarihi seçiniz (YYYY-AA-GG).",
       "dateInvalid": "Geçersiz tarih formatı."
+    },
+    "access": {
+      "organization": "Harç muafiyeti yazısında kurum adı ve şehri okunur.",
+      "members": "Kayıt bir üyeyle ilişkilendirilirken üye listesi (ad, üye numarası) okunur ve seçilen üye doğrulanır."
     }
   }
 }

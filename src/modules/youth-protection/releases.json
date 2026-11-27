@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal.",
   "releases": [
     {
+      "version": "0.2.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Denetim kaydında ad yok, kurum profili, üye bağlantısı",
+        "de": "Keine Namen im Protokoll, Organisationsprofil, Mitgliedsverknüpfung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Denetim kaydına kişi adı yazılmaz (§ 72a Abs. 5 SGB VIII, DSGVO md. 10); yazdırılan harç muafiyeti yazısında HTML kaçışlanır.",
+          "de": "Keine Personennamen mehr im Protokoll (§ 72a Abs. 5 SGB VIII, Art. 10 DSGVO); der gedruckte Gebührenbefreiungsbrief maskiert HTML."
+        },
+        {
+          "type": "fix",
+          "tr": "Yazı kurum adı ve şehrini kurum profilinden alır; satır eylemiyle açılan yazı her seferinde doğru kişiyi gösterir; durum filtresi çalışır; liste kayıttan sonra yenilenir.",
+          "de": "Der Brief verwendet Name und Ort aus dem Organisationsprofil; der über die Zeilenaktion geöffnete Brief zeigt stets die richtige Person; der Statusfilter funktioniert; die Liste aktualisiert sich nach dem Speichern."
+        },
+        {
+          "type": "feature",
+          "tr": "Kayıt bir üyeyle ilişkilendirilebilir. Kurum ve üye verisini okumak için yönetici erişim onayı bir kez yenilenmelidir.",
+          "de": "Einträge können mit einem Mitglied verknüpft werden. Für das Lesen von Organisations- und Mitgliedsdaten muss die Zugriffsfreigabe einmalig erneuert werden."
+        },
+        {
+          "type": "fix",
+          "tr": "Ayrılmış veya silinmiş bir üyeye bağlı kayıt güncellenebilir; eski bağlantı formda gösterilir ve kaldırılabilir.",
+          "de": "Einträge, die mit einem ausgetretenen oder gelöschten Mitglied verknüpft sind, bleiben bearbeitbar; die bisherige Verknüpfung wird im Formular angezeigt und kann entfernt werden."
+        }
+      ]
+    },
+    {
       "version": "0.1.2",
       "date": "2026-11-24",
       "title": {

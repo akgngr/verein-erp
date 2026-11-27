@@ -13,7 +13,7 @@ Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.
 |---|---|
 | Anahtar | `sepa` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.1 |
+| Sürüm | 1.2.3 |
 | Gerektirir | [Muhasebe](./accounting) |
 | Önerir | [Üyeler](./members), [Kurslar](./courses), [e-Sign](./online-forms) |
 
@@ -40,6 +40,18 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | SEPA otomatik ödeme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | — | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.2.3 — TARGET2 takvimi, pain.008 transliterasyonu ve atomik tahsilat/iade
+
+_2026-11-25_
+
+- **Düzeltme:** TARGET2 tatil günü ve tahsilat tarihi doğrulaması, pain.008 Türkçe çevirim/boş etiket koruması, ileri tarihli yetki kontrolü ve atomik tahsilat/iade işlemleri eklendi (#578).
+
+### 1.2.2 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Vade, tahsilat ve tahsil edildi tarihleri yerel biçimde (GG.AA.YYYY) ve takvimle seçilir.
 
 ### 1.2.1 — TAX_ADVISOR rolü izin tanımı
 
@@ -79,16 +91,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.0.2 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-### 1.0.1 — Muhasebe altına taşındı (/muhasebe/sepa)
-
-_2026-11-07_
-
-- **İyileştirme:** Muhasebe altına taşındı (/muhasebe/sepa)
-
-Daha eski 1 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.

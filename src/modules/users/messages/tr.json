@@ -40,7 +40,15 @@
     "delete": "Kalıcı olarak sil",
     "deleted": "Kullanıcı silindi.",
     "deleteTitle": "Kullanıcıyı kalıcı olarak sil",
-    "deleteConfirm": "\"{name}\" kullanıcısı kalıcı olarak silinecek ve geri alınamaz. Diğer kayıtlarda adı görünmeye devam eder. Yalnızca erişimi durdurmak istiyorsanız pasife almayı tercih edin. Onaylıyor musunuz?"
+    "deleteConfirm": "\"{name}\" kullanıcısı kalıcı olarak silinecek ve geri alınamaz. Diğer kayıtlarda adı görünmeye devam eder. Yalnızca erişimi durdurmak istiyorsanız pasife almayı tercih edin. Onaylıyor musunuz?",
+    "revokeSessions": "Tüm oturumları sonlandır",
+    "revokeSessionsTitle": "Tüm oturumlar sonlandırılsın mı?",
+    "revokeSessionsConfirm": "{name} kullanıcısı tüm cihazlarda oturumdan çıkarılacak ve yeniden giriş yapması gerekecek.",
+    "sessionsRevoked": "{name} kullanıcısının tüm oturumları sonlandırıldı.",
+    "resetTwoFactor": "İki adımlı doğrulamayı sıfırla",
+    "resetTwoFactorTitle": "İki adımlı doğrulama sıfırlansın mı?",
+    "resetTwoFactorConfirm": "{name} kullanıcısının doğrulama uygulaması ve kurtarma kodları kaldırılacak; tüm oturumları sonlanır. Yeniden yalnızca parolasıyla giriş yapıp kurulumu tekrarlayabilir.",
+    "twoFactorReset": "{name} kullanıcısının iki adımlı doğrulaması sıfırlandı."
   },
   "form": {
     "name": "Ad Soyad",
@@ -76,7 +84,8 @@
     "roleUnavailable": "Bu rol atanamaz: rol yok ya da modülü etkin değil.",
     "adminOnly": "Yönetici rolünü yalnızca bir yönetici atayabilir veya değiştirebilir.",
     "grantExceedsMaxDuration": "Erişim süresi en fazla 90 gün olabilir.",
-    "grantEndBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır."
+    "grantEndBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır.",
+    "twoFactorNotEnabled": "Bu kullanıcı için iki adımlı doğrulama açık değil."
   },
   "validation": {
     "nameRequired": "Ad soyad zorunludur.",
@@ -305,6 +314,7 @@
     "empty": "Henüz tanımlı erişim penceresi yok.",
     "statuses": {
       "active": "Aktif",
+      "scheduled": "Planlandı",
       "expired": "Süresi doldu",
       "revoked": "İptal edildi"
     }
@@ -321,11 +331,31 @@
     "toLogin": "Girişe git",
     "errors": {
       "invalid": "Bu davet bağlantısı geçersiz, süresi dolmuş veya daha önce kullanılmış. Yöneticinizden yeni bir davet isteyin.",
+      "rateLimited": "Çok fazla deneme yapıldı. Lütfen daha sonra tekrar deneyin.",
       "inactive": "Pasif kullanıcıya davet gönderilemez.",
       "mailNotConfigured": "E-posta gönderimi yapılandırılmamış (Ayarlar → E-posta).",
       "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",
       "sendFailed": "Davet e-postası gönderilemedi.",
       "mismatch": "Şifreler eşleşmiyor."
+    }
+  },
+  "passwordReset": {
+    "requestTitle": "Şifremi unuttum",
+    "requestIntro": "Hesabınızın e-posta adresini girin. Hesap varsa 30 dakika geçerli, tek kullanımlık bir sıfırlama bağlantısı gönderilir.",
+    "email": "E-posta",
+    "submitRequest": "Sıfırlama bağlantısı gönder",
+    "sent": "Bu adrese ait etkin bir hesap varsa sıfırlama bağlantısı gönderildi. Lütfen e-postanızı (ve istenmeyen klasörünü) kontrol edin.",
+    "toLogin": "Girişe dön",
+    "resetTitle": "Yeni şifre belirle",
+    "resetIntro": "{email} hesabı için yeni bir şifre belirleyin. Diğer tüm oturumlar sonlandırılır.",
+    "password": "Yeni şifre",
+    "confirm": "Yeni şifre (tekrar)",
+    "submitReset": "Şifreyi kaydet",
+    "done": "Şifreniz güncellendi. Yeni şifrenizle giriş yapabilirsiniz.",
+    "errors": {
+      "email": "Geçerli bir e-posta adresi girin.",
+      "rateLimited": "Çok fazla deneme yapıldı. Lütfen biraz sonra tekrar deneyin.",
+      "invalid": "Bu bağlantı geçersiz, süresi dolmuş veya daha önce kullanılmış. Yeni bir sıfırlama bağlantısı isteyin."
     }
   }
 }

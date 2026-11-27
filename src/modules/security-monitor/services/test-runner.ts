@@ -1,8 +1,10 @@
-import { execFile } from "node:child_process";
-import { promisify } from "node:util";
-import { getDb } from "@/shared/db";
+import "server-only";
 
-const execFileAsync = promisify(execFile);
+import { getDb } from "@/shared/db";
+import { canEncryptSecrets } from "@/shared/security/secret-box";
+
+import { evaluateRuntimeChecks, type CheckResult, type RuntimeSnapshot } from "./runtime-checks";
+
 type SupportedTestSuite = "security";
 
 interface TestResult {
@@ -13,7 +15,7 @@ interface TestResult {
   failed: number;
   skipped: number;
   durationMs: number;
-  results: unknown[];
+  results: CheckResult[];
   logs: string[];
   errors: string[];
 }
@@ -22,21 +24,20 @@ function isSupportedTestSuite(value: string): value is SupportedTestSuite {
   return value === "security";
 }
 
-function formatExecutionFailure(error: Error): string {
-  return `Security test execution failed: ${error.message}`;
-}
-
-function formatSuiteFailure(testSuite: SupportedTestSuite): string {
-  return `Failed to run test suite: ${testSuite}`;
-}
-
-function hasStatus(value: unknown, status: string): boolean {
-  return typeof value === "object" && value !== null && "status" in value && value.status === status;
+/** Veritabanı yoklamaları: salt okunur katalog sorguları (kullanıcı girdisi yok). */
+async function probeDatabase(): Promise<Pick<RuntimeSnapshot, "auditTriggers" | "failedMigrations">> {
+  const db = getDb();
+  const triggers = await db.$queryRaw<Array<{ tgname: string }>>`
+    SELECT t.tgname FROM pg_trigger t JOIN pg_class c ON c.oid = t.tgrelid
+    WHERE c.relname = 'AuditLog' AND NOT t.tgisinternal`;
+  const failed = await db.$queryRaw<Array<{ count: bigint }>>`
+    SELECT COUNT(*)::bigint AS count FROM "_prisma_migrations" WHERE finished_at IS NULL AND rolled_back_at IS NULL`;
+  return { auditTriggers: triggers.map((row) => row.tgname), failedMigrations: Number(failed[0]?.count ?? 0) };
 }
 
 /**
- * Run security tests and store results.
- * Only predefined package scripts are executable; user input is never passed to a shell.
+ * #585: Süreç içi güvenlik/bütünlük denetimi (bkz. runtime-checks.ts) ve sonucun kaydı. `fail` sonuçlar
+ * uyarı üretir; `warn` başarısız sayılmaz ama raporda görünür (`skipped` alanında sayılır).
  */
 export async function runSecurityTests(options: {
   testSuite?: string;
@@ -44,13 +45,7 @@ export async function runSecurityTests(options: {
   commitHash?: string;
   branch?: string;
 } = {}): Promise<TestResult> {
-  const {
-    testSuite = "security",
-    triggeredBy = "manual",
-    commitHash,
-    branch,
-  } = options;
-
+  const { testSuite = "security", triggeredBy = "manual", commitHash, branch } = options;
   if (!isSupportedTestSuite(testSuite)) {
     throw new Error(`Unsupported test suite: ${testSuite}`); // i18n-ignore
   }
@@ -59,162 +54,70 @@ export async function runSecurityTests(options: {
   const logs: string[] = [];
   const errors: string[] = [];
   const environment = process.env.NODE_ENV || "development";
-  const nodeVersion = process.version;
-  const osPlatform = process.platform;
+  const db = getDb();
 
+  let results: CheckResult[];
   try {
-    logs.push(`Starting ${testSuite} tests at ${new Date().toISOString()}`);
-
-    // execFile does not invoke a shell, and the command is selected from a fixed allowlist.
-    const testPattern = "tests/security/*.test.ts";
-    logs.push(`Running test suite: ${testSuite}`);
-
-    const { stdout, stderr } = await execFileAsync(
-      "pnpm",
-      ["exec", "tsx", "--test", "--test-reporter=json", testPattern],
-      {
+    const probes = await probeDatabase();
+    results = evaluateRuntimeChecks({
+      nodeEnv: environment,
+      authSecret: process.env.AUTH_SECRET,
+      canEncryptSecrets: canEncryptSecrets(),
+      appUrl: process.env.APP_URL,
+      uploadDir: process.env.UPLOAD_DIR || "./storage/uploads",
       cwd: process.cwd(),
-      timeout: 300000,
-      maxBuffer: 10 * 1024 * 1024,
-      env: {
-        ...process.env,
-        NODE_OPTIONS: "--conditions=react-server",
-      },
+      ...probes,
     });
+  } catch (error) {
+    // Ayrıntı yalnız sunucu günlüğüne; kayıtta yalnız hata kodu.
+    console.error("[security-monitor] runtime checks failed:", error instanceof Error ? error.message : error);
+    errors.push("RUNTIME_CHECKS_FAILED");
+    results = [];
+  }
 
-    const durationMs = Date.now() - startTime;
-    let results: unknown[] = [];
-    let totalTests = 0;
-    let passed = 0;
-    let failed = 0;
-    let skipped = 0;
+  const durationMs = Date.now() - startTime;
+  const passed = results.filter((item) => item.status === "pass").length;
+  const failed = results.filter((item) => item.status === "fail").length;
+  const warned = results.filter((item) => item.status === "warn").length;
+  const status = errors.length ? "error" : failed > 0 ? "failed" : "passed";
+  logs.push(`checks=${results.length} pass=${passed} warn=${warned} fail=${failed}`);
 
-    try {
-      if (stdout.trim()) {
-        const parsed: unknown = JSON.parse(stdout);
-        if (typeof parsed === "object" && parsed !== null) {
-          const report = parsed as {
-            tests?: unknown[];
-            stats?: { tests?: number; pass?: number; fail?: number; skipped?: number };
-          };
-          results = Array.isArray(report.tests) ? report.tests : [];
-          totalTests = report.stats?.tests ?? results.length;
-          passed = report.stats?.pass ?? results.filter((result) => hasStatus(result, "passed")).length;
-          failed = report.stats?.fail ?? results.filter((result) => hasStatus(result, "failed")).length;
-          skipped = report.stats?.skipped ?? results.filter((result) => hasStatus(result, "skipped")).length;
-        }
-      }
-    } catch (error) {
-      logs.push(`Failed to parse test results: ${String(error)}`);
-    }
-
-    if (stderr) logs.push(`Test stderr: ${stderr}`);
-    const status = failed > 0 ? "failed" : totalTests > 0 ? "passed" : "error";
-
-    const db = getDb();
-    const testRun = await db.securityTestRun.create({
-      data: {
-        testSuite,
-        status,
-        durationMs,
-        totalTests,
-        passed,
-        failed,
-        skipped,
-        environment,
-        nodeVersion,
-        osPlatform,
-        results: results as object[],
-        logs,
-        triggeredBy,
-        commitHash,
-        branch,
-      },
-    });
-
-    if (failed > 0) {
-      await db.securityTestAlert.create({
-        data: {
-          severity: "high",
-          type: "test_failure",
-          message: `${failed} security tests failed`, // i18n-ignore
-          description: `Security test suite "${testSuite}" has ${failed} failures`,
-          testRunId: testRun.id,
-          metadata: {
-            failedTests: results.filter((result) => hasStatus(result, "failed")) as object[],
-          },
-        },
-      });
-    }
-
-    logs.push(`Test run completed in ${durationMs}ms with status: ${status}`);
-
-    return {
-      success: status === "passed",
+  const testRun = await db.securityTestRun.create({
+    data: {
       testSuite,
-      totalTests,
+      status,
+      durationMs,
+      totalTests: results.length,
       passed,
       failed,
-      skipped,
-      durationMs,
-      results,
+      skipped: warned,
+      environment,
+      nodeVersion: process.version,
+      osPlatform: process.platform,
+      results: results as object[],
       logs,
-      errors,
-    };
-  } catch (error) {
-    const durationMs = Date.now() - startTime;
-    const failure = error instanceof Error ? error : new Error(String(error));
-    const processFailure = error as { stdout?: unknown; stderr?: unknown };
+      triggeredBy,
+      commitHash,
+      branch,
+    },
+  });
 
-    errors.push(failure.message);
-    if (typeof processFailure.stdout === "string") errors.push(processFailure.stdout);
-    if (typeof processFailure.stderr === "string") errors.push(processFailure.stderr);
-
-    const db = getDb();
-    const testRun = await db.securityTestRun.create({
-      data: {
-        testSuite,
-        status: "error",
-        durationMs,
-        totalTests: 0,
-        passed: 0,
-        failed: 0,
-        skipped: 0,
-        environment,
-        nodeVersion,
-        osPlatform,
-        results: [],
-        logs,
-        triggeredBy,
-        commitHash,
-        branch,
-      },
-    });
-
+  const failures = results.filter((item) => item.status === "fail");
+  if (errors.length || failures.length) {
+    const critical = errors.length > 0 || failures.some((item) => item.severity === "critical");
     await db.securityTestAlert.create({
       data: {
-        severity: "critical",
-        type: "test_error",
-        message: formatExecutionFailure(failure),
-        description: formatSuiteFailure(testSuite),
+        severity: critical ? "critical" : "high",
+        type: errors.length ? "test_error" : "test_failure",
+        message: errors.length ? "RUNTIME_CHECKS_FAILED" : failures.map((item) => item.key).join(","), // i18n-ignore (machine keys; UI translates)
+        description: testSuite,
         testRunId: testRun.id,
-        metadata: { error: failure.message },
+        metadata: { failedChecks: failures.map((item) => item.key) },
       },
     });
-
-    return {
-      success: false,
-      testSuite,
-      totalTests: 0,
-      passed: 0,
-      failed: 0,
-      skipped: 0,
-      durationMs,
-      results: [],
-      logs,
-      errors,
-    };
   }
+
+  return { success: status === "passed", testSuite, totalTests: results.length, passed, failed, skipped: warned, durationMs, results, logs, errors };
 }
 
 /**

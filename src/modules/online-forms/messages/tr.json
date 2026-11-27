@@ -77,7 +77,8 @@
     "noEncryption": "İmzaları şifrelemek için anahtar ayarlı değil (AUTH_SECRET).",
     "invalid": "Lütfen işaretli alanları kontrol edin.",
     "linkInvalid": "Bağlantı geçersiz, süresi dolmuş veya zaten kullanılmış.",
-    "textsChanged": "Form metinleri bu arada güncellendi. Lütfen sayfayı yenileyip metni okuyarak yeniden imzalayın."
+    "textsChanged": "Form metinleri bu arada güncellendi. Lütfen sayfayı yenileyip metni okuyarak yeniden imzalayın.",
+    "rateLimited": "Çok fazla deneme yapıldı; lütfen biraz bekleyip tekrar deneyin."
   },
   "validation": {
     "tooLong": "Çok uzun.",
@@ -89,7 +90,9 @@
     "bic": "Geçerli bir BIC girin.",
     "signerName": "Adınızı ve soyadınızı yazın.",
     "signature": "Lütfen imza alanına imzanızı atın.",
-    "privacy": "Datenschutz onayı zorunludur."
+    "privacy": "Datenschutz onayı zorunludur.",
+    "ibanRequired": "SEPA yetkisi için IBAN girin.",
+    "accountHolderRequired": "SEPA yetkisi için hesap sahibini girin."
   },
   "public": {
     "title": "Kayıt formu",

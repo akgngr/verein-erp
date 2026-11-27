@@ -139,39 +139,53 @@ export async function assertNoNegativeCashWithReplacement(
   const db = tx;
   const account = await db.accountingAccount.findUniqueOrThrow({
     where: { id: accountId },
-    select: { type: true },
+    select: { type: true, openingBalance: true },
   });
   if (account.type !== "CASH") return;
 
-  const { openingBalanceCents, movements } = await loadMovements(accountId, undefined, tx);
-
-  const deltas: Array<{ key: string; delta: number }> = movements.map((movement, index) => ({
-    key: `${movement.bookingDate.toISOString().slice(0, 10)}#${String(movement.sequence).padStart(6, "0")}#${index}`,
-    delta: movementEffectOn(movement, accountId),
-  }));
-
-  // Eski fişin etkisini listeden düş (tüm satırları — fiş accountId veya counterAccountId olabilir).
-  const oldRows = await db.accountingBooking.findMany({
-    where: { id: excludeBookingId },
-    select: { bookingDate: true, sequence: true, type: true, accountId: true, counterAccountId: true, amount: true },
+  const openingBalanceCents = Number(account.openingBalance.mul(100).toFixed(0));
+  const rows = await db.accountingBooking.findMany({
+    where: {
+      reversedAt: null,
+      OR: [{ accountId }, { counterAccountId: accountId }],
+    },
+    orderBy: [{ bookingDate: "asc" }, { sequence: "asc" }],
+    select: {
+      id: true,
+      bookingDate: true,
+      sequence: true,
+      type: true,
+      accountId: true,
+      counterAccountId: true,
+      amount: true,
+    },
   });
-  for (const row of oldRows) {
-    const delta = movementEffectOn(
-      {
-        accountId: row.accountId,
-        counterAccountId: row.counterAccountId,
-        type: row.type as string,
-        amountCents: Number(row.amount.mul(100).toFixed(0)),
-      },
-      accountId,
-    );
-    const key = `${row.bookingDate.toISOString().slice(0, 10)}#${String(row.sequence).padStart(6, "0")}#old`;
-    deltas.push({ key, delta: -delta });
-  }
+
+  const excludedRow = rows.find((row) => row.id === excludeBookingId) ?? null;
+  const deltas: Array<{ key: string; delta: number }> = rows
+    .filter((row) => row.id !== excludeBookingId)
+    .map((row, index) => ({
+      key: `${row.bookingDate.toISOString().slice(0, 10)}#${String(row.sequence).padStart(6, "0")}#${String(index).padStart(6, "0")}`,
+      delta: movementEffectOn(
+        {
+          accountId: row.accountId,
+          counterAccountId: row.counterAccountId,
+          type: row.type as string,
+          amountCents: Number(row.amount.mul(100).toFixed(0)),
+        },
+        accountId,
+      ),
+    }));
 
   if (replacement) {
+    const repDay = replacement.bookingDate.toISOString().slice(0, 10);
+    const sameDayAsExcluded =
+      excludedRow && excludedRow.bookingDate.toISOString().slice(0, 10) === repDay;
+    const seqSlot = sameDayAsExcluded
+      ? String(excludedRow.sequence).padStart(6, "0")
+      : "999999";
     deltas.push({
-      key: `${replacement.bookingDate.toISOString().slice(0, 10)}#new`,
+      key: `${repDay}#${seqSlot}#000000`,
       delta: movementEffectOn(replacement, accountId),
     });
   }

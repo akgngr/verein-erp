@@ -56,3 +56,17 @@ export async function searchCityWeatherAction(
     },
   })(rawInput);
 }
+
+/** #585: Derneğin şehri için hava durumu (başlık widget'ı; önceden sabit Frankfurt). */
+export async function fetchOrganizationWeatherAction(): Promise<ActionResult<WeatherData | null>> {
+  const { createAction } = await import("@/modules/auth/server");
+  const { z } = await import("zod");
+  return createAction({
+    permission: { definition: weatherPermissions, action: "view" },
+    schema: z.object({}).strict(),
+    handler: async () => {
+      const { getOrganizationWeather } = await import("../services/weather");
+      return getOrganizationWeather();
+    },
+  })({});
+}

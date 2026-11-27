@@ -13,7 +13,7 @@ Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı 
 |---|---|
 | Anahtar | `donations` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.13 |
+| Sürüm | 1.2.0 |
 | Sayfalar | `/bagislar`, `/bagislar/bagiscilar`, `/bagislar/bildirimler`, `/bagislar/bildirimler/olustur`, `/bagislar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,25 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_donation_statistics`
 
 ## Sürüm notları
+
+### 1.2.0 — Ayni bağış (Sachzuwendung), 300 € basitleştirilmiş kanıt ve EPC-QR (GiroCode)
+
+_2026-11-26_
+
+- **Yeni:** Ayni bağışlar (Sachzuwendung) için BMF Anlage 4 alanları (eşya açıklaması, kaynak türü, değerleme belgesi) ve tekil BMF bağış bildirimi şablonu eklendi; ayni bağışlar nakit/banka fişi açmaz ve toplu bildirimlere dahil edilmez (#618).
+- **Yeni:** 300 € ve altı nakdi bağışlar için § 50 Abs. 4 Nr. 2 EStDV basitleştirilmiş bağış kanıtı PDF'i (isteğe bağlı yerel GiroCode EPC-QR ile) eklendi (#618).
+
+### 1.1.15 — Banka eşleştirme tek tıkla bağış sözleşmesi (#616)
+
+_2026-11-26_
+
+- **Yeni:** Muhasebe banka ekstre satırından mevcut veya yeni bağışçı ile atomik bağış ve fiş oluşturma sunucu sözleşmesi eklendi.
+
+### 1.1.14 — Bağışçı düzenleme, BMF PDF, 10 yıl saklama ve toplu PDF birleştirme
+
+_2026-11-25_
+
+- **Düzeltme:** Bağışçı güncelleme/mükerrer kontrolü, bağış düzenleme fiş sürümlemesi, BMF PDF numaralandırma ve satır bölme, 10 yıllık saklama koruması ve SHA-256 doğrulamalı pdf-lib toplu birleştirme düzeltildi (#575, #577).
 
 ### 1.1.13 — nav.json kategori ve alt modül tanımı
 
@@ -72,22 +91,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 1.1.6 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-### 1.1.5 — İstatistik kartları ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Kart ve yüzey görünümleri ortak SurfaceCard/StatCard pattern'ine taşındı; modül bu kullanımda HeroUI Card implementasyonuna doğrudan bağlı değil.
-
-### 1.1.4 — İptal eylemi ortak buton katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Buton görünümü ve etkileşim semantiği ortak ActionButton pattern'ine taşındı; modül bu kullanımda HeroUI Button implementasyonuna doğrudan bağlı değil.
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 8 herkese açık sürüm notu.

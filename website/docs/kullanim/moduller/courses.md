@@ -13,7 +13,7 @@ Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve
 |---|---|
 | Anahtar | `courses` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.15 |
+| Sürüm | 1.4.18 |
 | Sayfalar | `/kurslar`, `/ogrenciler`, `/ogrenci-takibi`, `/kurslar/ogretmenler`, `/kurslar/odemeler`, `/kurslar/hakedisler`, `/kurslar/ayarlar` |
 | Gerektirir | [Öğrenciler](./students) |
 | Önerir | [Öğrenci takibi](./progress) |
@@ -27,6 +27,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | [Muhasebe](./accounting) | okuma, yazma | Kurs ücreti tahsilatlarını gelir fişi olarak yazar ve geri alır; kasa/banka hesaplarını ve gelir kategorilerini okur. Ödenen öğretmen hakedişlerini gider fişi olarak yazar. |
 | [E-posta Altyapısı](./mail) | okuma, yazma | Öğretmen davet e-postası gönderir. |
 | [Dernek Bilgileri](./organization) | okuma | Öğretmen hakediş PDF'inin antetinde dernek bilgilerini ve logosunu okur. |
+| [Öğrenci takibi](./progress) | silme | Bir kurs dersi silindiğinde o derse ait yetim yoklama kayıtlarını temizler. |
 | [Öğrenciler](./students) | okuma | Kursa kaydedilecek öğrencileri ve ödeme sorumlularını okur. |
 | [Kullanıcılar](./users) | okuma, yazma | Davet edilen öğretmen için Öğretmen rolünde kullanıcı hesabı açar; hesabı olan öğretmenin ad ve e-postasını kullanıcı kaydından okur. |
 
@@ -51,6 +52,25 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_course_statistics` · `list_courses` · `propose_course` · `propose_course_status` · `propose_delete_course`
 
 ## Sürüm notları
+
+### 1.4.18 — Banka eşleştirme kurs ücreti sözleşmesi (#616)
+
+_2026-11-26_
+
+- **Yeni:** Muhasebe banka ekstre eşleştirmesi için açık kurs ücretlerini listeleme ve seçilen banka hesabına atomik ödeme kaydetme sunucu sözleşmesi eklendi.
+
+### 1.4.17 — Yerel tarih alanları
+
+_2026-11-26_
+
+- **İyileştirme:** Ders, kayıt, ücret ödemesi ve öğretmen ödemesi tarihleri yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.
+
+### 1.4.16 — Ücret TOCTOU düzeltmesi, hakediş sertleştirmesi ve PDF denetim kaydı
+
+_2026-11-25_
+
+- **Düzeltme:** Ücret tahsilatı/ters kayıt/feragat işlemlerinde atomik durum kilidi, işlem içi kontenjan denetimi, hakediş P2002 yinelemesi, toplu sorgu ve onaylı hakedişteki dersin silinme koruması eklendi (#579, #578).
+- **Güvenlik:** Öğretmen hakediş PDF dışa aktarımına kişisel veri içermeyen denetim kaydı ve kanonik APP_URL davet bağlantısı eklendi (#579, #574).
 
 ### 1.4.15 — nav.json kategori ve alt modül tanımı
 
@@ -82,22 +102,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 1.4.8 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-### 1.4.7 — Asistan önerileri bulutta
-
-_2026-11-16_
-
-- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
-
-### 1.4.6 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 13 herkese açık sürüm notu.

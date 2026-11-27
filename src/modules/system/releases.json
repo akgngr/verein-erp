@@ -2,6 +2,111 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.21.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Şifreli yedekleme ve kurtarma doğrulama ekranı (#617)",
+        "de": "Verschlüsselte Datensicherung und Wiederherstellungsprüfung (#617)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "PostgreSQL veritabanı ve UPLOAD_DIR dosyalarını SHA-256 manifesti ve şema sürümüyle tek AES-256-GCM şifreli arşiv (.vbak) olarak paketleyen otomatik ve isteğe bağlı yedekleme servisi eklendi.",
+          "de": "Automatisierte und manuelle Datensicherung hinzugefügt, die PostgreSQL-Datenbank und UPLOAD_DIR-Dateien samt SHA-256-Manifest und Schemaversion als verschlüsseltes AES-256-GCM-Archiv (.vbak) verpackt."
+        },
+        {
+          "type": "security",
+          "tr": "Canlı veriyi değiştirmeden şifre çözme, bütünlük (SHA-256) ve şema uyumluluğunu test eden kurtarma doğrulama akışı (hem kayıtlı hem yüklenen arşivler için) ve tam denetim kaydı eklendi.",
+          "de": "Zerstörungsfreie Wiederherstellungsprüfung (Entschlüsselung, SHA-256-Integrität und Schemakompatibilität für gespeicherte und hochgeladene Archive) samt vollständigem Audit-Protokoll ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "1.20.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Gruplu ayar merkezi",
+        "de": "Gruppierte Einstellungsübersicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayar merkezi artık dokuz gruba ayrılıyor (Genel, Kullanıcılar ve erişim, Güvenlik ve gizlilik, Entegrasyonlar, Görünüm, İletişim, Yapay zekâ ve otomasyon, Modül yönetimi, Sistem yönetimi). Gruplar ve sıra modül tanımlarından gelir; sol paneldeki Ayarlar alt menüsü aynı sırayı izler.",
+          "de": "Die Einstellungsübersicht ist jetzt in neun Gruppen gegliedert (Allgemein, Benutzer und Zugriff, Sicherheit und Datenschutz, Integrationen, Darstellung, Kommunikation, KI und Automatisierung, Modulverwaltung, Systemverwaltung). Gruppen und Reihenfolge kommen aus den Moduldefinitionen; das Einstellungsmenü in der Seitenleiste folgt derselben Reihenfolge."
+        }
+      ]
+    },
+    {
+      "version": "1.19.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ayarlar genel bakışında her kart kendi açıklamasını gösterir; aynı modül açıklaması artık altı kartta tekrarlanmaz.",
+          "de": "In der Einstellungsübersicht hat jede Karte eine eigene Beschreibung; dieselbe Modulbeschreibung wiederholt sich nicht mehr auf sechs Karten."
+        }
+      ]
+    },
+    {
+      "version": "1.19.1",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Herkese açık sayfalarda modül kapısı",
+        "de": "Modulsperre auf öffentlichen Seiten"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Anonim ziyaretçi /portal, /oy, /formular gibi sayfalarda modül yönetimi metni yerine yalnız 'sayfa kullanılamıyor' görür; API'ler 404 döner.",
+          "de": "Anonyme Besucher sehen auf Seiten wie /portal, /oy, /formular nur „Seite nicht verfügbar“ statt Modulverwaltungstexten; APIs liefern 404."
+        },
+        {
+          "type": "improvement",
+          "tr": "Sağlık kokpiti, üye portalı açık ama PORTAL_ENABLED kapalıysa uyarır.",
+          "de": "Das Gesundheitscockpit warnt, wenn das Mitgliederportal aktiv, PORTAL_ENABLED aber nicht gesetzt ist."
+        }
+      ]
+    },
+    {
+      "version": "1.19.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Sağlık kokpiti, kurulum sihirbazı ve gizlilik ön ayarları",
+        "de": "Gesundheitscockpit, Einrichtungsassistent und Datenschutz-Voreinstellungen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Sağlık kokpiti başarısız arka plan işlerini ve worker kalp atışını doğru gösterir (önceden yanlış tablo sorgulanıp hep 0 görünüyordu); veriler modüllerin public API'lerinden okunur.",
+          "de": "Das Gesundheitscockpit zeigt fehlgeschlagene Hintergrundaufgaben und den Worker-Heartbeat korrekt an (zuvor wurde eine falsche Tabelle abgefragt, Ergebnis immer 0); die Daten kommen über die öffentlichen Modul-APIs."
+        },
+        {
+          "type": "improvement",
+          "tr": "Çekirdek (CORE) modüllerin erişimi her zaman onaylıdır; yeni kurulumda ve güncellemelerde 'izin bekliyor' görünmez.",
+          "de": "Zugriffe von Kernmodulen (CORE) gelten immer als freigegeben; nach Neuinstallation und Updates erscheint kein „Freigabe ausstehend“ mehr."
+        },
+        {
+          "type": "security",
+          "tr": "Gizlilik ön ayarı bağımlılıkları ve erişim onaylarını denetler; engel varsa önizlemede listelenir ve uygulanmaz.",
+          "de": "Datenschutz-Voreinstellungen prüfen Abhängigkeiten und Zugriffsfreigaben; Blocker werden in der Vorschau aufgelistet und nicht angewendet."
+        },
+        {
+          "type": "fix",
+          "tr": "Kurulum sihirbazı açık modülleri yalnız açık onayla kapatır, zorunlu bağımlılıkları (örn. otomasyon) açar, dernek ön ayarına SEPA, CRM, toplu e-posta ve hibeleri ekler ve muhasebe varsayılan eşlemelerini doldurur.",
+          "de": "Der Einrichtungsassistent deaktiviert aktive Module nur nach ausdrücklicher Bestätigung, aktiviert Pflichtabhängigkeiten (z. B. Automation), ergänzt SEPA, CRM, Mailings und Förderungen im Vereins-Preset und füllt die Buchhaltungs-Standardzuordnungen."
+        },
+        {
+          "type": "fix",
+          "tr": "'settings' izni tek tanıma indirildi; Menü düzeni sayfası sunucuda yetki ister; yöneticiler widget'ları herkes için açıp kapatabilir.",
+          "de": "Die Berechtigung „settings“ hat nur noch eine Definition; die Seite Menülayout prüft die Berechtigung serverseitig; Administratoren können Widgets für alle erlauben oder sperren."
+        }
+      ]
+    },
+    {
       "version": "1.18.5",
       "date": "2026-11-25",
       "title": {

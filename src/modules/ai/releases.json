@@ -2,6 +2,51 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.15.13",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Ayar merkezi grubu",
+        "de": "Gruppe in der Einstellungsübersicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.",
+          "de": "Die Einstellungsseiten erscheinen in der Einstellungsübersicht in ihrer eigenen Gruppe und Reihenfolge."
+        }
+      ]
+    },
+    {
+      "version": "1.15.12",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Yüzen asistan çubuğu mobilde ve sağlayıcı yapılandırılmamışken küçük bir düğmeye dönüşür; açık diyalog veya çekmece varken gizlenir.",
+          "de": "Die schwebende Assistentenleiste wird auf Mobilgeräten und ohne konfigurierten Anbieter zu einer kleinen Schaltfläche und blendet sich bei geöffneten Dialogen aus."
+        }
+      ]
+    },
+    {
+      "version": "1.15.11",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Gizlilik ön ayarı sağlayıcı politikası",
+        "de": "Anbieterrichtlinie der Datenschutz-Voreinstellung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Uygulanan gizlilik ön ayarının izin vermediği sağlayıcı seçilemez ve kullanılmaz (örn. 'Yalnız yerel' ön ayarında bulut sağlayıcı kapalıdır).",
+          "de": "Von der angewendeten Datenschutz-Voreinstellung nicht erlaubte Anbieter können weder gewählt noch genutzt werden (z. B. kein Cloud-Anbieter bei „Nur lokal“)."
+        }
+      ]
+    },
+    {
       "version": "1.15.10",
       "date": "2026-11-23",
       "title": {

@@ -25,11 +25,14 @@ export type ParsedEInvoice = {
   payableCents: number;
   byRate: Array<{ rate: number; netCents: number; taxCents: number }>;
   lineCount: number;
+  /** True when the incoming document is a CreditNote (UBL CreditNote or CII/UBL TypeCode 381). */
+  isCreditNote?: boolean;
 };
 
 export class EInvoiceParseError extends Error {}
 
-const cents = (value: string | null) => (value ? Math.abs(parseAmount(value)) : 0);
+const signedCents = (value: string | null) => (value ? parseAmount(value) : 0);
+const creditAdjusted = (value: number, isCreditNote: boolean) => (isCreditNote && value > 0 ? -value : value);
 const rate = (value: string | null) => Math.round(Number(value ?? "0"));
 const ciiDate = (value: string | null) => (value && /^\d{8}$/.test(value.trim()) ? `${value.slice(0, 4)}-${value.slice(4, 6)}-${value.slice(6, 8)}` : value ? value.slice(0, 10) : null);
 
@@ -44,6 +47,11 @@ export function parseEInvoice(xml: string): ParsedEInvoice {
 }
 
 function parseUbl(xml: string): ParsedEInvoice {
+  const isCreditNote =
+    /<(?:\w+:)?CreditNote[\s>]/.test(xml.slice(0, 5000)) ||
+    firstTopLevel(xml, "CreditNoteTypeCode") === "381" ||
+    firstTopLevel(xml, "InvoiceTypeCode") === "381";
+  const cents = (value: string | null) => creditAdjusted(signedCents(value), isCreditNote);
   const supplier = xmlAll(xml, "AccountingSupplierParty")[0] ?? "";
   const taxSchemes = xmlAll(supplier, "PartyTaxScheme");
   const schemeId = (scheme: string) => taxSchemes.find((item) => xmlPath(item, "TaxScheme/ID") === scheme);
@@ -55,6 +63,7 @@ function parseUbl(xml: string): ParsedEInvoice {
   const grossCents = cents(xmlPath(totals, "TaxInclusiveAmount"));
   return {
     syntax: "UBL",
+    isCreditNote,
     number: firstTopLevel(xml, "ID"),
     issueDate: xmlPath(xml, "IssueDate"),
     dueDate: xmlPath(xml, "DueDate") ?? xmlPath(xml, "PaymentMeans/PaymentDueDate"),
@@ -81,6 +90,8 @@ function firstTopLevel(xml: string, name: string): string | null {
 }
 
 function parseCii(xml: string): ParsedEInvoice {
+  const isCreditNote = xmlPath(xml, "ExchangedDocument/TypeCode") === "381";
+  const cents = (value: string | null) => creditAdjusted(signedCents(value), isCreditNote);
   const seller = xmlAll(xml, "SellerTradeParty")[0] ?? "";
   const registrations = [...seller.matchAll(/<(?:\w+:)?ID\s+schemeID="(VA|FC)"[^>]*>([^<]+)</g)];
   const settlement = xmlAll(xml, "ApplicableHeaderTradeSettlement")[0] ?? "";
@@ -91,6 +102,7 @@ function parseCii(xml: string): ParsedEInvoice {
   const grossCents = cents(xmlPath(summation, "GrandTotalAmount"));
   return {
     syntax: "CII",
+    isCreditNote,
     number: xmlPath(xml, "ExchangedDocument/ID"),
     issueDate: ciiDate(xmlPath(xml, "ExchangedDocument/IssueDateTime/DateTimeString")),
     dueDate: ciiDate(xmlPath(settlement, "SpecifiedTradePaymentTerms/DueDateDateTime/DateTimeString")),
@@ -134,7 +146,7 @@ export function extractEmbeddedInvoiceXml(pdf: Buffer): string | null {
         content = null;
       }
     } else if (!/\/Filter/.test(dict)) content = raw.toString("utf8");
-    if (content && /<(?:\w+:)?(CrossIndustryInvoice|Invoice)[\s>]/.test(content.slice(0, 3000))) return content.trim();
+    if (content && /<(?:\w+:)?(CrossIndustryInvoice|Invoice|CreditNote)[\s>]/.test(content.slice(0, 3000))) return content.trim();
   }
   return null;
 }
@@ -146,7 +158,7 @@ export type Section14Check = { key: "sellerName" | "sellerAddress" | "sellerTaxI
  * § 33 UStDV): vergi numarası, fatura no. ve hizmet tarihi aranmaz.
  */
 export function section14Checks(input: { sellerName: string | null; sellerAddress: string | null; sellerVatId: string | null; sellerTaxNumber: string | null; number: string | null; issueDate: string | null; serviceDate: string | null; grossCents: number; byRate: Array<{ rate: number }> }): Section14Check[] {
-  const small = input.grossCents <= 25_000;
+  const small = Math.abs(input.grossCents) <= 25_000;
   const checks: Section14Check[] = [
     { key: "sellerName", ok: Boolean(input.sellerName) },
     { key: "sellerAddress", ok: Boolean(input.sellerAddress) },

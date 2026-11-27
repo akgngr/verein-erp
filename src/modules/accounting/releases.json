@@ -2,6 +2,116 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.29.1",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "Gelen fatura ödeme dağılımı ve KoSIT yanıt sınırı düzeltmesi",
+        "de": "Korrektur: Zahlungsaufteilung bei Eingangsrechnungen und KoSIT-Antwortlimit"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Pozitif ve negatif vergi grupları içeren gelen faturalarda (ör. indirim veya avans kesintisi satırı) ödeme artık grupların işaretlerini korur; negatif grup gidere dönüşmez ve ön vergi dağılımı belgeyle aynı kalır.",
+          "de": "Bei Eingangsrechnungen mit positiven und negativen Steuergruppen (z. B. Rabatt- oder Anzahlungszeile) behält die Zahlung die Vorzeichen der Gruppen bei; die negative Gruppe wird nicht zum Aufwand und die Vorsteueraufteilung entspricht dem Beleg."
+        },
+        {
+          "type": "fix",
+          "tr": "KoSIT doğrulayıcısı 2 MB sınırını aşan bir yanıt döndürdüğünde doğrulama artık takılmaz; 'doğrulanamadı' sonucu döner.",
+          "de": "Liefert der KoSIT-Validator eine Antwort über dem 2-MB-Limit, hängt die Prüfung nicht mehr, sondern meldet „nicht prüfbar“."
+        }
+      ]
+    },
+    {
+      "version": "1.29.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Giden faturalarda yerel EPC-QR (GiroCode)",
+        "de": "Lokaler EPC-QR (GiroCode) auf Ausgangsrechnungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "IBAN tanımlı açık giden fatura PDF'lerine (ZUGFeRD dahil) dış sunucu olmadan yerel olarak üretilen SEPA EPC-QR (GiroCode) ödeme kodu eklendi (#618).",
+          "de": "Offene Ausgangsrechnungen (inkl. ZUGFeRD-PDF) enthalten bei hinterlegter IBAN nun einen lokal erzeugten SEPA-EPC-QR-Code (GiroCode) ohne externe Dienste (#618)."
+        }
+      ]
+    },
+    {
+      "version": "1.28.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Aidat, kurs ücreti ve tek tıkla bağış banka eşleştirmesi",
+        "de": "Bankabgleich für Mitgliedsbeiträge, Kursgebühren und Ein-Klick-Spenden"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Banka hareketleri artık açık üye aidatları, açık kurs ücretleri ve bağışlarla (mevcut veya yeni bağışçı) öneri puanlarıyla tek adımda eşleştirilip kapatılabilir (#616).",
+          "de": "Bankumsätze lassen sich nun direkt mit offenen Mitgliedsbeiträgen, Kursgebühren sowie Spenden (bestehende oder neue Spender) inkl. Vorschlagspunkten abgleichen und verbuchen (#616)."
+        }
+      ]
+    },
+    {
+      "version": "1.27.6",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Yerel tarih alanları",
+        "de": "Lokale Datumsfelder"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ödeme, fatura tahsilatı ve ödeme çalıştırması tarihleri yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.",
+          "de": "Zahlungs-, Zahlungseingangs- und Ausführungsdatum werden im lokalen Format (TT.MM.JJJJ, 24 h) mit Kalender gewählt statt im browserabhängigen Format mm/dd/yyyy."
+        }
+      ]
+    },
+    {
+      "version": "1.27.5",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "GoBD, vergi, Kassenminus, banka ve PDF güvenlik düzeltmeleri",
+        "de": "GoBD-, Steuer-, Kassenminus-, Bank- und PDF-Sicherheitskorrekturen"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Sayman raporu PDF oluşturucusunda çapraz modül dosya okuma engellendi ve KoSIT doğrulayıcıda DNS-sabitli SSRF koruması eklendi (#573).",
+          "de": "Modulübergreifender Dateizugriff im Kassenbericht-PDF gesperrt und DNS-gepinnter SSRF-Schutz im KoSIT-Validator ergänzt (#573)."
+        },
+        {
+          "type": "fix",
+          "tr": "Kassenminus, banka içe aktarma/ters kayıt, SOLL-Versteuerung UStVA, § 19 UStG, GoBD Z3 UTF-8/ek CSV'ler, yıllık kapanış, e-fatura KDV kategorisi E ve SEPA pain.001 transliterasyon hataları giderildi (#576, #577).",
+          "de": "Kassenminus, Bankimport/Storno, Soll-Versteuerung UStVA, § 19 UStG, GoBD Z3 UTF-8/Zusatz-CSVs, Jahresabschluss, E-Rechnung Steuerkategorie E und SEPA pain.001-Transliteration behoben (#576, #577)."
+        },
+        {
+          "type": "fix",
+          "tr": "Kesilmiş faturanın tahsilatında faturadaki KDV oranları esas alınır; § 19 UStG ayarı sonradan açılsa da KDV'li fatura KDV'siz kaydedilmez.",
+          "de": "Beim Zahlungseingang gelten die Steuersätze der ausgestellten Rechnung; wird § 19 UStG später aktiviert, wird eine Rechnung mit USt nicht ohne USt gebucht."
+        },
+        {
+          "type": "fix",
+          "tr": "İçe aktarılan tedarikçi alacak dekontları (negatif tutarlar) iade olarak kapatılabilir: elle veya gelen banka hareketiyle eşleştirilir, gider ve ön KDV azaltılır.",
+          "de": "Importierte Lieferantengutschriften (negative Beträge) lassen sich als Erstattung ausgleichen – manuell oder über einen Zahlungseingang; Aufwand und Vorsteuer werden gemindert."
+        }
+      ]
+    },
+    {
+      "version": "1.27.4",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Varlık, götürü gider ve kasa kapanışı formlarında tarih alanları yerel biçimde (GG.AA.YYYY) ve takvimle seçilir.",
+          "de": "Datumsfelder in Anlagen-, Pauschalen- und Kassenabschlussformularen nutzen das lokale Format (TT.MM.JJJJ) mit Kalender."
+        }
+      ]
+    },
+    {
       "version": "1.27.3",
       "date": "2026-11-24",
       "title": {

@@ -27,8 +27,10 @@ export const channels = defineChannels("campaign-telegram", [
       return list.map((recipient) => ({ ...recipient, telegramChatId: ids.get(`${sourceId}:${recipient.id}`) ?? null }));
     },
     address: (recipient) => recipient.telegramChatId ?? null,
-    // Abonelik (/start) kişinin kendi eylemidir; ayrıca itiraz edenler atlanır.
-    allowed: (recipient) => Boolean(recipient.telegramChatId) && recipient.consents?.telegram !== false,
+    // #581: Kaynak kaydında açık Telegram rızası şarttır (sözleşme: consents[kanal] === true). Kaynaklar geri
+    // alınan rızayı `undefined` olarak verir; önceki `!== false` kontrolü itiraz edene göndermeye devam ediyordu.
+    // /start ve /stop rızayı kaynağa yazar (services/telegram.ts).
+    allowed: (recipient) => Boolean(recipient.telegramChatId) && recipient.consents?.telegram === true,
     placeholders: { keys: ["telegramLink"], values: inviteLinks },
     sendBatch: async (messages, config) => {
       const results: ChannelSendResult[] = [];

@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Input, InputGroup, Label, Select, Spinner, StatusChip, Tabs, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
+import { DateInput, Input, InputGroup, Label, Select, Spinner, StatusChip, Tabs, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -321,19 +321,15 @@ export function GrantDetailApp({
           </table>
           {can.update ? (
             <div className="grid grid-cols-1 items-end gap-2 sm:grid-cols-[1fr_1fr_1fr_2fr_auto]">
-              <TextField
+              <DateInput
+                label={t("fields.requestedAt")}
+                ariaLabel={t("fields.requestedAt")}
                 value={payout.requestedAt}
                 onChange={(requestedAt) =>
                   setPayout({ ...payout, requestedAt })
                 }
-                className={["w-full"].filter(Boolean).join(" ")}
-              >
-                <Label>{t("fields.requestedAt")}</Label>
-                <Input
-                  type="date"
-                  className={["h-9 text-sm"].filter(Boolean).join(" ")}
-                />
-              </TextField>
+                className="w-full"
+              />
               <TextField
                 value={payout.amount}
                 onChange={(amount) => setPayout({ ...payout, amount })}
@@ -345,18 +341,13 @@ export function GrantDetailApp({
                   className={["h-9 text-sm"].filter(Boolean).join(" ")}
                 />
               </TextField>
-              <TextField
+              <DateInput
+                label={t("fields.receivedAt")}
+                ariaLabel={t("fields.receivedAt")}
                 value={payout.receivedAt}
                 onChange={(receivedAt) => setPayout({ ...payout, receivedAt })}
-                className={["w-full"].filter(Boolean).join(" ")}
-              >
-                <Label>{t("fields.receivedAt")}</Label>
-                <Input
-                  type="date"
-                  placeholder=" "
-                  className={["h-9 text-sm"].filter(Boolean).join(" ")}
-                />
-              </TextField>
+                className="w-full"
+              />
               <TextField
                 value={payout.note}
                 onChange={(note) => setPayout({ ...payout, note })}
@@ -399,6 +390,8 @@ export function GrantDetailApp({
             </p>
           ) : null}
           <div className="flex flex-wrap items-center gap-2">
+            {/* #582: Verwendungsnachweis fiş listesini içerir; muhasebe yetkisi yoksa gösterilmez. */}
+            {report.bookingDetailsHidden ? null : (
             <ActionLink
               href={`/api/grants/${grant.id}/report-pdf`}
               target="_blank"
@@ -410,6 +403,7 @@ export function GrantDetailApp({
               {<FileDown className="size-4" />}
               {t("reportPdf")}
             </ActionLink>
+            )}
             {grant.reportSubmittedAt ? (
               <StatusChip tone="success">
                 {t("submittedAt", {
@@ -509,8 +503,11 @@ export function GrantDetailApp({
           </section>
           <section>
             <h3 className="mb-2 font-semibold">
-              {t("report.vouchers")} ({report.vouchers.length})
+              {t("report.vouchers")}{report.bookingDetailsHidden ? "" : ` (${report.vouchers.length})`}
             </h3>
+            {report.bookingDetailsHidden ? (
+              <p className="text-sm text-ink-500">{t("report.detailsHidden")}</p>
+            ) : (
             <div className="max-h-96 overflow-y-auto">
               <table className="w-full text-xs">
                 <thead className="sticky top-0 bg-surface text-ink-500">
@@ -557,6 +554,7 @@ export function GrantDetailApp({
                 </tbody>
               </table>
             </div>
+            )}
           </section>
           <section className="flex flex-col gap-2">
             <h3 className="font-semibold">{t("report.narrative")}</h3>

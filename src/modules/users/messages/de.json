@@ -40,7 +40,15 @@
     "delete": "Endgültig löschen",
     "deleted": "Benutzer gelöscht.",
     "deleteTitle": "Benutzer endgültig löschen",
-    "deleteConfirm": "\"{name}\" wird endgültig gelöscht; dies kann nicht rückgängig gemacht werden. In anderen Datensätzen bleibt der Name sichtbar. Wenn Sie nur den Zugang sperren möchten, deaktivieren Sie den Benutzer stattdessen. Fortfahren?"
+    "deleteConfirm": "\"{name}\" wird endgültig gelöscht; dies kann nicht rückgängig gemacht werden. In anderen Datensätzen bleibt der Name sichtbar. Wenn Sie nur den Zugang sperren möchten, deaktivieren Sie den Benutzer stattdessen. Fortfahren?",
+    "revokeSessions": "Alle Sitzungen beenden",
+    "revokeSessionsTitle": "Alle Sitzungen beenden?",
+    "revokeSessionsConfirm": "{name} wird auf allen Geräten abgemeldet und muss sich neu anmelden.",
+    "sessionsRevoked": "Alle Sitzungen von {name} wurden beendet.",
+    "resetTwoFactor": "Zwei-Faktor-Anmeldung zurücksetzen",
+    "resetTwoFactorTitle": "Zwei-Faktor-Anmeldung zurücksetzen?",
+    "resetTwoFactorConfirm": "Authenticator-App und Wiederherstellungscodes von {name} werden entfernt, alle Sitzungen enden. Die Person meldet sich danach nur mit dem Passwort an und kann die Einrichtung wiederholen.",
+    "twoFactorReset": "Die Zwei-Faktor-Anmeldung von {name} wurde zurückgesetzt."
   },
   "form": {
     "name": "Vor- und Nachname",
@@ -76,7 +84,8 @@
     "roleUnavailable": "Diese Rolle kann nicht zugewiesen werden: Sie existiert nicht oder ihr Modul ist nicht aktiv.",
     "adminOnly": "Nur ein Administrator kann die Administratorrolle vergeben oder ändern.",
     "grantExceedsMaxDuration": "Die Zugriffsdauer darf höchstens 90 Tage betragen.",
-    "grantEndBeforeStart": "Das Enddatum muss nach dem Startdatum liegen."
+    "grantEndBeforeStart": "Das Enddatum muss nach dem Startdatum liegen.",
+    "twoFactorNotEnabled": "Für dieses Konto ist die Zwei-Faktor-Anmeldung nicht aktiv."
   },
   "validation": {
     "nameRequired": "Name ist erforderlich.",
@@ -305,6 +314,7 @@
     "empty": "Noch kein Zugriffsfenster hinterlegt.",
     "statuses": {
       "active": "Aktiv",
+      "scheduled": "Geplant",
       "expired": "Abgelaufen",
       "revoked": "Widerrufen"
     }
@@ -321,11 +331,31 @@
     "toLogin": "Zur Anmeldung",
     "errors": {
       "invalid": "Dieser Einladungslink ist ungültig, abgelaufen oder bereits verwendet. Bitten Sie Ihre Verwaltung um eine neue Einladung.",
+      "rateLimited": "Zu viele Versuche. Bitte versuchen Sie es später erneut.",
       "inactive": "An inaktive Nutzer kann keine Einladung gesendet werden.",
       "mailNotConfigured": "E-Mail-Versand ist nicht eingerichtet (Einstellungen → E-Mail).",
       "appUrl": "Die App-Adresse (APP_URL) muss mit https definiert sein.",
       "sendFailed": "Einladungs-E-Mail konnte nicht gesendet werden.",
       "mismatch": "Die Passwörter stimmen nicht überein."
+    }
+  },
+  "passwordReset": {
+    "requestTitle": "Passwort vergessen",
+    "requestIntro": "Geben Sie die E-Mail-Adresse Ihres Kontos ein. Falls ein Konto existiert, erhalten Sie einen einmaligen Link zum Zurücksetzen, der 30 Minuten gültig ist.",
+    "email": "E-Mail",
+    "submitRequest": "Link zum Zurücksetzen senden",
+    "sent": "Falls zu dieser Adresse ein aktives Konto existiert, wurde ein Link zum Zurücksetzen gesendet. Bitte prüfen Sie Ihr Postfach (auch den Spam-Ordner).",
+    "toLogin": "Zurück zur Anmeldung",
+    "resetTitle": "Neues Passwort festlegen",
+    "resetIntro": "Legen Sie ein neues Passwort für {email} fest. Alle anderen Sitzungen werden beendet.",
+    "password": "Neues Passwort",
+    "confirm": "Neues Passwort (Wiederholung)",
+    "submitReset": "Passwort speichern",
+    "done": "Ihr Passwort wurde geändert. Sie können sich jetzt mit dem neuen Passwort anmelden.",
+    "errors": {
+      "email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "rateLimited": "Zu viele Versuche. Bitte versuchen Sie es später erneut.",
+      "invalid": "Dieser Link ist ungültig, abgelaufen oder wurde bereits verwendet. Fordern Sie einen neuen Link an."
     }
   }
 }

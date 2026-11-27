@@ -21,7 +21,7 @@ export const DEFAULT_GRAPH_VERSION = "v21.0";
 
 export class WhatsappError extends Error {}
 
-export type WhatsappSettings = { phoneNumberId?: string; templateName?: string; templateLanguage?: string; templateApproved?: string; graphVersion?: string };
+export type WhatsappSettings = { phoneNumberId?: string; templateName?: string; templateLanguage?: string; templateApproved?: string; graphVersion?: string; verifyTemplateName?: string };
 
 export type WhatsappMessage = { to: string; count: number; link: string };
 export type WhatsappTransport = (input: { accessToken: string; phoneNumberId: string; graphVersion: string; body: unknown }) => Promise<{ ok: boolean; providerId?: string }>;
@@ -67,7 +67,7 @@ export const whatsappTransport: WhatsappTransport = async ({ accessToken, phoneN
 
 /** Admin: store credentials/template. Enabling requires everything plus the explicit "Meta approved the template" confirmation. */
 export async function configureWhatsapp(
-  input: { enabled: boolean; accessToken?: string; phoneNumberId?: string; templateName?: string; templateLanguage?: string; templateApproved?: boolean; graphVersion?: string },
+  input: { enabled: boolean; accessToken?: string; phoneNumberId?: string; templateName?: string; templateLanguage?: string; templateApproved?: boolean; graphVersion?: string; verifyTemplateName?: string },
   actorId: string,
 ): Promise<void> {
   const current = await getChannelConfig("whatsapp");
@@ -78,11 +78,13 @@ export async function configureWhatsapp(
     ...(input.templateLanguage !== undefined ? { templateLanguage: input.templateLanguage.trim() } : {}),
     ...(input.templateApproved !== undefined ? { templateApproved: String(input.templateApproved) } : {}),
     ...(input.graphVersion !== undefined ? { graphVersion: input.graphVersion.trim() } : {}),
+    ...(input.verifyTemplateName !== undefined ? { verifyTemplateName: input.verifyTemplateName.trim() } : {}),
   };
   if (settings.phoneNumberId && !PHONE_NUMBER_ID.test(settings.phoneNumberId)) throw new WhatsappError("notifications.channels.errors.whatsappConfig");
   if (settings.templateName && !TEMPLATE_NAME.test(settings.templateName)) throw new WhatsappError("notifications.channels.errors.whatsappConfig");
   if (settings.templateLanguage && !TEMPLATE_LANGUAGE.test(settings.templateLanguage)) throw new WhatsappError("notifications.channels.errors.whatsappConfig");
   if (settings.graphVersion && !GRAPH_VERSION.test(settings.graphVersion)) throw new WhatsappError("notifications.channels.errors.whatsappConfig");
+  if (settings.verifyTemplateName && !TEMPLATE_NAME.test(settings.verifyTemplateName)) throw new WhatsappError("notifications.channels.errors.whatsappConfig");
   const accessToken = input.accessToken?.trim() || current.secrets.accessToken;
   if (input.enabled && !whatsappReady({ enabled: true, secrets: accessToken ? { accessToken } : {}, settings })) throw new WhatsappError("notifications.channels.errors.whatsappNotReady");
   await saveChannelConfig("whatsapp", { enabled: input.enabled, secrets: { accessToken: input.accessToken ?? "" }, settings: settings as Record<string, string> }, actorId);

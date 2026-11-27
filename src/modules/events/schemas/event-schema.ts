@@ -39,6 +39,14 @@ const eventFields = {
     .trim()
     .max(500, "events.validation.urlInvalid")
     .url("events.validation.urlInvalid")
+    .refine((value) => {
+      try {
+        const parsed = new URL(value);
+        return parsed.protocol === "http:" || parsed.protocol === "https:";
+      } catch {
+        return false;
+      }
+    }, "events.validation.urlInvalid")
     .optional()
     .or(z.literal(""))
     .nullable(),

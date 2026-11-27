@@ -20,6 +20,7 @@ import {
   type YouthProtectionRow,
   type YouthProtectionValidityStatus,
 } from "../types";
+import type { FeeExemptionLetterOrganization } from "../services/fee-exemption-letter";
 import { FeeExemptionLetterModal } from "./fee-exemption-letter-modal";
 
 export function YouthProtectionItemTable({
@@ -32,6 +33,7 @@ export function YouthProtectionItemTable({
   q,
   canUpdate,
   canDelete,
+  organization,
 }: {
   rows: YouthProtectionRow[];
   total: number;
@@ -42,6 +44,7 @@ export function YouthProtectionItemTable({
   q?: string;
   canUpdate: boolean;
   canDelete: boolean;
+  organization?: FeeExemptionLetterOrganization;
 }) {
   const t = useTranslations("youth-protection.table");
   const router = useRouter();
@@ -161,6 +164,14 @@ export function YouthProtectionItemTable({
         dir={dir}
         q={q}
         searchPlaceholder={t("search")}
+        // #585: Durum filtresi sorguda vardı ama arayüze bağlı değildi.
+        filters={[
+          {
+            key: "status",
+            label: t("filterStatus"),
+            options: (["overdue", "upcoming", "valid", "ended"] as const).map((value) => ({ value, label: t(`filter_${value}`) })),
+          },
+        ]}
         emptyMessage={t("empty")}
         rowActions={(row) => [
           {
@@ -187,7 +198,10 @@ export function YouthProtectionItemTable({
         ]}
       />
 
+      {/* #585: Her açılışta yeniden kurulur; aksi halde ilk açılıştaki ad useState'te kalıyordu. */}
       <FeeExemptionLetterModal
+        key={letterPerson ?? "closed"}
+        organization={organization}
         isOpen={letterPerson !== null}
         onOpenChange={(open) => {
           if (!open) setLetterPerson(null);

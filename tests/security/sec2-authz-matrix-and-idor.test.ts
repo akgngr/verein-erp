@@ -30,9 +30,13 @@ function walkFiles(dir: string, predicate: (file: string) => boolean, out: strin
  */
 const PUBLIC_OR_CREDENTIAL_ACTIONS = new Set([
   "src/modules/auth/actions/login.ts",
+  // #613: Pre-login OAuth initiation; enabled-provider allowlist and Auth.js callback identity checks.
+  "src/modules/auth/actions/external-login.ts",
   "src/modules/auth/actions/logout.ts",
   "src/modules/meetings/actions/public-vote-actions.ts",
   "src/modules/online-forms/actions/public-actions.ts",
+  // #603: "Forgot password" request and reset (pre-login); guarded by rate limits and one-time hashed tokens.
+  "src/modules/users/actions/password-reset.ts",
 ]);
 
 test("SEC2: role × page & server-action authorization matrix is generated from permissionResources and enforces least privilege", () => {
@@ -172,4 +176,18 @@ test("SEC2 IDOR: every module with [id] record pages enforces permission/ownersh
     const combined = files.map((f) => fs.readFileSync(f, "utf8")).join("\n");
     assert.match(combined, /\buserId\b/, `${dir} must scope record queries by userId`);
   }
+});
+
+// OAuth initiation is deliberately public; the callback, not the caller, establishes identity.
+test("SEC2 OAuth login initiation validates the provider and cannot choose a redirect or link identity", () => {
+  const source = fs.readFileSync("src/modules/auth/actions/external-login.ts", "utf8");
+  assert.match(source, /typeof id !== "string"/);
+  assert.match(source, /\(await loadEnabledAuthProviders\(\)\)\.ids\.includes\(id\)/);
+  assert.ok(source.indexOf(".ids.includes(id)") < source.indexOf("await signIn("));
+  assert.match(source, /\.delete\("verein-oauth-link"\)/);
+  assert.match(source, /await signIn\(id, \{ redirectTo: "\/" \}\)/);
+  assert.doesNotMatch(source, /\b(linkAuthIdentity|unlinkAuthIdentity|prepareAuthIdentityLink|getDb)\s*\(/);
+  const callback = fs.readFileSync("src/modules/auth/auth.ts", "utf8");
+  assert.match(callback, /resolveOAuthSignIn\(account\.provider, String\(account\.providerAccountId\)\)/);
+  assert.match(callback, /if \(!result\.ok\) return "\/giris\?oauth=denied"/);
 });

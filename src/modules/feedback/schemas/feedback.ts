@@ -4,7 +4,16 @@ export const feedbackCreateSchema = z.object({
   type: z.enum(["BUG", "SUGGESTION"]),
   title: z.string().trim().min(3, "feedback.validation.title").max(150, "feedback.validation.titleMax"),
   description: z.string().trim().min(5, "feedback.validation.description").max(5000, "feedback.validation.descriptionMax"),
-  pageUrl: z.string().trim().max(500).optional().default(""),
+  pageUrl: z
+    .string()
+    .trim()
+    .max(500)
+    .refine(
+      (value) => value === "" || /^\/(?!\/)[^\\\r\n\u0000-\u001f]*$/.test(value),
+      "common.errors.invalidInput",
+    )
+    .optional()
+    .default(""),
   userAgent: z.string().trim().max(500).optional().default(""),
   viewport: z.string().trim().max(40).optional().default(""),
 });

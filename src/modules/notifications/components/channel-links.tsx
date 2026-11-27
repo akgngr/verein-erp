@@ -10,7 +10,7 @@ import {
 } from "../actions/channels";
 
 /** Telegram linking is opt-in; admin bot secret can only be written, never read back. */
-export function NotificationChannelLinks() {
+export function NotificationChannelLinks({ showLink = true }: { showLink?: boolean } = {}) {
   const t = useTranslations("notifications");
   const [status, setStatus] = useState<"linked" | "pending" | "none" | null>(null);
   const [url, setUrl] = useState<string | null>(null);
@@ -76,6 +76,7 @@ export function NotificationChannelLinks() {
 
   return (
     <div className="space-y-4">
+      {showLink ? (
       <section aria-label={t("ui.telegramLinkTitle")} className="space-y-3 rounded-xl border border-ink-200 p-4">
         <h2 className="font-semibold">{t("ui.telegramLinkTitle")}</h2>
         <p role="status" className="text-sm text-ink-500">
@@ -93,6 +94,7 @@ export function NotificationChannelLinks() {
           </div>
         )}
       </section>
+      ) : null}
       {adminEnabled !== null ? (
         <section aria-label={t("ui.telegramAdmin")} className="space-y-3 rounded-xl border border-ink-200 p-4">
           <h2 className="font-semibold">{t("ui.telegramAdmin")}</h2>

@@ -40,7 +40,7 @@ export const donorCreateSchema = z
   .object(baseFields)
   .superRefine((data, ctx) => {
     // § 11 md. 2: PERSON zorunlu lastName (1-60); ORGANIZATION zorunlu organizationName (2-120).
-    if (data.type === "PERSON" && !data.lastName) {
+    if (data.type === "PERSON" && !data.lastName && !data.copyFromMemberId) {
       ctx.addIssue({ code: "custom", path: ["lastName"], message: "donations.validation.lastNameRequired" });
     }
     if (data.type === "ORGANIZATION" && (!data.organizationName || data.organizationName.length < 2)) {

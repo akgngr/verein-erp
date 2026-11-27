@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.4",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Yerel tarih alanları",
+        "de": "Lokale Datumsfelder"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Görev son tarihi yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.",
+          "de": "Fälligkeitsdatum von Aufgaben werden im lokalen Format (TT.MM.JJJJ, 24 h) mit Kalender gewählt statt im browserabhängigen Format mm/dd/yyyy."
+        }
+      ]
+    },
+    {
+      "version": "1.4.3",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Gizli oylama kapanış yarış düzeltmesi ve tutanak korumaları",
+        "de": "Geheime-Abstimmung-Race-Fix und Protokoll-Schutzregeln"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Gizli oylama kapatma atomik işlem içine alındı, açık oylama varken onay engellendi, düzenlenebilirlik denetimi eklendi, gömülü metinler/window.confirm kaldırıldı ve PDF fontları ortaklaştırıldı (#579, #577).",
+          "de": "Schließen geheimer Abstimmungen atomar in einer Transaktion gekapselt, Freigabe bei offenen Abstimmungen gesperrt, Bearbeitbarkeit geprüft, fest kodierte Texte/window.confirm ersetzt und PDF-Schriften vereinheitlicht (#579, #577)."
+        }
+      ]
+    },
+    {
       "version": "1.4.2",
       "date": "2026-11-24",
       "title": {

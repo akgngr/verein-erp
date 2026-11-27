@@ -9,6 +9,8 @@ model User {
   failedLoginCount   Int       @default(0)
   lockedUntil        DateTime?
   lastLoginAt        DateTime?
+  /// #603: "Tüm cihazlardan çıkış" sayacı — oturum sürümüne karışır; artırmak diğer tüm JWT oturumlarını düşürür.
+  sessionEpoch       Int       @default(0)
   locale             String    @default("tr") // arayüz dili (de | tr)
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
@@ -70,6 +72,8 @@ model UserNavPreference {
 model UserInvitation {
   id          String    @id @default(cuid())
   userId      String
+  /// #603: INVITE (yönetici daveti, 72 sa) | RESET (şifremi unuttum, 30 dk). Belirteçler amaçlar arası kullanılamaz.
+  purpose     String    @default("INVITE")
   tokenHash   String    @unique
   expiresAt   DateTime
   usedAt      DateTime?

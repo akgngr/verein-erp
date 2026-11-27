@@ -13,7 +13,7 @@ Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı 
 |---|---|
 | Anahtar | `crm` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.10 |
+| Sürüm | 1.0.12 |
 | Sayfalar | `/crm` |
 | Önerir | [Üyeler](./members), [Muhasebe](./accounting) |
 
@@ -42,6 +42,20 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_crm_pipeline`
 
 ## Sürüm notları
+
+### 1.0.12 — Yerel tarih alanları
+
+_2026-11-26_
+
+- **İyileştirme:** Beklenen kapanış tarihi ve görev son tarihi/saati yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.
+
+### 1.0.11 — Kişi verisi kaynak modül iznine tabi
+
+_2026-11-25_
+
+- **Güvenlik:** Kişi adı ve iletişimi yalnız kaynak modülü (Üyeler, Muhasebe) görebilen rollere gösterilir; diğerleri 'Kısıtlı' görür ve aramada o kaynak listelenmez.
+- **Düzeltme:** Fırsat tutarı en çok 20.000.000 € olabilir (önceden büyük tutarlar veritabanında taşıyordu).
+- **İyileştirme:** Tüm CRM işlemleri denetim kaydı bırakır; olmayan kayıtta anlaşılır hata döner.
 
 ### 1.0.10 — nav.json kategori ve alt modül tanımı
 
@@ -79,16 +93,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 1.0.3 — Asistan araçları yeni veri sözleşmesinde
-
-_2026-11-15_
-
-- **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
-
-### 1.0.2 — Sürümlü AI istatistik sözleşmesi
-
-_2026-11-15_
-
-- **Güvenlik:** Toplu istatistik araçları katı girdi, sunucu sonucu ve modele çıkacak alanların açık şemalarıyla v2 sözleşmesine taşındı; kişisel satırlar modele döndürülmez.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 4 herkese açık sürüm notu.

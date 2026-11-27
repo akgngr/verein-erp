@@ -43,6 +43,7 @@ export { confirmTemplateAction } from "./actions/settings-actions";
 export { downloadConfirmationPdfHandler } from "./handlers/confirmation-pdf";
 export { batchPdfHandler } from "./handlers/batch-pdf";
 export { templatePreviewPdfHandler } from "./handlers/template-preview-pdf";
+export { simplifiedProofPdfHandler } from "./handlers/simplified-proof-pdf";
 export { exportDonationsHandler } from "./handlers/export-donations";
 export { exportConfirmationsHandler } from "./handlers/export-confirmations";
 export { berlinTodayStart, parseDateOnly } from "./utils";
@@ -51,3 +52,8 @@ export {
   getDonationConfirmationPdfForPortal,
   type PortalDonationConfirmationRow,
 } from "./services/portal-receipts";
+export {
+  listActiveDonorsForBankMatch,
+  recordBankDonation,
+  type ActiveDonorForBankMatch,
+} from "./services/bank-reconciliation";

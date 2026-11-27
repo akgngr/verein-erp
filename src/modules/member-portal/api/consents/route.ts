@@ -7,6 +7,7 @@ import { z } from "zod";
 import { getActivePortalSession } from "../../services/auth";
 import { isPortalEnabled, PORTAL_SESSION_COOKIE } from "../../services/auth-core";
 import { requestPortalConsentOptIn, revokePortalConsent } from "../../services/self-service";
+import { isPortalActionLimited } from "../../services/portal-guard";
 
 const CONSENT_ACTION_SCHEMA = z.object({
   action: z.enum(["revoke", "requestOptIn"]),
@@ -22,6 +23,9 @@ export async function POST(request: Request): Promise<NextResponse> {
   const session = await getActivePortalSession(cookieStore.get(PORTAL_SESSION_COOKIE)?.value);
   if (!session) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+  if (await isPortalActionLimited("consents", session.subjectRef)) {
+    return NextResponse.json({ ok: false, error: "rateLimited" }, { status: 429 });
   }
 
   let body: unknown;

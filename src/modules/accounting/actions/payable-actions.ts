@@ -46,7 +46,7 @@ export async function savePayableAction(input: unknown): Promise<ActionResult> {
           const taxCents = group.tax ? toCents(group.tax) ?? 0 : Math.round((netCents * group.rate) / 100);
           return { rate: group.rate, netCents, taxCents };
         })
-        .filter((group) => group.netCents > 0);
+        .filter((group) => group.netCents !== 0);
       if (!groups.length) throw new ActionError("accounting.payables.errors.amountRequired", { net19: ["accounting.payables.errors.amountRequired"] });
       const netCents = groups.reduce((sum, group) => sum + group.netCents, 0);
       const taxCents = groups.reduce((sum, group) => sum + group.taxCents, 0);

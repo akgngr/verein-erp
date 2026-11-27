@@ -1,10 +1,12 @@
 import { getTranslations } from "next-intl/server";
 
-import { requireUser } from "@/modules/auth/server";
+import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { getUserNavPreference } from "@/modules/users/server";
 import { registry } from "@/registry";
 import { MODULE_NAV_DEFAULTS } from "@/shared/navigation/nav-defaults.generated";
+import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { can } from "@/shared/permissions/define";
+import { settingsPermissions } from "@/shared/permissions/system";
 
 import { listUsableModuleKeys } from "../../server";
 import { MenuCustomizerClient, type MenuCustomizerModuleItem } from "./menu-customizer-client";
@@ -17,7 +19,14 @@ export async function generateMetadata() {
 }
 
 export default async function MenuSettingsPage() {
-  const user = await requireUser();
+  // #583: Menü düzeni, ayarlar menüsündeki girişle aynı izni (settings.view) sunucuda ister.
+  let user;
+  try {
+    user = await requirePermission(settingsPermissions, "view");
+  } catch (error) {
+    if (error instanceof ForbiddenError) return <AccessDenied />;
+    throw error;
+  }
   const [activeModuleKeys, initialConfig] = await Promise.all([
     listUsableModuleKeys(),
     getUserNavPreference(user.id).catch(() => null),

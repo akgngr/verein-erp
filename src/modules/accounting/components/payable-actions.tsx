@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
+import { DateInput, Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -114,15 +114,14 @@ export function PayableActions({
                         {t("open", { amount: openLabel })}
                       </Description>
                     </TextField>
-                    <TextField
+                    <DateInput
+                      label={t("paidDate")}
+                      ariaLabel={t("paidDate")}
                       value={paidDate}
-                      isRequired
                       onChange={setPaidDate}
-                      className={["w-full"].filter(Boolean).join(" ")}
-                    >
-                      <Label>{t("paidDate")}</Label>
-                      <Input type="date" />
-                    </TextField>
+                      isRequired
+                      className="w-full"
+                    />
                     <Select
                       isRequired
                       value={accountId ? accountId : null}

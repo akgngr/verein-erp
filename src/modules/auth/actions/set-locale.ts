@@ -6,35 +6,26 @@ import { z } from "zod";
 import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
 
-import { ActionError, requireUser } from "../server";
-import { unstable_update } from "../auth";
+import { ActionError, UnauthorizedError, requireUser } from "../server";
 import { SUPPORTED_LOCALES, type Locale } from "@/i18n/config";
 
 /**
  * Kullanıcının arayüz dilini değiştirir.
  *
- * KARAR (Verein pivotu): 3 adımda çalışır:
+ * KARAR (Verein pivotu):
  *   1. User.locale alanını günceller (kalıcı tercih)
  *   2. NEXT_LOCALE çerezini yazar (next-intl'in okuduğu kaynak)
- *   3. unstable_update ile JWT'yi tazeler — böylece session.user.locale güncel olur
- *      ve sonraki istekler hemen yeni dilde çalışır.
- *
- * Şema: yalnızca desteklenen dilleri kabul eder (SUPPORTED_LOCALES). Varsayılan
- * "tr"; "de" diğer dil. İlave dil eklendiğinde config.ts ve messages/ güncellenir.
  */
 const setLocaleSchema = z.object({
   locale: z.enum(SUPPORTED_LOCALES as unknown as [Locale, ...Locale[]]),
 });
 
 export async function setLocaleAction(input: unknown): Promise<ActionResult<Locale>> {
-  // KARAR: createAction yerine elle yönetiyoruz çünkü bu aksiyon başarılı
-  // olduğunda unstable_update()'i çağırmamız gerekiyor (genel createAction bunu
-  // desteklemiyor). Oturum/zod/hata akımı yine aynı kalıpla uygulanır.
   let user;
   try {
-    user = await requireUser();
+    user = await requireUser({ allowPasswordChangePending: true });
   } catch (error) {
-    if (error instanceof ActionError) {
+    if (error instanceof ActionError || error instanceof UnauthorizedError) {
       return { ok: false, error: error.message };
     }
     throw error;
@@ -66,9 +57,6 @@ export async function setLocaleAction(input: unknown): Promise<ActionResult<Loca
     sameSite: "lax",
     httpOnly: false, // next-intl client tarafında da okuyor olabilir; güvenli tutuyoruz
   });
-
-  // JWT'yi tazele ki session.user.locale da güncel olsun.
-  await unstable_update({ user: { locale: newLocale } as never });
 
   return { ok: true, data: newLocale };
 }

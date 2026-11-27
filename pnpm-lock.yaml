@@ -7,6 +7,7 @@ settings:
 overrides:
   '@internationalized/date': 3.12.4
   effect: 3.22.4
+  i18next: 26.3.4
 
 importers:
 
@@ -88,8 +89,8 @@ importers:
         specifier: ^4.4.0
         version: 4.4.0
       i18next:
-        specifier: 24.2.3
-        version: 24.2.3(typescript@5.9.3)
+        specifier: 26.3.4
+        version: 26.3.4(typescript@5.9.3)
       imapflow:
         specifier: ^2.12.2
         version: 2.12.2
@@ -3469,10 +3470,10 @@ packages:
   i18next-browser-languagedetector@8.3.0:
     resolution: {integrity: sha512-t7FtF+VyQ+XSy+GI1O9TXWsMzP4U2u0m27yxJcCbG4LaAbTQa3CXFXgG3LvRivS+ZoYah8yPv5NhMl+Wg6I8Fg==}
 
-  i18next@24.2.3:
-    resolution: {integrity: sha512-lfbf80OzkocvX7nmZtu7nSTNbrTYR52sLWxPtlXX1zAhVw8WEnFk4puUkCR4B1dNQwbSpEHHHemcZu//7EcB7A==}
+  i18next@26.3.4:
+    resolution: {integrity: sha512-pa7m0d7pBDqGHZxljT+WPFeyFgQ7P7SciPPo1tTqYuO0z4sqADYhwnBESmmGp/wEof1inwdls/k8ZgTg8rxFHA==}
     peerDependencies:
-      typescript: ^5
+      typescript: ^5 || ^6
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -4581,7 +4582,7 @@ packages:
   react-i18next@15.7.4:
     resolution: {integrity: sha512-nyU8iKNrI5uDJch0z9+Y5XEr34b0wkyYj3Rp+tfbahxtlswxSCjcUL9H0nqXo9IR3/t5Y5PKIA3fx3MfUyR9Xw==}
     peerDependencies:
-      i18next: '>= 23.4.0'
+      i18next: 26.3.4
       react: '>= 16.8.0'
       react-dom: '*'
       react-native: '*'
@@ -7237,14 +7238,14 @@ snapshots:
       ajv: 8.20.0
       clsx: 2.1.1
       date-fns: 4.4.0
-      i18next: 24.2.3(typescript@5.9.3)
+      i18next: 26.3.4(typescript@5.9.3)
       i18next-browser-languagedetector: 8.3.0
       immer: 10.2.0
       notistack: 3.0.2(csstype@3.2.3)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react: 19.3.1
       react-ace: 14.1.0(react-dom@19.3.1(react@19.3.1))(react@19.3.1)
       react-dom: 19.3.1(react@19.3.1)
-      react-i18next: 15.7.4(i18next@24.2.3(typescript@5.9.3))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3)
+      react-i18next: 15.7.4(i18next@26.3.4(typescript@5.9.3))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3)
       react-mentions-ts: 5.4.7(class-variance-authority@0.7.1)(clsx@2.1.1)(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(tailwind-merge@3.4.0)
       remeda: 2.33.4
       zustand: 5.1.0(@types/react@19.3.0)(immer@10.2.0)(react@19.3.1)(use-sync-external-store@1.7.0(react@19.3.1))
@@ -8676,9 +8677,7 @@ snapshots:
     dependencies:
       '@babel/runtime': 7.29.10
 
-  i18next@24.2.3(typescript@5.9.3):
-    dependencies:
-      '@babel/runtime': 7.29.10
+  i18next@26.3.4(typescript@5.9.3):
     optionalDependencies:
       typescript: 5.9.3
 
@@ -9766,11 +9765,11 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.3.0
 
-  react-i18next@15.7.4(i18next@24.2.3(typescript@5.9.3))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3):
+  react-i18next@15.7.4(i18next@26.3.4(typescript@5.9.3))(react-dom@19.3.1(react@19.3.1))(react@19.3.1)(typescript@5.9.3):
     dependencies:
       '@babel/runtime': 7.29.10
       html-parse-stringify: 3.1.0
-      i18next: 24.2.3(typescript@5.9.3)
+      i18next: 26.3.4(typescript@5.9.3)
       react: 19.3.1
     optionalDependencies:
       react-dom: 19.3.1(react@19.3.1)

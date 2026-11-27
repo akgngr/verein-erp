@@ -12,7 +12,7 @@ import { aiPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "ai",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.15.10",
+  version: "1.15.13",
   label: "Yapay zekâ asistanı",
   description:
     "Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan.",
@@ -48,6 +48,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Sparkles,
       group: "settings",
       order: 60,
+      settingsGroup: "ai-automation",
+      settingsOrder: 10,
       permission: { definition: aiPermissions, action: "view" },
     },
   ],

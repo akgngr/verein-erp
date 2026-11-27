@@ -3,6 +3,7 @@
 import { Button, Drawer, Dropdown, Label, Tooltip } from "@heroui/react";
 import {
   Building2,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
@@ -30,6 +31,7 @@ import { registry } from "@/registry";
 import { RoleChip } from "@/shared/components/roles/roles-provider";
 import { getCategoryIcon } from "@/shared/navigation/category-icons";
 import { MODULE_NAV_DEFAULTS } from "@/shared/navigation/nav-defaults.generated";
+import { compareSettingsEntries, settingsPageOrder } from "@/shared/navigation/settings-groups";
 import {
   resolveUserSidebarTree,
   type UserNavConfig,
@@ -123,7 +125,6 @@ const USER_MENU_PLACEMENT = {
   collapsed: "right bottom",
   expanded: "top start",
 } as const;
-const BRAND = "Dernek ERP"; // i18n-ignore
 
 /** Sidebar'da sabit "Panel" öğesi (yetki gerektirmez). */
 const PANEL_ITEM: NavItem = {
@@ -164,7 +165,10 @@ function buildSettingsModule(
 ): { module: ModuleConfig; hub: NavItem; items: NavItem[] } | null {
   if (items.length === 0) return null;
   const hub = items.find((item) => item.href === "/ayarlar") ?? items[0];
-  const pages = items.filter((item) => item !== hub);
+  // #611: Alt menü, ayar merkeziyle aynı grup sırasını izler (grup → grup içi sıra → adres).
+  const pages = items
+    .filter((item) => item !== hub)
+    .sort((a, b) => compareSettingsEntries(settingsPageOrder(a), settingsPageOrder(b)));
   return {
     hub,
     items,
@@ -682,6 +686,57 @@ function SidebarContent({
   );
 }
 
+/**
+ * #586: Kaydırılabilir menü alanı; üstte/altta daha fazla öğe varsa solan gölge ve alt ok gösterir
+ * (44 modül açıkken "Ayarlar" ve alttaki modüller ekranın altında kalıyordu ve fark edilmiyordu).
+ */
+function SidebarScrollArea({ className, children }: { className?: string; children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [edges, setEdges] = useState({ top: false, bottom: false });
+  useEffect(() => {
+    const element = ref.current;
+    if (!element) return;
+    const update = () => {
+      const top = element.scrollTop > 4;
+      const bottom = element.scrollTop + element.clientHeight < element.scrollHeight - 4;
+      setEdges((current) => (current.top === top && current.bottom === bottom ? current : { top, bottom }));
+    };
+    const frame = window.requestAnimationFrame(update);
+    element.addEventListener("scroll", update, { passive: true });
+    const observer = new ResizeObserver(update);
+    observer.observe(element);
+    if (element.firstElementChild) observer.observe(element.firstElementChild);
+    return () => {
+      window.cancelAnimationFrame(frame);
+      element.removeEventListener("scroll", update);
+      observer.disconnect();
+    };
+  }, []);
+  return (
+    <div className="relative flex min-h-0 flex-1 flex-col">
+      <div ref={ref} className={cn("min-h-0 flex-1", className)}>
+        {children}
+      </div>
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute inset-x-0 top-0 h-6 bg-gradient-to-b from-[#1c2822] to-transparent transition-opacity dark:from-[#141d18]",
+          edges.top ? "opacity-100" : "opacity-0",
+        )}
+      />
+      <div
+        aria-hidden
+        className={cn(
+          "pointer-events-none absolute inset-x-0 bottom-0 flex h-10 items-end justify-center bg-gradient-to-t from-[#1c2822] to-transparent pb-1 transition-opacity dark:from-[#141d18]",
+          edges.bottom ? "opacity-100" : "opacity-0",
+        )}
+      >
+        <ChevronDown className="h-4 w-4 text-white/60" />
+      </div>
+    </div>
+  );
+}
+
 function Brand({ collapsed = false }: { collapsed?: boolean }) {
   const tSidebar = useTranslations("sidebar");
   return (
@@ -696,10 +751,10 @@ function Brand({ collapsed = false }: { collapsed?: boolean }) {
       </div>
       <div className={collapsed ? "sr-only" : "flex flex-col min-w-0"}>
         <span className="text-[15px] font-semibold tracking-tight text-white truncate">
-          {BRAND}
+          {tSidebar("brandShort")}
         </span>
         <span className="text-[11px] font-medium text-[#a9bcae] leading-none truncate">
-          {tSidebar.has("brand") ? tSidebar("brand") : "Yönetim Sistemi"}
+          {tSidebar("brand")}
         </span>
       </div>
     </div>
@@ -844,14 +899,14 @@ function DesktopSidebar({
       )}
     >
       <Brand collapsed={collapsed} />
-      <div className="flex-1 overflow-y-auto overflow-x-hidden">
+      <SidebarScrollArea className="overflow-y-auto overflow-x-hidden">
         <SidebarContent
           role={role}
           activeModuleKeys={activeModuleKeys}
           initialNavConfig={initialNavConfig}
           collapsed={collapsed}
         />
-      </div>
+      </SidebarScrollArea>
       <div
         className={cn(
           "flex px-2 pb-2",
@@ -907,25 +962,26 @@ function MobileSidebar({
   onSignOut?: () => Promise<void>;
 }) {
   const { mobileOpen, setMobileOpen } = useSidebar();
+  const tSidebar = useTranslations("sidebar");
   return (
     <Drawer>
       <Drawer.Backdrop isOpen={mobileOpen} onOpenChange={setMobileOpen}>
         <Drawer.Content placement="left">
           <Drawer.Dialog
-            aria-label={BRAND}
+            aria-label={tSidebar("brandShort")}
             className="sidebar-surface h-full max-h-dvh w-[min(288px,90vw)] rounded-none p-0"
           >
             {({ close }) => (
               <div className="flex h-full min-h-0 flex-col">
                 <Brand />
-                <Drawer.Body className="min-h-0 flex-1 overflow-y-auto px-0">
+                <SidebarScrollArea className="overflow-y-auto overscroll-contain">
                   <SidebarContent
                     role={role}
                     activeModuleKeys={activeModuleKeys}
                     initialNavConfig={initialNavConfig}
                     onNavigate={close}
                   />
-                </Drawer.Body>
+                </SidebarScrollArea>
                 {userName && onSignOut ? (
                   <SidebarUserFooter
                     name={userName}
@@ -952,8 +1008,8 @@ function MobileHeader({ widgetAccess }: { widgetAccess?: HeaderWidgetAccess }) {
       <SidebarTrigger />
       <Building2 className="h-4 w-4 text-accent" aria-hidden />
       <span className="truncate text-sm font-semibold text-foreground">
-        {BRAND}
-        {tSidebar.has("brand") ? ` · ${tSidebar("brand")}` : ""}
+        {tSidebar("brandShort")}
+        {` · ${tSidebar("brand")}`}
       </span>
       <div className="ml-auto flex min-w-0 shrink-0 items-center gap-2">
         {widgetAccess ? <HeaderWidgetSlot access={widgetAccess} mobile /> : null}

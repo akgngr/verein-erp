@@ -11,6 +11,7 @@ import { configureSms, confirmSmsVerification, requestSmsVerification, revokeSms
 import { configureWebPush, publicKey, subscribe, subscriptionSchema, unsubscribe, WebPushError } from "../services/web-push";
 import { configureTelegram, requestTelegramLink, revokeTelegramLink, TelegramError, telegramLinkStatus } from "../services/telegram";
 import { configureWhatsapp, WhatsappError } from "../services/whatsapp";
+import { confirmWhatsappVerification, phoneLinkStatus, requestWhatsappVerification, revokeWhatsapp } from "../services/whatsapp-link";
 
 const view = { definition: notificationsPermissions, action: "view" as const };
 const admin = { definition: notificationsPermissions, action: "update" as const };
@@ -140,6 +141,7 @@ export async function saveWhatsappChannelAction(input: unknown): Promise<ActionR
       templateLanguage: z.string().max(5).optional(),
       templateApproved: z.boolean().optional(),
       graphVersion: z.string().max(6).optional(),
+      verifyTemplateName: z.string().max(512).optional(),
     }).strict(),
     handler: async ({ input, user, audit }) => {
       await guard(() => configureWhatsapp(input, user.id));
@@ -176,4 +178,76 @@ export async function confirmSmsVerificationAction(input: unknown): Promise<Acti
 
 export async function revokeSmsAction(input: unknown): Promise<ActionResult<null>> {
   return createAction({ schema: z.object({}).strict(), handler: async ({ user }) => { await revokeSms(user.id); return null; } })(input ?? {});
+}
+
+export type ChannelAvailability = { email: boolean; web_push: boolean; telegram: boolean; sms: boolean; whatsapp: boolean; whatsappLinking: boolean };
+
+/**
+ * #604 — user: which external channels actually deliver right now. The preferences table and the link cards show only
+ * these; a toggle for an unconfigured channel would never deliver anything.
+ */
+export async function availableNotificationChannelsAction(input: unknown): Promise<ActionResult<ChannelAvailability>> {
+  return createAction({
+    permission: view,
+    schema: z.object({}).strict(),
+    handler: async () => {
+      const [{ isMailConfigured }, { publicKey }, { getChannelConfig }, { smsAvailable }, whatsapp, link] = await Promise.all([
+        import("@/modules/mail/automation"),
+        import("../services/web-push"),
+        import("../services/channel-config"),
+        import("../services/sms"),
+        import("../services/whatsapp"),
+        import("../services/whatsapp-link"),
+      ]);
+      const [telegram, waConfig] = await Promise.all([getChannelConfig("telegram"), getChannelConfig("whatsapp")]);
+      const waState = { ...waConfig, settings: waConfig.settings as import("../services/whatsapp").WhatsappSettings };
+      const safe = async (check: () => Promise<boolean>) => check().catch(() => false);
+      return {
+        email: await safe(isMailConfigured),
+        web_push: await safe(async () => Boolean(await publicKey())),
+        telegram: telegram.enabled && Boolean(telegram.secrets.botToken),
+        sms: await safe(smsAvailable),
+        whatsapp: whatsapp.whatsappReady(waState),
+        whatsappLinking: link.whatsappLinkingReady(waState),
+      };
+    },
+  })(input ?? {});
+}
+
+/** #604 — user: own SMS/WhatsApp link status (number masked). */
+export async function phoneLinkStatusAction(input: unknown): Promise<ActionResult<{ status: "linked" | "pending" | "none"; masked: string | null }>> {
+  return createAction({
+    permission: view,
+    schema: z.object({ channel: z.enum(["sms", "whatsapp"]) }).strict(),
+    handler: async ({ input, user }) => phoneLinkStatus(user.id, input.channel),
+  })(input);
+}
+
+/** #604 — user: send a WhatsApp verification code (authentication template). No number in the audit. */
+export async function requestWhatsappVerificationAction(input: unknown): Promise<ActionResult<null>> {
+  return createAction({
+    permission: view,
+    schema: z.object({ phone: z.string().trim().min(6).max(32) }).strict(),
+    handler: async ({ input, user, audit }) => {
+      await guard(() => requestWhatsappVerification(user.id, input.phone));
+      await audit({ action: "CREATE", entity: "NotificationChannelLink", entityId: `${user.id}:whatsapp`, after: { status: "pending" } });
+      return null;
+    },
+  })(input);
+}
+
+export async function confirmWhatsappVerificationAction(input: unknown): Promise<ActionResult<null>> {
+  return createAction({
+    permission: view,
+    schema: z.object({ code: z.string().trim().regex(/^\d{6}$/) }).strict(),
+    handler: async ({ input, user, audit }) => {
+      await guard(() => confirmWhatsappVerification(user.id, input.code));
+      await audit({ action: "UPDATE", entity: "NotificationChannelLink", entityId: `${user.id}:whatsapp`, after: { status: "linked" } });
+      return null;
+    },
+  })(input);
+}
+
+export async function revokeWhatsappAction(input: unknown): Promise<ActionResult<null>> {
+  return createAction({ schema: z.object({}).strict(), handler: async ({ user }) => { await revokeWhatsapp(user.id); return null; } })(input ?? {});
 }

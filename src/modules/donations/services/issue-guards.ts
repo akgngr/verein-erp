@@ -1,7 +1,6 @@
 import "server-only";
 
 import { TEMPLATE_VERSION } from "../pdf/template-de";
-import { CONFIRMATION_RETENTION_YEARS } from "../constants";
 import { getOrganizationProfile } from "@/modules/organization/server";
 import { getDb } from "@/shared/db";
 import { getMessageTranslator } from "@/shared/i18n/translate-message";
@@ -11,7 +10,7 @@ import { getMessageTranslator } from "@/shared/i18n/translate-message";
  * kalemler tek hatada listelenir (§ 18 kabul: "ALL missing items are listed").
  */
 
-export type IssueContent = "DONATION" | "MEMBERSHIP_FEE";
+export type IssueContent = "DONATION" | "IN_KIND_DONATION" | "MEMBERSHIP_FEE";
 
 export class ReadinessError extends Error {
   readonly items: string[];
@@ -92,7 +91,7 @@ export async function getReadiness(issueDate: Date): Promise<{
   const years = exemptionValidityYears(profile.exemptionDocumentType);
   if (profile.exemptionNoticeDate && years) {
     const limit = new Date(profile.exemptionNoticeDate);
-    limit.setFullYear(limit.getFullYear() + years);
+    limit.setUTCFullYear(limit.getUTCFullYear() + years);
     const diffMs = limit.getTime() - issueDate.getTime();
     daysRemaining = Math.floor(diffMs / 86_400_000);
     validityOk = diffMs >= 0;
@@ -154,7 +153,4 @@ export async function assertCanIssue(
   }
 }
 
-/** Bildirim nüsha saklama süresinin sonu (31.12.issuedYear + 8 yıl). */
-export function retentionEndDate(issuedAt: Date): Date {
-  return new Date(Date.UTC(issuedAt.getUTCFullYear() + CONFIRMATION_RETENTION_YEARS, 11, 31));
-}
+export { retentionEndDate } from "./confirmation-rules";

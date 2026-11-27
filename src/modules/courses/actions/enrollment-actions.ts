@@ -29,45 +29,57 @@ export async function enrollStudentsAction(input: unknown): Promise<ActionResult
       const enrolledAt = parseDateOnly(input.enrolledAt)!;
       const students = await listStudentOptions({ ids: input.studentIds });
       if (students.length !== new Set(input.studentIds).size) throw new ActionError("courses.errors.studentNotFound");
-      const already = new Set(
-        (await db.courseEnrollment.findMany({ where: { courseId: course.id, studentId: { in: input.studentIds } }, select: { studentId: true } })).map(
-          (row) => row.studentId,
-        ),
-      );
-      const fresh = students.filter((student) => !already.has(student.id));
-      if (fresh.length === 0) throw new ActionError("courses.errors.alreadyEnrolled");
 
-      if (course.capacity) {
-        const active = await db.courseEnrollment.count({ where: { courseId: course.id, status: "ACTIVE" } });
-        if (active + fresh.length > course.capacity) {
-          throw new ActionError("courses.errors.capacityExceeded", undefined, { capacity: course.capacity, free: Math.max(course.capacity - active, 0) });
-        }
-      }
-
-      const payers = new Map(await Promise.all(fresh.map(async (student) => [student.id, await getStudentPayer(student.id)] as const)));
-      if (course.feeType !== "FREE" && input.discountPercent < 100) {
-        const missing = fresh.filter((student) => !payers.get(student.id));
-        if (missing.length > 0) {
-          throw new ActionError("courses.errors.payerMissing", undefined, { names: missing.map((student) => student.label).join(", ") });
-        }
-      }
-
+      const payers = new Map(await Promise.all(students.map(async (student) => [student.id, await getStudentPayer(student.id)] as const)));
       const actorLabel = buildUserLabel(user.name, user.email);
-      await db.$transaction(async (tx) => {
+
+      const enrolledCount = await db.$transaction(async (tx) => {
+        // Acquire a row-level lock on the course so concurrent enrollments serialize on capacity (#579).
+        const lockedCourse = await tx.course.update({
+          where: { id: course.id },
+          data: { updatedAt: new Date() },
+        });
+        if (lockedCourse.deletedAt) throw new ActionError("courses.errors.notFound");
+        if (lockedCourse.status === "COMPLETED" || lockedCourse.status === "CANCELLED") {
+          throw new ActionError("courses.errors.courseClosed");
+        }
+
+        const already = new Set(
+          (await tx.courseEnrollment.findMany({ where: { courseId: lockedCourse.id, studentId: { in: input.studentIds } }, select: { studentId: true } })).map(
+            (row) => row.studentId,
+          ),
+        );
+        const fresh = students.filter((student) => !already.has(student.id));
+        if (fresh.length === 0) throw new ActionError("courses.errors.alreadyEnrolled");
+
+        if (lockedCourse.capacity) {
+          const active = await tx.courseEnrollment.count({ where: { courseId: lockedCourse.id, status: "ACTIVE" } });
+          if (active + fresh.length > lockedCourse.capacity) {
+            throw new ActionError("courses.errors.capacityExceeded", undefined, { capacity: lockedCourse.capacity, free: Math.max(lockedCourse.capacity - active, 0) });
+          }
+        }
+
+        if (lockedCourse.feeType !== "FREE" && input.discountPercent < 100) {
+          const missing = fresh.filter((student) => !payers.get(student.id));
+          if (missing.length > 0) {
+            throw new ActionError("courses.errors.payerMissing", undefined, { names: missing.map((student) => student.label).join(", ") });
+          }
+        }
+
         for (const student of fresh) {
           const payer = payers.get(student.id) ?? null;
           const plan = planCharges({
-            feeType: course.feeType,
-            feeCents: course.feeCents,
-            installmentCount: course.installmentCount,
+            feeType: lockedCourse.feeType,
+            feeCents: lockedCourse.feeCents,
+            installmentCount: lockedCourse.installmentCount,
             discountPercent: input.discountPercent,
             enrolledAt,
-            courseStart: course.startDate,
-            courseEnd: course.endDate,
+            courseStart: lockedCourse.startDate,
+            courseEnd: lockedCourse.endDate,
           });
           await tx.courseEnrollment.create({
             data: {
-              courseId: course.id,
+              courseId: lockedCourse.id,
               studentId: student.id,
               studentLabel: student.label,
               studentNumber: student.studentNumber,
@@ -82,9 +94,10 @@ export async function enrollStudentsAction(input: unknown): Promise<ActionResult
             },
           });
         }
+        return fresh.length;
       });
-      await audit({ action: "ENROLL", entity: "Course", entityId: course.id, after: { course: course.code, enrolled: fresh.length } });
-      return { enrolled: fresh.length };
+      await audit({ action: "ENROLL", entity: "Course", entityId: course.id, after: { course: course.code, enrolled: enrolledCount } });
+      return { enrolled: enrolledCount };
     },
   });
   return run(input);

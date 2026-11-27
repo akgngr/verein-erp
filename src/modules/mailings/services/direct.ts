@@ -8,7 +8,7 @@ import { availableChannels, getChannelConfig } from "./campaigns";
 export async function listDirectChannels(): Promise<string[]> {
   const out: string[] = [];
   for (const channel of await availableChannels()) {
-    if (await channel.isConfigured(await getChannelConfig(channel.key))) out.push(channel.key);
+    if (await channel.isConfigured(await getChannelConfig(channel.key), "transactional")) out.push(channel.key);
   }
   return out;
 }
@@ -21,8 +21,8 @@ export async function sendDirectMessage(channelKey: string, message: { to: strin
   const channel = (await availableChannels()).find((item) => item.key === channelKey);
   if (!channel) return { ok: false, error: "CHANNEL_UNAVAILABLE" };
   const config = await getChannelConfig(channelKey);
-  if (!(await channel.isConfigured(config))) return { ok: false, error: "CHANNEL_NOT_CONFIGURED" };
+  if (!(await channel.isConfigured(config, "transactional"))) return { ok: false, error: "CHANNEL_NOT_CONFIGURED" };
   const text = channel.capabilities.maxLength ? message.text.slice(0, channel.capabilities.maxLength) : message.text;
-  const [result] = await channel.sendBatch([{ ...message, text, html: channel.capabilities.html ? message.html : undefined }], config);
+  const [result] = await channel.sendBatch([{ ...message, text, html: channel.capabilities.html ? message.html : undefined, purpose: "transactional" }], config);
   return result ?? { ok: false, error: "NO_RESULT" };
 }

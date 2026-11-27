@@ -15,6 +15,8 @@ export type MemberAddressBlock = {
   memberNumber: string;
   /** "Ad Soyad" birleşik. */
   name: string;
+  firstName?: string;
+  lastName?: string;
   street: string;
   postalCode: string;
   city: string;
@@ -22,12 +24,17 @@ export type MemberAddressBlock = {
 };
 
 /**
- * Üyenin bildirim alıcı bloğu (§ 5 md. 1): üye silinmiş veya adresi eksikse
- * (street + postalCode + city) null döner.
+ * Üyenin bildirim alıcı bloğu (§ 5 md. 1): üye ID veya üye numarası (örn. UYE-0001)
+ * ile aranır; üye silinmiş veya adresi eksikse (street + postalCode + city) null döner.
  */
-export async function getMemberAddressBlock(memberId: string): Promise<MemberAddressBlock | null> {
+export async function getMemberAddressBlock(memberIdOrNumber: string): Promise<MemberAddressBlock | null> {
+  const key = memberIdOrNumber.trim();
+  if (!key) return null;
   const member = await getDb().member.findFirst({
-    where: { id: memberId, deletedAt: null },
+    where: {
+      deletedAt: null,
+      OR: [{ id: key }, { membershipNumber: { equals: key, mode: "insensitive" } }],
+    },
     select: {
       id: true,
       membershipNumber: true,
@@ -45,6 +52,8 @@ export async function getMemberAddressBlock(memberId: string): Promise<MemberAdd
     memberId: member.id,
     memberNumber: member.membershipNumber,
     name: `${member.firstName} ${member.lastName}`,
+    firstName: member.firstName,
+    lastName: member.lastName,
     street: member.street,
     postalCode: member.postalCode,
     city: member.city,

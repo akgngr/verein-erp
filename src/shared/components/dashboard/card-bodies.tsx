@@ -32,17 +32,18 @@ export function StatCardBody({
   details?: StatDetail[];
 }) {
   return (
-    <div className="flex h-full flex-col justify-between gap-4">
-      <div className="flex items-baseline gap-2">
+    <div className="@container flex h-full flex-col justify-between gap-4">
+      {/* #586: Değer kesilmez (ör. tarih "04.1…" olmaz): dar kartta küçülür, etiket alt satıra geçer. */}
+      <div className="flex min-w-0 flex-wrap items-baseline gap-x-2 gap-y-0.5">
         <span
           className={cn(
-            "truncate text-[34px] font-semibold leading-tight tracking-[-0.045em] tabular-nums",
+            "whitespace-nowrap text-[26px] font-semibold leading-tight tracking-[-0.045em] tabular-nums @[14rem]:text-[34px]",
             TONE_TEXT[tone],
           )}
         >
           {value}
         </span>
-        <span className="truncate text-[12px] font-medium text-ink-500">
+        <span className="min-w-0 truncate text-[12px] font-medium text-ink-500">
           {label}
         </span>
       </div>

@@ -15,8 +15,7 @@ import { registerSharedPdfFonts } from "@/shared/pdf/fonts";
 import { getMemberAddressBlock, listMemberFeePaymentsForConfirmation } from "@/modules/members/server";
 
 import { WAIVER_METHOD } from "../constants";
-import { ConfirmationDocument } from "../pdf/confirmation-document";
-import type { ConfirmationPdfData } from "../pdf/confirmation-document";
+import { ConfirmationDocument, type ConfirmationPdfData, type InKindSnapshotData } from "../pdf/confirmation-document";
 import { TEMPLATE_VERSION } from "../pdf/template-de";
 import { assertCanIssue } from "./issue-guards";
 import {
@@ -72,7 +71,7 @@ async function renderAndStore(
 
 async function issueOne(args: {
   actor: { id: string; label: string };
-  content: "DONATION" | "MEMBERSHIP_FEE";
+  content: "DONATION" | "IN_KIND_DONATION" | "MEMBERSHIP_FEE";
   kind: "SINGLE" | "COLLECTIVE";
   recipient: RecipientSnapshot;
   /** Bağışçı/üye ipucu. */
@@ -82,6 +81,8 @@ async function issueOne(args: {
   periodFrom: Date;
   periodTo: Date;
   waived: boolean;
+  /** Yalnız IN_KIND_DONATION (Sachzuwendung; #618). */
+  inKind?: InKindSnapshotData | null;
   /** Yerine üretim zinciri (§ 11 md. 10). */
   replacesId?: string | null;
 }): Promise<IssueResult> {
@@ -109,19 +110,23 @@ async function issueOne(args: {
               amountCents: item.amountCents,
               waived: item.waived,
             })),
-            itemType: args.content === "DONATION" ? "DONATION" : "MEMBER_PAYMENT",
+            itemType: args.content === "MEMBERSHIP_FEE" ? "MEMBER_PAYMENT" : "DONATION",
             waived: args.waived,
           });
           if (snapshot.totalCents !== args.items.reduce((sum, item) => sum + item.amountCents, 0)) {
             throw new IssueError("Öge toplamı bildirim tutarına eşit değil."); // i18n-ignore (geliştirici hatası; kullanıcıya gösterilmez)
           }
 
+          const storedIssuerSnapshot: Record<string, unknown> = args.inKind
+            ? { ...snapshot.issuer, inKind: args.inKind }
+            : snapshot.issuer;
+
           // 3) PDF verisi + render + depolama (transaction içinde; rollback güvenli).
-          const issuer = await getDb().donationsSettings.findUnique({ where: { id: "singleton" } });
-          void issuer;
           const pdfData = await confirmationIssuerSnapshotToPdf({
+            confirmationNumber,
+            issueDate,
             recipient: args.recipient,
-            issuer: snapshot.issuer,
+            issuer: storedIssuerSnapshot,
             lang: "de",
             kind: args.kind,
             content: args.content,
@@ -130,6 +135,7 @@ async function issueOne(args: {
             periodFrom: args.periodFrom,
             periodTo: args.periodTo,
             waived: args.waived,
+            inKind: args.inKind ?? null,
             items: args.items,
           });
 
@@ -153,7 +159,7 @@ async function issueOne(args: {
               totalAmount: (snapshot.totalCents / 100).toFixed(2),
               amountInWords: snapshot.amountInWords,
               waivedReimbursement: args.waived,
-              issuerSnapshot: snapshot.issuer as Prisma.InputJsonValue,
+              issuerSnapshot: storedIssuerSnapshot as Prisma.InputJsonValue,
               templateVersion: TEMPLATE_VERSION,
               issuedAt: issueDate,
               issuedPlace: (snapshot.issuer as { city?: string | null }).city ?? "",
@@ -198,7 +204,7 @@ async function issueOne(args: {
   }
 }
 
-/** Tek bağış bildirimi (§ 11 md. 9 md. 1). */
+/** Tek bağış bildirimi (§ 11 md. 9 md. 1 + #618 Sachzuwendung). */
 export async function issueSingleDonationConfirmation(
   actor: { id: string; label: string },
   donationId: string,
@@ -212,10 +218,23 @@ export async function issueSingleDonationConfirmation(
   if (!donation) throw new IssueError("donations.errors.donationNotFound");
   if (donation.reversedAt) throw new IssueError("donations.errors.reversedDonation");
 
+  const isInKind = donation.method === "IN_KIND";
+  let inKind: InKindSnapshotData | null = null;
+  if (isInKind) {
+    if (!donation.itemDescription || !donation.inKindOrigin) {
+      throw new IssueError("donations.errors.inKindDetailsMissing");
+    }
+    inKind = {
+      itemDescription: donation.itemDescription,
+      origin: donation.inKindOrigin,
+      valuationRecordsAvailable: donation.valuationRecordsAvailable,
+    };
+  }
+
   const recipient = donorRecipient(donation.donor);
   return issueOne({
     actor,
-    content: "DONATION",
+    content: isInKind ? "IN_KIND_DONATION" : "DONATION",
     kind: "SINGLE",
     recipient,
     donorId: donation.donorId,
@@ -227,13 +246,14 @@ export async function issueSingleDonationConfirmation(
         sourceId: donation.id,
         itemDate: donation.receivedAt,
         amountCents: Number(donation.amount.mul(100).toFixed(0)),
-        label: "Geldspende", // i18n-ignore (amtlicher Belegtext, immer Deutsch)
-        waived: donation.waivedReimbursement,
+        label: isInKind ? "Sachzuwendung" : "Geldspende", // i18n-ignore (amtlicher Belegtext, immer Deutsch)
+        waived: isInKind ? false : donation.waivedReimbursement,
       },
     ],
     periodFrom: donation.receivedAt,
     periodTo: donation.receivedAt,
-    waived: donation.waivedReimbursement,
+    waived: isInKind ? false : donation.waivedReimbursement,
+    inKind,
     replacesId,
   });
 }
@@ -263,10 +283,15 @@ export async function issueCollectiveDonationConfirmation(
   }
 
   // Grup kuralı (§ 1): tek bildirim = tek alıcı + tek içerik + tek takvim yılı +
-  // tek vazgeçim değeri; dönem bir takvim yılı içinde.
+  // tek vazgeçim değeri; dönem bir takvim yılı içinde ve her bağış [periodFrom, periodTo] aralığında.
   const year = args.periodFrom.getUTCFullYear();
   if (args.periodTo.getUTCFullYear() !== year) {
     throw new IssueError("donations.errors.periodSingleYear");
+  }
+  const fromDay = args.periodFrom.toISOString().slice(0, 10);
+  const toDay = args.periodTo.toISOString().slice(0, 10);
+  if (fromDay > toDay) {
+    throw new IssueError("donations.errors.periodOrderInvalid");
   }
   const waivedValues = new Set(donations.map((donation) => donation.waivedReimbursement));
   if (waivedValues.size > 1) {
@@ -279,7 +304,11 @@ export async function issueCollectiveDonationConfirmation(
     if (donation.reversedAt) {
       throw new IssueError("donations.errors.donationReversed", { number: donation.donationNumber });
     }
-    if (donation.receivedAt.getUTCFullYear() !== year) {
+    if (donation.method === "IN_KIND") {
+      throw new IssueError("donations.errors.inKindNoCollective", { number: donation.donationNumber });
+    }
+    const donationDay = donation.receivedAt.toISOString().slice(0, 10);
+    if (donationDay < fromDay || donationDay > toDay) {
       throw new IssueError("donations.errors.donationOutsidePeriod", { number: donation.donationNumber });
     }
     if (donation.waivedReimbursement) {
@@ -411,7 +440,7 @@ export async function issueBatchConfirmations(
   return results;
 }
 
-/** Bir bağışçının o yılki bildirilebilir bağışlarından toplu bildirim. */
+/** Bir bağışçının o yılki bildirilebilir nakdi bağışlarından toplu bildirim (Sachzuwendung hariç). */
 async function issueCollectiveDonationForYear(
   actor: { id: string; label: string },
   donorId: string,
@@ -428,6 +457,7 @@ async function issueCollectiveDonationForYear(
     where: {
       donorId,
       reversedAt: null,
+      method: { not: "IN_KIND" },
       receivedAt: {
         gte: new Date(Date.UTC(year, 0, 1)),
         lt: new Date(Date.UTC(year + 1, 0, 1)),

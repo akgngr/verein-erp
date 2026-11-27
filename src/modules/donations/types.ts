@@ -4,6 +4,7 @@ import type {
   ConfirmationStatus,
   DonationMethod,
   DonorType,
+  InKindOrigin,
 } from "@prisma/client";
 
 /** Faz 5 modül tipleri. Tutarlar UI'da string/cent; kalıcılıkta Decimal(12,2). */
@@ -64,6 +65,9 @@ export type DonationDetail = DonationListItem & {
   sequence: number;
   reference: string | null;
   purposeNote: string | null;
+  itemDescription: string | null;
+  inKindOrigin: InKindOrigin | null;
+  valuationRecordsAvailable: boolean;
   claimBasis: string | null;
   waiverDeclaredAt: Date | null;
   expenseCategoryId: string | null;
@@ -140,6 +144,8 @@ export type ConfirmationCandidate = {
   amountCents: number;
   label: string;
   waived: boolean;
+  /** Ayni bağış (Sachzuwendung; yalnız SINGLE). */
+  isInKind?: boolean;
   /** Bağış: BG numarası; aidat: makbuz numarası. */
   sourceNumber: string;
 };

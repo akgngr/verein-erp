@@ -17,7 +17,7 @@ import {
   type StudentInput,
 } from "../schemas/student";
 import { allocateDebtorNumber, allocateStudentNumber, withUniqueRetry } from "../services/numbers";
-import { parseDateOnly, personName } from "../utils";
+import { parseDateOnly } from "../utils";
 
 function studentData(input: StudentInput) {
   return {
@@ -178,7 +178,7 @@ export async function makeStudentSelfPayerAction(input: unknown): Promise<Action
           return created;
         }),
       );
-      await audit({ action: "SELF_PAYER", entity: "Student", entityId: student.id, after: { guardian: personName(guardian), debtorNumber: guardian.debtorNumber } });
+      await audit({ action: "SELF_PAYER", entity: "Student", entityId: student.id, after: { guardianId: guardian.id, debtorNumber: guardian.debtorNumber } });
       return { guardianId: guardian.id };
     },
   });

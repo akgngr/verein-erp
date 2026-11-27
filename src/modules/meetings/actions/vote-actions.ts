@@ -55,8 +55,12 @@ export async function issueBallotAction(input: unknown): Promise<ActionResult<{ 
   return createAction({
     permission: { definition: meetingsPermissions, action: "update" },
     schema: z.object({ meetingId: id, voteId: id, memberId: id }),
-    handler: async ({ input, audit }) => {
-      const vote = await getDb().meetingVote.findFirst({ where: { id: input.voteId, meetingId: input.meetingId }, select: { id: true } });
+    handler: async ({ input, user, audit }) => {
+      const db = getDb();
+      const meeting = await db.meeting.findUnique({ where: { id: input.meetingId }, select: { status: true, deletedAt: true } });
+      if (!meeting) throw new ActionError("meetings.errors.meetingNotFound");
+      assertMeetingEditable(meeting, "content", user.role, meetingsPermissions);
+      const vote = await db.meetingVote.findFirst({ where: { id: input.voteId, meetingId: input.meetingId }, select: { id: true } });
       if (!vote) throw new ActionError("meetings.vote.errors.voteNotOpen");
       const result = await issueBallot(input.voteId, input.memberId);
       if (!result.ok) throw new ActionError(`meetings.vote.errors.${result.error}`); // i18n-ignore (dynamic key; every code exists in meetings.vote.errors)
@@ -70,8 +74,12 @@ export async function closeVoteAction(input: unknown): Promise<ActionResult<{ pu
   return createAction({
     permission: { definition: meetingsPermissions, action: "update" },
     schema: z.object({ meetingId: id, voteId: id, decisionText: z.string().trim().max(2000).nullable().default(null) }),
-    handler: async ({ input, audit }) => {
-      const vote = await getDb().meetingVote.findFirst({ where: { id: input.voteId, meetingId: input.meetingId }, select: { id: true } });
+    handler: async ({ input, user, audit }) => {
+      const db = getDb();
+      const meeting = await db.meeting.findUnique({ where: { id: input.meetingId }, select: { status: true, deletedAt: true } });
+      if (!meeting) throw new ActionError("meetings.errors.meetingNotFound");
+      assertMeetingEditable(meeting, "content", user.role, meetingsPermissions);
+      const vote = await db.meetingVote.findFirst({ where: { id: input.voteId, meetingId: input.meetingId }, select: { id: true } });
       if (!vote) throw new ActionError("meetings.vote.errors.voteNotOpen");
       const result = await closeVote(input.voteId, input.decisionText);
       if (!result.ok) throw new ActionError(`meetings.vote.errors.${result.error}`); // i18n-ignore (dynamic key; every code exists in meetings.vote.errors)

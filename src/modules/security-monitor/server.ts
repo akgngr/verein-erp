@@ -5,10 +5,6 @@ export {
   getSecurityTestRuns,
   getSecurityTestRun,
   getSecurityTestAlerts,
-  getSecurityTestSchedules,
-  createSecurityTestSchedule,
-  updateSecurityTestSchedule,
-  deleteSecurityTestSchedule,
   acknowledgeSecurityAlert,
   resolveSecurityAlert,
 } from "./queries/security-monitor";

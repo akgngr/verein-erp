@@ -1,5 +1,5 @@
 ---
-sidebar_position: 39
+sidebar_position: 40
 title: "Toplu e-posta"
 description: "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta."
 slug: /kullanim/moduller/mailings
@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.6.2 |
+| Sürüm | 2.7.2 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -43,6 +43,26 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft` · `propose_dues_reminder_draft`
 
 ## Sürüm notları
+
+### 2.7.2 — Yerel tarih alanları
+
+_2026-11-26_
+
+- **İyileştirme:** Zamanlanmış gönderim tarihi/saati yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.
+
+### 2.7.1 — Kanonik APP_URL kampanya bağlantıları
+
+_2026-11-25_
+
+- **Güvenlik:** Kampanya abonelik iptali ve bağlantı üretiminde kanonik APP_URL kökü kullanıldı (#574).
+
+### 2.7.0 — Tek tıkla çıkış ve güvenilir gönderim
+
+_2026-11-25_
+
+- **Yeni:** E-postalarda List-Unsubscribe / List-Unsubscribe-Post başlıkları ve kişiye özel tek tıkla çıkış adresi; çıkış kaynağın kaydında toplu e-posta itirazını işaretler. Metinde {unsubscribeLink} yer tutucusu kullanılabilir.
+- **Düzeltme:** Gönderim sonuçları her 20 mesajda kaydedilir; ara hatadan sonra yeniden deneme gönderilmiş SMS/WhatsApp'ları tekrar göndermez.
+- **Düzeltme:** Sonradan gelen 'başarısız' teslim bildirimleri kampanya sayaçlarına yansır; programatik toplu e-posta worker kuyruğundan gönderilir.
 
 ### 2.6.2 — nav.json kategori ve alt modül tanımı
 
@@ -75,22 +95,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 2.4.7 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-### 2.4.6 — Asistan önerileri bulutta
-
-_2026-11-16_
-
-- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
-
-### 2.4.5 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 19 herkese açık sürüm notu.
+Daha eski 22 herkese açık sürüm notu.

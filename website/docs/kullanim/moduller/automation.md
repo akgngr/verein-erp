@@ -13,7 +13,7 @@ Kalıcı arka plan görevleri ve iş akışları.
 |---|---|
 | Anahtar | `automation` |
 | Tür | Eklenti |
-| Sürüm | 0.10.16 |
+| Sürüm | 0.10.21 |
 | Sayfalar | `/automation`, `/automation/workflows` |
 
 ## Diğer modüllere erişim
@@ -36,6 +36,39 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
+### 0.10.21 — i18next güvenlik güncellemesi
+
+_2026-11-27_
+
+- **Güvenlik:** Akış düzenleyicisinin çeviri kütüphanesi i18next 26.3.4 sürümüne yükseltildi (deepExtend prototip özyinelemesi düzeltmesi). Düzenleyici ve uygulama tek bir kopya kullanır; Türkçe/Almanca düzenleyici metinleri korunur.
+
+### 0.10.20 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
+
+### 0.10.19 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Zamanlanmış görevler okunur adla ve doğru aralıkla (dakika/saat/gün) gösterilir; önceden "meetings.vote_purge" ve "Her 0.1 saatte" görünüyordu.
+
+### 0.10.18 — Sağlık kokpiti için durum özeti
+
+_2026-11-25_
+
+- **İyileştirme:** Modül sağlık kokpiti için kaynak modül başına başarısız/çalışan iş özeti (girdi/sonuç verisi olmadan).
+
+### 0.10.17 — Çalışan izin politikası, denetim kaydı, dil
+
+_2026-11-25_
+
+- **Güvenlik:** Arka plan çalışanı her görevden önce rol geçersiz kılmalarını ve özel rolleri yükler; yüklenemezse görev yeniden denenir.
+- **Güvenlik:** Ham hata metinleri yalnız otomasyonu yönetebilen rollere gösterilir; diğerleri hata kodunu görür.
+- **İyileştirme:** Tüm otomasyon ve iş akışı işlemleri (onay kararı dahil) denetim kaydı bırakır.
+- **Düzeltme:** İş akışı alt görevleri başlatanın dilinde, zamanlanmış görevler belge dilinde çalışır (önceden sabit Almanca).
+
 ### 0.10.16 — nav.json kategori ve alt modül tanımı
 
 _2026-11-24_
@@ -54,34 +87,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 0.10.10 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-### 0.10.9 — Onay eylemleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Workflow onay/red eylemleri ortak ActionButton/notify pattern'lerine taşındı; approvals panel artık HeroUI Button/Toast bileşenlerini doğrudan içe aktarmıyor.
-
-### 0.10.8 — Çalışma eylemleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Eylem butonları ve bildirimler ortak ActionButton/notify adapter katmanına taşındı; ilgili ekran artık bu kullanımda HeroUI Button/Toast implementasyonuna doğrudan bağlı değil.
-
-### 0.10.7 — Çalışma durumu rozeti ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Rozet görünümü ortak StatusChip pattern'ine taşındı; modül artık bu kullanımda HeroUI Chip implementasyonuna doğrudan bağlı değil.
-
-### 0.10.6 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 28 herkese açık sürüm notu.
+Daha eski 33 herkese açık sürüm notu.

@@ -8,11 +8,13 @@ import { z } from "zod";
 import { ActionError, createAction } from "@/modules/auth/server";
 import { canRequestRenewal, requestMandateRenewal } from "@/modules/online-forms/server";
 import { listUsableModuleKeys } from "@/modules/system/automation";
+import { resolvePublicOrigin } from "@/shared/security/public-origin";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
 import { sepaPermissions } from "../permissions";
 import { DEFAULT_MAX_RETURNS, RETURN_CODE_LIST } from "../lib/mandate-health";
+import { isValidCollectionDate } from "../lib/pain008";
 import { mandateHealth } from "../services/health";
 import { cancelRun, candidates, createRun, creditorProblems, markCollected, markReturned, previewRun } from "../services/runs";
 
@@ -46,7 +48,7 @@ export async function createRunAction(input: unknown): Promise<ActionResult<{ id
       const problems = await creditorProblems();
       if (problems.includes("ownIban")) throw new ActionError("sepa.errors.ownIban");
       if (problems.includes("creditorId")) throw new ActionError("sepa.errors.creditorId");
-      if (input.collectionDate < new Date().toISOString().slice(0, 10)) throw new ActionError("sepa.errors.pastDate");
+      if (!isValidCollectionDate(input.collectionDate)) throw new ActionError("sepa.errors.invalidCollectionDate");
       const run = await createRun(input.source, input.param, input.collectionDate, input.sourceKeys, actorOf(user), await labels(), input.maxReturns);
       if (!run) throw new ActionError("sepa.errors.nothingToCollect");
       await audit({ action: "CREATE", entity: "SepaDebitRun", entityId: run.id, after: { number: run.number } });
@@ -81,7 +83,7 @@ export async function markReturnedAction(input: unknown): Promise<ActionResult<n
     }).refine((value) => value.code !== null || value.reason.length >= 2, { message: "sepa.errors.reason", path: ["reason"] }),
     handler: async ({ input, user, audit }) => {
       const reason = input.reason || input.code!;
-      if (!(await markReturned(input.itemId, { reason, code: input.code, feeCents: input.feeCents }, actorOf(user)))) throw new ActionError("sepa.errors.notCollected");
+      if (!(await markReturned(input.runId, input.itemId, { reason, code: input.code, feeCents: input.feeCents }, actorOf(user)))) throw new ActionError("sepa.errors.notCollected");
       // Denetim kaydı yalnız kod ve ücret tutar; serbest metin (kişi bilgisi içerebilir) yazılmaz.
       await audit({ action: "UPDATE", entity: "SepaDebitItem", entityId: input.itemId, after: { returned: true, code: input.code, feeCents: input.feeCents } });
       revalidatePath(`/muhasebe/sepa/${input.runId}`);
@@ -125,11 +127,9 @@ export async function requestMandateRenewalAction(input: unknown): Promise<Actio
       const subject = (await candidates(input.source, input.param, await labels())).find((item) => item.sourceKey === input.sourceKey)?.subject;
       if (!subject) throw new ActionError("sepa.errors.renewalTarget");
       if (!canRequestRenewal(user.role, subject.kind)) throw new ActionError("sepa.errors.renewalForbidden");
-      const h = await headers();
-      const host = h.get("x-forwarded-host") ?? h.get("host");
-      if (!host) throw new ActionError("sepa.errors.renewalFailed");
-      const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
-      const result = await requestMandateRenewal(subject, input.channel, actorOf(user), `${proto}://${host}`);
+      const origin = resolvePublicOrigin(await headers());
+      if (!origin) throw new ActionError("sepa.errors.renewalFailed");
+      const result = await requestMandateRenewal(subject, input.channel, actorOf(user), origin);
       if (!result.ok) throw new ActionError(result.error === "noAddress" ? "sepa.errors.renewalNoAddress" : "sepa.errors.renewalFailed");
       // Denetim: yalnız kimlikler ve kanal; adres veya ad yazılmaz.
       await audit({ action: "CREATE", entity: "OnlineFormRequest", entityId: result.id, after: { purpose: "sepaMandateRenewal", kind: subject.kind, channel: input.channel } });

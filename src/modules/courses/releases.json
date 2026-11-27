@@ -2,6 +2,56 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.18",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Banka eşleştirme kurs ücreti sözleşmesi (#616)",
+        "de": "Bankabgleich-Vertrag für Kursgebühren (#616)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Muhasebe banka ekstre eşleştirmesi için açık kurs ücretlerini listeleme ve seçilen banka hesabına atomik ödeme kaydetme sunucu sözleşmesi eklendi.",
+          "de": "Server-Vertrag zum Auflisten offener Kursgebühren und zur atomaren Buchung auf das zugeordnete Bankkonto ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "1.4.17",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Yerel tarih alanları",
+        "de": "Lokale Datumsfelder"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ders, kayıt, ücret ödemesi ve öğretmen ödemesi tarihleri yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.",
+          "de": "Termin-, Anmelde-, Zahlungs- und Honorardatum werden im lokalen Format (TT.MM.JJJJ, 24 h) mit Kalender gewählt statt im browserabhängigen Format mm/dd/yyyy."
+        }
+      ]
+    },
+    {
+      "version": "1.4.16",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Ücret TOCTOU düzeltmesi, hakediş sertleştirmesi ve PDF denetim kaydı",
+        "de": "Gebühren-TOCTOU-Fix, Honorar-Härtung und PDF-Prüfprotokoll"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Ücret tahsilatı/ters kayıt/feragat işlemlerinde atomik durum kilidi, işlem içi kontenjan denetimi, hakediş P2002 yinelemesi, toplu sorgu ve onaylı hakedişteki dersin silinme koruması eklendi (#579, #578).",
+          "de": "Atomare Statussperre für Zahlungen/Stornos/Erlasse, transaktionale Platzprüfung, Honorar-P2002-Retry, Batch-Abfrage und Löschschutz für abgerechnete Termine ergänzt (#579, #578)."
+        },
+        {
+          "type": "security",
+          "tr": "Öğretmen hakediş PDF dışa aktarımına kişisel veri içermeyen denetim kaydı ve kanonik APP_URL davet bağlantısı eklendi (#579, #574).",
+          "de": "Prüfprotokoll ohne PII für Honorar-PDF-Exporte sowie kanonische APP_URL für Einladungslinks ergänzt (#579, #574)."
+        }
+      ]
+    },
+    {
       "version": "1.4.15",
       "date": "2026-11-24",
       "title": {

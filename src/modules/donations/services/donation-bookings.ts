@@ -2,7 +2,13 @@ import "server-only";
 
 import type { Prisma } from "@prisma/client";
 
-import { createSourcedBooking, donationAccountKeyFor, getDonationBookingTargets, reverseSourcedBooking } from "@/modules/accounting/server";
+import {
+  createSourcedBooking,
+  donationAccountKeyFor,
+  getDonationBookingTargets,
+  nextVersionedSourcedBookingId,
+  reverseSourcedBooking,
+} from "@/modules/accounting/server";
 
 import { formatDonorNumber } from "./confirmation-numbers";
 import { ActionError } from "@/modules/auth/server";
@@ -15,6 +21,7 @@ import { ActionError } from "@/modules/auth/server";
  */
 
 export type DonationBookingResult = {
+  bookingId: string;
   bookingNumber: string;
   waiverBookingNumber: string | null;
 };
@@ -41,19 +48,27 @@ export async function createDonationBookings(
     method: string;
     waivedReimbursement: boolean;
     expenseCategoryId: string | null;
+    accountId?: string;
   },
 ): Promise<DonationBookingResult> {
   const targets = await getDonationBookingTargets();
   const accountKey = donationAccountKeyFor(args.method);
-  const accountId = accountKey === "cashAccountId" ? targets.cashAccountId : targets.bankAccountId;
+  const accountId =
+    args.accountId ??
+    (accountKey === "cashAccountId"
+      ? targets.cashAccountId
+      : targets.bankAccountId);
 
-  const description = `Spende ${args.donationNumber} – Spender Nr. ${formatDonorNumber(args.donorNumber)}`;
+  const description = args.waivedReimbursement
+    ? donationBookingDescription(args.donationNumber, args.donorNumber, "income")
+    : `Spende ${args.donationNumber} – Spender Nr. ${formatDonorNumber(args.donorNumber)}`;
+  const incomeSourceId = await nextVersionedSourcedBookingId(tx, "DONATION", args.donationId);
   const income = await createSourcedBooking({
     tx,
     actor: args.actor,
     type: "INCOME",
     sourceType: "DONATION",
-    sourceId: args.donationId,
+    sourceId: incomeSourceId,
     bookingDate: args.receivedAt,
     accountId,
     categoryId: targets.donationCategoryId,
@@ -63,19 +78,24 @@ export async function createDonationBookings(
   });
 
   if (!args.waivedReimbursement) {
-    return { bookingNumber: income.bookingNumber, waiverBookingNumber: null };
+    return {
+      bookingId: income.id,
+      bookingNumber: income.bookingNumber,
+      waiverBookingNumber: null,
+    };
   }
 
   // Aufwandsspende: banka hesabına gelir + gider çifti (§ 11 md. 5 md. 3).
   if (!args.expenseCategoryId) {
     throw new ActionError("donations.errors.waiverExpenseRequired");
   }
+  const waiverSourceId = await nextVersionedSourcedBookingId(tx, "DONATION_WAIVER", args.donationId);
   const expense = await createSourcedBooking({
     tx,
     actor: args.actor,
     type: "EXPENSE",
     sourceType: "DONATION_WAIVER",
-    sourceId: args.donationId,
+    sourceId: waiverSourceId,
     bookingDate: args.receivedAt,
     accountId: targets.bankAccountId,
     categoryId: args.expenseCategoryId,
@@ -84,7 +104,11 @@ export async function createDonationBookings(
     receiptReference: args.donationNumber,
   });
 
-  return { bookingNumber: income.bookingNumber, waiverBookingNumber: expense.bookingNumber };
+  return {
+    bookingId: income.id,
+    bookingNumber: income.bookingNumber,
+    waiverBookingNumber: expense.bookingNumber,
+  };
 }
 
 /**

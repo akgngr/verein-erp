@@ -8,7 +8,7 @@ import { can } from "@/shared/permissions/define";
 
 import { accountingPermissions } from "./permissions";
 import { getIncomeExpenseReport, listAccountBalances } from "./server";
-import { listTaxRows } from "./queries/tax-reports";
+import { listTaxRows, listUstvaRows } from "./queries/tax-reports";
 import { getEuerAdjustments } from "./queries/assets";
 import { listOpenItems } from "./queries/invoices";
 import { AGING_BUCKETS } from "./services/invoice-payments";
@@ -113,9 +113,14 @@ export const ai = defineModuleAiV2({
       projectForModel: (result) => result,
       run: async ({ year }) => {
         const settings = await getTaxSettings(getDb());
-        const rows = await listTaxRows(new Date(Date.UTC(year, 0, 1)), new Date(Date.UTC(year, 11, 31)));
+        const from = new Date(Date.UTC(year, 0, 1));
+        const to = new Date(Date.UTC(year, 11, 31));
+        const [rows, ustvaRows] = await Promise.all([
+          listTaxRows(from, to),
+          listUstvaRows(from, to, settings.taxMethod),
+        ]);
         const periods = vatPeriods(year, settings.vatPeriod).map((period) => {
-          const result = computeUstva(rows.filter((row) => row.bookingDate >= period.from && row.bookingDate <= period.to));
+          const result = computeUstva(ustvaRows.filter((row) => row.bookingDate >= period.from && row.bookingDate <= period.to));
           return { period: period.key, kz81BaseEur: result.kz81BaseEuros, kz86BaseEur: result.kz86BaseEuros, kz66Eur: euros(result.kz66Cents), kz83Eur: euros(result.kz83Cents) };
         });
         const euer = computeEuer(rows, await getEuerAdjustments(year));

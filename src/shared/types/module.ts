@@ -11,6 +11,21 @@ export type NavCategoryId =
   | "communication"
   | "operations";
 
+/**
+ * Ayar merkezi grupları (#611). Sıra `SETTINGS_GROUPS` (shared/navigation/settings-groups.ts) içinde sabittir;
+ * etiketler kabuk çevirisinde `settings.groups.<id>`.
+ */
+export type SettingsGroupId =
+  | "general"
+  | "users-access"
+  | "security-privacy"
+  | "integrations"
+  | "appearance"
+  | "communication"
+  | "ai-automation"
+  | "module-management"
+  | "system-management";
+
 export type NavItem = {
   href: string;
   label: string;
@@ -29,6 +44,10 @@ export type NavItem = {
    * Başka bir modülün menüsünden bağlanan alt modüller için (örn. Öğrenciler → Kurslar menüsü).
    */
   hidden?: boolean;
+  /** Yalnız `group: "settings"` için: ayar merkezindeki grup (#611). Verilmezse "general". */
+  settingsGroup?: SettingsGroupId;
+  /** Grup içi sıra (küçük önce). Verilmezse `order`. */
+  settingsOrder?: number;
 };
 
 export type PermissionRequirement = { definition: PermissionDefinition; action: PermissionAction };
@@ -55,6 +74,10 @@ export type ModuleMenuItem = {
   isDownload?: boolean;
   /** Başka modülün sayfasına bağlantı: o modül kullanılamıyorsa (kapalı) bağlantı gizlenir. */
   module?: string;
+  /** Yalnız `key: "settings"` için: ayar merkezindeki grup (#611). Verilmezse "module-management". */
+  settingsGroup?: SettingsGroupId;
+  /** Grup içi sıra (küçük önce). Verilmezse modül anahtarına göre sıralanır. */
+  settingsOrder?: number;
 };
 
 /** Başka bir modülün verisine erişim türü (o modülün `server` API'si üzerinden). */

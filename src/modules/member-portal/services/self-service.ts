@@ -17,15 +17,8 @@ import {
 
 import { generateOpaqueToken, hashPortalSecret } from "./auth-core";
 import { signReceiptRef } from "./receipt-ref";
+import { parseSubjectRef } from "./subject-ref";
 
-function parseSubjectRef(ref: string): { kind: "member" | "guardian"; id: string } | null {
-  const idx = ref.indexOf(":");
-  if (idx <= 0) return null;
-  const kind = ref.slice(0, idx);
-  const id = ref.slice(idx + 1);
-  if ((kind !== "member" && kind !== "guardian") || !id) return null;
-  return { kind, id };
-}
 
 export const CONSENT_TEXT_VERSION = "2026-01";
 const CONSENT_CHALLENGE_TTL_MS = 24 * 60 * 60 * 1000;

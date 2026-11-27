@@ -114,6 +114,7 @@ async function deliver(
       subject: valid.subject,
       text: valid.text,
       html: valid.html,
+      ...(valid.headers ? { headers: valid.headers } : {}),
     });
     const messageId = info.messageId;
     return { ok: true, messageId, logId: await writeLog(valid, "SENT", { messageId }) };

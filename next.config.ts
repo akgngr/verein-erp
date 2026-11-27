@@ -78,7 +78,7 @@ const nextConfig: NextConfig = {
       // Prisma sorgu motoru
       "./node_modules/.prisma/client/**",
       "./node_modules/@prisma/client/**",
-      // PDF fontları: @react-pdf/renderer dosyayı process.cwd() üzerinden okur. Makbuz, bağış bildirimi,
+      // PDF fontları (#577, #587): @react-pdf/renderer dosyayı process.cwd() üzerinden okur. Makbuz, bağış bildirimi,
       // fatura, rapor ve tutanak PDF'leri rota handler'larında ve server action'larda üretildiği için
       // tüm rotalara eklenir (birkaç MB).
       "./src/shared/pdf/fonts/**",

@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.15.1 |
+| Sürüm | 0.16.1 |
 | Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular`, `/ayarlar/bildirimler/aboneler` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,33 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.16.1 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
+
+### 0.16.0 — Kanal ayarları ve numara doğrulama
+
+_2026-11-26_
+
+- **Yeni:** Bildirim ayarlarında yöneticiler için SMS (seven.io/Twilio) ve WhatsApp (Meta Cloud API) bölümleri; anahtarlar yalnız yazılır, hiçbir zaman gösterilmez.
+- **Yeni:** Kullanıcılar SMS ve WhatsApp numaralarını 6 haneli kodla doğrular (numara yalnız son haneleriyle gösterilir). WhatsApp kodu onaylı bir kimlik doğrulama şablonuyla gönderilir.
+- **İyileştirme:** Tercih tablosunda yalnız gerçekten çalışan kanallar gösterilir; yapılandırılmamış kanal sütunu gizlenir.
+- **Güvenlik:** SMS ve WhatsApp numara doğrulaması yalnız kodun gönderildiği numarayı doğrular; eşzamanlı yeni bir istek başka bir numarayı doğrulanmış yapamaz.
+
+### 0.15.3 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Bildirim tercihlerinde türler okunur adla, duyuru alıcılarında roller çevrilmiş adla gösterilir; zil rozeti mobil başlıkta kesilmez.
+
+### 0.15.2 — Etkin kanal listesi
+
+_2026-11-25_
+
+- **İyileştirme:** Sağlık kokpiti etkin bildirim kanallarını public API ile okur (sır ve ayar döndürülmez).
 
 ### 0.15.1 — TAX_ADVISOR rolü izin tanımı
 
@@ -62,33 +89,4 @@ _2026-11-23_
 - **İyileştirme:** Bildirim çekmecesi için aria-live, aria-haspopup, genişletilmiş durum yönetimi ve ekran okuyuculara yönelik bağlamsal buton etiketleri ile tam erişilebilirlik sağlandı.
 - **Güvenlik:** SSE akışı kullanıcı bazında katı şekilde yalıtılmıştır; akış üzerinden kişisel veri (PII) iletilmez, yalnızca hafif sinyal ve sayılar taşınır.
 
-### 0.12.0 — Yönetici duyuru gönderme ekranı
-
-_2026-11-22_
-
-- **Yeni:** Yöneticiler duyuruyu herkese veya seçilen rollere onay penceresinden gönderebilir ve gerçek alıcı sayısını görebilir.
-
-### 0.11.0 — Bildirim zili ve tercih ekranı
-
-_2026-11-22_
-
-- **Yeni:** Sağ üstte bildirim zili ve okunmamış rozeti; sağ çekmecede bildirimler (okundu, tümünü okundu, ertele). Zil Widget Platformu üzerinden eklenir.
-- **Yeni:** Ayarlar → Bildirimler: tür × kanal tercihleri, sessiz saatler, günlük özet, Telegram bağlama ve tarayıcı (push) bildirimleri.
-
-### 0.10.0 — Web Push istemci ve PWA manifest
-
-_2026-11-21_
-
-- **Yeni:** Web Push istemci bileşenleri (PushToggle, PushCard), tarayıcı izin akışı ve PWA manifest desteği eklendi.
-- **Yeni:** public/sw.js ile anlık bildirim gösterimi, güvenli aynı kökenli bağlantı yönlendirmesi ve pushsubscriptionchange desteği sağlandı.
-- **İyileştirme:** iOS cihazlarda PWA ana ekrana ekleme rehberi ve desteklenmeyen tarayıcılarda zarif geri çekilme sağlandı.
-
-### 0.9.0 — SMS kanalı ve iş akışında bildirim
-
-_2026-11-20_
-
-- **Yeni:** Yönetici isterse SMS kanalını (seven.io veya Twilio) açabilir; kullanıcı numarasını kodla doğrular. Varsayılan kapalıdır.
-- **Yeni:** Otomasyonlarda yeni adım: 'Bildirim gönder' — herkese veya seçilen rollere kurum içi bildirim.
-- **Güvenlik:** SMS anahtarı veritabanında şifreli, numara şifreli; doğrulama kodu yalnız hash, 15 dakika, sınırlı deneme. SMS'e yalnız genel metin ve bağlantı gider.
-
-Daha eski 8 herkese açık sürüm notu.
+Daha eski 12 herkese açık sürüm notu.

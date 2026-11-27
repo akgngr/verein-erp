@@ -2,6 +2,51 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.1",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Satın alma tarihi yerel biçimde (GG.AA.YYYY) ve takvimle seçilir.",
+          "de": "Das Kaufdatum nutzt das lokale Format (TT.MM.JJJJ) mit Kalender."
+        }
+      ]
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "AfA yetkisi, CSV güvenliği, yumuşak silme",
+        "de": "AfA-Berechtigung, CSV-Sicherheit, weiches Löschen"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "AfA'da izlenen eşyada muhasebe demirbaşını değiştiren işlem muhasebe yazma izni ister (SECRETARY/BOARD artık AfA kaydını değiştiremez).",
+          "de": "Änderungen, die das Anlagegut in der Buchhaltung betreffen, erfordern Schreibrecht in der Buchhaltung (SECRETARY/BOARD können AfA-Daten nicht mehr ändern)."
+        },
+        {
+          "type": "security",
+          "tr": "CSV dışa aktarımında formül enjeksiyonu (=, +, -, @) nötrlenir.",
+          "de": "Im CSV-Export wird Formelinjektion (=, +, -, @) neutralisiert."
+        },
+        {
+          "type": "fix",
+          "tr": "Asistanla eşya oluşturma artık çalışır (zorunlu alan eksikti).",
+          "de": "Das Anlegen von Gegenständen über den Assistenten funktioniert wieder (Pflichtfeld fehlte)."
+        },
+        {
+          "type": "improvement",
+          "tr": "Silme yumuşaktır ve tüm işlemler denetim kaydı bırakır.",
+          "de": "Löschen ist nun ein weiches Löschen; alle Aktionen werden protokolliert."
+        }
+      ]
+    },
+    {
       "version": "1.1.12",
       "date": "2026-11-24",
       "title": {

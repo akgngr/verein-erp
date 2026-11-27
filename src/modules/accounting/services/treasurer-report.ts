@@ -68,6 +68,8 @@ export interface TreasurerReportResult {
   totals: {
     totalIncomeCents: number;
     totalExpenseCents: number;
+    previousYearIncomeCents: number;
+    previousYearExpenseCents: number;
     netAnnualSurplusCents: number;
     previousYearSurplusCents: number;
     yearOnYearDeltaCents: number;
@@ -221,6 +223,8 @@ export function computeTreasurerReport(params: {
     totals: {
       totalIncomeCents,
       totalExpenseCents,
+      previousYearIncomeCents: prevTotalIncomeCents,
+      previousYearExpenseCents: prevTotalExpenseCents,
       netAnnualSurplusCents,
       previousYearSurplusCents,
       yearOnYearDeltaCents,

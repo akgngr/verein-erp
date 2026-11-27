@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.13.4",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Takip ve yetki devri tarihleri yerel biçimde girilir ve gösterilir (GG.AA.YYYY).",
+          "de": "Wiedervorlage- und Vertretungsdaten werden im lokalen Format eingegeben und angezeigt (TT.MM.JJJJ)."
+        }
+      ]
+    },
+    {
       "version": "0.13.3",
       "date": "2026-11-24",
       "title": {

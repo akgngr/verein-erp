@@ -16,3 +16,4 @@ export { ReadinessCockpitView } from "./views/readiness-cockpit-view";
 export { ReadinessCockpit } from "./components/readiness-cockpit";
 export { PrivacyPresetsView } from "./views/privacy-presets-view";
 export { EgressReportView } from "./views/egress-report-view";
+export { BackupView } from "./views/backup-view";

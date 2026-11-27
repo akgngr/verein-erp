@@ -10,7 +10,7 @@
     }
   },
   "access": {
-    "mailings": "Um im Webhook die (verschlüsselten) Bot-Einstellungen zu lesen."
+    "mailings": "Liest im Webhook die (verschlüsselten) Bot-Einstellungen und schreibt die per /start bzw. /stop erteilte oder widerrufene Telegram-Einwilligung in den Datensatz der Person."
   },
   "replies": {
     "linked": "✅ Abo bestätigt. Zum Beenden /stop senden.",

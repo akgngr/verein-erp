@@ -6,6 +6,7 @@ import { useState, useTransition } from "react";
 
 import { Button, Input, Label, Select, StatusChip, TextField } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { notify } from "@/shared/components/ui/notify";
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
@@ -40,6 +41,7 @@ export function VotesTab({ meetingId, votes, present, agendaItems, editable }: {
   const [pending, start] = useTransition();
   const [form, setForm] = useState({ question: "", kind: "yesNoAbstain" as "yesNoAbstain" | "candidates", candidates: "", minBallots: String(DEFAULT_MIN_BALLOTS), reason: "", agendaItemId: "" });
   const [code, setCode] = useState<{ name: string; code: string } | null>(null);
+  const [closingVoteId, setClosingVoteId] = useState<string | null>(null);
   const label = (option: string) => ((YES_NO_ABSTAIN as readonly string[]).includes(option) ? t(`options.${option}` as never) : option);
   const min = Number(form.minBallots);
 
@@ -108,15 +110,7 @@ export function VotesTab({ meetingId, votes, present, agendaItems, editable }: {
               </ul>
               {!present.length ? <p className="text-sm text-warning-700">{t("noPresent")}</p> : null}
               <p className="text-sm">{t("boothHint")}</p>
-              <Button className="self-start" variant={actionVariant("danger", "solid")} isPending={pending} onPress={() => {
-                if (!window.confirm(t("closeConfirm"))) return;
-                start(async () => {
-                  const result = await closeVoteAction({ meetingId, voteId: vote.id, decisionText: null });
-                  if (!result.ok) return void notify.error(translate(result.error));
-                  notify.success(result.data.published ? t("closed") : t("closedWithheld", { count: result.data.ballotCount }));
-                  router.refresh();
-                });
-              }}>
+              <Button className="self-start" variant={actionVariant("danger", "solid")} isPending={pending} onPress={() => setClosingVoteId(vote.id)}>
                 {t("close")}
               </Button>
             </>
@@ -185,6 +179,27 @@ export function VotesTab({ meetingId, votes, present, agendaItems, editable }: {
           <Button className="self-start" variant={actionVariant("primary", "solid")} isPending={pending} isDisabled={form.question.trim().length < 3} onPress={open}>{t("open")}</Button>
         </section>
       ) : null}
+      <ConfirmDialog
+        isOpen={closingVoteId !== null}
+        onOpenChange={(open) => {
+          if (!open) setClosingVoteId(null);
+        }}
+        title={t("close")}
+        message={t("closeConfirm")}
+        confirmLabel={t("close")}
+        confirmColor="danger"
+        onConfirm={async () => {
+          if (!closingVoteId) return;
+          const result = await closeVoteAction({ meetingId, voteId: closingVoteId, decisionText: null });
+          if (!result.ok) {
+            notify.error(translate(result.error));
+            return;
+          }
+          notify.success(result.data.published ? t("closed") : t("closedWithheld", { count: result.data.ballotCount }));
+          setClosingVoteId(null);
+          router.refresh();
+        }}
+      />
     </div>
   );
 }

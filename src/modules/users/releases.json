@@ -2,6 +2,106 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.6.1",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Ayar merkezi grubu",
+        "de": "Gruppe in der Einstellungsübersicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.",
+          "de": "Die Einstellungsseiten erscheinen in der Einstellungsübersicht in ihrer eigenen Gruppe und Reihenfolge."
+        }
+      ]
+    },
+    {
+      "version": "1.6.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "İki adımlı doğrulamayı sıfırlama",
+        "de": "Zwei-Faktor-Anmeldung zurücksetzen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kullanıcılar tablosunda \"İki adımlı doğrulamayı sıfırla\" (kayıp telefon ve kurtarma kodları): doğrulama kaldırılır, tüm oturumlar sonlanır, işlem denetim kaydına yazılır.",
+          "de": "„Zwei-Faktor-Anmeldung zurücksetzen“ in der Benutzertabelle (verlorenes Smartphone und Wiederherstellungscodes): der zweite Faktor wird entfernt, alle Sitzungen enden, der Vorgang wird protokolliert."
+        }
+      ]
+    },
+    {
+      "version": "1.5.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Şifre sıfırlama ve oturum yönetimi",
+        "de": "Passwort zurücksetzen und Sitzungsverwaltung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kendi kendine şifre sıfırlama: tek kullanımlık, 30 dakika geçerli e-posta bağlantısı; adresin kayıtlı olup olmadığı yanıt veya süreden anlaşılmaz; IP ve adres başına sınır.",
+          "de": "Passwort selbst zurücksetzen: einmaliger, 30 Minuten gültiger E-Mail-Link; ob eine Adresse registriert ist, ist weder an der Antwort noch an der Dauer erkennbar; Limits pro IP und Adresse."
+        },
+        {
+          "type": "feature",
+          "tr": "Yönetici, kullanıcı listesinden bir kullanıcının tüm oturumlarını sonlandırabilir (kayıp cihaz).",
+          "de": "Administratoren können in der Benutzerliste alle Sitzungen eines Benutzers beenden (z. B. verlorenes Gerät)."
+        },
+        {
+          "type": "security",
+          "tr": "Davet ve sıfırlama bağlantıları amaç bazlıdır, birbirinin yerine kullanılamaz; şifre belirlenince bekleyen tüm bağlantılar geçersiz olur ve kilit kalkar.",
+          "de": "Einladungs- und Rücksetzlinks sind zweckgebunden und nicht austauschbar; mit dem neuen Passwort werden alle offenen Links ungültig und die Sperre aufgehoben."
+        }
+      ]
+    },
+    {
+      "version": "1.4.4",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Yerel tarih alanları",
+        "de": "Lokale Datumsfelder"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Harici erişim başlangıç ve bitiş zamanı (bitiş, başlangıçtan önce seçilemez) yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.",
+          "de": "Beginn und Ende externer Zugänge (Ende nicht vor dem Beginn) werden im lokalen Format (TT.MM.JJJJ, 24 h) mit Kalender gewählt statt im browserabhängigen Format mm/dd/yyyy."
+        }
+      ]
+    },
+    {
+      "version": "1.4.3",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "ADMIN yetki denetimleri, davet hız sınırı ve harici erişim sertleştirmesi",
+        "de": "ADMIN-Berechtigungsprüfungen, Einladungs-Rate-Limit und Gastzugriffs-Härtung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Yönetici yetki korumaları, davet hız sınırı ve atomik işlem, harici erişim hibesi doğrulaması ve kanonik APP_URL bağlantıları eklendi (#574).",
+          "de": "ADMIN-Schutzprüfungen, Einladungs-Rate-Limit/Transaktion, Prüfung externer Zugriffsrechte und kanonische APP_URL-Links ergänzt (#574)."
+        }
+      ]
+    },
+    {
+      "version": "1.4.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arka plan için izin politikası yükleyicisi",
+        "de": "Berechtigungsrichtlinie für Hintergrundprozesse"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Rol ve izin politikası arka plan çalışanı tarafından da yüklenebilir (özel roller ve geçersiz kılmalar görevlerde geçerli).",
+          "de": "Die Rollen- und Berechtigungsrichtlinie wird auch vom Hintergrund-Worker geladen (eigene Rollen und Overrides gelten in Aufgaben)."
+        }
+      ]
+    },
+    {
       "version": "1.4.1",
       "date": "2026-11-25",
       "title": {

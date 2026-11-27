@@ -54,6 +54,7 @@
     "widgetlar": "Widget-Einstellungen",
     "privacyPresets": "Datenschutzprofile",
     "egressReport": "Datenausgangsbericht",
+    "yedekleme": "Datensicherung & Prüfung",
     "menuDuzeni": "Menüanordnung"
   },
   "meta": {
@@ -98,7 +99,9 @@
     "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden).",
     "users": "Prüft das Vorhandensein eines Administratorkontos im Modul- und Workflow-Gesundheitscockpit.",
     "ai": "Liest den Status konfigurierter KI-Anbieter für Datenschutz-Voreinstellungen und den monatlichen Datenausgangsbericht.",
-    "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer."
+    "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer.",
+    "automation": "Liest im Modul-Gesundheitscockpit fehlgeschlagene Hintergrundaufgaben und den Worker-Heartbeat (keine Ein-/Ausgabedaten).",
+    "notifications": "Liest im Modul-Gesundheitscockpit, welche Benachrichtigungskanäle aktiv sind (keine Geheimnisse oder Einstellungen)."
   },
   "gate": {
     "manage": "Zur Modulverwaltung",
@@ -113,6 +116,10 @@
     "unlicensed": {
       "title": "Dieses Modul erfordert eine Lizenz",
       "description": "Diese Funktion ist nur mit einer gültigen Enterprise-Lizenz verfügbar. Admins können sie unter Einstellungen → Lizenz hinterlegen."
+    },
+    "public": {
+      "title": "Diese Seite ist derzeit nicht verfügbar",
+      "description": "Die gesuchte Seite ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Verein."
     }
   },
   "releases": {
@@ -199,7 +206,9 @@
       "smallBusinessOff": "Regelbesteuerung",
       "presetOn": "Kategorien und Konten werden angelegt",
       "presetOff": "nein",
-      "note": "Nicht ausgewählte optionale Module werden deaktiviert (Daten bleiben erhalten)."
+      "note": "Daten nicht ausgewählter Module werden nicht gelöscht; deaktiviert wird nur, was Sie unten bestätigen.",
+      "willDisable": "Derzeit aktive, nicht ausgewählte Module: {modules}.",
+      "confirmDisable": "Diese Module deaktivieren (ohne Bestätigung bleiben sie aktiv)"
     },
     "back": "Zurück",
     "next": "Weiter",
@@ -212,7 +221,10 @@
       "profile": "Organisationsdaten erfassen",
       "accountingSettings": "Buchhaltungseinstellungen",
       "modulesPage": "Modulverwaltung",
-      "dashboard": "Zum Dashboard"
+      "dashboard": "Zum Dashboard",
+      "kept": "Aktiv gelassen, da nicht bestätigt: {modules}",
+      "mapped": "Leere Standardzuordnungen in den Buchhaltungseinstellungen (Kasse/Bank, Spenden- und Beitragskategorie) wurden ergänzt.",
+      "mappingFailed": "Die Buchhaltungs-Standardzuordnung war nicht möglich; bitte unter Buchhaltung → Einstellungen ergänzen."
     },
     "errors": {
       "accountingOff": "Für die Buchhaltungsvorbereitung muss das Modul Buchhaltung ausgewählt sein."
@@ -353,7 +365,11 @@
           "right": "Kopfzeile · rechts"
         }
       },
-      "resetSuccess": "Standardeinstellungen wiederhergestellt."
+      "resetSuccess": "Standardeinstellungen wiederhergestellt.",
+      "policy": {
+        "label": "Für alle erlaubt",
+        "toggle": "Widget {title} für alle Benutzer erlauben oder sperren"
+      }
     }
   },
   "readiness": {
@@ -411,7 +427,8 @@
       "accessGrantsPending": "Die von diesem Modul angeforderten Berechtigungen warten auf Administratorfreigabe.",
       "failedJobsDetected": "In der Hintergrund-Warteschlange wurden fehlgeschlagene Aufgaben festgestellt.",
       "notificationsNoChannel": "Für das Benachrichtigungsmodul ist kein aktiver Kanal (E-Mail, Telegram etc.) eingerichtet.",
-      "generalIssue": "Es liegen Konfigurations- oder Workflow-Hinweise für dieses Modul vor."
+      "generalIssue": "Es liegen Konfigurations- oder Workflow-Hinweise für dieses Modul vor.",
+      "portalDisabledByEnv": "Das Mitgliederportal ist aktiv, aber PORTAL_ENABLED=true ist auf dem Server nicht gesetzt; /portal ist für Besucher gesperrt (404)."
     }
   },
   "privacyUi": {
@@ -454,7 +471,15 @@
     "apply": "Bestätigen und anwenden",
     "applying": "Wird angewendet…",
     "noChanges": "Das Profil ist bereits aktiv; keine Änderungen.",
-    "readOnly": "Zur Änderung sind Systemadministratorrechte erforderlich."
+    "readOnly": "Zur Änderung sind Systemadministratorrechte erforderlich.",
+    "blocked": "Voreinstellung nicht angewendet: Einige Moduländerungen sind wegen Abhängigkeiten oder fehlender Zugriffsfreigabe blockiert.",
+    "blockersTitle": "Vor dem Anwenden zu lösen",
+    "blockers": {
+      "requires": "{module} würde aktiviert, aber erforderliche Module bleiben deaktiviert: {modules}.",
+      "missing": "Für {module} erforderliche Module fehlen oder sind zu alt: {modules}.",
+      "approval": "Der Zugriff von {module} ist nicht freigegeben; bitte zuerst in der Modulverwaltung freigeben.",
+      "dependents": "{module} würde deaktiviert, aber abhängige Module bleiben aktiv: {modules}."
+    }
   },
   "egressUi": {
     "title": "Monatlicher Datenausgangsbericht",
@@ -494,5 +519,103 @@
     "yes": "Ja",
     "no": "Nein",
     "unknown": "Nicht angegeben"
+  },
+  "backups": {
+    "title": "Datensicherung & Wiederherstellungsprüfung",
+    "subtitle": "Sichern Sie PostgreSQL-Datenbank und UPLOAD_DIR-Dokumente verschlüsselt mit AES-256-GCM und prüfen Sie Integrität sowie Schemakompatibilität.",
+    "encryptionMissingTitle": "Verschlüsselungsschlüssel nicht konfiguriert",
+    "encryptionMissingBody": "Da kein Datenverschlüsselungsschlüssel (DATA_ENCRYPTION_KEYS oder AUTH_SECRET) verfügbar ist, sind verschlüsselte Sicherungen und Prüfungen aus Sicherheitsgründen deaktiviert.",
+    "stats": {
+      "encryption": "Verschlüsselungsstatus",
+      "encryptionReady": "Bereit",
+      "encryptionUnavailable": "Schlüssel fehlt",
+      "cipherLabel": "AES-256-GCM + SHA-256-Manifest",
+      "lastBackup": "Letzte Sicherung",
+      "never": "Noch keine",
+      "readySummary": "{count} bereite Sicherungen · {size}",
+      "lastVerification": "Letzte Prüfung",
+      "notVerifiedYet": "Noch nicht geprüft",
+      "schemaVersion": "Aktive Schemaversion",
+      "unknown": "Unbekannt",
+      "migrationCount": "{count} Migrationen angewendet"
+    },
+    "manual": {
+      "title": "Verschlüsselte Sicherung jetzt erstellen",
+      "description": "Datenbank-Schnappschuss, hochgeladene Dokumente (UPLOAD_DIR) und SHA-256-Manifest werden in ein verschlüsseltes .vbak-Archiv verpackt und sofort selbst geprüft.",
+      "cta": "Verschlüsselte Sicherung erstellen",
+      "running": "Wird gesichert und geprüft..."
+    },
+    "policy": {
+      "title": "Automatische Sicherung & Aufbewahrung",
+      "description": "Der Automatisierungs-Worker (system.run_backup) erstellt regelmäßig Sicherungen und bereinigt ältere Archive gemäß der Aufbewahrungsanzahl.",
+      "enabled": "Geplante automatische Sicherung aktivieren",
+      "retentionCount": "Aufzubewahrende Sicherungen (1–90)",
+      "intervalHours": "Sicherungsintervall (Stunden, 6–168)",
+      "save": "Richtlinie speichern",
+      "saving": "Wird gespeichert..."
+    },
+    "uploadVerify": {
+      "title": "Externes Archiv zerstörungsfrei prüfen (Probelauf)",
+      "description": "Laden Sie ein heruntergeladenes .vbak-Archiv hoch, um Entschlüsselung, Datei-Prüfsummen und Schemakompatibilität ohne Änderung der Live-Daten zu prüfen.",
+      "cta": ".vbak-Archiv wählen und prüfen",
+      "running": "Archiv wird geprüft..."
+    },
+    "verifyDetail": {
+      "passedHeading": "Wiederherstellungsprüfung bestanden — Archiv ist intakt und entschlüsselbar.",
+      "failedHeading": "Wiederherstellungsprüfung fehlgeschlagen ({code}).",
+      "archiveSha": "Archiv-SHA-256",
+      "dbIntegrity": "Datenbankintegrität",
+      "filesChecked": "Geprüfte Dateien",
+      "schemaCompatibility": "Schemakompatibilität",
+      "ok": "Bestanden",
+      "failed": "Fehlerhaft"
+    },
+    "schemaCompatibility": {
+      "compatible": "Vollständig kompatibel",
+      "older": "Älteres Schema (Migration erforderlich)",
+      "newer": "Neueres Schema (App-Update erforderlich)",
+      "unknown": "Unklar"
+    },
+    "status": {
+      "ready": "Bereit",
+      "failed": "Fehlgeschlagen",
+      "verifiedPassed": "Geprüft",
+      "verifiedFailed": "Prüfung fehlgeschlagen"
+    },
+    "trigger": {
+      "manual": "Manuell",
+      "scheduled": "Geplant"
+    },
+    "list": {
+      "title": "Sicherungsverlauf",
+      "empty": "Es wurden noch keine Systemsicherungen erstellt.",
+      "date": "Datum / Auslöser",
+      "status": "Status",
+      "contents": "Inhalt",
+      "size": "Größe / SHA-256",
+      "verification": "Prüfung",
+      "actions": "Aktionen",
+      "dbSummary": "{tables} Tabellen · {rows} Zeilen",
+      "uploadSummary": "{files} Dokumentdateien"
+    },
+    "actions": {
+      "verify": "Prüfen",
+      "download": "Herunterladen",
+      "delete": "Löschen"
+    },
+    "messages": {
+      "created": "Verschlüsselte Sicherung erstellt und erfolgreich geprüft.",
+      "createdWithPrune": "Verschlüsselte Sicherung erstellt, geprüft und {count} ältere Sicherungen gemäß Richtlinie bereinigt.",
+      "createFailed": "Fehler beim Erstellen der Sicherung.",
+      "configSaved": "Sicherungsrichtlinie gespeichert.",
+      "configFailed": "Sicherungsrichtlinie konnte nicht gespeichert werden.",
+      "verifyPassed": "Archiv entschlüsselt, alle SHA-256-Prüfsummen und Datenbankintegrität bestätigt.",
+      "uploadVerifyPassed": "Hochgeladenes Archiv erfolgreich entschlüsselt und geprüft (Live-Daten unverändert).",
+      "verifyFailed": "Archivprüfung fehlgeschlagen: {code}",
+      "verifyError": "Unerwarteter Fehler bei der Prüfung.",
+      "deleteConfirm": "Dieses verschlüsselte Sicherungsarchiv dauerhaft vom Datenträger und aus dem Verlauf löschen?",
+      "deleted": "Sicherungsarchiv gelöscht.",
+      "deleteFailed": "Sicherungsarchiv konnte nicht gelöscht werden."
+    }
   }
 }

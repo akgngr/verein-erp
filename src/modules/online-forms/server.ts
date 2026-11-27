@@ -10,3 +10,4 @@ export {
   signOnlineFormForPortal,
   type PortalPendingFormRow,
 } from "./services/portal-signing";
+export { cancelPendingMemberForms } from "./services/cleanup";

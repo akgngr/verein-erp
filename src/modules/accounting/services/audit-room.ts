@@ -234,7 +234,7 @@ export async function getAuditRoomOverview(actor: AuditActor, year: number): Pro
       _count: { _all: true },
     }),
     db.accountingInvoice.findMany({
-      where: { status: "ISSUED" },
+      where: { kind: "INVOICE", status: "ISSUED" },
       select: { grossCents: true, paidCents: true, skontoCents: true },
     }),
     db.accountingPayable.findMany({

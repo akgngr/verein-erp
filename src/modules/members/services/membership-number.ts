@@ -18,14 +18,17 @@ export function formatMembershipNumber(year: number, sequence: number): string {
 /**
  * Sayaç ayırma: yıl bazında atomik upsert (lastSeq +1). Mutlaka bir
  * prisma.$transaction İÇİNDE çağrılmalıdır; üye kaydı aynı transaction içinde
- * oluşturulur. Kayıt yılı, kayıt anı (now) yılını kullanır — tıpkı evrak
- * registeredAt kalıbı gibi (istisnai olarak üyenin katılım yılını değil).
+ * oluşturulur.
  *
- * KARAR: Üyelik numarası kayıt yılına göre üretilir (joinDate'e göre değil).
- * Çünkü kayıt defteri o yıl başlanıldığını gösterir; katılım tarihi farklı
- * bir yıldan bile olabilir (geç kayıt). Numara yine de tekildir çünkü sayaç
- * yıl bazında artar ve üye tablosunda @@unique([year, sequence]) yatar.
+ * KARAR (#605, ürün sahibi): Üyelik numarasındaki yıl üyelik başlangıç yılıdır (joinDate), kayıt anı değil —
+ * geç kaydedilen veya içe aktarılan üye "UYE-<katılım yılı>-…" alır. Numara yine tekildir: sayaç yıl bazında
+ * artar ve üye tablosunda @@unique([year, sequence]) vardır. Mevcut numaralar değişmez.
  */
+/** Numara yılı: üyelik başlangıcının yılı (joinDate, takvim günü UTC olarak saklanır). */
+export function membershipNumberYear(joinDate: Date): number {
+  return joinDate.getUTCFullYear();
+}
+
 export async function allocateMembershipNumber(
   tx: Prisma.TransactionClient,
   year: number,

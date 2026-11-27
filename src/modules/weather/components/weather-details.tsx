@@ -7,6 +7,7 @@ import {
   CloudFog,
   CloudLightning,
   CloudRain,
+  Snowflake,
   CloudSun,
   Droplets,
   MapPin,
@@ -49,6 +50,10 @@ function getWeatherIcon(code: number, isDay = true, className = "size-8") {
   }
   if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) {
     return <CloudRain className={`${className} text-blue-500`} aria-hidden="true" />;
+  }
+  // #585: Kar kodları (WMO 71–77, 85–86) önceden genel bulut simgesiyle gösteriliyordu.
+  if ([71, 73, 75, 77, 85, 86].includes(code)) {
+    return <Snowflake className={`${className} text-sky-400`} aria-hidden="true" />;
   }
   if ([95, 96, 99].includes(code)) {
     return <CloudLightning className={`${className} text-purple-500`} aria-hidden="true" />;

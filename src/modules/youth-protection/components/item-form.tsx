@@ -4,8 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ShieldAlert } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { useForm, useWatch } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
@@ -47,7 +47,10 @@ function addYears(dateStr: string, years: number): string {
  * Orijinal belge fiziki olarak incelenir, asla dijitalleştirilmez.
  * Yalnızca ibraz olgusu, tarih ve durum (status) kaydedilir; serbest metin not girilmez.
  */
-export function YouthProtectionItemForm({ item }: { item?: YouthProtectionRow }) {
+/** #585: Üye seçici (members public API'sinden; ad ve üye numarası). */
+export type YouthProtectionMemberOption = { id: string; label: string; membershipNumber: string };
+
+export function YouthProtectionItemForm({ item, memberOptions = [] }: { item?: YouthProtectionRow; memberOptions?: YouthProtectionMemberOption[] }) {
   const t = useTranslations("youth-protection.form");
   const router = useRouter();
   const closeDrawer = useFormDrawerClose();
@@ -72,6 +75,23 @@ export function YouthProtectionItemForm({ item }: { item?: YouthProtectionRow })
       activityEndedAt: item?.activityEndedAt ? toDateString(item.activityEndedAt) : "",
     },
   });
+
+  // Üye seçilince ad alanı boşsa üyenin adıyla doldurulur.
+  const selectedMemberId = useWatch({ control: form.control, name: "memberId" });
+  useEffect(() => {
+    const member = memberOptions.find((option) => option.id === selectedMemberId);
+    if (member && !form.getValues("personName")) form.setValue("personName", member.label, { shouldDirty: true });
+  }, [selectedMemberId, memberOptions, form]);
+
+  // Mevcut bağlantı artık seçilebilir üyeler arasında değilse (ayrılmış/silinmiş üye) korunur ve kaldırılabilir.
+  const linkedMemberId = item?.memberId ?? null;
+  const memberSelectOptions: FormSelectOption[] = [
+    { value: "", label: t("memberNone") },
+    ...(linkedMemberId && !memberOptions.some((option) => option.id === linkedMemberId)
+      ? [{ value: linkedMemberId, label: t("memberHistorical") }]
+      : []),
+    ...memberOptions.map((member) => ({ value: member.id, label: `${member.label} (${member.membershipNumber})` })),
+  ];
 
   const statusOptions: FormSelectOption[] = [
     { value: "CLEARED", label: t("status_CLEARED") },
@@ -144,6 +164,16 @@ export function YouthProtectionItemForm({ item }: { item?: YouthProtectionRow })
             description={t("nextDueDateHelp")}
           />
         </div>
+
+        {memberSelectOptions.length > 1 ? (
+          <FormSelect
+            name="memberId"
+            label={t("member")}
+            control={form.control}
+            options={memberSelectOptions}
+            description={t("memberHelp")}
+          />
+        ) : null}
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormSelect

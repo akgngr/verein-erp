@@ -7,7 +7,7 @@ import { SurfaceCard } from "@/shared/components/ui/surface-card";
 import { LoginForm } from "../components/login-form";
 
 /** Login yüzeyi ortak SurfaceCard sözleşmesini kullanır. */
-export function LoginView({ passive }: { passive?: boolean }) {
+export function LoginView({ passive, oauthDenied }: { passive?: boolean; oauthDenied?: boolean }) {
   const t = useTranslations("auth");
   const header = (
     <div className="flex w-full flex-col items-center gap-3 text-center">
@@ -36,6 +36,14 @@ export function LoginView({ passive }: { passive?: boolean }) {
           className="rounded-xl border border-warning-200 bg-warning-50/70 px-4 py-3 text-sm text-warning-700 dark:border-warning-900/50 dark:bg-warning-950/30 dark:text-warning-300"
         >
           {t("passiveNotice")}
+        </div>
+      ) : null}
+      {oauthDenied ? (
+        <div
+          role="alert"
+          className="rounded-xl border border-warning-200 bg-warning-50/70 px-4 py-3 text-sm text-warning-700 dark:border-warning-900/50 dark:bg-warning-950/30 dark:text-warning-300"
+        >
+          {t("oauthDenied")}
         </div>
       ) : null}
       <LoginForm />

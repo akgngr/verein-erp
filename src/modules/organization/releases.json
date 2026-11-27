@@ -2,6 +2,56 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.0.11",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Ayar merkezi grubu",
+        "de": "Gruppe in der Einstellungsübersicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.",
+          "de": "Die Einstellungsseiten erscheinen in der Einstellungsübersicht in ihrer eigenen Gruppe und Reihenfolge."
+        }
+      ]
+    },
+    {
+      "version": "1.0.10",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Kamu yararı bölüm başlığı Türkçe arayüzde büyük harfe çevrilmez (\"GEMEİNNÜTZİGKEİT\" hatası).",
+          "de": "Die Überschrift zur Gemeinnützigkeit wird in der türkischen Oberfläche nicht mehr in Großbuchstaben umgewandelt (Fehler „GEMEİNNÜTZİGKEİT“)."
+        }
+      ]
+    },
+    {
+      "version": "1.0.9",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Profil kaydı ve görünüm",
+        "de": "Profil speichern und Ansicht"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Profil art arda kaydedilebilir ve logo değişikliğinden sonra 'kayıt değişti' hatası vermez; son düzenleyen her kayıtta güncellenir.",
+          "de": "Das Profil kann mehrfach hintereinander gespeichert werden und meldet nach einer Logoänderung keinen Konflikt mehr; der letzte Bearbeiter wird bei jeder Änderung aktualisiert."
+        },
+        {
+          "type": "improvement",
+          "tr": "Salt okunur görünüm Gemeinnützigkeit alanlarını (belge türü, amaçlar, aidat indirilebilirliği) gösterir.",
+          "de": "Die Leseansicht zeigt die Gemeinnützigkeitsfelder (Bescheidart, Zwecke, Abziehbarkeit der Beiträge)."
+        }
+      ]
+    },
+    {
       "version": "1.0.8",
       "date": "2026-11-23",
       "title": {

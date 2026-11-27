@@ -1,11 +1,9 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { useTranslations } from "next-intl";
+import { useEffect, useState, useTransition } from "react";
+import { useLocale, useTranslations } from "next-intl";
 import {
-  ArrowDownRight,
   ArrowRightLeft,
-  ArrowUpRight,
   Clock,
   Coins,
   RefreshCw,
@@ -21,6 +19,7 @@ import { fetchExchangeRatesAction } from "../actions/rates-actions";
 
 export function CurrencyDashboard({ initialRates }: { initialRates: RatesData }) {
   const t = useTranslations("finance");
+  const locale = useLocale();
   const [rates, setRates] = useState<RatesData>(initialRates);
   const [search, setSearch] = useState("");
   const [baseCurrency, setBaseCurrency] = useState(initialRates.base);
@@ -45,6 +44,30 @@ export function CurrencyDashboard({ initialRates }: { initialRates: RatesData })
     });
   };
 
+  // #585: Ayarlar sayfasında kaydedilen tercihler (bu tarayıcı) uygulanır: ana para birimi ve izlenen
+  // para birimleri. Önceden ayarlar yalnız yazılıyor, hiçbir yerde okunmuyordu.
+  const [tracked, setTracked] = useState<string[] | null>(null);
+  useEffect(() => {
+    let mounted = true;
+    // İlk okuma ertelenir; efekt içinde eşzamanlı durum güncellemesi olmaz (react-hooks/set-state-in-effect).
+    void Promise.resolve().then(() => {
+      if (!mounted) return;
+      try {
+        const savedBase = localStorage.getItem("finance:baseCurrency");
+        const savedTracked = JSON.parse(localStorage.getItem("finance:trackedCurrencies") ?? "null") as unknown;
+        if (Array.isArray(savedTracked)) setTracked(savedTracked.filter((code): code is string => typeof code === "string" && code in SUPPORTED_CURRENCIES));
+        if (savedBase && savedBase in SUPPORTED_CURRENCIES && savedBase !== initialRates.base) handleBaseChange(savedBase);
+      } catch {
+        // Tercih okunamazsa varsayılanlar kalır.
+      }
+    });
+    return () => {
+      mounted = false;
+    };
+    // Yalnız ilk yüklemede.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleSwap = () => {
     setFromCurrency(toCurrency);
     setToCurrency(fromCurrency);
@@ -53,11 +76,11 @@ export function CurrencyDashboard({ initialRates }: { initialRates: RatesData })
   const convertedResult = convertCurrency(amount, fromCurrency, toCurrency, rates.rates);
 
   const currencyList = Object.entries(SUPPORTED_CURRENCIES).filter(([code, info]) => {
-    if (!search.trim()) return true;
+    if (!search.trim()) return !tracked || tracked.length === 0 || tracked.includes(code) || code === baseCurrency;
     const q = search.toLowerCase();
     return (
       code.toLowerCase().includes(q) ||
-      info.nameTr.toLowerCase().includes(q) ||
+      (locale === "de" ? info.nameDe : info.nameTr).toLowerCase().includes(q) ||
       info.nameDe.toLowerCase().includes(q)
     );
   });
@@ -118,7 +141,7 @@ export function CurrencyDashboard({ initialRates }: { initialRates: RatesData })
               step={10}
               value={amount}
               onChange={(e) => setAmount(Number(e.target.value) || 0)}
-              className="w-full rounded-2xl bg-white dark:bg-ink-950 border border-emerald-500/30 px-3.5 py-2.5 text-base font-mono font-bold text-ink-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
+              className="w-full rounded-2xl bg-white dark:bg-white/5 border border-emerald-500/30 px-3.5 py-2.5 text-base font-mono font-bold text-ink-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
             />
           </div>
 
@@ -130,11 +153,11 @@ export function CurrencyDashboard({ initialRates }: { initialRates: RatesData })
             <select
               value={fromCurrency}
               onChange={(e) => setFromCurrency(e.target.value)}
-              className="w-full rounded-2xl bg-white dark:bg-ink-950 border border-emerald-500/30 px-3 py-2.5 text-sm font-semibold text-ink-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
+              className="w-full rounded-2xl bg-white dark:bg-white/5 border border-emerald-500/30 px-3 py-2.5 text-sm font-semibold text-ink-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
             >
               {Object.entries(SUPPORTED_CURRENCIES).map(([code, info]) => (
                 <option key={code} value={code}>
-                  {info.flag} {code} — {info.nameTr}
+                  {info.flag} {code} — {(locale === "de" ? info.nameDe : info.nameTr)}
                 </option>
               ))}
             </select>
@@ -160,11 +183,11 @@ export function CurrencyDashboard({ initialRates }: { initialRates: RatesData })
             <select
               value={toCurrency}
               onChange={(e) => setToCurrency(e.target.value)}
-              className="w-full rounded-2xl bg-white dark:bg-ink-950 border border-emerald-500/30 px-3 py-2.5 text-sm font-semibold text-ink-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
+              className="w-full rounded-2xl bg-white dark:bg-white/5 border border-emerald-500/30 px-3 py-2.5 text-sm font-semibold text-ink-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 shadow-sm"
             >
               {Object.entries(SUPPORTED_CURRENCIES).map(([code, info]) => (
                 <option key={code} value={code}>
-                  {info.flag} {code} — {info.nameTr}
+                  {info.flag} {code} — {(locale === "de" ? info.nameDe : info.nameTr)}
                 </option>
               ))}
             </select>
@@ -212,8 +235,6 @@ export function CurrencyDashboard({ initialRates }: { initialRates: RatesData })
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {currencyList.map(([code, info]) => {
             const rate = rates.rates[code] ?? 1;
-            const prev = rates.previousRates?.[code] ?? rate;
-            const isUp = rate >= prev;
 
             return (
               <div
@@ -229,7 +250,7 @@ export function CurrencyDashboard({ initialRates }: { initialRates: RatesData })
                       {code}
                     </span>
                     <span className="block text-xs text-ink-400 truncate">
-                      {info.nameTr}
+                      {(locale === "de" ? info.nameDe : info.nameTr)}
                     </span>
                   </div>
                 </div>
@@ -237,18 +258,6 @@ export function CurrencyDashboard({ initialRates }: { initialRates: RatesData })
                 <div className="text-right">
                   <span className="block font-mono font-bold text-sm text-ink-900 dark:text-white">
                     {rate.toFixed(code === "TRY" || code === "JPY" ? 2 : 4)}
-                  </span>
-                  <span
-                    className={`inline-flex items-center text-xs font-semibold ${
-                      isUp ? "text-emerald-600 dark:text-emerald-400" : "text-rose-600 dark:text-rose-400"
-                    }`}
-                  >
-                    {isUp ? (
-                      <ArrowUpRight className="size-3.5 mr-0.5" aria-hidden="true" />
-                    ) : (
-                      <ArrowDownRight className="size-3.5 mr-0.5" aria-hidden="true" />
-                    )}
-                    {isUp ? "+0.2%" : "-0.1%"}
                   </span>
                 </div>
               </div>

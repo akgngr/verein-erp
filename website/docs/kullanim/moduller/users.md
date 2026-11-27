@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.1 |
+| Sürüm | 1.6.1 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,44 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
+### 1.6.1 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
+
+### 1.6.0 — İki adımlı doğrulamayı sıfırlama
+
+_2026-11-26_
+
+- **Yeni:** Kullanıcılar tablosunda "İki adımlı doğrulamayı sıfırla" (kayıp telefon ve kurtarma kodları): doğrulama kaldırılır, tüm oturumlar sonlanır, işlem denetim kaydına yazılır.
+
+### 1.5.0 — Şifre sıfırlama ve oturum yönetimi
+
+_2026-11-26_
+
+- **Yeni:** Kendi kendine şifre sıfırlama: tek kullanımlık, 30 dakika geçerli e-posta bağlantısı; adresin kayıtlı olup olmadığı yanıt veya süreden anlaşılmaz; IP ve adres başına sınır.
+- **Yeni:** Yönetici, kullanıcı listesinden bir kullanıcının tüm oturumlarını sonlandırabilir (kayıp cihaz).
+- **Güvenlik:** Davet ve sıfırlama bağlantıları amaç bazlıdır, birbirinin yerine kullanılamaz; şifre belirlenince bekleyen tüm bağlantılar geçersiz olur ve kilit kalkar.
+
+### 1.4.4 — Yerel tarih alanları
+
+_2026-11-26_
+
+- **İyileştirme:** Harici erişim başlangıç ve bitiş zamanı (bitiş, başlangıçtan önce seçilemez) yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.
+
+### 1.4.3 — ADMIN yetki denetimleri, davet hız sınırı ve harici erişim sertleştirmesi
+
+_2026-11-25_
+
+- **Güvenlik:** Yönetici yetki korumaları, davet hız sınırı ve atomik işlem, harici erişim hibesi doğrulaması ve kanonik APP_URL bağlantıları eklendi (#574).
+
+### 1.4.2 — Arka plan için izin politikası yükleyicisi
+
+_2026-11-25_
+
+- **Güvenlik:** Rol ve izin politikası arka plan çalışanı tarafından da yüklenebilir (özel roller ve geçersiz kılmalar görevlerde geçerli).
+
 ### 1.4.1 — Menü grubu ikon alanı kalıcılığı
 
 _2026-11-25_
@@ -47,40 +85,4 @@ _2026-11-24_
 
 - **Yeni:** Kullanıcılar (ör. kasa denetçisi veya vergi danışmanı) e-postayla tek kullanımlık, 72 saat geçerli bir davet bağlantısı alır ve şifresini kendisi belirler. E-postada şifre veya mali veri yoktur.
 
-### 1.3.0 — Kullanıcı bazlı sol menü özelleştirme tercihi
-
-_2026-11-24_
-
-- **Yeni:** UserNavPreference modeli, /api/users/nav-preferences uç noktası ve DSGVO silme kancası eklendi.
-
-### 1.2.0 — Vergi danışmanı (TAX_ADVISOR) rolü ve zaman sınırlı erişim
-
-_2026-11-23_
-
-- **Yeni:** Muhasebe ve finans raporları için salt okunur TAX_ADVISOR rolü ile varsayılan 14 / en fazla 90 günlük erişim penceresi yönetimi eklendi.
-
-### 1.1.11 — Silinen kullanıcı için daha az kişisel veri
-
-_2026-11-23_
-
-- **Güvenlik:** Bir kullanıcı silindiğinde denetim kaydına artık adı ve e-posta adresi yazılmıyor; yalnız kimlik numarası ve rol tutuluyor.
-
-### 1.1.10 — Kullanıcı dizini
-
-_2026-11-20_
-
-- **İyileştirme:** Yönetici ekranları için ad/e-posta ile aranabilen, sayfalı kullanıcı dizini (ör. bildirim aboneleri).
-
-### 1.1.9 — Bildirim kitlesi
-
-_2026-11-20_
-
-- **İyileştirme:** Bildirim sistemi, duyurular için etkin kullanıcıları (isteğe bağlı role göre) listeleyebilir.
-
-### 1.1.8 — Bildirim alıcısı eşleme
-
-_2026-11-20_
-
-- **İyileştirme:** Diğer modüller, bildirim alıcısını e-posta adresine göre etkin kullanıcılar arasından bulabilir.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 16 herkese açık sürüm notu.

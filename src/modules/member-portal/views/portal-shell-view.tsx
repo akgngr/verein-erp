@@ -5,6 +5,7 @@ import { getTranslations } from "next-intl/server";
 import { Button, Card, CardContent, CardHeader, StatusChip } from "@/shared/components/kit";
 
 import { PortalRightsPanel } from "../components/portal-rights-panel";
+import { PortalStepUpButton } from "../components/step-up-button";
 import { PortalSelfServicePanel } from "../components/portal-self-service-panel";
 import { getActivePortalSession } from "../services/auth";
 import { isPortalEnabled, isPortalStepUpActive, PORTAL_SESSION_COOKIE } from "../services/auth-core";
@@ -76,6 +77,7 @@ export async function PortalShellView() {
           <StatusChip tone={stepUpActive ? "success" : "warning"}>
             {stepUpActive ? t("shell.stepUpActive") : t("shell.stepUpRequired")}
           </StatusChip>
+          {!stepUpActive ? <PortalStepUpButton /> : null}
           <form action="/api/member-portal/logout" method="POST">
             <Button type="submit" size="sm" variant="secondary">
               {t("shell.signOutEverywhere")}

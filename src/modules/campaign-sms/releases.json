@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.4",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Kanonik APP_URL webhook adresleri",
+        "de": "Kanonische APP_URL für SMS-Webhooks"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "SMS durum geri çağrı (webhook) adresleri kanonik APP_URL kökü ile oluşturuluyor (#574).",
+          "de": "SMS-Webhook-URLs werden nun über die kanonische APP_URL erzeugt (#574)."
+        }
+      ]
+    },
+    {
+      "version": "1.1.3",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Webhook sertleştirme",
+        "de": "Webhook-Härtung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Twilio ve seven.io webhook gövdeleri boyutla sınırlıdır; uygulama sırrı (AUTH_SECRET) yoksa seven.io gizli adresi üretilmez (fail closed).",
+          "de": "Twilio- und seven.io-Webhooks sind größenbegrenzt; ohne App-Geheimnis (AUTH_SECRET) wird keine seven.io-Geheimadresse erzeugt (fail closed)."
+        }
+      ]
+    },
+    {
       "version": "1.1.2",
       "date": "2026-11-23",
       "title": {

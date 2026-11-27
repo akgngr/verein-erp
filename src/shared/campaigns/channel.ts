@@ -19,6 +19,13 @@ export type ChannelMessage = {
   reference: string;
   /** Uygulamanın genel adresi; sağlayıcıya mesaj başına durum bildirimi adresi verilebiliyorsa (Twilio). */
   callbackBaseUrl?: string;
+  /**
+   * #581: "transactional" = tek kişiye işlem mesajı (ör. e-imza bağlantısı, `sendDirectMessage`); kanal
+   * pazarlama şablonunu kullanmamalıdır (WhatsApp: ayrı "utility" şablonu). Verilmezse kampanya (pazarlama).
+   */
+  purpose?: "marketing" | "transactional";
+  /** #581: Tek tıkla abonelikten çıkış adresi (e-posta kanalı List-Unsubscribe başlıklarını ekler). */
+  unsubscribeUrl?: string;
 };
 
 export type ChannelSendResult = { ok: boolean; error?: string; providerId?: string };
@@ -40,7 +47,8 @@ export type CampaignChannel = {
   allowed(recipient: Recipient): boolean;
   /** Yönetici ayarları (Kampanyalar → Ayarlar). Yoksa ayar ekranında görünmez. */
   settings?: readonly ChannelSetting[];
-  isConfigured(config: ChannelConfig): Promise<boolean>;
+  /** `purpose` "transactional" ise kanal işlem mesajı için de hazır mı (#581; örn. WhatsApp utility şablonu). */
+  isConfigured(config: ChannelConfig, purpose?: "marketing" | "transactional"): Promise<boolean>;
   /** Sağlayıcı panelinde girilecek bildirim (webhook) adresleri; ayar ekranında gösterilir. */
   webhookUrls?(config: ChannelConfig, origin: string): { key: string; url: string }[];
   /** Ayarlar kaydedildikten sonra (ör. Telegram webhook kaydı). `origin` = uygulamanın genel adresi. */

@@ -8,6 +8,7 @@ import {
   PORTAL_SESSION_ABSOLUTE_MS,
 } from "../../services/auth-core";
 import { consumePortalMagicLinkPost } from "../../services/auth";
+import { clearHostCookie } from "../../services/portal-guard";
 
 const confirmSchema = z.object({
   token: z.string().min(10).max(512),
@@ -54,7 +55,7 @@ export async function POST(req: NextRequest) {
   }
 
   const res = NextResponse.redirect(new URL("/portal", req.nextUrl.origin), 303);
-  res.cookies.delete(PORTAL_NONCE_COOKIE);
+  clearHostCookie(res, PORTAL_NONCE_COOKIE);
   res.cookies.set(PORTAL_SESSION_COOKIE, result.rawSessionToken, {
     httpOnly: true,
     sameSite: "strict",

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 42
+sidebar_position: 43
 title: "Üyeler"
 description: "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi."
 slug: /kullanim/moduller/members
@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.15.7 |
+| Sürüm | 1.16.1 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -24,7 +24,8 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | Modül | İşlem | Gerekçe |
 |---|---|---|
 | [Dernek Bilgileri](./organization) | okuma | Makbuz ve belgelerde dernek antetini kullanır. |
-| [e-Sign](./online-forms) | okuma | Üye sayfasından e-imza/uzaktan form bağlantısı göndermek ve imzalı belgeleri göstermek için. |
+| [e-Sign](./online-forms) | okuma, yazma | Üye sayfasından e-imza/uzaktan form bağlantısı göndermek, imzalı belgeleri göstermek ve üye silindiğinde bekleyen davetleri iptal etmek için. |
+| [Üye Portalı](./member-portal) | okuma, yazma | Üye silindiğinde o üyeye ait aktif üye portalı oturumlarını iptal eder. |
 
 ## Varsayılan yetkiler
 
@@ -45,6 +46,44 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
+### 1.16.1 — Banka eşleştirme aidat sözleşmesi (#616)
+
+_2026-11-26_
+
+- **Yeni:** Muhasebe banka ekstre eşleştirmesi için açık aidat listeleme ve tek işlemde atomik aidat tahsilatı kaydetme sunucu sözleşmesi eklendi.
+
+### 1.16.0 — Katılım tarihi esaslı sayılar, doğum günleri ve yıldönümleri
+
+_2026-11-26_
+
+- **Düzeltme:** "Bu ay yeni" sayısı üyelik başlangıcına (katılım tarihi) göre hesaplanır; toplu içe aktarma veya geç kayıt sayıyı artık şişirmez.
+- **İyileştirme:** Yeni üyelik numaralarındaki yıl katılım yılıdır (ör. 1998'de katılan üye UYE-1998-…). Mevcut numaralar değişmez.
+- **Yeni:** Panelde yeni kart: önümüzdeki 30 gündeki doğum günleri ve 10/25/40/50/60. üyelik yılları (yalnız etkin/pasif üyeler; üye düzenleme yetkisi olanlar görür).
+
+### 1.15.11 — Aidat korumaları, DSGVO dışa aktarım, silme temizliği ve düzeltme talebi paneli
+
+_2026-11-25_
+
+- **Düzeltme:** Aidat fazla ödeme/işlem içi koruma, makbuz PDF tutarı ve denetim kaydı, mükerrer üye uyarısı, tam DSGVO dışa aktarımı, toplu içe aktarma tekilleştirme, silmede SEPA/portal temizliği ve üye düzeltme talebi onay paneli eklendi (#578, #577).
+
+### 1.15.10 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Aidat ödemeleri başlığı Türkçe arayüzde büyük harfe çevrilmez ("MİTGLİEDSBEİTRÄGE" hatası).
+
+### 1.15.9 — Portal ve form için SEPA API'si
+
+_2026-11-25_
+
+- **İyileştirme:** Maskeli IBAN ve SEPA yetkisi kaydı üye portalı ve çevrimiçi formlar için public API'den sunulur.
+
+### 1.15.8 — Kanal rızası eşitlemesi
+
+_2026-11-25_
+
+- **Güvenlik:** Telegram /start ve /stop ile tek tıkla e-posta çıkışı üyenin rızasını ve toplu e-posta itirazını günceller.
+
 ### 1.15.7 — nav.json kategori ve alt modül tanımı
 
 _2026-11-24_
@@ -57,40 +96,4 @@ _2026-11-24_
 
 - **Yeni:** MemberCorrectionProposal onay kuyruğu, portal rıza/düzeltme sözleşmeleri ve aidat makbuzu PDF sözleşmesi eklendi.
 
-### 1.15.5 — TAX_ADVISOR rolü izin tanımı
-
-_2026-11-23_
-
-- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
-
-### 1.15.4 — GoBD silme koruması
-
-_2026-11-23_
-
-- **Güvenlik:** Aidat tahakkuk ilişkisi (MemberDue.member) onDelete: Restrict olarak güncellendi.
-
-### 1.15.3 — Kod bakımı
-
-_2026-11-19_
-
-- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
-
-### 1.15.2 — Arka plan işleri için üye eşleştirme
-
-_2026-11-19_
-
-- **Düzeltme:** E-postaya göre üye eşleştirmesi arka plan işlerinden de güvenle kullanılabilir.
-
-### 1.15.1 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-### 1.15.0 — Sekreter özetine katkı
-
-_2026-11-18_
-
-- **Yeni:** Kişisel sekreterin sabah özetinde vadesi geçmiş aidat sayısı görünür (yalnız aidat yetkisi olanlara, üye adı olmadan).
-
-Daha eski 32 herkese açık sürüm notu.
+Daha eski 38 herkese açık sürüm notu.
