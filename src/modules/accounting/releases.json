@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.29.2",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "Gelen alacak dekontu işaretleri ve iade ödemesi",
+        "de": "Vorzeichen eingehender Gutschriften und Erstattungszahlung"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Pozitif ve negatif vergi grupları içeren gelen alacak dekontlarında (UBL/CII) işaret artık belge başına bir kez belirlenir; gruplar toplamlarla tutarlı kalır (BR-CO-13) ve onay ekranı doğru tutarlarla dolar.",
+          "de": "Bei eingehenden Gutschriften (UBL/CII) mit positiven und negativen Steuergruppen wird das Vorzeichen jetzt einmal pro Beleg bestimmt; die Gruppen bleiben mit den Summen konsistent (BR-CO-13) und die Freigabe wird mit korrekten Beträgen vorbelegt."
+        },
+        {
+          "type": "fix",
+          "tr": "Tedarikçi alacak dekontları gelen fatura sayfasındaki ödeme penceresinden iade olarak kapatılabilir (tutar pozitif girilir).",
+          "de": "Lieferanten-Gutschriften lassen sich im Zahlungsdialog der Eingangsrechnung als Erstattung ausgleichen (Betrag positiv eingeben)."
+        }
+      ]
+    },
+    {
       "version": "1.29.1",
       "date": "2026-11-27",
       "title": {

@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.29.1 |
+| Sürüm | 1.29.2 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/denetim`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -45,6 +45,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.29.2 — Gelen alacak dekontu işaretleri ve iade ödemesi
+
+_2026-11-27_
+
+- **Düzeltme:** Pozitif ve negatif vergi grupları içeren gelen alacak dekontlarında (UBL/CII) işaret artık belge başına bir kez belirlenir; gruplar toplamlarla tutarlı kalır (BR-CO-13) ve onay ekranı doğru tutarlarla dolar.
+- **Düzeltme:** Tedarikçi alacak dekontları gelen fatura sayfasındaki ödeme penceresinden iade olarak kapatılabilir (tutar pozitif girilir).
 
 ### 1.29.1 — Gelen fatura ödeme dağılımı ve KoSIT yanıt sınırı düzeltmesi
 
@@ -92,10 +99,4 @@ _2026-11-24_
 
 - **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
-### 1.27.2 — TAX_ADVISOR rolü izin tanımı
-
-_2026-11-23_
-
-- **Güvenlik:** TAX_ADVISOR rolü için salt okunur görüntüleme izni tanımlandı.
-
-Daha eski 56 herkese açık sürüm notu.
+Daha eski 57 herkese açık sürüm notu.
