@@ -52,3 +52,8 @@ export {
   getDonationConfirmationPdfForPortal,
   type PortalDonationConfirmationRow,
 } from "./services/portal-receipts";
+export {
+  listActiveDonorsForBankMatch,
+  recordBankDonation,
+  type ActiveDonorForBankMatch,
+} from "./services/bank-reconciliation";

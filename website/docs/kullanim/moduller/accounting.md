@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.27.7 |
+| Sürüm | 1.29.0 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/denetim`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -22,9 +22,11 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 | Modül | İşlem | Gerekçe |
 |---|---|---|
-| [Modül Yönetimi](./system) | okuma | Envanter modülünün etkin olup olmadığını okur. |
+| [Modül Yönetimi](./system) | okuma | Envanter ve ilgili modüllerin etkin olup olmadığını okur. |
 | [Envanter ve Demirbaş](./inventory) | yazma | Demirbaşları envanter eşyalarıyla senkron tutar (ad, tarih, bedel, hurdaya çıkarma). |
-| [Üyeler](./members) | okuma | Üye aidat ödemelerini muhasebeye aktarmak için ödemeleri okur. |
+| [Üyeler](./members) | okuma, yazma | Üye aidat ödemelerini muhasebeye aktarmak ve banka hareketleriyle açık aidatları eşleştirip kapatmak için üye aidatlarını okur ve öder. |
+| [Kurslar](./courses) | okuma, yazma | Açık kurs ücretlerini banka hareketleriyle eşleştirip ödenmiş olarak işaretlemek için kurs ücretlerini okur ve günceller. |
+| [Bağışlar](./donations) | okuma, yazma | Gelen banka hareketlerini tek tıkla bağış olarak kaydetmek ve mevcut bağışçıları önermek için bağış modülünü okur ve yazar. |
 | [Dernek Bilgileri](./organization) | okuma | PDF raporlarında dernek antetini kullanır. |
 
 ## Varsayılan yetkiler
@@ -44,11 +46,17 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
-### 1.27.7 — Giden faturalarda yerel EPC-QR (GiroCode)
+### 1.29.0 — Giden faturalarda yerel EPC-QR (GiroCode)
 
 _2026-11-26_
 
 - **Yeni:** IBAN tanımlı açık giden fatura PDF'lerine (ZUGFeRD dahil) dış sunucu olmadan yerel olarak üretilen SEPA EPC-QR (GiroCode) ödeme kodu eklendi (#618).
+
+### 1.28.0 — Aidat, kurs ücreti ve tek tıkla bağış banka eşleştirmesi
+
+_2026-11-26_
+
+- **Yeni:** Banka hareketleri artık açık üye aidatları, açık kurs ücretleri ve bağışlarla (mevcut veya yeni bağışçı) öneri puanlarıyla tek adımda eşleştirilip kapatılabilir (#616).
 
 ### 1.27.6 — Yerel tarih alanları
 
@@ -89,10 +97,4 @@ _2026-11-23_
 
 - **Yeni:** Son kullanma tarihli salt-okunur denetçi erişimi (/muhasebe/denetim), tüm görüntülemelerin denetim kaydına yazılması, 5 alanlı rehberli kontrol listesi ve Genel Kurul Denetim Raporu PDF'ine aktarılan bulgu kayıtları eklendi.
 
-### 1.26.1 — GoBD silme koruması
-
-_2026-11-23_
-
-- **Güvenlik:** Banka ekstresi hareketleri ilişkisi (AccountingBankTransaction.import) onDelete: Restrict olarak güncellendi.
-
-Daha eski 54 herkese açık sürüm notu.
+Daha eski 55 herkese açık sürüm notu.

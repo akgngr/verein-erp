@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.27.7",
+      "version": "1.29.0",
       "date": "2026-11-26",
       "title": {
         "tr": "Giden faturalarda yerel EPC-QR (GiroCode)",
@@ -13,6 +13,21 @@
           "type": "feature",
           "tr": "IBAN tanımlı açık giden fatura PDF'lerine (ZUGFeRD dahil) dış sunucu olmadan yerel olarak üretilen SEPA EPC-QR (GiroCode) ödeme kodu eklendi (#618).",
           "de": "Offene Ausgangsrechnungen (inkl. ZUGFeRD-PDF) enthalten bei hinterlegter IBAN nun einen lokal erzeugten SEPA-EPC-QR-Code (GiroCode) ohne externe Dienste (#618)."
+        }
+      ]
+    },
+    {
+      "version": "1.28.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Aidat, kurs ücreti ve tek tıkla bağış banka eşleştirmesi",
+        "de": "Bankabgleich für Mitgliedsbeiträge, Kursgebühren und Ein-Klick-Spenden"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Banka hareketleri artık açık üye aidatları, açık kurs ücretleri ve bağışlarla (mevcut veya yeni bağışçı) öneri puanlarıyla tek adımda eşleştirilip kapatılabilir (#616).",
+          "de": "Bankumsätze lassen sich nun direkt mit offenen Mitgliedsbeiträgen, Kursgebühren sowie Spenden (bestehende oder neue Spender) inkl. Vorschlagspunkten abgleichen und verbuchen (#616)."
         }
       ]
     },

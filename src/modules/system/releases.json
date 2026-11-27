@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.21.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Şifreli yedekleme ve kurtarma doğrulama ekranı (#617)",
+        "de": "Verschlüsselte Datensicherung und Wiederherstellungsprüfung (#617)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "PostgreSQL veritabanı ve UPLOAD_DIR dosyalarını SHA-256 manifesti ve şema sürümüyle tek AES-256-GCM şifreli arşiv (.vbak) olarak paketleyen otomatik ve isteğe bağlı yedekleme servisi eklendi.",
+          "de": "Automatisierte und manuelle Datensicherung hinzugefügt, die PostgreSQL-Datenbank und UPLOAD_DIR-Dateien samt SHA-256-Manifest und Schemaversion als verschlüsseltes AES-256-GCM-Archiv (.vbak) verpackt."
+        },
+        {
+          "type": "security",
+          "tr": "Canlı veriyi değiştirmeden şifre çözme, bütünlük (SHA-256) ve şema uyumluluğunu test eden kurtarma doğrulama akışı (hem kayıtlı hem yüklenen arşivler için) ve tam denetim kaydı eklendi.",
+          "de": "Zerstörungsfreie Wiederherstellungsprüfung (Entschlüsselung, SHA-256-Integrität und Schemakompatibilität für gespeicherte und hochgeladene Archive) samt vollständigem Audit-Protokoll ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.20.0",
       "date": "2026-11-26",
       "title": {

@@ -1,4 +1,4 @@
-import { Activity, Boxes, History, KeyRound, Settings, Wand2, PackageCheck, PanelsTopLeft, ShieldCheck, FileText, SlidersHorizontal } from "lucide-react";
+import { Activity, Boxes, DatabaseBackup, History, KeyRound, Settings, Wand2, PackageCheck, PanelsTopLeft, ShieldCheck, FileText, SlidersHorizontal } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
 import {
   settingsPermissions,
@@ -8,7 +8,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "system",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.20.0",
+  version: "1.21.0",
   label: "Modül Yönetimi",
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
@@ -139,6 +139,17 @@ export const moduleConfig: ModuleConfig = {
       settingsGroup: "appearance",
       settingsOrder: 20,
       permission: { definition: settingsPermissions, action: "view" },
+    },
+    {
+      href: "/ayarlar/yedekleme",
+      label: "Yedekleme ve kurtarma",
+      labelKey: "yedekleme",
+      icon: DatabaseBackup,
+      group: "settings",
+      order: 9,
+      settingsGroup: "system-management",
+      settingsOrder: 10,
+      permission: { definition: systemPermissions, action: "update" },
     },
     {
       href: "/ayarlar/surum-notlari",

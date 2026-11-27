@@ -13,8 +13,8 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.20.0 |
-| Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/menu`, `/ayarlar/surum-notlari` |
+| Sürüm | 1.21.0 |
+| Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/menu`, `/ayarlar/yedekleme`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
 
@@ -40,6 +40,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.21.0 — Şifreli yedekleme ve kurtarma doğrulama ekranı (#617)
+
+_2026-11-26_
+
+- **Yeni:** PostgreSQL veritabanı ve UPLOAD_DIR dosyalarını SHA-256 manifesti ve şema sürümüyle tek AES-256-GCM şifreli arşiv (.vbak) olarak paketleyen otomatik ve isteğe bağlı yedekleme servisi eklendi.
+- **Güvenlik:** Canlı veriyi değiştirmeden şifre çözme, bütünlük (SHA-256) ve şema uyumluluğunu test eden kurtarma doğrulama akışı (hem kayıtlı hem yüklenen arşivler için) ve tam denetim kaydı eklendi.
 
 ### 1.20.0 — Gruplu ayar merkezi
 
@@ -88,10 +95,4 @@ _2026-11-24_
 
 - **İyileştirme:** Kullanıcı bazlı menü özelleştirme sayfası Ayarlar menüsüne (/ayarlar/menu) taşındı.
 
-### 1.18.2 — Lisans özelliği kontrolü dışa aktarımı
-
-_2026-11-24_
-
-- **İyileştirme:** hasLicensedFeature fonksiyonu modül sunucu sözleşmesine eklendi.
-
-Daha eski 32 herkese açık sürüm notu.
+Daha eski 33 herkese açık sürüm notu.

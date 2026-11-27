@@ -72,6 +72,7 @@ export const DATA_POLICY = {
   SecurityTestRun: { owner: "security-monitor", category: "K0", reason: "Güvenlik denetimi sonuçları ve günlükleri (ortam ayrıntısı)", sensitiveFields: ["logs", "results"] },
   SecurityTestAlert: { owner: "security-monitor", category: "K0", reason: "Güvenlik uyarıları", sensitiveFields: ["metadata"] },
   SecurityTestSchedule: { owner: "security-monitor", category: "K0", reason: "Eski zamanlama kaydı (kullanılmıyor; zamanlama otomasyondadır)", sensitiveFields: [] },
+  SystemBackup: { owner: "system", category: "K0", reason: "Şifreli sistem yedeği üstverisi ve depolama yolu (#617; tam veritabanı ve ekleri içerir)", sensitiveFields: ["storagePath", "archiveSha256", "manifestSha256"] },
   SystemSetting: { owner: "system", category: "K0", reason: "Yapılandırma ve erişim onayları (sır içerebilir)", sensitiveFields: [] },
   User: { owner: "users", category: "K0", reason: "Kimlik doğrulama sırları (parola hash, kilit)", sensitiveFields: ["passwordHash", "email"], directAccess: ["auth"] },
   UserTotp: { owner: "auth", category: "K0", reason: "İkinci faktör sırrı (#603; secret box ile şifreli)", sensitiveFields: ["secretEnc", "lastUsedStep"], personalOwnerField: "userId" },

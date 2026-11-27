@@ -147,6 +147,7 @@
     "widgetlar": "Widget ayarları",
     "privacyPresets": "Gizlilik ön ayarları",
     "egressReport": "Veri çıkışı raporu",
+    "yedekleme": "Yedekleme ve kurtarma",
     "tasks": "Görevler",
     "kullanicilar": "Kullanıcılar",
     "weather": "Hava Durumu",
@@ -316,6 +317,7 @@
       "lisans": "Lisans bilgileri ve kullanım koşulları.",
       "privacyPresets": "Gizlilik ön ayarları: hangi verinin dışarı çıkabileceği.",
       "egressReport": "Harici hizmetlere giden verilerin raporu.",
+      "yedekleme": "Şifreli veritabanı ve dosya yedekleme ile geri yükleme doğrulaması.",
       "menuDuzeni": "Kenar çubuğu menüsünün sırası ve görünürlüğü.",
       "surumNotlari": "Uygulama ve modül sürüm notları.",
       "organization": "Dernek adı, adres, logo ve kamu yararı bilgileri.",
@@ -1107,10 +1109,12 @@
       }
     },
     "access": {
-      "members": "Üye aidat ödemelerini muhasebeye aktarmak için ödemeleri okur.",
+      "members": "Üye aidat ödemelerini muhasebeye aktarmak ve banka hareketleriyle açık aidatları eşleştirip kapatmak için üye aidatlarını okur ve öder.",
+      "courses": "Açık kurs ücretlerini banka hareketleriyle eşleştirip ödenmiş olarak işaretlemek için kurs ücretlerini okur ve günceller.",
+      "donations": "Gelen banka hareketlerini tek tıkla bağış olarak kaydetmek ve mevcut bağışçıları önermek için bağış modülünü okur ve yazar.",
       "organization": "PDF raporlarında dernek antetini kullanır.",
       "inventory": "Demirbaşları envanter eşyalarıyla senkron tutar (ad, tarih, bedel, hurdaya çıkarma).",
-      "system": "Envanter modülünün etkin olup olmadığını okur."
+      "system": "Envanter ve ilgili modüllerin etkin olup olmadığını okur."
     },
     "pdf": {
       "voucher": {
@@ -1471,7 +1475,7 @@
     },
     "bank": {
       "title": "Banka",
-      "description": "Ekstreleri içe aktarın (CAMT.053, MT940, CSV), önerileri onaylayarak fişe veya açık faturaya bağlayın.",
+      "description": "Ekstreleri içe aktarın (CAMT.053, MT940, CSV), önerileri onaylayarak fişe, açık faturaya, aidata, kurs ücretine veya bağışa bağlayın.",
       "import": {
         "title": "Ekstre içe aktar",
         "hint": "Bankanızın online bankacılığından CAMT.053 (XML), MT940 veya CSV dışa aktarımını yükleyin. Aynı satırlar ikinci kez eklenmez.",
@@ -1502,7 +1506,13 @@
         "invoiceNumber": "fatura no.",
         "amount": "tutar",
         "name": "ad",
-        "rule": "kural"
+        "rule": "kural",
+        "memberNumber": "üye no.",
+        "iban": "IBAN",
+        "courseCode": "kurs kodu",
+        "debtorNumber": "borçlu no.",
+        "donationKeyword": "bağış",
+        "donor": "bağışçı"
       },
       "actions": {
         "book": "Fişe bağla",
@@ -1523,8 +1533,21 @@
       "modal": {
         "title": "Banka hareketini fişe bağla",
         "invoice": "Açık fatura",
+        "memberDue": "Üye aidatı",
+        "courseCharge": "Kurs ücreti",
+        "donation": "Bağış",
         "category": "Kategori",
         "invoiceSelect": "Fatura",
+        "memberDueSelect": "Açık üye aidatı",
+        "courseChargeSelect": "Açık kurs ücreti",
+        "courseAmountMismatchHint": "Kurs ücretleri yalnızca tam tutarla eşleştirilebilir.",
+        "donorSelect": "Bağışçı",
+        "donorCreateNew": "+ Yeni bağışçı oluştur",
+        "newDonorName": "Bağışçı adı",
+        "newDonorType": "Bağışçı türü",
+        "donorPerson": "Kişi",
+        "donorOrganization": "Kurum / Firma",
+        "purposeNote": "Amaç / açıklama (isteğe bağlı)",
         "categorySelect": "Kategori",
         "taxRate": "KDV oranı",
         "learn": "Kural öğren",
@@ -1557,12 +1580,24 @@
         "notFound": "Hareket bulunamadı.",
         "notOpen": "Hareket artık açık değil.",
         "notBooked": "Yalnızca fişe bağlanmış banka hareketleri ters kaydedilebilir.",
-        "reverseInvoiceManaged": "Fatura veya gelen fatura ile eşleştirilmiş banka hareketleri ilgili fatura ekranından iptal edilmelidir.",
+        "reverseInvoiceManaged": "Fatura, aidat, kurs ücreti veya bağış ile eşleştirilmiş banka hareketleri ilgili modül ekranından iptal edilmelidir.",
         "invoiceRequired": "Fatura seçin.",
         "invoiceNeedsCredit": "Faturaya yalnızca gelen ödemeler bağlanabilir.",
         "payableRequired": "Gelen fatura seçin.",
         "payableNeedsDebit": "Gelen faturaya yalnızca giden ödemeler bağlanabilir.",
-        "creditNoteNeedsCredit": "Alacak dekontu yalnızca tedarikçiden gelen bir iadeyle (hesaba giriş) eşleştirilebilir."
+        "creditNoteNeedsCredit": "Alacak dekontu yalnızca tedarikçiden gelen bir iadeyle (hesaba giriş) eşleştirilebilir.",
+        "memberDueRequired": "Açık bir üye aidatı seçin.",
+        "memberDueNeedsCredit": "Üye aidatına yalnızca gelen ödemeler bağlanabilir.",
+        "memberDueNotFound": "Seçilen üye aidatı bulunamadı.",
+        "memberDueAlreadySettled": "Bu üye aidatı zaten tamamen ödenmiş.",
+        "memberDueOverpayment": "Banka tutarı seçilen aidatın açık bakiyesinden büyük.",
+        "courseChargeRequired": "Açık bir kurs ücreti seçin.",
+        "courseChargeNeedsCredit": "Kurs ücretine yalnızca gelen ödemeler bağlanabilir.",
+        "courseChargeNotFound": "Seçilen kurs ücreti bulunamadı.",
+        "courseChargeAlreadySettled": "Bu kurs ücreti zaten kapatılmış.",
+        "courseChargeAmountMismatch": "Banka tutarı seçilen kurs ücretiyle birebir aynı olmalıdır.",
+        "donationNeedsCredit": "Bağış olarak yalnızca gelen ödemeler kaydedilebilir.",
+        "donorRequired": "Mevcut bir bağışçı seçin veya yeni bağışçı adı girin."
       }
     },
     "payables": {
@@ -10343,6 +10378,104 @@
       "yes": "Evet",
       "no": "Hayır",
       "unknown": "Belirtilmemiş"
+    },
+    "backups": {
+      "title": "Yedekleme ve kurtarma doğrulaması",
+      "subtitle": "PostgreSQL veritabanı ve UPLOAD_DIR belgelerini AES-256-GCM ile şifreleyip bütünlük ve geri yükleme uyumluluğunu doğrulayın.",
+      "encryptionMissingTitle": "Şifreleme anahtarı yapılandırılmamış",
+      "encryptionMissingBody": "Veri şifreleme anahtarı (DATA_ENCRYPTION_KEYS veya AUTH_SECRET) bulunamadığı için şifreli yedekleme ve doğrulama güvenlik gereği kapalıdır.",
+      "stats": {
+        "encryption": "Şifreleme durumu",
+        "encryptionReady": "Hazır",
+        "encryptionUnavailable": "Anahtar eksik",
+        "cipherLabel": "AES-256-GCM + SHA-256 manifest",
+        "lastBackup": "Son yedek",
+        "never": "Henüz yok",
+        "readySummary": "{count} hazır yedek · {size}",
+        "lastVerification": "Son doğrulama",
+        "notVerifiedYet": "Henüz doğrulanmadı",
+        "schemaVersion": "Canlı şema sürümü",
+        "unknown": "Bilinmiyor",
+        "migrationCount": "{count} migration uygulandı"
+      },
+      "manual": {
+        "title": "Anlık şifreli yedek oluştur",
+        "description": "Veritabanı anlık görüntüsü, yüklenen belgeler (UPLOAD_DIR) ve SHA-256 manifesti tek şifreli .vbak arşivinde paketlenir ve anında kendi kendini doğrular.",
+        "cta": "Şifreli yedek al",
+        "running": "Yedekleniyor ve doğrulanıyor..."
+      },
+      "policy": {
+        "title": "Otomatik yedekleme ve saklama politikası",
+        "description": "Otomasyon çalışanı (system.run_backup) belirlenen aralıkta yedek alır ve saklama sınırını aşan eski yedekleri temizler.",
+        "enabled": "Zamanlanmış otomatik yedeklemeyi etkinleştir",
+        "retentionCount": "Saklanacak yedek adedi (1–90)",
+        "intervalHours": "Yedekleme aralığı (saat, 6–168)",
+        "save": "Politikayı kaydet",
+        "saving": "Kaydediliyor..."
+      },
+      "uploadVerify": {
+        "title": "Harici arşiv geri yükleme provası (salt okunur)",
+        "description": "İndirdiğiniz bir .vbak arşivini yükleyerek canlı veriye dokunmadan şifre çözme, dosya bütünlüğü ve şema uyumluluğunu doğrulayın.",
+        "cta": ".vbak arşivi seç ve doğrula",
+        "running": "Arşiv doğrulanıyor..."
+      },
+      "verifyDetail": {
+        "passedHeading": "Kurtarma doğrulaması başarılı — arşiv sağlam ve çözülebilir.",
+        "failedHeading": "Kurtarma doğrulaması başarısız ({code}).",
+        "archiveSha": "Arşiv SHA-256",
+        "dbIntegrity": "Veritabanı bütünlüğü",
+        "filesChecked": "Doğrulanan dosya",
+        "schemaCompatibility": "Şema uyumluluğu",
+        "ok": "Geçti",
+        "failed": "Hatalı"
+      },
+      "schemaCompatibility": {
+        "compatible": "Tam uyumlu",
+        "older": "Eski şema (migration gerekir)",
+        "newer": "Daha yeni şema (uygulama güncellemesi gerekir)",
+        "unknown": "Belirsiz"
+      },
+      "status": {
+        "ready": "Hazır",
+        "failed": "Başarısız",
+        "verifiedPassed": "Doğrulandı",
+        "verifiedFailed": "Doğrulama başarısız"
+      },
+      "trigger": {
+        "manual": "Elle",
+        "scheduled": "Zamanlanmış"
+      },
+      "list": {
+        "title": "Yedek geçmişi",
+        "empty": "Henüz alınmış bir sistem yedeği bulunmuyor.",
+        "date": "Tarih / Tetikleyici",
+        "status": "Durum",
+        "contents": "İçerik",
+        "size": "Boyut / SHA-256",
+        "verification": "Doğrulama",
+        "actions": "İşlemler",
+        "dbSummary": "{tables} tablo · {rows} satır",
+        "uploadSummary": "{files} belge dosyası"
+      },
+      "actions": {
+        "verify": "Doğrula",
+        "download": "İndir",
+        "delete": "Sil"
+      },
+      "messages": {
+        "created": "Şifreli yedek oluşturuldu ve bütünlüğü doğrulandı.",
+        "createdWithPrune": "Şifreli yedek oluşturuldu, doğrulandı ve saklama politikasına göre {count} eski yedek temizlendi.",
+        "createFailed": "Yedek oluşturulurken hata oluştu.",
+        "configSaved": "Yedekleme politikası kaydedildi.",
+        "configFailed": "Yedekleme politikası kaydedilemedi.",
+        "verifyPassed": "Arşiv çözüldü, tüm SHA-256 özetleri ve veritabanı bütünlüğü doğrulandı.",
+        "uploadVerifyPassed": "Yüklenen arşiv başarıyla çözüldü ve doğrulandı (canlı veri değiştirilmedi).",
+        "verifyFailed": "Arşiv doğrulaması başarısız oldu: {code}",
+        "verifyError": "Doğrulama sırasında beklenmeyen bir hata oluştu.",
+        "deleteConfirm": "Bu şifreli yedek arşivi diskten ve geçmişten kalıcı olarak silinsin mi?",
+        "deleted": "Yedek arşivi silindi.",
+        "deleteFailed": "Yedek arşivi silinemedi."
+      }
     }
   },
   "tasks": {

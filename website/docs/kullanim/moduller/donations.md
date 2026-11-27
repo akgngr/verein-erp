@@ -49,6 +49,12 @@ _2026-11-26_
 - **Yeni:** Ayni bağışlar (Sachzuwendung) için BMF Anlage 4 alanları (eşya açıklaması, kaynak türü, değerleme belgesi) ve tekil BMF bağış bildirimi şablonu eklendi; ayni bağışlar nakit/banka fişi açmaz ve toplu bildirimlere dahil edilmez (#618).
 - **Yeni:** 300 € ve altı nakdi bağışlar için § 50 Abs. 4 Nr. 2 EStDV basitleştirilmiş bağış kanıtı PDF'i (isteğe bağlı yerel GiroCode EPC-QR ile) eklendi (#618).
 
+### 1.1.15 — Banka eşleştirme tek tıkla bağış sözleşmesi (#616)
+
+_2026-11-26_
+
+- **Yeni:** Muhasebe banka ekstre satırından mevcut veya yeni bağışçı ile atomik bağış ve fiş oluşturma sunucu sözleşmesi eklendi.
+
 ### 1.1.14 — Bağışçı düzenleme, BMF PDF, 10 yıl saklama ve toplu PDF birleştirme
 
 _2026-11-25_
@@ -85,10 +91,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 1.1.6 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-Daha eski 7 herkese açık sürüm notu.
+Daha eski 8 herkese açık sürüm notu.

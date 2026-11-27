@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.16.0 |
+| Sürüm | 1.16.1 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -45,6 +45,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.16.1 — Banka eşleştirme aidat sözleşmesi (#616)
+
+_2026-11-26_
+
+- **Yeni:** Muhasebe banka ekstre eşleştirmesi için açık aidat listeleme ve tek işlemde atomik aidat tahsilatı kaydetme sunucu sözleşmesi eklendi.
 
 ### 1.16.0 — Katılım tarihi esaslı sayılar, doğum günleri ve yıldönümleri
 
@@ -90,10 +96,4 @@ _2026-11-24_
 
 - **Yeni:** MemberCorrectionProposal onay kuyruğu, portal rıza/düzeltme sözleşmeleri ve aidat makbuzu PDF sözleşmesi eklendi.
 
-### 1.15.5 — TAX_ADVISOR rolü izin tanımı
-
-_2026-11-23_
-
-- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
-
-Daha eski 37 herkese açık sürüm notu.
+Daha eski 38 herkese açık sürüm notu.
