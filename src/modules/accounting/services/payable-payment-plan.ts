@@ -19,9 +19,19 @@ export function planPayablePayment(
   const openAbs = Math.abs(openCents);
   const amountAbs = requestedCents === null ? openAbs : Math.abs(requestedCents);
   if (!Number.isInteger(amountAbs) || amountAbs <= 0 || amountAbs > openAbs) return null;
-  const absGroups = groups.map((group) => ({ rate: group.rate, netCents: Math.abs(group.netCents), taxCents: Math.abs(group.taxCents) }));
-  const parts = allocatePayment(absGroups, amountAbs)
+  // Normalise by the document's overall sign only: groups keep their relative signs (e.g. a negative discount or
+  // deposit group inside a positive invoice), so the payment's tax breakdown matches the document. Taking the
+  // absolute value per group would turn such a group into an expense and distort the input tax. Inconsistent data
+  // whose groups do not add up to the open amount's sign falls back to the absolute values.
+  // `|| 0` avoids -0 (sign × 0), which would format as "-0,00 €".
+  const signed = (value: number) => sign * value || 0;
+  const normalized = groups.map((group) => ({ rate: group.rate, netCents: signed(group.netCents), taxCents: signed(group.taxCents) }));
+  const normalizedTotal = normalized.reduce((sum, group) => sum + group.netCents + group.taxCents, 0);
+  const basis = normalizedTotal > 0
+    ? normalized
+    : groups.map((group) => ({ rate: group.rate, netCents: Math.abs(group.netCents), taxCents: Math.abs(group.taxCents) }));
+  const parts = allocatePayment(basis, amountAbs)
     .filter((part) => part.netCents + part.taxCents !== 0)
-    .map((part) => ({ rate: part.rate, netCents: sign * part.netCents, taxCents: sign * part.taxCents }));
+    .map((part) => ({ rate: part.rate, netCents: signed(part.netCents), taxCents: signed(part.taxCents) }));
   return { amountCents: sign * amountAbs, parts, settled: amountAbs === openAbs };
 }

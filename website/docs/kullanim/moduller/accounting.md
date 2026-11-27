@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.29.0 |
+| Sürüm | 1.29.1 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/denetim`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -45,6 +45,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.29.1 — Gelen fatura ödeme dağılımı ve KoSIT yanıt sınırı düzeltmesi
+
+_2026-11-27_
+
+- **Düzeltme:** Pozitif ve negatif vergi grupları içeren gelen faturalarda (ör. indirim veya avans kesintisi satırı) ödeme artık grupların işaretlerini korur; negatif grup gidere dönüşmez ve ön vergi dağılımı belgeyle aynı kalır.
+- **Düzeltme:** KoSIT doğrulayıcısı 2 MB sınırını aşan bir yanıt döndürdüğünde doğrulama artık takılmaz; 'doğrulanamadı' sonucu döner.
 
 ### 1.29.0 — Giden faturalarda yerel EPC-QR (GiroCode)
 
@@ -91,10 +98,4 @@ _2026-11-23_
 
 - **Güvenlik:** TAX_ADVISOR rolü için salt okunur görüntüleme izni tanımlandı.
 
-### 1.27.0 — Kassenprüfer süreli denetim odası (B001 Q1)
-
-_2026-11-23_
-
-- **Yeni:** Son kullanma tarihli salt-okunur denetçi erişimi (/muhasebe/denetim), tüm görüntülemelerin denetim kaydına yazılması, 5 alanlı rehberli kontrol listesi ve Genel Kurul Denetim Raporu PDF'ine aktarılan bulgu kayıtları eklendi.
-
-Daha eski 55 herkese açık sürüm notu.
+Daha eski 56 herkese açık sürüm notu.
