@@ -30,7 +30,16 @@ function readModels(): Model[] {
 
 function sourceFiles(dir: string): string[] {
   const out: string[] = [];
-  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+  let entries: fs.Dirent[];
+  try {
+    entries = fs.readdirSync(dir, { withFileTypes: true });
+  } catch (error) {
+    // tests/shared/i18n.test.ts creates and deletes src/modules/temp-i18n-mod while the suites run in parallel.
+    // A directory that disappears mid-scan holds no real module source, so skip it instead of failing.
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return out;
+    throw error;
+  }
+  for (const entry of entries) {
     const full = path.join(dir, entry.name);
     if (entry.isDirectory()) out.push(...sourceFiles(full));
     else if (/\.(ts|tsx)$/.test(entry.name)) out.push(full);
