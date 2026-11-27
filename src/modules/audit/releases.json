@@ -2,6 +2,41 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.1",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Ayar merkezi grubu",
+        "de": "Gruppe in der Einstellungsübersicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.",
+          "de": "Die Einstellungsseiten erscheinen in der Einstellungsübersicht in ihrer eigenen Gruppe und Reihenfolge."
+        }
+      ]
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Değişiklik ayrıntısı ve tarih filtresi",
+        "de": "Änderungsdetails und Datumsfilter"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Denetim kaydında önce/sonra ayrıntısı, tarih aralığı filtresi ve veritabanındaki gerçek işlem/varlık değerleriyle filtreler.",
+          "de": "Im Protokoll gibt es Vorher/Nachher-Details, einen Datumsfilter und Filter mit den tatsächlich vorhandenen Aktionen/Entitäten."
+        },
+        {
+          "type": "fix",
+          "tr": "Portal işlem günlüğü yönetimin kaydettiği ödeme/makbuz işlemlerini de gösterir.",
+          "de": "Das Portal-Verarbeitungsprotokoll zeigt auch vom Vorstand erfasste Zahlungen/Quittungen."
+        }
+      ]
+    },
+    {
       "version": "1.0.4",
       "date": "2026-11-24",
       "title": {

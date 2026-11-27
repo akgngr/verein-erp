@@ -2,6 +2,56 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.9",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Geri bildirim bağlantılarında protokol doğrulaması",
+        "de": "Protokollprüfung für Feedback-Links"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Geri bildirim URL alanlarında yalnızca güvenli http/https protokollerine izin veriliyor (#573).",
+          "de": "Feedback-URLs lassen nun ausschließlich sichere http/https-Protokolle zu (#573)."
+        }
+      ]
+    },
+    {
+      "version": "1.1.8",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Tanıtım balonu tarayıcı başına bir kez gösterilir ve kendiliğinden kapanır; geri bildirim düğmesi açık diyalog/çekmece varken gizlenir, mobilde tek düğmedir.",
+          "de": "Die Begrüßungsblase erscheint einmal pro Browser und schließt sich selbst; die Feedback-Schaltfläche blendet sich bei geöffneten Dialogen aus und ist mobil nur eine Schaltfläche."
+        }
+      ]
+    },
+    {
+      "version": "1.1.7",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Kullanıcı silmede anonimleştirme",
+        "de": "Anonymisierung beim Löschen von Benutzern"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Kullanıcı silinince geri bildirimleri anonimleştirilir ve ekran görüntüleri silinir (DSGVO md. 17).",
+          "de": "Beim Löschen eines Benutzers werden seine Rückmeldungen anonymisiert und Screenshots gelöscht (DSGVO Art. 17)."
+        },
+        {
+          "type": "fix",
+          "tr": "Kaydı oluşturan kişi kendi ekran görüntüsünü görebilir.",
+          "de": "Meldende sehen ihren eigenen Screenshot."
+        }
+      ]
+    },
+    {
       "version": "1.1.6",
       "date": "2026-11-24",
       "title": {

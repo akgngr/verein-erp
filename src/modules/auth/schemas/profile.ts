@@ -15,7 +15,7 @@ export const profileSchema = z.object({
   houseNumber: text(20),
   postalCode: text(10),
   city: text(80),
-  country: z.string().trim().refine((value) => value === "" || /^[A-Z]{2}$/.test(value), "auth.profileForm.validation.country"),
+  country: z.string().trim().refine((value) => value === "" || /^[A-Z]{2}$/i.test(value), "auth.profileForm.validation.country"),
   accountHolder: text(120),
   iban: z.string().trim().refine((value) => value === "" || isValidIban(value), "auth.profileForm.validation.iban"),
   clearIban: z.boolean(),

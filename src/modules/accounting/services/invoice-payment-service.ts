@@ -35,8 +35,12 @@ export async function applyInvoicePayment(tx: Prisma.TransactionClient, input: I
   if (amountCents <= 0 || amountCents > open) {
     throw new ActionError("accounting.invoices.errors.amountInvalid", { amount: ["accounting.invoices.errors.amountInvalid"] });
   }
+  // Kesilmiş faturanın kayıtlı KDV oranları esas alınır: § 19 UStG ayarı faturayı keserken satırlara işlenir
+  // (invoice-actions → effectiveTaxRate). Ayar sonradan açılsa da KDV'li kesilmiş fatura KDV'siz tahsil edilmez.
   const lines = await tx.accountingInvoiceLine.findMany({ where: { invoiceId: invoice.id }, orderBy: { position: "asc" } });
-  const { byRate } = calculateInvoiceTotals(lines.map((line) => ({ quantity: Number(line.quantity), unitPriceCents: line.unitPriceCents, taxRate: line.taxRate })));
+  const { byRate } = calculateInvoiceTotals(
+    lines.map((line) => ({ quantity: Number(line.quantity), unitPriceCents: line.unitPriceCents, taxRate: line.taxRate })),
+  );
   const parts = allocatePayment(byRate, amountCents).filter((part) => part.netCents + part.taxCents !== 0);
   const existing = await tx.accountingBooking.count({
     where: { sourceType: INVOICE_SOURCE, OR: [{ sourceId: invoice.id }, { sourceId: { startsWith: `${invoice.id}:` } }] },
@@ -45,7 +49,9 @@ export async function applyInvoicePayment(tx: Prisma.TransactionClient, input: I
   const bookings: Array<{ id: string; bookingNumber: string }> = [];
   for (const [index, part] of parts.entries()) {
     const seq = existing + index;
-    const label = [parts.length > 1 ? `${part.rate} % USt` : "", partial ? "Teilzahlung" : ""].filter(Boolean).join(", "); // i18n-ignore: Buchungstext (Almanca muhasebe kaydı)
+    const partGross = part.netCents + part.taxCents;
+    const tax = { rate: part.rate, netCents: part.netCents, taxCents: part.taxCents };
+    const label = [parts.length > 1 && tax.rate > 0 ? `${tax.rate} % USt` : "", partial ? "Teilzahlung" : ""].filter(Boolean).join(", "); // i18n-ignore: Buchungstext (Almanca muhasebe kaydı)
     bookings.push(
       await createSourcedBooking({
         tx,
@@ -56,8 +62,8 @@ export async function applyInvoicePayment(tx: Prisma.TransactionClient, input: I
         bookingDate: input.paidDate,
         accountId: input.accountId,
         categoryId: input.categoryId,
-        amountCents: part.netCents + part.taxCents,
-        tax: { rate: part.rate, netCents: part.netCents, taxCents: part.taxCents },
+        amountCents: partGross,
+        tax,
         description: `Rechnung ${invoice.number} – ${invoice.recipientName}${label ? ` (${label})` : ""}`.slice(0, 300), // i18n-ignore: Buchungstext
         receiptReference: invoice.number,
       }),

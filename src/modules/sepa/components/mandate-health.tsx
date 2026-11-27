@@ -4,7 +4,7 @@ import { Send, ShieldCheck } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 
-import { Button, Input, Label, Select, Spinner, StatusChip, TextField } from "@/shared/components/kit";
+import { Button, DateInput, Input, Label, Select, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 import { notify } from "@/shared/components/ui/notify";
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
@@ -64,10 +64,7 @@ export function MandateHealthPanel({ sources, defaults }: { sources: ("MEMBER_DU
             <Input placeholder=" " inputMode="numeric" />
           </TextField>
         ) : (
-          <TextField value={param.COURSE_FEES} onChange={(value) => setParam({ ...param, COURSE_FEES: value })} className="w-full">
-            <Label>{t("dueUntil")}</Label>
-            <Input type="date" placeholder=" " />
-          </TextField>
+          <DateInput label={t("dueUntil")} ariaLabel={t("dueUntil")} value={param.COURSE_FEES} onChange={(value) => setParam({ ...param, COURSE_FEES: value })} className="w-full" />
         )}
         <Select id="sepa-health-threshold" value={String(maxReturns)} onChange={(value) => setMaxReturns(Number(value ?? maxReturns))}>
           <Label>{t("health.threshold")}</Label>

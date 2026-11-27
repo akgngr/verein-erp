@@ -13,7 +13,7 @@ Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır.
 |---|---|
 | Anahtar | `exports` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 2.2.4 |
+| Sürüm | 2.2.7 |
 | Sayfalar | `/dosyalar` |
 
 ## Diğer modüllere erişim
@@ -33,7 +33,7 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 | İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
 |---|---|---|---|---|---|---|---|---|
-| Dosyalarım | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | — | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme |
+| Dosyalarım | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme |
 
 ## Asistan araçları
 
@@ -42,6 +42,25 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_file` · `export_dataset` · `propose_dataset_export`
 
 ## Sürüm notları
+
+### 2.2.7 — Dışa aktarım alt süreç ortam izolasyonu
+
+_2026-11-25_
+
+- **Güvenlik:** Alt süreç oluşturma ortamında hassas ortam değişkenlerinin sızmasını önleyen beyaz liste uygulandı (#573).
+
+### 2.2.6 — Art. 15 anahtarı
+
+_2026-11-25_
+
+- **Güvenlik:** Art. 15 dışa aktarım şifrelemesinde sabit yedek anahtar kaldırıldı (anahtar yoksa fail closed).
+
+### 2.2.5 — Vergi danışmanı rapor indirmesi
+
+_2026-11-25_
+
+- **Düzeltme:** Vergi danışmanı (TAX_ADVISOR) oluşturduğu uyum raporunu artık indirebilir (önceden HTTP 403).
+- **Güvenlik:** CSV formül enjeksiyonu koruması ortak yardımcıya taşındı; envanter dışa aktarımı da kullanır.
 
 ### 2.2.4 — nav.json kategori ve alt modül tanımı
 
@@ -73,22 +92,4 @@ _2026-11-19_
 
 - **Yeni:** Merkezi dosya üretim hattı artık PDF belgeleri de üretir (çıktı doğrulaması, şifreli saklama, yayından önce yetki denetimi). İlk kullanan: sekreterin haftalık kurul raporu.
 
-### 2.1.11 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-### 2.1.9 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-### 2.1.8 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 13 herkese açık sürüm notu.
+Daha eski 16 herkese açık sürüm notu.

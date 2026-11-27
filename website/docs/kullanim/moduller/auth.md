@@ -13,9 +13,43 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.1.1 |
+| Sürüm | 1.5.0 |
 
 ## Sürüm notları
+
+### 1.5.0 — Güvenli harici hesap bağlama
+
+_2026-11-26_
+
+- **Güvenlik:** Kısa süreli tek kullanımlık OAuth bağlama niyeti ve yeniden parola doğrulaması.
+
+### 1.4.0 — Dış giriş sağlayıcıları için platform
+
+_2026-11-26_
+
+- **Yeni:** Modüller giriş sağlayıcısı (OAuth/OIDC) ekleyebilir; sağlayıcılar istek anında yüklenir ve modül kapalıysa görünmez. Parola girişi değişmedi.
+- **Güvenlik:** Dış sağlayıcıyla giriş yalnızca açıkça bağlanmış hesapla mümkündür; e-posta ile eşleme ve otomatik hesap oluşturma yoktur. İki adımlı doğrulaması açık hesaplar parola ile girer; yönlendirmeler yalnız aynı adrese yapılır.
+
+### 1.3.0 — İki adımlı doğrulama (TOTP)
+
+_2026-11-26_
+
+- **Yeni:** Profilde isteğe bağlı iki adımlı doğrulama: doğrulama uygulamasıyla kurulum (anahtar veya bağlantı), onay kodu ve bir kez gösterilen 10 kurtarma kodu. Açıksa girişte parolanın ardından kod sorulur.
+- **Güvenlik:** RFC 6238 (±30 sn tolerans); her kod bir kez geçer (tekrar oynatma koruması). Sır şifreli, kurtarma kodları yalnızca özet olarak saklanır; hatalı kodlar hesap kilidine sayılır. Kurulum/kapatma mevcut parolayı, kapatma ayrıca güncel kodu ister.
+- **Düzeltme:** "Diğer tüm cihazlardan çıkış yap" sonrasında bu cihaz yanlışlıkla giriş sayfasına ("oturumunuz sonlandırıldı") yönlendirilmiyor; sayfa yeni oturum çereziyle yeniden yüklenir.
+
+### 1.2.0 — Şifre sıfırlama ve oturum yönetimi
+
+_2026-11-26_
+
+- **Yeni:** Giriş sayfasında "Şifremi unuttum" bağlantısı; profilde "Diğer tüm cihazlardan çıkış yap" (mevcut şifreyle onay; bu cihaz açık kalır).
+- **Güvenlik:** Oturum sürümü kullanıcı başına bir sayaç içerir; sayaç artınca diğer tüm oturumlar anında düşer. Mevcut oturumlar güncellemeyle düşmez.
+
+### 1.1.2 — Zorunlu parola değişimi kilidi ve oturum sertleştirmesi
+
+_2026-11-25_
+
+- **Güvenlik:** Zorunlu parola değişimi sunucu tarafı kilit mekanizması, şifre değişikliğinde oturum iptali ve giriş sertleştirmesi eklendi (#572).
 
 ### 1.1.1 — Davet sayfası
 
@@ -35,35 +69,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.0.5 — Giriş ve profil yüzeyleri ortak kart katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Kart ve yüzey görünümleri ortak SurfaceCard/StatCard pattern'ine taşındı; modül bu kullanımda HeroUI Card implementasyonuna doğrudan bağlı değil.
-
-### 1.0.4 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-### 1.0.3 — AI v2 güvenilirlik ve veri koruma
-
-_2026-11-14_
-
-- **Güvenlik:** Sunucu tarafından doğrulanan AI işlemleri, kapsamlı veri erişimi ve güvenilir yaşam döngüsü kontrolleri güncellendi.
-
-### 1.0.2 — Silinme hakkı
-
-_2026-11-07_
-
-- **Güvenlik:** Kullanıcı silinince silinir: Kullanıcı profili (banka, adres, iletişim).
-
-### 1.0.1 — Güvenlik ve oturum sağlamlaştırması
-
-_2026-11-05_
-
-- **Güvenlik:** Giriş denemesi kilitleme politikası ortaklaştırıldı ve test edilebilir hale getirildi.
-- **Düzeltme:** Dosya yolu doğrulaması Windows ayraçlarını ve kontrol karakterlerini güvenli biçimde işler.
-
-Daha eski 1 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.

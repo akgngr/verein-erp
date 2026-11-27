@@ -3,7 +3,7 @@
 import { notify } from "@/shared/components/ui/notify";
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass } from "@/shared/components/forms/form-drawer";
-import { Checkbox, Input, Label, Sheet, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
+import { DateTimeInput, Checkbox, Input, Label, Sheet, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -17,7 +17,14 @@ import { useRouter } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { EVENT_TYPES, EVENT_STATUSES } from "../constants";
 import { createEventAction, updateEventAction } from "../actions/event-actions";
+import { utcToBerlinLocalInput } from "../helpers/berlin-time";
 import type { EventRow, EventType, EventStatus } from "../types";
+
+/** Genel hata + alan hataları tek mesajda (form alanları kontrollü olduğu için ayrı alan gösterimi yok). */
+function formatActionError(result: { error: string; fieldErrors?: Record<string, string[]> }): string {
+  const fieldMessages = Object.values(result.fieldErrors ?? {}).flat();
+  return fieldMessages.length ? fieldMessages.join(" ") : result.error;
+}
 
 interface EventFormModalProps {
   isOpen: boolean;
@@ -47,16 +54,11 @@ export function EventFormModal({
   const [status, setStatus] = useState<EventStatus>(
     eventToEdit?.status ?? "PUBLISHED",
   );
+  // #584: Saatler Europe/Berlin duvar saati olarak gösterilir ve gönderilir (sunucu UTC'ye çevirir).
   const [startDate, setStartDate] = useState(
-    eventToEdit?.startDate
-      ? new Date(eventToEdit.startDate).toISOString().slice(0, 16)
-      : new Date().toISOString().slice(0, 16),
+    utcToBerlinLocalInput(eventToEdit?.startDate ?? new Date()),
   );
-  const [endDate, setEndDate] = useState(
-    eventToEdit?.endDate
-      ? new Date(eventToEdit.endDate).toISOString().slice(0, 16)
-      : "",
-  );
+  const [endDate, setEndDate] = useState(utcToBerlinLocalInput(eventToEdit?.endDate));
   const [location, setLocation] = useState(eventToEdit?.location ?? "");
   const [isOnline, setIsOnline] = useState(eventToEdit?.isOnline ?? false);
   const [onlineUrl, setOnlineUrl] = useState(eventToEdit?.onlineUrl ?? "");
@@ -88,8 +90,8 @@ export function EventFormModal({
           capacity: capacity ? parseInt(capacity, 10) : null,
         });
 
-        if (!res.success) {
-          setErrorMessage(res.error ?? "Güncelleme başarısız oldu.");
+        if (!res.ok) {
+          setErrorMessage(formatActionError(res));
           setLoading(false);
           return;
         }
@@ -107,8 +109,8 @@ export function EventFormModal({
           capacity: capacity ? parseInt(capacity, 10) : null,
         });
 
-        if (!res.success) {
-          setErrorMessage(res.error ?? tForm("createFailed"));
+        if (!res.ok) {
+          setErrorMessage(formatActionError(res));
           setLoading(false);
           return;
         }
@@ -214,28 +216,23 @@ export function EventFormModal({
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                    <TextField
+                    <DateTimeInput
+                      label={tFields("startDate")}
+                      ariaLabel={tFields("startDate")}
                       value={startDate}
+                      onChange={(value) => setStartDate(value)}
                       isRequired
-                      className={["w-full"].filter(Boolean).join(" ")}
-                    >
-                      <Label>{tFields("startDate")}</Label>
-                      <Input
-                        type="datetime-local"
-                        onChange={(e) => setStartDate(e.target.value)}
-                      />
-                    </TextField>
+                      className="w-full"
+                    />
 
-                    <TextField
+                    <DateTimeInput
+                      label={tForm("endOptional")}
+                      ariaLabel={tForm("endOptional")}
                       value={endDate}
-                      className={["w-full"].filter(Boolean).join(" ")}
-                    >
-                      <Label>{tForm("endOptional")}</Label>
-                      <Input
-                        type="datetime-local"
-                        onChange={(e) => setEndDate(e.target.value)}
-                      />
-                    </TextField>
+                      onChange={(value) => setEndDate(value)}
+                      minValue={startDate || undefined}
+                      className="w-full"
+                    />
                   </div>
 
                   <div className="flex flex-col gap-2">

@@ -3,6 +3,7 @@ import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/render
 import { Letterhead, type LetterheadProfile } from "@/shared/pdf/letterhead";
 
 import type { EvidenceSnapshot } from "../services/evidence-store";
+import { showsSepaConsent } from "../lib/evidence-consents";
 
 export type EvidencePdfLabels = {
   title: string;
@@ -78,7 +79,8 @@ export function EvidenceDocument({ snapshot, signature, organization, labels, da
           <Text style={styles.h2}>{labels.sections.consents}</Text>
           <Consent checked={consents.includes("privacy")} text={texts.privacy} />
           {data.member || data.student ? <Consent checked={consents.includes("photo")} text={texts.photo} /> : null}
-          {data.guardian ? <Consent checked={consents.includes("sepa")} text={texts.sepa} /> : null}
+          {/* #580: SEPA yetkisi veli formunda ve banka bilgisi/SEPA onayı içeren üye formunda kanıta yazılır. */}
+          {showsSepaConsent(data) ? <Consent checked={consents.includes("sepa")} text={texts.sepa} /> : null}
           {channels !== undefined ? (
             <View style={styles.row}><Text style={styles.label}>{labels.fields.messagingConsents}</Text><Text style={styles.value}>{display(channels, labels)}</Text></View>
           ) : null}

@@ -40,7 +40,8 @@
     "reportNotFound": "Rapor bulunamadı.",
     "staleProposal": "Kayıt değişti veya önerinin süresi doldu. Lütfen yeni bir öneri oluşturun.",
     "cloudIntentRequired": "Bulut sağlayıcıda yalnızca “Üye sayısı 2026”, “Bağış özeti 2026” veya “Aidat dosyası 2026” gibi hazır istekler kullanılabilir. Serbest metin için yerel sağlayıcıyı seçin.",
-    "cloudDisabled": "Bulut işleme kapalı. Yönetici yerel bir model seçebilir veya Ayarlar → AI asistanı → Bulut veri politikası'nı değiştirebilir."
+    "cloudDisabled": "Bulut işleme kapalı. Yönetici yerel bir model seçebilir veya Ayarlar → AI asistanı → Bulut veri politikası'nı değiştirebilir.",
+    "providerNotAllowed": "Bu sağlayıcı, uygulanan gizlilik ön ayarı tarafından izin verilmiyor (Ayarlar → Gizlilik)."
   },
   "panel": {
     "title": "Asistan",

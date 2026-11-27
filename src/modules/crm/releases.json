@@ -2,6 +2,46 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.0.12",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Yerel tarih alanları",
+        "de": "Lokale Datumsfelder"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Beklenen kapanış tarihi ve görev son tarihi/saati yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.",
+          "de": "Erwartetes Abschlussdatum sowie Fälligkeit von Aufgaben werden im lokalen Format (TT.MM.JJJJ, 24 h) mit Kalender gewählt statt im browserabhängigen Format mm/dd/yyyy."
+        }
+      ]
+    },
+    {
+      "version": "1.0.11",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Kişi verisi kaynak modül iznine tabi",
+        "de": "Kontaktdaten folgen dem Recht des Quellmoduls"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Kişi adı ve iletişimi yalnız kaynak modülü (Üyeler, Muhasebe) görebilen rollere gösterilir; diğerleri 'Kısıtlı' görür ve aramada o kaynak listelenmez.",
+          "de": "Name und Kontaktdaten werden nur Rollen angezeigt, die das Quellmodul (Mitglieder, Buchhaltung) sehen dürfen; andere sehen „Eingeschränkt“, die Quelle erscheint nicht in der Suche."
+        },
+        {
+          "type": "fix",
+          "tr": "Fırsat tutarı en çok 20.000.000 € olabilir (önceden büyük tutarlar veritabanında taşıyordu).",
+          "de": "Der Betrag einer Chance ist auf 20.000.000 € begrenzt (zuvor liefen große Beträge in der Datenbank über)."
+        },
+        {
+          "type": "improvement",
+          "tr": "Tüm CRM işlemleri denetim kaydı bırakır; olmayan kayıtta anlaşılır hata döner.",
+          "de": "Alle CRM-Aktionen werden protokolliert; bei fehlenden Datensätzen erscheint eine verständliche Meldung."
+        }
+      ]
+    },
+    {
       "version": "1.0.10",
       "date": "2026-11-24",
       "title": {

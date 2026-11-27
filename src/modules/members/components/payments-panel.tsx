@@ -102,7 +102,8 @@ export function PaymentsPanel({
   return (
     <div className="rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-500">
+        {/* #586: Karışık TR/DE başlık büyük harfe çevrilmez (Türkçe yerelde "MİTGLİEDSBEİTRÄGE" oluyordu). */}
+        <h2 className="text-sm font-semibold tracking-wide text-ink-500">
           {t("title")}
         </h2>
         {canCreate ? (

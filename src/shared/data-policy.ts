@@ -68,8 +68,18 @@ export const DATA_POLICY = {
   PortalPasskey: { owner: "member-portal", category: "K0", reason: "Üye portalı WebAuthn geçiş anahtarı", sensitiveFields: ["publicKey"] },
   PortalSession: { owner: "member-portal", category: "K0", reason: "Üye portalı oturumu", sensitiveFields: ["sessionHash"] },
   ProgressNote: { owner: "progress", category: "K0", reason: "Çocuklara ilişkin değerlendirme notları", sensitiveFields: ["goals", "text"] },
+  // #585: Güvenlik denetim sonuçları yalnız güvenlik izleme modülünde (ortam ayrıntısı içerebilir).
+  SecurityTestRun: { owner: "security-monitor", category: "K0", reason: "Güvenlik denetimi sonuçları ve günlükleri (ortam ayrıntısı)", sensitiveFields: ["logs", "results"] },
+  SecurityTestAlert: { owner: "security-monitor", category: "K0", reason: "Güvenlik uyarıları", sensitiveFields: ["metadata"] },
+  SecurityTestSchedule: { owner: "security-monitor", category: "K0", reason: "Eski zamanlama kaydı (kullanılmıyor; zamanlama otomasyondadır)", sensitiveFields: [] },
+  SystemBackup: { owner: "system", category: "K0", reason: "Şifreli sistem yedeği üstverisi ve depolama yolu (#617; tam veritabanı ve ekleri içerir)", sensitiveFields: ["storagePath", "archiveSha256", "manifestSha256"] },
   SystemSetting: { owner: "system", category: "K0", reason: "Yapılandırma ve erişim onayları (sır içerebilir)", sensitiveFields: [] },
   User: { owner: "users", category: "K0", reason: "Kimlik doğrulama sırları (parola hash, kilit)", sensitiveFields: ["passwordHash", "email"], directAccess: ["auth"] },
+  UserTotp: { owner: "auth", category: "K0", reason: "İkinci faktör sırrı (#603; secret box ile şifreli)", sensitiveFields: ["secretEnc", "lastUsedStep"], personalOwnerField: "userId" },
+  UserTotpRecoveryCode: { owner: "auth", category: "K0", reason: "İkinci faktör kurtarma kodları (#603; yalnızca SHA-256 özeti)", sensitiveFields: ["codeHash"], personalOwnerField: "userId" },
+  AuthOAuthLinkIntent: { owner: "auth", category: "K0", reason: "Tek kullanımlık OAuth bağlama isteği", sensitiveFields: ["tokenHash", "sessionVersion"], personalOwnerField: "userId" },
+  SocialLoginProvider: { owner: "social-login", category: "K0", reason: "OAuth uygulama kimlik bilgileri (gizli anahtar şifreli)", sensitiveFields: ["secretEnc", "clientId", "tenantId"] },
+  AuthIdentity: { owner: "auth", category: "K0", reason: "Dış giriş sağlayıcısı bağlantısı (#612; sağlayıcı + subject, token yok)", sensitiveFields: ["subject"], personalOwnerField: "userId" },
   UserProfile: { owner: "auth", category: "K0", reason: "Banka ve iletişim verisi", sensitiveFields: ["accountHolder", "bic", "city", "houseNumber", "ibanEnc", "mobile", "phone", "postalCode", "street", "taxNumberEnc"], personalOwnerField: "userId" },
   YouthProtectionRecord: {
     owner: "youth-protection",

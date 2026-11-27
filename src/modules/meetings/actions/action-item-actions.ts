@@ -81,7 +81,7 @@ export async function addActionItemAction(
         });
         if (!decision) {
           throw new ActionError("meetings.errors.decisionNotFound", {
-            decisionId: ["Geçerli bir karar seçin."],
+            decisionId: ["meetings.validation.decisionRequired"],
           });
         }
       }
@@ -140,7 +140,7 @@ export async function updateActionItemAction(
         });
         if (!decision) {
           throw new ActionError("meetings.errors.decisionNotFound", {
-            decisionId: ["Geçerli bir karar seçin."],
+            decisionId: ["meetings.validation.decisionRequired"],
           });
         }
       }

@@ -7,16 +7,18 @@ import { useMemo, useState } from "react";
 import { Button, Dialog, Input, Label, TextArea, TextField } from "@/shared/components/kit";
 import { notify } from "@/shared/components/ui/notify";
 
-import { buildFeeExemptionLetterText } from "../services/fee-exemption-letter";
+import { buildFeeExemptionLetterText, escapeLetterHtml, type FeeExemptionLetterOrganization } from "../services/fee-exemption-letter";
 
 export function FeeExemptionLetterModal({
   isOpen,
   onOpenChange,
   initialPersonName,
+  organization,
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   initialPersonName?: string;
+  organization?: FeeExemptionLetterOrganization;
 }) {
   const t = useTranslations("youth-protection.letter");
   const [personName, setPersonName] = useState(initialPersonName ?? "");
@@ -31,8 +33,11 @@ export function FeeExemptionLetterModal({
       birthDate: birthDate || undefined,
       address: address || undefined,
       role: role || undefined,
+      // #585: Kurum adı ve şehri kurum profilinden (önceden sabit "Unser Verein e.V." / "Berlin").
+      organizationName: organization?.name ?? undefined,
+      organizationCity: organization?.city ?? undefined,
     });
-  }, [personName, birthDate, address, role, t]);
+  }, [personName, birthDate, address, role, t, organization]);
 
   const handleCopy = async () => {
     try {
@@ -55,7 +60,7 @@ export function FeeExemptionLetterModal({
       <!DOCTYPE html>
       <html>
         <head>
-          <title>${t("title")}</title>
+          <title>${escapeLetterHtml(t("title"))}</title>
           <style>
             body {
               font-family: Arial, sans-serif;
@@ -67,7 +72,7 @@ export function FeeExemptionLetterModal({
             }
           </style>
         </head>
-        <body>${letterText}</body>
+        <body>${escapeLetterHtml(letterText)}</body>
       </html>
     `);
     printWindow.document.close();

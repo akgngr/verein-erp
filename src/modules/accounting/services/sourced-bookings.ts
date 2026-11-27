@@ -43,6 +43,24 @@ export type SourcedBookingInput = {
 };
 
 /**
+ * Aynı kaynak için ters kayıt sonrası yeniden oluşturulan fişlere benzersiz sürümlü sourceId üretir (#575).
+ * İlk fiş `baseSourceId`, sonrakiler `${baseSourceId}:${count}` biçimindedir.
+ */
+export async function nextVersionedSourcedBookingId(
+  tx: Prisma.TransactionClient,
+  sourceType: string,
+  baseSourceId: string,
+): Promise<string> {
+  const existingCount = await tx.accountingBooking.count({
+    where: {
+      sourceType,
+      OR: [{ sourceId: baseSourceId }, { sourceId: { startsWith: `${baseSourceId}:` } }],
+    },
+  });
+  return existingCount === 0 ? baseSourceId : `${baseSourceId}:${existingCount}`;
+}
+
+/**
  * Kaynak bağlı fiş oluşturur (§ 6): bağış kaydının transaction'ında `tx` ile
  * çağrılır; tx yoksa kendi transaction'ını açar. Yıl kilidi, açılış tarihi,
  * kasa kuralı ve numara üretimi createBookingAction ile AYNI kurallardır.

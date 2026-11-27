@@ -196,12 +196,12 @@ export async function FeedbackDetailView({ id }: { id: string }) {
           </p>
           <p className="break-all">
             {t("fields.page")}:{" "}
-            {item.pageUrl ? (
+            {item.pageUrl && /^\/(?!\/)[^\\\r\n\u0000-\u001f]*$/.test(item.pageUrl) ? (
               <Link className="text-accent hover:underline" href={item.pageUrl}>
                 {item.pageUrl}
               </Link>
             ) : (
-              "—"
+              item.pageUrl || "—"
             )}
           </p>
           <p>
@@ -213,7 +213,8 @@ export async function FeedbackDetailView({ id }: { id: string }) {
           <p className="break-all text-xs text-ink-500">
             {item.userAgent ?? ""}
           </p>
-          {item.screenshotPath && all ? (
+          {/* #583: getFeedback yalnız yöneticiye veya kaydın sahibine döner; sahibi de kendi görüntüsünü görür. */}
+          {item.screenshotPath ? (
             <a
               href={`/api/feedback/${item.id}/screenshot`}
               target="_blank"

@@ -2,6 +2,96 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.21",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "i18next güvenlik güncellemesi",
+        "de": "Sicherheitsupdate für i18next"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Akış düzenleyicisinin çeviri kütüphanesi i18next 26.3.4 sürümüne yükseltildi (deepExtend prototip özyinelemesi düzeltmesi). Düzenleyici ve uygulama tek bir kopya kullanır; Türkçe/Almanca düzenleyici metinleri korunur.",
+          "de": "Die Übersetzungsbibliothek des Ablauf-Editors wurde auf i18next 26.3.4 aktualisiert (Korrektur der deepExtend-Prototyp-Rekursion). Editor und Anwendung nutzen eine einzige Kopie; die türkischen/deutschen Editortexte bleiben erhalten."
+        }
+      ]
+    },
+    {
+      "version": "0.10.20",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Ayar merkezi grubu",
+        "de": "Gruppe in der Einstellungsübersicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.",
+          "de": "Die Einstellungsseiten erscheinen in der Einstellungsübersicht in ihrer eigenen Gruppe und Reihenfolge."
+        }
+      ]
+    },
+    {
+      "version": "0.10.19",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Zamanlanmış görevler okunur adla ve doğru aralıkla (dakika/saat/gün) gösterilir; önceden \"meetings.vote_purge\" ve \"Her 0.1 saatte\" görünüyordu.",
+          "de": "Geplante Aufgaben erscheinen mit lesbarem Namen und passender Einheit (Minuten/Stunden/Tage) statt \"meetings.vote_purge\" oder \"Alle 0.1 Stunden\"."
+        }
+      ]
+    },
+    {
+      "version": "0.10.18",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Sağlık kokpiti için durum özeti",
+        "de": "Statusübersicht für das Gesundheitscockpit"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Modül sağlık kokpiti için kaynak modül başına başarısız/çalışan iş özeti (girdi/sonuç verisi olmadan).",
+          "de": "Zusammenfassung fehlgeschlagener/laufender Aufgaben je Quellmodul für das Gesundheitscockpit (ohne Ein-/Ausgabedaten)."
+        }
+      ]
+    },
+    {
+      "version": "0.10.17",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Çalışan izin politikası, denetim kaydı, dil",
+        "de": "Worker-Berechtigungsrichtlinie, Protokoll, Sprache"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Arka plan çalışanı her görevden önce rol geçersiz kılmalarını ve özel rolleri yükler; yüklenemezse görev yeniden denenir.",
+          "de": "Der Hintergrund-Worker lädt vor jeder Aufgabe Rollen-Overrides und eigene Rollen; schlägt das fehl, wird die Aufgabe erneut versucht."
+        },
+        {
+          "type": "security",
+          "tr": "Ham hata metinleri yalnız otomasyonu yönetebilen rollere gösterilir; diğerleri hata kodunu görür.",
+          "de": "Rohe Fehlermeldungen sind nur für Rollen sichtbar, die Automationen verwalten; andere sehen den Fehlercode."
+        },
+        {
+          "type": "improvement",
+          "tr": "Tüm otomasyon ve iş akışı işlemleri (onay kararı dahil) denetim kaydı bırakır.",
+          "de": "Alle Automations- und Workflow-Aktionen (einschließlich Freigabeentscheidungen) werden protokolliert."
+        },
+        {
+          "type": "fix",
+          "tr": "İş akışı alt görevleri başlatanın dilinde, zamanlanmış görevler belge dilinde çalışır (önceden sabit Almanca).",
+          "de": "Workflow-Teilaufgaben laufen in der Sprache des Auslösers, geplante Aufgaben in der Dokumentsprache (zuvor fest Deutsch)."
+        }
+      ]
+    },
+    {
       "version": "0.10.16",
       "date": "2026-11-24",
       "title": {

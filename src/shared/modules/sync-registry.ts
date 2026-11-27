@@ -1,25 +1,28 @@
+// #587: Geliştirici aracı; `turbopackIgnore` yorumları bu dosyadaki dinamik yolların derleme anında
+// izlenmesini (src/modules klasörünün standalone pakete kopyalanmasını) engeller. Davranış değişmez.
 import fs from "node:fs";
 import path from "node:path";
 
 const ROOT_DIR = process.cwd();
-const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
-const REGISTRY_FILE = path.join(ROOT_DIR, "src", "registry.ts");
-const CARDS_FILE = path.join(ROOT_DIR, "src", "dashboard-cards.ts");
-const AI_FILE = path.join(ROOT_DIR, "src", "ai-registry.ts");
-const DEMO_FILE = path.join(ROOT_DIR, "src", "demo-registry.ts");
-const FORMATS_FILE = path.join(ROOT_DIR, "src", "format-registry.ts");
-const RECIPIENTS_FILE = path.join(ROOT_DIR, "src", "recipient-registry.ts");
-const LIFECYCLE_FILE = path.join(ROOT_DIR, "src", "lifecycle-registry.ts");
-const RELEASES_FILE = path.join(ROOT_DIR, "src", "module-releases.ts");
-const CALENDAR_FILE = path.join(ROOT_DIR, "src", "calendar-registry.ts");
-const SECRETARY_FILE = path.join(ROOT_DIR, "src", "secretary-registry.ts");
-const NOTIFICATION_FILE = path.join(ROOT_DIR, "src", "notification-registry.ts");
-const WIDGET_FILE = path.join(ROOT_DIR, "src", "widget-registry.ts");
-const COMPLIANCE_FILE = path.join(ROOT_DIR, "src", "compliance-registry.ts");
-const CALENDAR_SYNC_FILE = path.join(ROOT_DIR, "src", "calendar-sync-registry.ts");
-const CAMPAIGN_CHANNEL_FILE = path.join(ROOT_DIR, "src", "campaign-channel-registry.ts");
-const AUTOMATION_FILE = path.join(ROOT_DIR, "src", "automation-registry.ts");
-const PERMISSIONS_FILE = path.join(ROOT_DIR, "src", "permissions-registry.ts");
+const MODULES_DIR = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "modules");
+const REGISTRY_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "registry.ts");
+const CARDS_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "dashboard-cards.ts");
+const AI_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "ai-registry.ts");
+const DEMO_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "demo-registry.ts");
+const FORMATS_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "format-registry.ts");
+const RECIPIENTS_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "recipient-registry.ts");
+const LIFECYCLE_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "lifecycle-registry.ts");
+const RELEASES_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "module-releases.ts");
+const CALENDAR_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "calendar-registry.ts");
+const SECRETARY_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "secretary-registry.ts");
+const NOTIFICATION_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "notification-registry.ts");
+const WIDGET_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "widget-registry.ts");
+const COMPLIANCE_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "compliance-registry.ts");
+const AUTH_PROVIDERS_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "auth-provider-registry.ts");
+const CALENDAR_SYNC_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "calendar-sync-registry.ts");
+const CAMPAIGN_CHANNEL_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "campaign-channel-registry.ts");
+const AUTOMATION_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "automation-registry.ts");
+const PERMISSIONS_FILE = path.join(/* turbopackIgnore: true */ ROOT_DIR, "src", "permissions-registry.ts");
 
 // Sabit öncelikli sıralama (çekirdek ve resmi modüller üstte)
 const PRIORITY_ORDER = [
@@ -52,7 +55,7 @@ export function syncModuleRegistry(): { registered: string[] } {
   for (const entry of entries) {
     if (!entry.isDirectory()) continue;
     const moduleName = entry.name;
-    const configPath = path.join(MODULES_DIR, moduleName, "module.config.ts");
+    const configPath = path.join(/* turbopackIgnore: true */ MODULES_DIR, moduleName, "module.config.ts");
     if (fs.existsSync(configPath)) {
       validModules.push(moduleName);
     }
@@ -115,6 +118,7 @@ export const registry: ModuleConfig[] = allModules;
   syncConventionFile(validModules, "secretary.ts", "secretary", SECRETARY_FILE, "ModuleSecretary", "@/shared/secretary/define", "moduleSecretaryRegistry", "Kişisel sekretere sabah özeti katkısı veren modüller (src/modules/<modül>/secretary.ts).");
   syncConventionFile(validModules, "notifications.ts", "notifications", NOTIFICATION_FILE, "ModuleNotifications", "@/shared/notifications/define", "moduleNotificationRegistry", "Merkezi bildirim türleri (src/modules/<modül>/notifications.ts, ADR 0006).");
   syncConventionFile(validModules, "compliance.ts", "compliance", COMPLIANCE_FILE, "ModuleCompliance", "@/shared/compliance/define", "moduleComplianceRegistry", "Uyum (Gemeinnützigkeit) metrik sağlayıcıları (src/modules/<modül>/compliance.ts, ADR 0009).");
+  syncConventionFile(validModules, "auth-providers.ts", "authProviders", AUTH_PROVIDERS_FILE, "ModuleAuthProviders", "@/shared/auth/providers", "moduleAuthProviderRegistry", "Giriş sağlayıcıları (OAuth/OIDC) sunan modüller (src/modules/<modül>/auth-providers.ts, #612). Yalnız sunucu.");
   syncWidgetRegistry(validModules);
   syncAutomationTasks(validModules);
 
@@ -126,7 +130,7 @@ export const registry: ModuleConfig[] = allModules;
  * toplar. İstemci-güvenlidir (server-only yok): yalnız tembel (lazy) yükleyiciler ve tanımlar içerir.
  */
 function syncWidgetRegistry(modules: string[]): void {
-  const withFile = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, "widget.ts")));
+  const withFile = modules.filter((mod) => fs.existsSync(path.join(/* turbopackIgnore: true */ MODULES_DIR, mod, "widget.ts")));
   const varName = (mod: string) => `${mod.replace(/-/g, "")}Widgets`;
   const imports = withFile.map((mod) => `import { widgets as ${varName(mod)} } from "@/modules/${mod}/widget";`).join("\n");
   const items = withFile.map((mod) => `  { module: "${mod}", widgets: ${varName(mod)} },`).join("\n");
@@ -151,7 +155,7 @@ export const widgetRegistry: readonly WidgetRegistration[] = buildWidgetRegistry
  */
 function syncDashboardCards(modules: string[]): void {
   const withCards = modules.filter((mod) =>
-    ["index.ts", "index.tsx"].some((file) => fs.existsSync(path.join(MODULES_DIR, mod, "cards", file))),
+    ["index.ts", "index.tsx"].some((file) => fs.existsSync(path.join(/* turbopackIgnore: true */ MODULES_DIR, mod, "cards", file))),
   );
   const imports = withCards
     .map((mod) => `import { cards as ${mod}Cards } from "@/modules/${mod}/cards";`)
@@ -177,7 +181,7 @@ export const dashboardCards: { moduleKey: string; cards: DashboardCardDefinition
 
 /** Modül sürüm notları kaydı: her modülün releases.json dosyası (Ayarlar → Sürüm notları). */
 function syncModuleReleases(modules: string[]): void {
-  const withReleases = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, "releases.json")));
+  const withReleases = modules.filter((mod) => fs.existsSync(path.join(/* turbopackIgnore: true */ MODULES_DIR, mod, "releases.json")));
   const toValidVarName = (mod: string) => mod.replace(/-/g, "");
   const imports = withReleases.map((mod) => `import ${toValidVarName(mod)}Releases from "@/modules/${mod}/releases.json";`).join("\n");
   const listItems = withReleases.map((mod) => `  { moduleKey: "${mod}", releases: ${toValidVarName(mod)}Releases.releases as ModuleRelease[] },`).join("\n");
@@ -209,7 +213,7 @@ function syncConventionFile(
   doc: string,
 ): void {
   const base = file.replace(/\.tsx?$/, "");
-  const withFile = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, file)));
+  const withFile = modules.filter((mod) => fs.existsSync(path.join(/* turbopackIgnore: true */ MODULES_DIR, mod, file)));
   const suffix = exportName.charAt(0).toUpperCase() + exportName.slice(1);
   const toValidVarName = (mod: string) => mod.replace(/-/g, "");
   const imports = withFile.map((mod) => `import { ${exportName} as ${toValidVarName(mod)}${suffix} } from "@/modules/${mod}/${base}";`).join("\n");
@@ -235,7 +239,7 @@ export const ${listName}: ${typeName}[] = ${listItems ? `[\n${listItems}\n]` : "
  * toplar (bkz. src/shared/ai/define.ts). AI modülü araçları ve onay eylemlerini yalnızca buradan alır.
  */
 function syncModuleAi(modules: string[]): void {
-  const withAi = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, "ai.ts")));
+  const withAi = modules.filter((mod) => fs.existsSync(path.join(/* turbopackIgnore: true */ MODULES_DIR, mod, "ai.ts")));
   const imports = withAi.map((mod) => `import { ai as ${mod}Ai } from "@/modules/${mod}/ai";`).join("\n");
   const listItems = withAi.map((mod) => `  ${mod}Ai,`).join("\n");
 
@@ -262,7 +266,7 @@ export const moduleAiRegistry: ModuleAi[] = ${listItems ? `[\n${listItems}\n]` :
  * politikası kaynakları buradan okur; yeni modülün izinleri elle eklenmeden görünür.
  */
 function syncPermissionResources(modules: string[]): void {
-  const withPermissions = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, "permissions.ts")));
+  const withPermissions = modules.filter((mod) => fs.existsSync(path.join(/* turbopackIgnore: true */ MODULES_DIR, mod, "permissions.ts")));
   const toValidVarName = (mod: string) => mod.replace(/-/g, "");
   const imports = withPermissions.map((mod) => `import * as ${toValidVarName(mod)}PermissionExports from "@/modules/${mod}/permissions";`).join("\n");
   const listItems = withPermissions.map((mod) => `  { moduleKey: "${mod}", definitions: definitionsOf(${toValidVarName(mod)}PermissionExports) },`).join("\n");
@@ -300,7 +304,7 @@ ${listItems}
  * görev değil, dar enqueue API'sidir; bu yüzden hariç tutulur.
  */
 function syncAutomationTasks(modules: string[]): void {
-  const withTasks = modules.filter((mod) => mod !== "automation" && fs.existsSync(path.join(MODULES_DIR, mod, "automation.ts")));
+  const withTasks = modules.filter((mod) => mod !== "automation" && fs.existsSync(path.join(/* turbopackIgnore: true */ MODULES_DIR, mod, "automation.ts")));
   const toValidVarName = (mod: string) => mod.replace(/-/g, "");
   const imports = withTasks.map((mod) => `import * as ${toValidVarName(mod)}AutomationExports from "@/modules/${mod}/automation";`).join("\n");
   const listItems = withTasks.map((mod) => `  ...tasksOf("${mod}", ${toValidVarName(mod)}AutomationExports),`).join("\n");

@@ -5,12 +5,13 @@
   "loginButton": "Anmelden",
   "logout": "Abmelden",
   "mustChangePasswordBanner": "Passwort muss aktualisiert werden",
+  "mustChangePasswordHint": "Zu Ihrer Sicherheit müssen Sie unten zuerst ein neues Passwort festlegen, bevor Sie fortfahren können.",
   "meta": {
     "profile": "Profil"
   },
   "appTitle": "Vereinsverwaltung",
   "loginSubtitle": "Melden Sie sich an, um fortzufahren",
-  "passiveNotice": "Ihre Sitzung wurde beendet. Ihr Konto wurde möglicherweise deaktiviert; bitte wenden Sie sich an Ihren Administrator.",
+  "passiveNotice": "Ihre Sitzung wurde beendet (z. B. Passwortänderung, Abmeldung auf allen Geräten oder deaktiviertes Konto). Bitte melden Sie sich erneut an; bei Problemen wenden Sie sich an Ihren Administrator.",
   "profile": {
     "title": "Profil",
     "description": "Ihre Kontodaten und Passwortänderung.",
@@ -21,21 +22,36 @@
     "changePassword": "Passwort ändern",
     "currentPassword": "Aktuelles Passwort",
     "newPassword": "Neues Passwort",
+    "confirmPassword": "Neues Passwort bestätigen",
     "submit": "Passwort aktualisieren",
     "updated": "Ihr Passwort wurde aktualisiert.",
     "details": "Meine Profildaten",
-    "detailsHint": "Kontakt-, Adress-, Zahlungs- und Rechnungsdaten. Nur Sie und berechtigte Verantwortliche können sie sehen."
+    "detailsHint": "Kontakt-, Adress-, Zahlungs- und Rechnungsdaten. Nur Sie und berechtigte Verantwortliche können sie sehen.",
+    "sessions": {
+      "title": "Sitzungen",
+      "hint": "Melden Sie sich auf allen anderen Geräten und Browsern ab (z. B. verlorenes Handy, gemeinsam genutzter Computer). Auf diesem Gerät bleiben Sie angemeldet.",
+      "currentPassword": "Aktuelles Passwort",
+      "submit": "Auf allen anderen Geräten abmelden",
+      "done": "Die Sitzungen auf allen anderen Geräten wurden beendet."
+    },
+    "twoFactor": "Zwei-Faktor-Anmeldung"
   },
   "errors": {
     "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
     "currentPasswordWrong": "Das aktuelle Passwort ist falsch.",
+    "samePassword": "Das neue Passwort darf nicht mit dem aktuellen Passwort übereinstimmen.",
     "invalidCredentials": "E-Mail oder Passwort ist falsch.",
     "accountLocked": "Das Konto ist vorübergehend gesperrt. Bitte versuchen Sie es später erneut.",
+    "rateLimited": "Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.",
     "loginFailed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-    "invalidLocale": "Ungültige Sprachauswahl."
+    "invalidLocale": "Ungültige Sprachauswahl.",
+    "twoFactorRequired": "Geben Sie den Code aus Ihrer Authenticator-App ein.",
+    "twoFactorInvalid": "Der Code ist falsch, abgelaufen oder wurde bereits verwendet."
   },
   "validation": {
     "currentPasswordRequired": "Bitte das aktuelle Passwort eingeben.",
+    "confirmPasswordRequired": "Bitte das neue Passwort wiederholen.",
+    "passwordsMismatch": "Die neuen Passwörter stimmen nicht überein.",
     "emailRequired": "E-Mail ist erforderlich.",
     "passwordRequired": "Passwort ist erforderlich."
   },
@@ -80,5 +96,53 @@
       "bic": "Bitte eine gültige BIC eingeben (8 oder 11 Zeichen).",
       "vatId": "Bitte eine gültige USt-IdNr. eingeben (z. B. DE123456789)."
     }
-  }
+  },
+  "forgotPassword": "Passwort vergessen?",
+  "twoFactorCode": "Bestätigungscode",
+  "twoFactorCodeHint": "Geben Sie den 6-stelligen Code aus Ihrer Authenticator-App oder einen Ihrer Wiederherstellungscodes ein.",
+  "twoFactorBack": "Mit einem anderen Konto anmelden",
+  "twoFactor": {
+    "loading": "Wird geladen…",
+    "off": "Die Zwei-Faktor-Anmeldung ist ausgeschaltet.",
+    "on": "Die Zwei-Faktor-Anmeldung ist aktiv — {count, plural, one {# Wiederherstellungscode} other {# Wiederherstellungscodes}} übrig.",
+    "hint": "Fragt bei der Anmeldung zusätzlich zum Passwort einen Code aus einer Authenticator-App ab (z. B. Google Authenticator, Microsoft Authenticator, 2FAS). Empfohlen für Administrations- und Kassenkonten.",
+    "manageHint": "Zum Ausschalten oder für neue Wiederherstellungscodes geben Sie den aktuellen Code aus Ihrer App (oder einen Wiederherstellungscode) ein.",
+    "currentPassword": "Aktuelles Passwort",
+    "currentPasswordForDisable": "Aktuelles Passwort (zum Ausschalten)",
+    "code": "Code",
+    "cancel": "Abbrechen",
+    "enabled": "Die Zwei-Faktor-Anmeldung ist eingeschaltet.",
+    "disabled": "Die Zwei-Faktor-Anmeldung ist ausgeschaltet.",
+    "disable": "Zwei-Faktor-Anmeldung ausschalten",
+    "error": "Der Vorgang konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.",
+    "setup": {
+      "start": "Einrichtung starten",
+      "step1": "1. Fügen Sie in Ihrer Authenticator-App ein neues Konto hinzu und geben Sie den folgenden Schlüssel ein (auf dem Smartphone genügt ein Tippen auf den Link).",
+      "manualKey": "Einrichtungsschlüssel",
+      "openApp": "In der Authenticator-App öffnen",
+      "step2": "2. Geben Sie den 6-stelligen Code aus der App ein.",
+      "confirm": "Bestätigen und einschalten"
+    },
+    "recovery": {
+      "title": "Wiederherstellungscodes",
+      "hint": "Ohne Zugriff auf Ihr Smartphone melden Sie sich mit diesen Codes an; jeder Code funktioniert einmal. Bewahren Sie sie sicher auf — sie werden nicht erneut angezeigt.",
+      "copy": "Codes kopieren",
+      "copied": "Wiederherstellungscodes kopiert.",
+      "done": "Gespeichert",
+      "replace": "Neue Wiederherstellungscodes erstellen"
+    },
+    "errors": {
+      "alreadyEnabled": "Die Zwei-Faktor-Anmeldung ist bereits aktiv.",
+      "noEnrolment": "Starten Sie zuerst die Einrichtung.",
+      "codeInvalid": "Der Code ist falsch, abgelaufen oder wurde bereits verwendet."
+    }
+  },
+  "oauthDenied": "Die Anmeldung mit diesem Konto war nicht möglich. Wenn das Konto nicht verknüpft oder deaktiviert ist oder die Zwei-Faktor-Authentifizierung aktiv ist, melden Sie sich mit E-Mail und Passwort an.",
+  "oauth": {
+    "errors": {
+      "invalidLink": "Die Kontoverknüpfung ist ungültig.",
+      "alreadyLinked": "Dieses Konto ist bereits mit einem anderen Benutzer verknüpft."
+    }
+  },
+  "externalLogin": "Mit {provider} anmelden"
 }

@@ -11,24 +11,31 @@ import { paymentSchema, reversePaymentSchema, settingsSchema, waiveChargeSchema 
 import { bookCoursePayment, chargeBookingLabel, reverseCoursePaymentBooking } from "../services/fee-bookings";
 import { parseDateOnly } from "../utils";
 
-/** Ücret kalemini tahsil eder: ödeme kaydı + muhasebe gelir fişi aynı transaction'da. */
+/** Ücret kalemini tahsil eder: atomik durum kilidi + ödeme kaydı + muhasebe gelir fişi tek transaction'da (#579). */
 export async function recordPaymentAction(input: unknown): Promise<ActionResult<{ bookingNumber: string }>> {
   const run = createAction({
     permission: { definition: courseFeesPermissions, action: "create" },
     schema: paymentSchema,
     handler: async ({ input, user, audit }) => {
       const db = getDb();
-      const charge = await db.courseCharge.findUnique({
-        where: { id: input.chargeId },
-        include: { enrollment: { include: { course: { select: { code: true } } } } },
-      });
-      if (!charge) throw new ActionError("courses.errors.chargeNotFound");
-      if (charge.status !== "OPEN") throw new ActionError("courses.errors.chargeNotOpen");
-      const settings = await db.coursesSettings.findUnique({ where: { id: "singleton" } });
       const actor = { id: user.id, label: buildUserLabel(user.name, user.email) };
       const paidAt = parseDateOnly(input.paidAt)!;
 
-      const bookingNumber = await db.$transaction(async (tx) => {
+      const result = await db.$transaction(async (tx) => {
+        const charge = await tx.courseCharge.findUnique({
+          where: { id: input.chargeId },
+          include: { enrollment: { include: { course: { select: { code: true } } } } },
+        });
+        if (!charge) throw new ActionError("courses.errors.chargeNotFound");
+
+        // Atomic status claim prevents concurrent double-payment and duplicate accounting bookings.
+        const claimed = await tx.courseCharge.updateMany({
+          where: { id: charge.id, status: "OPEN" },
+          data: { status: "PAID" },
+        });
+        if (claimed.count !== 1) throw new ActionError("courses.errors.chargeNotOpen");
+
+        const settings = await tx.coursesSettings.findUnique({ where: { id: "singleton" } });
         const payment = await tx.coursePayment.create({
           data: {
             chargeId: charge.id,
@@ -52,56 +59,74 @@ export async function recordPaymentAction(input: unknown): Promise<ActionResult<
           chargeLabel: chargeBookingLabel(charge),
         });
         await tx.coursePayment.update({ where: { id: payment.id }, data: { bookingNumber: number } });
-        await tx.courseCharge.update({ where: { id: charge.id }, data: { status: "PAID" } });
-        return number;
+        return {
+          chargeId: charge.id,
+          courseCode: charge.enrollment.course.code,
+          debtorNumber: charge.enrollment.payerDebtorNumber,
+          amountCents: charge.amountCents,
+          bookingNumber: number,
+        };
       });
 
       await audit({
         action: "PAYMENT",
         entity: "CourseCharge",
-        entityId: charge.id,
-        after: { course: charge.enrollment.course.code, debtor: charge.enrollment.payerDebtorNumber, amountCents: charge.amountCents, bookingNumber },
+        entityId: result.chargeId,
+        after: { course: result.courseCode, debtor: result.debtorNumber, amountCents: result.amountCents, bookingNumber: result.bookingNumber },
       });
-      return { bookingNumber };
+      return { bookingNumber: result.bookingNumber };
     },
   });
   return run(input);
 }
 
-/** Tahsilatı geri alır: muhasebe fişi ters kayıtla iptal edilir, kalem yeniden açık olur. */
+/** Tahsilatı geri alır: atomik ters kayıt kilidi + muhasebe fişi iptali tek transaction'da (#579). */
 export async function reversePaymentAction(input: unknown): Promise<ActionResult<{ ok: true }>> {
   const run = createAction({
     permission: { definition: courseFeesPermissions, action: "update" },
     schema: reversePaymentSchema,
     handler: async ({ input, user, audit }) => {
       const db = getDb();
-      const payment = await db.coursePayment.findUnique({ where: { id: input.paymentId } });
-      if (!payment || payment.reversedAt) throw new ActionError("courses.errors.paymentNotFound");
       const actor = { id: user.id, label: buildUserLabel(user.name, user.email) };
-      await db.$transaction(async (tx) => {
+      const reversed = await db.$transaction(async (tx) => {
+        const payment = await tx.coursePayment.findUnique({ where: { id: input.paymentId } });
+        if (!payment || payment.reversedAt) throw new ActionError("courses.errors.paymentNotFound");
+
+        const claimed = await tx.coursePayment.updateMany({
+          where: { id: payment.id, reversedAt: null },
+          data: { reversedAt: new Date(), reverseReason: input.reason },
+        });
+        if (claimed.count !== 1) throw new ActionError("courses.errors.paymentNotFound");
+
         await reverseCoursePaymentBooking(tx, { actor, paymentId: payment.id, reason: input.reason });
-        await tx.coursePayment.update({ where: { id: payment.id }, data: { reversedAt: new Date(), reverseReason: input.reason } });
         await tx.courseCharge.update({ where: { id: payment.chargeId }, data: { status: "OPEN" } });
+        return { chargeId: payment.chargeId, bookingNumber: payment.bookingNumber };
       });
-      await audit({ action: "PAYMENT_REVERSE", entity: "CourseCharge", entityId: payment.chargeId, after: { bookingNumber: payment.bookingNumber, reason: input.reason } });
+      await audit({ action: "PAYMENT_REVERSE", entity: "CourseCharge", entityId: reversed.chargeId, after: { bookingNumber: reversed.bookingNumber, reason: input.reason } });
       return { ok: true as const };
     },
   });
   return run(input);
 }
 
-/** Kalemden feragat (burs, sosyal indirim): fiş oluşmaz, gerekçe saklanır. */
+/** Kalemden feragat (burs, sosyal indirim): atomik durum kilidi ile fişsiz kapanır (#579). */
 export async function waiveChargeAction(input: unknown): Promise<ActionResult<{ ok: true }>> {
   const run = createAction({
     permission: { definition: courseFeesPermissions, action: "update" },
     schema: waiveChargeSchema,
     handler: async ({ input, audit }) => {
       const db = getDb();
-      const charge = await db.courseCharge.findUnique({ where: { id: input.chargeId } });
-      if (!charge) throw new ActionError("courses.errors.chargeNotFound");
-      if (charge.status !== "OPEN") throw new ActionError("courses.errors.chargeNotOpen");
-      await db.courseCharge.update({ where: { id: charge.id }, data: { status: "WAIVED", waivedReason: input.reason } });
-      await audit({ action: "CHARGE_WAIVE", entity: "CourseCharge", entityId: charge.id, after: { amountCents: charge.amountCents, reason: input.reason } });
+      const waived = await db.$transaction(async (tx) => {
+        const charge = await tx.courseCharge.findUnique({ where: { id: input.chargeId } });
+        if (!charge) throw new ActionError("courses.errors.chargeNotFound");
+        const claimed = await tx.courseCharge.updateMany({
+          where: { id: charge.id, status: "OPEN" },
+          data: { status: "WAIVED", waivedReason: input.reason },
+        });
+        if (claimed.count !== 1) throw new ActionError("courses.errors.chargeNotOpen");
+        return { id: charge.id, amountCents: charge.amountCents };
+      });
+      await audit({ action: "CHARGE_WAIVE", entity: "CourseCharge", entityId: waived.id, after: { amountCents: waived.amountCents, reason: input.reason } });
       return { ok: true as const };
     },
   });

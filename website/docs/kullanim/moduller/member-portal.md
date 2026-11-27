@@ -1,5 +1,5 @@
 ---
-sidebar_position: 41
+sidebar_position: 42
 title: "Üye Portalı"
 description: "Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı."
 slug: /kullanim/moduller/member-portal
@@ -13,7 +13,7 @@ Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı
 |---|---|
 | Anahtar | `member-portal` |
 | Tür | Eklenti |
-| Sürüm | 0.3.1 |
+| Sürüm | 0.4.1 |
 
 ## Diğer modüllere erişim
 
@@ -40,6 +40,27 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Üye Portalı Yönetimi | görüntüleme, düzenleme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 0.4.1 — Üye silmede portal oturumu iptal API'si
+
+_2026-11-25_
+
+- **Güvenlik:** Üye silme işlemi için aktif portal oturumlarını aynı işlemde iptal eden sunucu API'si eklendi (#578).
+
+### 0.4.0 — Portal uçtan uca çalışır, ek doğrulama, güvenlik
+
+_2026-11-25_
+
+- **Düzeltme:** Portal öznesi tek biçimde ('member:&lt;id>'); önceden her gerçek oturumda rıza, düzeltme, makbuz, Art. 15, etkinlik ve imza işlemleri başarısız oluyordu. Giriş bağlantısı tam e-posta eşleşmesiyle bulunur; ana veride gerçek maskeli IBAN gösterilir.
+- **Güvenlik:** E-postayla ek doğrulama (step-up) eklendi; doğrulamasız geçiş anahtarı yolu kapatıldı. Rıza onayı yalnız sayfadaki düğmeyle (POST) yapılır; tüm portal uçlarında hız sınırı; __Host- çerezleri doğru silinir; makbuz imza anahtarında sabit yedek değer kaldırıldı.
+- **Düzeltme:** Portal içi imza, tam akış bağlanana kadar kapalı; bekleyen formlar e-postadaki bağlantıyla (belge, imza, kanıt, PDF) imzalanır.
+- **Düzeltme:** Ek doğrulama isteği sınıra takılırsa bekleyen bağlantı geçerli kalır ve üyeye yeniden deneme mesajı gösterilir.
+
+### 0.3.2 — İşlem günlüğünde ödemeler
+
+_2026-11-25_
+
+- **Düzeltme:** İşlem günlüğü ve Art. 15 dışa aktarımı yönetimin kaydettiği ödemeleri de içerir.
 
 ### 0.3.1 — Portal CSP nonce, SameSite=Strict oturum ve Secure __Host- çerezleri
 

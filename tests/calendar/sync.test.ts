@@ -21,8 +21,9 @@ describe("calendar sync plugins", () => {
   test("google: all-day end is made inclusive, cancelled events are dropped", () => {
     const allDay = mapGoogleEvent({ id: "a", summary: "Urlaub", start: { date: "2026-11-10" }, end: { date: "2026-11-11" } })!;
     assert.equal(allDay.allDay, true);
-    assert.equal(allDay.start.getDate(), 10);
-    assert.equal(allDay.end.getDate(), 10);
+    // #584: Tüm gün kaydı sunucu saat diliminden bağımsız olarak Berlin gece yarısı → 23:59 olarak saklanır.
+    assert.equal(allDay.start.toISOString(), "2026-11-09T23:00:00.000Z");
+    assert.equal(allDay.end.toISOString(), "2026-11-10T22:59:00.000Z");
     assert.equal(mapGoogleEvent({ id: "b", status: "cancelled", start: { dateTime: "2026-11-10T10:00:00Z" } }), null);
     const timed = mapGoogleEvent({ id: "c", start: { dateTime: "2026-11-10T10:00:00+01:00" }, end: { dateTime: "2026-11-10T11:00:00+01:00" } })!;
     assert.equal(timed.start.toISOString(), "2026-11-10T09:00:00.000Z");

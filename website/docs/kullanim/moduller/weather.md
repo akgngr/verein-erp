@@ -13,7 +13,7 @@ Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik ö
 |---|---|
 | Anahtar | `weather` |
 | Tür | Eklenti |
-| Sürüm | 0.2.0 |
+| Sürüm | 0.3.0 |
 | Sayfalar | `/weather` |
 
 ## Diğer modüllere erişim
@@ -39,6 +39,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_current_weather`
 
 ## Sürüm notları
+
+### 0.3.0 — Derneğin şehri, kar simgeleri
+
+_2026-11-25_
+
+- **Düzeltme:** Sayfa, kart ve başlık widget'ı derneğin şehrini (kurum profili) kullanır; önceden her zaman Frankfurt gösteriliyordu. Günlük özet aynı konumu kullanır.
+- **İyileştirme:** Kar kodları (WMO 71–77, 85–86) kar simgesiyle gösterilir; hava ve konum önbellekleri sınırlıdır. Bulunamayan şehir aramaları 10 dakika sonra yeniden denenir.
 
 ### 0.2.0 — Hafif hava durumu header widget'ı
 

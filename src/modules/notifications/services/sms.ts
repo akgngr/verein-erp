@@ -135,7 +135,13 @@ export async function confirmSmsVerification(userId: string, code: string, now =
     await db.notificationDelivery.create({ data: { userId, channel: "sms", dedupeKey: `code-fail:${now.getTime()}:${Math.random()}`, status: "FAILED", attempts: 1 } });
     throw new SmsError("notifications.channels.errors.codeInvalid");
   }
-  await db.notificationChannelLink.update({ where: { id: row.id }, data: { verifiedAt: now, linkTokenHash: null, linkExpiresAt: null } });
+  // Bind the update to the exact code and address that were checked: a parallel request for another number
+  // replaces the row's address and code, so this update then matches nothing and the new number stays unverified.
+  const verified = await db.notificationChannelLink.updateMany({
+    where: { id: row.id, linkTokenHash: row.linkTokenHash, addressHash: row.addressHash, linkExpiresAt: { gt: now }, revokedAt: null },
+    data: { verifiedAt: now, linkTokenHash: null, linkExpiresAt: null },
+  });
+  if (verified.count !== 1) throw new SmsError("notifications.channels.errors.codeExpired");
 }
 
 export async function revokeSms(userId: string, now = new Date()): Promise<void> {

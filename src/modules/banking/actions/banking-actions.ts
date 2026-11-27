@@ -5,6 +5,7 @@ import { getLocale } from "next-intl/server";
 import { revalidatePath } from "next/cache";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { resolvePublicOrigin } from "@/shared/security/public-origin";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
@@ -31,11 +32,9 @@ async function guarded<T>(run: () => Promise<T>, connectionId?: string): Promise
 }
 
 async function redirectBase(): Promise<string> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host");
-  const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") || host?.startsWith("127.") ? "http" : "https");
-  if (!host) throw new ActionError("banking.errors.provider");
-  return `${proto}://${host}`;
+  const origin = resolvePublicOrigin(await headers());
+  if (!origin) throw new ActionError("banking.errors.appUrlRequired");
+  return origin;
 }
 
 export async function saveBankingSettingsAction(input: unknown): Promise<ActionResult<null>> {

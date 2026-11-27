@@ -90,9 +90,9 @@ describe("SEPA coach texts and privacy (#406)", () => {
     assert.match(actions, /after: \{ returned: true, code: input\.code, feeCents: input\.feeCents \}/, "the audit log stores code and fee, not the free-text note");
   });
 
-  test("the run preview skips dormant, renew-after-return and paused mandates", () => {
+  test("the run preview skips future-dated, dormant, renew-after-return and paused mandates", () => {
     const runs = fs.readFileSync("src/modules/sepa/services/runs.ts", "utf8");
-    assert.match(runs, /HEALTH_SKIPS: readonly HealthIssue\[\] = \["dormant", "renewAfterReturn", "pausedAfterReturns"\]/);
-    assert.match(runs, /else if \(healthSkip\(item\)\)/);
+    assert.match(runs, /HEALTH_SKIPS: readonly HealthIssue\[\] = \["futureSignatureDate", "dormant", "renewAfterReturn", "pausedAfterReturns"\]/);
+    assert.match(runs, /const skipHealth = healthSkip\(item\)|else if \(healthSkip\(item\)\)/);
   });
 });

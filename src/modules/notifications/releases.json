@@ -2,6 +2,81 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.16.1",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Ayar merkezi grubu",
+        "de": "Gruppe in der Einstellungsübersicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.",
+          "de": "Die Einstellungsseiten erscheinen in der Einstellungsübersicht in ihrer eigenen Gruppe und Reihenfolge."
+        }
+      ]
+    },
+    {
+      "version": "0.16.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Kanal ayarları ve numara doğrulama",
+        "de": "Kanaleinstellungen und Nummernbestätigung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bildirim ayarlarında yöneticiler için SMS (seven.io/Twilio) ve WhatsApp (Meta Cloud API) bölümleri; anahtarlar yalnız yazılır, hiçbir zaman gösterilmez.",
+          "de": "In den Benachrichtigungseinstellungen gibt es für Administratoren Bereiche für SMS (seven.io/Twilio) und WhatsApp (Meta Cloud API); Schlüssel werden nur geschrieben, nie angezeigt."
+        },
+        {
+          "type": "feature",
+          "tr": "Kullanıcılar SMS ve WhatsApp numaralarını 6 haneli kodla doğrular (numara yalnız son haneleriyle gösterilir). WhatsApp kodu onaylı bir kimlik doğrulama şablonuyla gönderilir.",
+          "de": "Benutzer bestätigen ihre SMS- und WhatsApp-Nummer mit einem 6-stelligen Code (die Nummer wird nur gekürzt angezeigt). Der WhatsApp-Code wird über eine genehmigte Authentifizierungsvorlage gesendet."
+        },
+        {
+          "type": "improvement",
+          "tr": "Tercih tablosunda yalnız gerçekten çalışan kanallar gösterilir; yapılandırılmamış kanal sütunu gizlenir.",
+          "de": "Die Präferenztabelle zeigt nur Kanäle, die tatsächlich zustellen; nicht konfigurierte Kanäle werden ausgeblendet."
+        },
+        {
+          "type": "security",
+          "tr": "SMS ve WhatsApp numara doğrulaması yalnız kodun gönderildiği numarayı doğrular; eşzamanlı yeni bir istek başka bir numarayı doğrulanmış yapamaz.",
+          "de": "Die SMS- und WhatsApp-Bestätigung gilt nur für die Nummer, an die der Code gesendet wurde; eine parallele neue Anfrage kann keine andere Nummer als bestätigt markieren."
+        }
+      ]
+    },
+    {
+      "version": "0.15.3",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Arayüz düzeltmeleri (#586)",
+        "de": "Oberflächenkorrekturen (#586)"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Bildirim tercihlerinde türler okunur adla, duyuru alıcılarında roller çevrilmiş adla gösterilir; zil rozeti mobil başlıkta kesilmez.",
+          "de": "Benachrichtigungsarten erscheinen mit lesbarem Namen, Rollen in Mitteilungen übersetzt; das Glockenabzeichen wird im mobilen Kopfbereich nicht mehr abgeschnitten."
+        }
+      ]
+    },
+    {
+      "version": "0.15.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Etkin kanal listesi",
+        "de": "Liste aktiver Kanäle"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Sağlık kokpiti etkin bildirim kanallarını public API ile okur (sır ve ayar döndürülmez).",
+          "de": "Das Gesundheitscockpit liest aktive Kanäle über die öffentliche API (ohne Geheimnisse und Einstellungen)."
+        }
+      ]
+    },
+    {
       "version": "0.15.1",
       "date": "2026-11-23",
       "title": {

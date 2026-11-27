@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -19,15 +20,23 @@ export function LoginForm() {
   const tCommon = useTranslations("common");
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
+  // #603: second step — shown once the server reports that this account has two-factor sign-in turned on.
+  const [needsSecondFactor, setNeedsSecondFactor] = useState(false);
   const form = useForm<LoginInput>({
     resolver: zodResolver(loginSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: "", password: "", otp: "" },
   });
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
-    const result = await loginAction(values);
+    const result = await loginAction(needsSecondFactor ? values : { ...values, otp: undefined });
     if (!result.ok) {
+      if (result.error === "auth.errors.twoFactorRequired") {
+        setNeedsSecondFactor(true);
+        form.setValue("otp", "");
+        setTimeout(() => form.setFocus("otp"), 0);
+        return;
+      }
       setFormError(applyActionResult(result, form.setError));
       return;
     }
@@ -54,9 +63,33 @@ export function LoginForm() {
         type="password"
         autoComplete="current-password"
         isRequired
+        isDisabled={needsSecondFactor}
       />
+      {needsSecondFactor ? (
+        <div className="flex flex-col gap-1">
+          <FormInput
+            name="otp"
+            label={t("twoFactorCode")}
+            control={form.control}
+            autoComplete="one-time-code"
+            isRequired
+          />
+          <p className="text-xs text-ink-500">{t("twoFactorCodeHint")}</p>
+          <button
+            type="button"
+            className="self-start text-xs text-ink-500 hover:text-foreground hover:underline"
+            onClick={() => { setNeedsSecondFactor(false); form.setValue("otp", ""); setFormError(null); }}
+          >
+            {t("twoFactorBack")}
+          </button>
+        </div>
+      ) : null}
       <FormErrorSummary message={formError} />
       <SubmitButton isSubmitting={form.formState.isSubmitting}>{t("loginButton")}</SubmitButton>
+      {/* #603: Self-service password reset. */}
+      <Link href="/sifremi-unuttum" className="self-center text-sm text-ink-500 hover:text-foreground hover:underline">
+        {t("forgotPassword")}
+      </Link>
     </form>
   );
 }

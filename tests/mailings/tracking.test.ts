@@ -43,9 +43,24 @@ describe("SMS delivery reports", () => {
   });
 
   test("seven.io secret path and status mapping", () => {
-    const secret = sevenWebhookSecret("key-1");
-    assert.equal(verifySevenSecret("key-1", secret), true);
-    assert.equal(verifySevenSecret("key-2", secret), false);
+    const previous = { auth: process.env.AUTH_SECRET, next: process.env.NEXTAUTH_SECRET };
+    try {
+      process.env.AUTH_SECRET = "test-secret-at-least-16-chars";
+      const secret = sevenWebhookSecret("key-1");
+      assert.ok(secret);
+      assert.equal(verifySevenSecret("key-1", secret), true);
+      assert.equal(verifySevenSecret("key-2", secret), false);
+      // #581: Uygulama sırrı yoksa gizli yol üretilmez ve hiçbir değer doğrulanmaz (fail closed).
+      delete process.env.AUTH_SECRET;
+      delete process.env.NEXTAUTH_SECRET;
+      assert.equal(sevenWebhookSecret("key-1"), null);
+      assert.equal(verifySevenSecret("key-1", secret), false);
+    } finally {
+      if (previous.auth === undefined) delete process.env.AUTH_SECRET;
+      else process.env.AUTH_SECRET = previous.auth;
+      if (previous.next === undefined) delete process.env.NEXTAUTH_SECRET;
+      else process.env.NEXTAUTH_SECRET = previous.next;
+    }
     assert.equal(mapSevenStatus("DELIVERED"), "DELIVERED");
     assert.equal(mapSevenStatus("NOTDELIVERED"), "FAILED");
     assert.equal(mapSevenStatus("BUFFERED"), null);

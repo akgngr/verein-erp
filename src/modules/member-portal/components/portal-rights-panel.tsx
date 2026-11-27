@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { Button, Card, CardContent, CardHeader, Input, StatusChip } from "@/shared/components/kit";
+import { Button, Card, CardContent, CardHeader, StatusChip } from "@/shared/components/kit";
 
 type Art15Item = {
   id: string;
@@ -59,9 +59,7 @@ export function PortalRightsPanel({
   const [events, setEvents] = useState(initialEvents);
   const [eventPending, setEventPending] = useState<string | null>(null);
 
-  const [forms, setForms] = useState(initialPendingForms);
-  const [signerName, setSignerName] = useState("");
-  const [signPending, setSignPending] = useState<string | null>(null);
+  const forms = initialPendingForms;
 
   async function requestArt15() {
     setArt15Pending(true);
@@ -106,22 +104,6 @@ export function PortalRightsPanel({
     }
   }
 
-  async function signForm(requestId: string) {
-    if (!signerName.trim()) return;
-    setSignPending(requestId);
-    try {
-      const res = await fetch("/api/member-portal/signing", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ requestId, signerName }),
-      });
-      if (res.ok) {
-        setForms((prev) => prev.filter((f) => f.id !== requestId));
-      }
-    } finally {
-      setSignPending(null);
-    }
-  }
 
   return (
     <div className="space-y-6">
@@ -257,13 +239,8 @@ export function PortalRightsPanel({
                 <p className="text-xs text-ink-500">{t("signing.empty")}</p>
               ) : (
                 <>
-                  <label className="flex flex-col gap-1 text-xs font-medium text-ink-700">
-                    {t("signing.signerNameLabel")}
-                    <Input
-                      value={signerName}
-                      onChange={(e) => setSignerName(e.target.value)}
-                    />
-                  </label>
+                  {/* #580: İmza e-postadaki form bağlantısında (belge, imza, kanıt ve PDF ile) yapılır. */}
+                  <p className="text-xs text-ink-600">{t("signing.useEmailLink")}</p>
                   <ul className="divide-y divide-ink-100 text-sm">
                     {forms.map((form) => (
                       <li key={form.id} className="flex flex-wrap items-center justify-between gap-2 py-2">
@@ -271,14 +248,6 @@ export function PortalRightsPanel({
                           <div className="font-medium text-ink-900">{form.kind}</div>
                           <div className="text-xs text-ink-500">{form.expiresAt.slice(0, 10)}</div>
                         </div>
-                        <Button
-                          type="button"
-                          size="sm"
-                          isDisabled={signPending === form.id || !signerName.trim()}
-                          onPress={() => signForm(form.id)}
-                        >
-                          {t("signing.signButton")}
-                        </Button>
                       </li>
                     ))}
                   </ul>

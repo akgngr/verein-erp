@@ -28,8 +28,22 @@ const SENSITIVE_KEYS = new Set([
   "plainPassword",
 ]);
 
+/**
+ * Değişiklik verisini JSON'a hazırlar: parola alanları atılır. #582: `Date` ve `toJSON` taşıyan değerler
+ * (Prisma `Decimal`) önce düz değere çevrilir; önceden `Object.entries` bunları `{}` yapıyordu ve denetimde
+ * tarih/tutar kayboluyordu (örn. ödeme alındı tarihi, fırsat kapanış tarihi, etkinlik saatleri).
+ */
+export function sanitizeAuditValue(value: unknown): unknown {
+  return sanitize(value);
+}
+
 function sanitize(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(sanitize);
+  if (value instanceof Date) return Number.isNaN(value.getTime()) ? null : value.toISOString();
+  if (value && typeof value === "object" && typeof (value as { toJSON?: unknown }).toJSON === "function") {
+    const json = (value as { toJSON: () => unknown }).toJSON();
+    return json === value ? null : sanitize(json);
+  }
   if (value && typeof value === "object") {
     const output: Record<string, unknown> = {};
     for (const [key, item] of Object.entries(value as Record<string, unknown>)) {

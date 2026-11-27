@@ -11,6 +11,7 @@ import { can } from "@/shared/permissions/define";
 import { ComplianceCockpitToolbar } from "../components/cockpit-toolbar";
 import { ComplianceRowActions } from "../components/row-actions";
 import { compliancePermissions } from "../permissions";
+import { COMPLIANCE_RULES } from "../rules";
 import { trafficLight } from "../services/engine";
 import { formatComputedValue } from "../services/export-report";
 import { runCockpit, type CockpitRow } from "../services/run";
@@ -49,6 +50,7 @@ export async function ComplianceCockpitView({ searchParams }: { searchParams: Pr
     };
   });
   const canCreate = can(user.role, compliancePermissions, "create");
+  const draftOnly = COMPLIANCE_RULES.length > 0 && COMPLIANCE_RULES.every((rule) => rule.review.status !== "reviewed");
   const canUpdate = can(user.role, compliancePermissions, "update");
   const advisorHref = canUpdate ? "/ayarlar/kullanicilar" : "/muhasebe";
 
@@ -72,7 +74,12 @@ export async function ComplianceCockpitView({ searchParams }: { searchParams: Pr
           </a>
         ))}
       </section>
-      {rows.length === 0 ? <p className="text-sm text-ink-500">{t("empty")}</p> : null}
+      {rows.length === 0 ? (
+        <p className="text-sm text-ink-500">
+          {/* #585: Kurallar hukuki inceleme ("reviewed") olmadan yalnız yönetici önizlemesinde çalışır. */}
+          {draftOnly ? t(canUpdate ? "draftOnlyAdmin" : "draftOnly") : t("empty")}
+        </p>
+      ) : null}
       {areas.map(({ key, rows: areaRows }) =>
         areaRows.length === 0 ? null : (
           <section key={key} id={`area-${key}`} aria-labelledby={`area-heading-${key}`} className="space-y-3">
@@ -119,7 +126,7 @@ export async function ComplianceCockpitView({ searchParams }: { searchParams: Pr
                       {finding.status === "ok" ? <p className="text-ink-500">{t("ok")}</p> : null}
                       {finding.status === "unchecked" ? <p className="text-ink-500">{t(`unchecked.${String(finding.facts.reason)}` as never)}</p> : null}
                       <p className="text-xs text-ink-500">
-                        {t("ui.computedValue")}: {formatComputedValue(finding.facts)}
+                        {t("ui.computedValue")}: {formatComputedValue(finding.facts, lang)}
                       </p>
                       {finding.status === "triggered" && row.mode === "active" && canCreate && row.rule.suggestedTask ? (
                         <ComplianceRowActions mode="task" ruleId={finding.ruleId} period={finding.period} refKey={typeof finding.facts.ref === "string" ? finding.facts.ref : ""} locale={lang} />

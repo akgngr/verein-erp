@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.14",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Veli self-servis silinmiş kayıt filtresi ve denetim kaydı gizliliği",
+        "de": "Soft-Delete-Filter im Eltern-Self-Service und Audit-Datenschutz"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Veli self-servis ve yetki sorgularında silinmiş kayıtlar (deletedAt) filtrelendi; SELF_PAYER denetim kaydından ad-soyad kişisel verisi kaldırıldı (#579).",
+          "de": "Gelöschte Datensätze (deletedAt) in Eltern-Self-Service- und Mandatsabfragen gefiltert; Klarnamen-PII aus dem SELF_PAYER-Prüfprotokoll entfernt (#579)."
+        }
+      ]
+    },
+    {
       "version": "1.4.13",
       "date": "2026-11-24",
       "title": {

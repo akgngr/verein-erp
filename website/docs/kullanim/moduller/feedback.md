@@ -13,7 +13,7 @@ Test kullanıcılarının hata ve önerilerini toplar.
 |---|---|
 | Anahtar | `feedback` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.6 |
+| Sürüm | 1.1.9 |
 | Sayfalar | `/geri-bildirim` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,25 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Geri bildirim | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | — | görüntüleme, oluşturma | görüntüleme, oluşturma |
 
 ## Sürüm notları
+
+### 1.1.9 — Geri bildirim bağlantılarında protokol doğrulaması
+
+_2026-11-25_
+
+- **Güvenlik:** Geri bildirim URL alanlarında yalnızca güvenli http/https protokollerine izin veriliyor (#573).
+
+### 1.1.8 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Tanıtım balonu tarayıcı başına bir kez gösterilir ve kendiliğinden kapanır; geri bildirim düğmesi açık diyalog/çekmece varken gizlenir, mobilde tek düğmedir.
+
+### 1.1.7 — Kullanıcı silmede anonimleştirme
+
+_2026-11-25_
+
+- **Güvenlik:** Kullanıcı silinince geri bildirimleri anonimleştirilir ve ekran görüntüleri silinir (DSGVO md. 17).
+- **Düzeltme:** Kaydı oluşturan kişi kendi ekran görüntüsünü görebilir.
 
 ### 1.1.6 — nav.json kategori ve alt modül tanımı
 
@@ -64,15 +83,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 1.1.0 — İş akışı tetikleyicileri
-
-_2026-11-06_
-
-- **Yeni:** İş akışı tetikleyicisi: "Geri bildirim gönderildiğinde" (tür, öncelik; {{feedback.title}} vb.).
-
-### 1.0.0 — Geri bildirim modülü
-
-_2026-11-01_
-
-- **Yeni:** Sağ altta geri bildirim butonu: ilk açılışta kısa bir sesle kendini tanıtır; hata bildirimi veya öneri gönderilebilir, isteğe bağlı ekran görüntüsü eklenir. Sayfa adresi ve tarayıcı bilgisi otomatik eklenir.
-- **Yeni:** Geri bildirim listesi: herkes kendi kayıtlarını, yöneticiler tümünü görür; durum, öncelik ve cevap yönetimi. Ekran görüntüleri yalnızca yetkililere açıktır.
+Daha eski 2 herkese açık sürüm notu.

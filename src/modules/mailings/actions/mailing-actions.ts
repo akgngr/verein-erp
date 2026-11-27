@@ -6,6 +6,7 @@ import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { resolvePublicOrigin } from "@/shared/security/public-origin";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
@@ -89,15 +90,13 @@ export async function launchCampaignAction(input: unknown): Promise<ActionResult
       if (!channel || !(await channel.isConfigured(await getChannelConfig(channel.key)))) throw new ActionError(input.channel === "email" ? "mailings.errors.notConfigured" : "mailings.errors.channelNotConfigured");
       const t = await getTranslations("mailings.workflow");
       const scheduledAt = input.scheduledAt ? new Date(input.scheduledAt) : null;
-      const h = await headers();
-      const host = h.get("x-forwarded-host") ?? h.get("host");
-      const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
+      const origin = resolvePublicOrigin(await headers()) ?? undefined;
       const result = await launchCampaign(user.role, { ...input, scheduledAt }, actorOf(user), {
         workflow: t("name", { name: input.name }),
         trigger: t("trigger"),
         wait: t("wait"),
         send: t("send"),
-      }, host ? `${proto}://${host}` : undefined);
+      }, origin);
       if (!result) throw new ActionError("mailings.errors.source");
       if (result.recipients === 0) throw new ActionError("mailings.errors.noRecipients");
       // KVKK: denetim kaydına alıcı listesi değil, kaynak, filtre ve sayı yazılır.
@@ -172,11 +171,9 @@ export async function saveChannelSettingsAction(input: unknown): Promise<ActionR
     permission: { definition: mailingsPermissions, action: "approve" },
     schema: z.object({ channel: z.string().regex(/^[a-z0-9-]{2,30}$/), values: z.record(z.string().max(60), z.string().max(2000)) }),
     handler: async ({ input, user, audit }) => {
-      const h = await headers();
-      const host = h.get("x-forwarded-host") ?? h.get("host");
-      const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
+      const origin = resolvePublicOrigin(await headers()) ?? undefined;
       try {
-        if (!(await saveChannelConfig(input.channel, input.values, user.id, host ? `${proto}://${host}` : undefined))) throw new ActionError("mailings.errors.channelUnknown");
+        if (!(await saveChannelConfig(input.channel, input.values, user.id, origin))) throw new ActionError("mailings.errors.channelUnknown");
       } catch (error) {
         if (error instanceof ActionError) throw error;
         throw new ActionError("mailings.errors.channelSetup");

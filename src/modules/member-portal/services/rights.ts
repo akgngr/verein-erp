@@ -9,25 +9,15 @@ import {
   createEncryptedArt15ExportForPortal,
   readEncryptedArt15ExportForPortal,
 } from "@/modules/exports/server";
-import {
-  listPendingOnlineFormsForPortal,
-  signOnlineFormForPortal,
-} from "@/modules/online-forms/server";
+import { listPendingOnlineFormsForPortal } from "@/modules/online-forms/server";
 import { hasLicensedFeature } from "@/modules/system/server";
 
 import { getPortalMasterData } from "./master-data";
 import { listPortalConsents, listPortalCorrections } from "./self-service";
+import { parseSubjectRef } from "./subject-ref";
 
 export const PORTAL_BUSINESS_FEATURE = "member-portal:business";
 
-function parseSubjectRef(ref: string): { kind: "member" | "guardian"; id: string } | null {
-  const idx = ref.indexOf(":");
-  if (idx <= 0) return null;
-  const kind = ref.slice(0, idx);
-  const id = ref.slice(idx + 1);
-  if ((kind !== "member" && kind !== "guardian") || !id) return null;
-  return { kind, id };
-}
 
 export async function hasPortalBusinessLicense(): Promise<boolean> {
   const [hasPortalBiz, hasBiz] = await Promise.all([
@@ -83,13 +73,13 @@ export async function requestPortalArt15Export(subjectRef: string): Promise<
     return { ok: false, reason: "alreadyOpen" };
   }
 
-  const [masterData, corrections, consents, processingLog] = await Promise.all([
+  const [masterData, corrections, consents] = await Promise.all([
     getPortalMasterData(subjectRef),
     listPortalCorrections(subjectRef),
     listPortalConsents(subjectRef),
-    listSubjectAuditLogsForPortal({ subjectRef, memberId: parsed.id }),
   ]);
   if (!masterData) return { ok: false, reason: "notFound" };
+  const processingLog = await listSubjectAuditLogsForPortal({ subjectRef, memberId: parsed.id, memberNumber: masterData.memberNumber });
 
   const { fileId, expiresAt } = await createEncryptedArt15ExportForPortal({
     ownerId: subjectRef,
@@ -148,7 +138,8 @@ export async function downloadPortalArt15Export(subjectRef: string, requestId: s
 export async function listPortalProcessingLog(subjectRef: string) {
   const parsed = parseSubjectRef(subjectRef);
   if (!parsed || parsed.kind !== "member") return [];
-  return listSubjectAuditLogsForPortal({ subjectRef, memberId: parsed.id });
+  const masterData = await getPortalMasterData(subjectRef);
+  return listSubjectAuditLogsForPortal({ subjectRef, memberId: parsed.id, memberNumber: masterData?.memberNumber ?? null });
 }
 
 export async function listPortalBusinessFeatures(subjectRef: string) {
@@ -193,24 +184,17 @@ export async function registerPortalEvent(subjectRef: string, eventId: string) {
   });
 }
 
+/**
+ * #580: Portal içi imza, tam online-forms akışı (belge, imza, kanıt, PDF, üye güncellemesi) bağlanana kadar
+ * kapalıdır; kişi e-postadaki form bağlantısını kullanır. Bkz. online-forms/services/portal-signing.ts.
+ */
 export async function signPortalPendingForm(
   subjectRef: string,
   requestId: string,
   signerName: string,
-): Promise<{ ok: true } | { ok: false; reason: "licenseRequired" | "invalidOrExpired" }> {
-  if (!(await hasPortalBusinessLicense())) {
-    return { ok: false, reason: "licenseRequired" };
-  }
-  const parsed = parseSubjectRef(subjectRef);
-  if (!parsed || parsed.kind !== "member") {
-    return { ok: false, reason: "invalidOrExpired" };
-  }
-
-  const signed = await signOnlineFormForPortal({
-    memberId: parsed.id,
-    subjectRef,
-    requestId,
-    signerName,
-  });
-  return signed ? { ok: true } : { ok: false, reason: "invalidOrExpired" };
+): Promise<{ ok: true } | { ok: false; reason: "licenseRequired" | "invalidOrExpired" | "useEmailLink" }> {
+  void subjectRef;
+  void requestId;
+  void signerName;
+  return { ok: false, reason: "useEmailLink" };
 }

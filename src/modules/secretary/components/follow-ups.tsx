@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
-import { Button, Input, Label, TextField } from "@/shared/components/kit";
+import { Button, DateInput, Input, Label, TextField } from "@/shared/components/kit";
+import { formatDate } from "@/shared/utils";
 import { notify } from "@/shared/components/ui/notify";
 
 import { changeFollowUpAction, createFollowUpAction, listMyFollowUpsAction } from "../actions/follow-ups";
@@ -95,10 +96,7 @@ export function SecretaryFollowUps({ labels }: { labels: FollowUpLabels }) {
           <Label>{labels.title}</Label>
           <Input value={title} maxLength={200} onChange={(event) => setTitle(event.target.value)} />
         </TextField>
-        <TextField isDisabled={pending !== null}>
-          <Label>{labels.due}</Label>
-          <Input type="date" value={dueOn} onChange={(event) => setDueOn(event.target.value)} />
-        </TextField>
+        <DateInput label={labels.due} ariaLabel={labels.due} value={dueOn} onChange={setDueOn} isDisabled={pending !== null} />
         <Button variant="primary" isPending={pending === "create"} isDisabled={pending !== null || !title.trim() || !dueOn}
           onPress={() => void create()}>{labels.create}</Button>
       </div>
@@ -111,7 +109,7 @@ export function SecretaryFollowUps({ labels }: { labels: FollowUpLabels }) {
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <div className="min-w-0">
                   <p className="break-words font-medium">{item.title}</p>
-                  <p className="text-sm text-ink-500">{item.dueOn} · {labels.status[item.status]} · {labels.reminders}: {item.reminderCount}/{item.maxReminders}</p>
+                  <p className="text-sm text-ink-500"><time dateTime={item.dueOn}>{formatDate(item.dueOn)}</time> · {labels.status[item.status]} · {labels.reminders}: {item.reminderCount}/{item.maxReminders}</p>
                 </div>
                 {isSafeSourceHref(item.sourceHref) ? <Link href={item.sourceHref} className="text-sm text-accent underline-offset-4 hover:underline focus-visible:underline">{labels.openSource}</Link> : null}
               </div>

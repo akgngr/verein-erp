@@ -1,0 +1,9 @@
+# Temporary, dated Trivy vulnerability exceptions (#621).
+# Every entry MUST match docs/security/DEPENDENCY_AUDIT_EXCEPTIONS.md and include
+# an explicit `expired_at` date so exceptions cannot silently become permanent.
+vulnerabilities:
+  - id: GHSA-fc5q-39xc-vjpf
+    expired_at: 2026-12-15
+    statement: >-
+      Temporary upstream exception for picomatch <= 4.0.7 ReDoS (transitive via
+      @parcel/watcher / tinyglobby). Tracked in docs/security/DEPENDENCY_AUDIT_EXCEPTIONS.md.

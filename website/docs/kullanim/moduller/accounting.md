@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.27.3 |
+| Sürüm | 1.29.2 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/denetim`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -22,9 +22,11 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 | Modül | İşlem | Gerekçe |
 |---|---|---|
-| [Modül Yönetimi](./system) | okuma | Envanter modülünün etkin olup olmadığını okur. |
+| [Modül Yönetimi](./system) | okuma | Envanter ve ilgili modüllerin etkin olup olmadığını okur. |
 | [Envanter ve Demirbaş](./inventory) | yazma | Demirbaşları envanter eşyalarıyla senkron tutar (ad, tarih, bedel, hurdaya çıkarma). |
-| [Üyeler](./members) | okuma | Üye aidat ödemelerini muhasebeye aktarmak için ödemeleri okur. |
+| [Üyeler](./members) | okuma, yazma | Üye aidat ödemelerini muhasebeye aktarmak ve banka hareketleriyle açık aidatları eşleştirip kapatmak için üye aidatlarını okur ve öder. |
+| [Kurslar](./courses) | okuma, yazma | Açık kurs ücretlerini banka hareketleriyle eşleştirip ödenmiş olarak işaretlemek için kurs ücretlerini okur ve günceller. |
+| [Bağışlar](./donations) | okuma, yazma | Gelen banka hareketlerini tek tıkla bağış olarak kaydetmek ve mevcut bağışçıları önermek için bağış modülünü okur ve yazar. |
 | [Dernek Bilgileri](./organization) | okuma | PDF raporlarında dernek antetini kullanır. |
 
 ## Varsayılan yetkiler
@@ -44,52 +46,57 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
+### 1.29.2 — Gelen alacak dekontu işaretleri ve iade ödemesi
+
+_2026-11-27_
+
+- **Düzeltme:** Pozitif ve negatif vergi grupları içeren gelen alacak dekontlarında (UBL/CII) işaret artık belge başına bir kez belirlenir; gruplar toplamlarla tutarlı kalır (BR-CO-13) ve onay ekranı doğru tutarlarla dolar.
+- **Düzeltme:** Tedarikçi alacak dekontları gelen fatura sayfasındaki ödeme penceresinden iade olarak kapatılabilir (tutar pozitif girilir).
+
+### 1.29.1 — Gelen fatura ödeme dağılımı ve KoSIT yanıt sınırı düzeltmesi
+
+_2026-11-27_
+
+- **Düzeltme:** Pozitif ve negatif vergi grupları içeren gelen faturalarda (ör. indirim veya avans kesintisi satırı) ödeme artık grupların işaretlerini korur; negatif grup gidere dönüşmez ve ön vergi dağılımı belgeyle aynı kalır.
+- **Düzeltme:** KoSIT doğrulayıcısı 2 MB sınırını aşan bir yanıt döndürdüğünde doğrulama artık takılmaz; 'doğrulanamadı' sonucu döner.
+
+### 1.29.0 — Giden faturalarda yerel EPC-QR (GiroCode)
+
+_2026-11-26_
+
+- **Yeni:** IBAN tanımlı açık giden fatura PDF'lerine (ZUGFeRD dahil) dış sunucu olmadan yerel olarak üretilen SEPA EPC-QR (GiroCode) ödeme kodu eklendi (#618).
+
+### 1.28.0 — Aidat, kurs ücreti ve tek tıkla bağış banka eşleştirmesi
+
+_2026-11-26_
+
+- **Yeni:** Banka hareketleri artık açık üye aidatları, açık kurs ücretleri ve bağışlarla (mevcut veya yeni bağışçı) öneri puanlarıyla tek adımda eşleştirilip kapatılabilir (#616).
+
+### 1.27.6 — Yerel tarih alanları
+
+_2026-11-26_
+
+- **İyileştirme:** Ödeme, fatura tahsilatı ve ödeme çalıştırması tarihleri yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.
+
+### 1.27.5 — GoBD, vergi, Kassenminus, banka ve PDF güvenlik düzeltmeleri
+
+_2026-11-25_
+
+- **Güvenlik:** Sayman raporu PDF oluşturucusunda çapraz modül dosya okuma engellendi ve KoSIT doğrulayıcıda DNS-sabitli SSRF koruması eklendi (#573).
+- **Düzeltme:** Kassenminus, banka içe aktarma/ters kayıt, SOLL-Versteuerung UStVA, § 19 UStG, GoBD Z3 UTF-8/ek CSV'ler, yıllık kapanış, e-fatura KDV kategorisi E ve SEPA pain.001 transliterasyon hataları giderildi (#576, #577).
+- **Düzeltme:** Kesilmiş faturanın tahsilatında faturadaki KDV oranları esas alınır; § 19 UStG ayarı sonradan açılsa da KDV'li fatura KDV'siz kaydedilmez.
+- **Düzeltme:** İçe aktarılan tedarikçi alacak dekontları (negatif tutarlar) iade olarak kapatılabilir: elle veya gelen banka hareketiyle eşleştirilir, gider ve ön KDV azaltılır.
+
+### 1.27.4 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **Düzeltme:** Varlık, götürü gider ve kasa kapanışı formlarında tarih alanları yerel biçimde (GG.AA.YYYY) ve takvimle seçilir.
+
 ### 1.27.3 — nav.json kategori ve alt modül tanımı
 
 _2026-11-24_
 
 - **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
-### 1.27.2 — TAX_ADVISOR rolü izin tanımı
-
-_2026-11-23_
-
-- **Güvenlik:** TAX_ADVISOR rolü için salt okunur görüntüleme izni tanımlandı.
-
-### 1.27.0 — Kassenprüfer süreli denetim odası (B001 Q1)
-
-_2026-11-23_
-
-- **Yeni:** Son kullanma tarihli salt-okunur denetçi erişimi (/muhasebe/denetim), tüm görüntülemelerin denetim kaydına yazılması, 5 alanlı rehberli kontrol listesi ve Genel Kurul Denetim Raporu PDF'ine aktarılan bulgu kayıtları eklendi.
-
-### 1.26.1 — GoBD silme koruması
-
-_2026-11-23_
-
-- **Güvenlik:** Banka ekstresi hareketleri ilişkisi (AccountingBankTransaction.import) onDelete: Restrict olarak güncellendi.
-
-### 1.26.0 — Genel Kurul Kassenbericht ve sunum görünümü
-
-_2026-11-22_
-
-- **Yeni:** Genel Kurul için tek tıkla faaliyet alanları (§ 5), projeler, rezervler ve önceki yıl karşılaştırmalı Kassenbericht PDF raporu ve slayt görünümü eklendi (Q3, Refs #407).
-
-### 1.25.0 — Sekreterden ihtar önerisi
-
-_2026-11-19_
-
-- **Yeni:** Vadesi geçmiş ve ihtar zamanı gelmiş faturalar için sekreter, onay kutusunda "ihtar kaydı oluştur" önerisi sunar. Onaylanınca her faturaya sıradaki ihtar kademesi kaydedilir; e-posta veya PDF gönderilmez. Yalnız muhasebe düzenleme yetkisi olanlar görür; bu arada ödenen veya ihtarlanan fatura varsa öneri geçersiz olur.
-
-### 1.24.2 — Kod bakımı
-
-_2026-11-19_
-
-- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
-
-### 1.24.1 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 50 herkese açık sürüm notu.
+Daha eski 57 herkese açık sürüm notu.

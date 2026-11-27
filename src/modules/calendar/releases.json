@@ -2,6 +2,66 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.3.18",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Yerel tarih alanları",
+        "de": "Lokale Datumsfelder"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Tekrarlayan randevunun bitiş tarihi yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.",
+          "de": "Enddatum wiederkehrender Termine werden im lokalen Format (TT.MM.JJJJ, 24 h) mit Kalender gewählt statt im browserabhängigen Format mm/dd/yyyy."
+        }
+      ]
+    },
+    {
+      "version": "1.3.17",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Kanonik APP_URL abonelik bağlantıları",
+        "de": "Kanonische APP_URL für Kalender-Abos"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Takvim abonelik bağlantıları artık kanonik APP_URL kökü üzerinden üretiliyor (#574).",
+          "de": "Kalender-Abonnement-Links verwenden nun die kanonische APP_URL-Basis (#574)."
+        }
+      ]
+    },
+    {
+      "version": "1.3.16",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "ICS aboneliği ve ortak takvim düzeltmeleri",
+        "de": "Korrekturen an ICS-Abo und gemeinsamen Kalendern"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "ICS: noktalı virgül doğru kaçışlanır; tüm gün kayıtlar Berlin tarihine göre ve dışlayıcı bitişle yazılır (tek günlük kayıtlar Apple/Google'da kaybolmaz).",
+          "de": "ICS: Semikolons werden korrekt maskiert; ganztägige Termine werden nach Berliner Datum und mit exklusivem Ende geschrieben (eintägige Termine verschwinden nicht mehr in Apple/Google)."
+        },
+        {
+          "type": "fix",
+          "tr": "Abonelik dış takvimlerden senkronlanan kayıtları geri yayımlamaz, sahibinin takvim yetkisini denetler ve bağlantı dilini kullanır.",
+          "de": "Das Abo veröffentlicht keine synchronisierten externen Termine mehr, prüft die Kalenderberechtigung des Inhabers und nutzt die Sprache des Links."
+        },
+        {
+          "type": "fix",
+          "tr": "Ortak takvimden silmek silme yetkisi ister; ortak takvim, abonelik bağlantısı ve dış takvim işlemleri denetim kaydına yazılır.",
+          "de": "Löschen aus gemeinsamen Kalendern erfordert die Löschberechtigung; Aktionen an gemeinsamen Kalendern, Abo-Links und externen Kalendern werden protokolliert."
+        },
+        {
+          "type": "fix",
+          "tr": "iCloud yönlendirmeleri izinli sunuculara izlenir; izin verilmeyen sunucu adresi için anlaşılır hata.",
+          "de": "iCloud-Weiterleitungen zu erlaubten Servern werden verfolgt; verständliche Meldung bei nicht erlaubter Serveradresse."
+        }
+      ]
+    },
+    {
       "version": "1.3.15",
       "date": "2026-11-24",
       "title": {

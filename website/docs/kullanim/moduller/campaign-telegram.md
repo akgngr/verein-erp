@@ -1,5 +1,5 @@
 ---
-sidebar_position: 37
+sidebar_position: 38
 title: "Telegram"
 description: "Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone olur; /stop ile ayrılır."
 slug: /kullanim/moduller/campaign-telegram
@@ -13,7 +13,7 @@ Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone
 |---|---|
 | Anahtar | `campaign-telegram` |
 | Tür | Eklenti |
-| Sürüm | 1.0.2 |
+| Sürüm | 1.1.0 |
 | Gerektirir | [Toplu e-posta](./mailings) |
 
 ## Diğer modüllere erişim
@@ -22,7 +22,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 | Modül | İşlem | Gerekçe |
 |---|---|---|
-| [Toplu e-posta](./mailings) | okuma | Webhook'ta bot ayarlarını (şifreli) okumak için. |
+| [Toplu e-posta](./mailings) | okuma, yazma | Webhook'ta bot ayarlarını (şifreli) okumak ve /start, /stop ile verilen/geri alınan Telegram rızasını kişinin kaydına yazmak için. |
 
 ## Varsayılan yetkiler
 
@@ -33,6 +33,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Telegram | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.0 — Açık rıza ve tek kullanımlık davet
+
+_2026-11-25_
+
+- **Güvenlik:** Telegram mesajı yalnız kişinin kaydında açık Telegram rızası varsa gönderilir; rızasını geri alan kişiye artık gitmez.
+- **Güvenlik:** Davet bağlantısı ilk kullanımda yenilenir; iletilmiş eski bağlantı başka bir sohbeti bağlayamaz. /start rızayı kaydeder, /stop geri alır.
+- **Güvenlik:** Webhook gövdesi boyutla sınırlıdır. Rıza eşitlemesi için Kampanyalar erişimi 'yazma' içerir; yönetici onayı yenilenmelidir.
 
 ### 1.0.2 — TAX_ADVISOR rolü izin tanımı
 

@@ -19,8 +19,11 @@ import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState } from "react";
 
+import { useOverlayOpen } from "@/shared/hooks/use-overlay-open";
+
 const INTRO_KEY = "feedback.introSeen";
 const MUTE_KEY = "feedback.muted";
+const INTRO_VISIBLE_MS = 12_000;
 
 const storage = {
   get: (key: string) => {
@@ -88,13 +91,21 @@ export function FeedbackWidget() {
   const [file, setFile] = useState<File | null>(null);
   const [busy, setBusy] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
+  const overlayOpen = useOverlayOpen();
 
   useEffect(() => {
     const isMuted = storage.get(MUTE_KEY) === "1";
     // localStorage yalnızca istemcide okunur; durum güncellemesi bir sonraki tikte (hidrasyon sonrası).
     const sync = window.setTimeout(() => setMuted(isMuted), 0);
     if (storage.get(INTRO_KEY)) return () => window.clearTimeout(sync);
-    const show = window.setTimeout(() => setIntro(true), 1500);
+    // #586: Tanıtım balonu tarayıcı başına bir kez gösterilir (kapatılmasa da sonraki sayfalarda açılmaz)
+    // ve bir süre sonra kendiliğinden kapanır; önceden her sayfada açılıp kaydet düğmelerini örtüyordu.
+    let hide = 0;
+    const show = window.setTimeout(() => {
+      storage.set(INTRO_KEY, "1");
+      setIntro(true);
+      hide = window.setTimeout(() => setIntro(false), INTRO_VISIBLE_MS);
+    }, 1500);
     // Ses ancak bir kullanıcı etkileşiminden sonra çalabilir: ilk tıklamada bir kez bip.
     const onFirstInteraction = () => {
       if (!isMuted) beep();
@@ -104,6 +115,7 @@ export function FeedbackWidget() {
     return () => {
       window.clearTimeout(sync);
       window.clearTimeout(show);
+      window.clearTimeout(hide);
       window.removeEventListener("pointerdown", onFirstInteraction);
     };
   }, []);
@@ -170,7 +182,11 @@ export function FeedbackWidget() {
 
   return (
     <>
-      <div className="fixed bottom-24 right-4 z-40 flex flex-col items-end gap-2 md:bottom-6 md:right-6 print:hidden">
+      {/* #586: Açık diyalog/çekmece varken gizlenir; mobilde tek düğme (ses düğmesi diyalogda). */}
+      <div
+        className="fixed bottom-4 right-4 z-40 flex flex-col items-end gap-2 md:bottom-6 md:right-6 print:hidden"
+        hidden={overlayOpen || open}
+      >
         {intro ? (
           <div className="relative max-w-64 animate-[bounce_1s_ease-in-out_2] rounded-xl border border-brand-200 bg-surface p-3 pr-8 text-sm shadow-lg">
             <button
@@ -204,33 +220,28 @@ export function FeedbackWidget() {
           </div>
         ) : null}
         <div className="flex items-center gap-1.5">
-          <Button
-            isIconOnly
-            size="sm"
-            aria-label={muted ? t("unmute") : t("mute")}
-            onPress={toggleMute}
-            variant={actionVariant("default", "flat")}
-            className={["bg-surface shadow-sm", "rounded-full"]
-              .filter(Boolean)
-              .join(" ")}
-          >
-            {muted ? (
-              <VolumeX className="h-4 w-4" aria-hidden />
-            ) : (
-              <Volume2 className="h-4 w-4" aria-hidden />
-            )}
-          </Button>
+          <span className="hidden md:inline-flex">
+            <Button
+              isIconOnly
+              size="sm"
+              aria-label={muted ? t("unmute") : t("mute")}
+              onPress={toggleMute}
+              variant={actionVariant("default", "flat")}
+              className="rounded-full bg-surface shadow-sm"
+            >
+              {muted ? (
+                <VolumeX className="h-4 w-4" aria-hidden />
+              ) : (
+                <Volume2 className="h-4 w-4" aria-hidden />
+              )}
+            </Button>
+          </span>
           <Button
             isIconOnly
             aria-label={t("open")}
             onPress={() => start("BUG")}
             variant={actionVariant("warning", "solid")}
-            className={[
-              `h-12 w-12 shadow-lg ${intro ? "animate-pulse" : ""}`,
-              "rounded-full",
-            ]
-              .filter(Boolean)
-              .join(" ")}
+            className={`h-11 w-11 rounded-full shadow-lg md:h-12 md:w-12 ${intro ? "animate-pulse" : ""}`}
           >
             <MessageSquareWarning className="h-5 w-5" aria-hidden />
           </Button>
@@ -331,6 +342,15 @@ export function FeedbackWidget() {
                     </p>
                   </Dialog.Body>
                   <Dialog.Footer>
+                    <Button
+                      isIconOnly
+                      aria-label={muted ? t("unmute") : t("mute")}
+                      onPress={toggleMute}
+                      variant={actionVariant("default", "light")}
+                      className="mr-auto md:hidden"
+                    >
+                      {muted ? <VolumeX className="h-4 w-4" aria-hidden /> : <Volume2 className="h-4 w-4" aria-hidden />}
+                    </Button>
                     <Button
                       onPress={close}
                       variant={actionVariant("default", "light")}

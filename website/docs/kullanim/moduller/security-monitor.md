@@ -13,7 +13,7 @@ Regularly runs system security tests and monitors results
 |---|---|
 | Anahtar | `security-monitor` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.6 |
+| Sürüm | 1.4.1 |
 | Sayfalar | `/guvenlik-izleme` |
 | Gerektirir | [Otomasyon](./automation) |
 
@@ -29,11 +29,30 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Güvenlik İzleme | görüntüleme, oluşturma, düzenleme, silme | — | — | — | görüntüleme | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Güvenlik İzleme | görüntüleme, oluşturma, düzenleme, silme | — | — | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.4.1 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
+
+### 1.4.0 — Süreç içi güvenlik denetimi
+
+_2026-11-25_
+
+- **Düzeltme:** 'Testleri çalıştır' artık alt süreçte test paketi başlatmaz (her zaman hata veriyordu); çalışan kurulumun güvenlik ayarları süreç içinde denetlenir: uygulama sırrı, sır şifreleme, HTTPS adres, yükleme klasörü, değiştirilemez denetim kaydı, veritabanı göçleri (yalnızca çözülmemiş hatalar), üretim modu.
+- **Güvenlik:** API'ler Zod ile doğrulanır; 401/403/400/404/500 ayrımı yapılır, ham hata mesajı dönmez; çalıştırma ve uyarı işlemleri denetim kaydı bırakır. Kullanılmayan zamanlama API'si kaldırıldı (zamanlama otomasyondadır).
+
+### 1.3.7 — Sayfa yetkisi
+
+_2026-11-25_
+
+- **Güvenlik:** Sayfa sunucuda yetki ister; 'Testleri çalıştır' yalnız oluşturma iznine sahip rollere görünür.
 
 ### 1.3.6 — TAX_ADVISOR rolü izin tanımı
 
@@ -65,23 +84,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 1.3.1 — İş akışı etiketleri
-
-_2026-11-06_
-
-- **İyileştirme:** Güvenlik testleri adımı için okunur ad ve alan etiketleri eklendi.
-
-### 1.3.0 — Güvenlik testleri iş akışlarında; API adresleri düzeltildi
-
-_2026-11-06_
-
-- **Yeni:** Güvenlik testleri iş akışı düzenleyicisinde görev olarak kullanılabilir.
-- **Düzeltme:** Güvenlik İzleme ekranı var olmayan /api/modules/... adreslerini çağırdığı için 404 alıyordu; istatistik, çalıştırma ve uyarı istekleri ile test kuyruğa alma artık doğru /api/security-monitor/... adreslerini kullanıyor. Menü etiketi Otomasyon İzleme ile çakışmıyor.
-
-### 1.2.0 — Güvenlik testleri zamanlanabilir
-
-_2026-11-05_
-
-- **Yeni:** Güvenlik testleri Otomasyon ekranından düzenli aralıklarla (en az saatlik) çalışacak şekilde zamanlanabilir.
-
-Daha eski 3 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.

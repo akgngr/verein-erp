@@ -12,7 +12,7 @@ const err = (rule: string): EInvoiceIssue => ({ rule, severity: "error" });
 const warn = (rule: string): EInvoiceIssue => ({ rule, severity: "warning" });
 /** 1 sent yuvarlama toleransı (satır bazlı yuvarlama farkları). */
 const close = (a: number, b: number, tolerance = 1) => Math.abs(a - b) <= tolerance;
-const category = (rate: number, smallBusiness: boolean) => (rate > 0 ? "S" : smallBusiness ? "E" : "Z");
+const category = (rate: number, _smallBusiness: boolean) => (rate > 0 ? "S" : "E");
 
 /** Giden fatura / iptal faturası (XRechnung ve ZUGFeRD aynı veriden üretilir). */
 export function validateOutgoing(data: XInvoiceData): EInvoiceIssue[] {
@@ -99,7 +99,7 @@ export function validateIncoming(parsed: ParsedEInvoice): EInvoiceIssue[] {
   for (const group of parsed.byRate) {
     if (group.rate > 0) add(!close(Math.round((group.netCents * group.rate) / 100), group.taxCents, 2), warn("BR-S-09"));
   }
-  add(parsed.payableCents > parsed.grossCents, err("BR-CO-16"));
+  add(Math.abs(parsed.payableCents) > Math.abs(parsed.grossCents), err("BR-CO-16"));
   return dedupe(issues);
 }
 

@@ -49,6 +49,12 @@ export type RecipientSource = {
   placeholders: string[];
   filters: RecipientFilter[];
   resolve: (filter: Record<string, string[]>) => Promise<Recipient[]>;
+  /**
+   * #581: Kanal rızasını kaynağın kaydına yazar (örn. Telegram /start → verildi, /stop → geri alındı).
+   * Kayıt yoksa veya kanal desteklenmiyorsa `false` döner. Uygulamayan kaynakta kanal eklentisinin
+   * kendi abonelik kaydı rıza yerine geçmez: gönderim yine `consents[kanal] === true` ister.
+   */
+  setConsent?: (recordId: string, channel: string, granted: boolean) => Promise<boolean>;
   /** Test gönderiminde kullanılacak örnek değerler (alıcı yoksa). */
   sampleVars: Record<string, string>;
 };

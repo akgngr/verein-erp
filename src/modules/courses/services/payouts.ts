@@ -1,13 +1,16 @@
 import "server-only";
 
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 
 import { createSourcedBooking, getPaymentAccountTargets, reverseSourcedBooking } from "@/modules/accounting/server";
 import { ActionError, getPaymentProfile } from "@/modules/auth/server";
 import { getDb } from "@/shared/db";
 
 import { getCoursesSettings } from "../queries/course-parts";
-import { calculatePayout, exceedsLimit, periodRange, type PayoutLine, type PayoutSession } from "./payout-calc";
+import { calculatePayout, periodRange, type PayoutLine, type PayoutSession } from "./payout-calc";
+import { approvePayoutCore, listPayoutsCore, type PayoutRow } from "./payout-core";
+
+export type { PayoutRow };
 
 const SOURCE = "COURSE_TEACHER_PAYOUT";
 type Actor = { id: string; label: string };
@@ -78,18 +81,9 @@ export async function generatePayouts(period: string, actor: Actor): Promise<{ c
   return { created, updated, skipped };
 }
 
-/** Onay: Gutschrift numarası verilir (HA-<yıl>-<sıra>, yıl içinde boşluksuz). */
+/** Onay: Gutschrift numarası verilir (HA-<yıl>-<sıra>, P2002 retry + atomik DRAFT kilidi — #579). */
 export async function approvePayout(id: string, actor: Actor): Promise<string> {
-  return getDb().$transaction(async (tx) => {
-    const payout = await tx.courseTeacherPayout.findUnique({ where: { id } });
-    if (!payout || payout.status !== "DRAFT") throw new ActionError("courses.payouts.errors.notDraft");
-    const year = Number(payout.period.slice(0, 4));
-    const last = await tx.courseTeacherPayout.findFirst({ where: { year }, orderBy: { sequence: "desc" }, select: { sequence: true } });
-    const sequence = (last?.sequence ?? 0) + 1;
-    const number = `HA-${year}-${String(sequence).padStart(4, "0")}`;
-    await tx.courseTeacherPayout.update({ where: { id }, data: { status: "APPROVED", year, sequence, number, approvedAt: new Date(), approvedByLabel: actor.label } });
-    return number;
-  });
+  return approvePayoutCore(id, actor, (code) => new ActionError(code));
 }
 
 /** Ödendi: muhasebeye gider fişi (banka hesabı, hakediş gider kategorisi). Açıklamada ad yok, numara var. */
@@ -100,6 +94,11 @@ export async function markPayoutPaid(id: string, paidAt: Date, actor: Actor): Pr
   return getDb().$transaction(async (tx) => {
     const payout = await tx.courseTeacherPayout.findUnique({ where: { id } });
     if (!payout || payout.status !== "APPROVED" || !payout.number) throw new ActionError("courses.payouts.errors.notApproved");
+    const claimed = await tx.courseTeacherPayout.updateMany({
+      where: { id, status: "APPROVED" },
+      data: { status: "PAID", paidAt },
+    });
+    if (claimed.count !== 1) throw new ActionError("courses.payouts.errors.notApproved");
     const booking = await createSourcedBooking({
       tx,
       actor,
@@ -113,7 +112,7 @@ export async function markPayoutPaid(id: string, paidAt: Date, actor: Actor): Pr
       description: `Honorar ${payout.number} – ${payout.period.slice(5)}/${payout.period.slice(0, 4)}`, // i18n-ignore (Buchungstext Almanca, DATEV)
       receiptReference: payout.number,
     });
-    await tx.courseTeacherPayout.update({ where: { id }, data: { status: "PAID", paidAt, bookingNumber: booking.bookingNumber } });
+    await tx.courseTeacherPayout.update({ where: { id }, data: { bookingNumber: booking.bookingNumber } });
     return booking.bookingNumber;
   });
 }
@@ -124,75 +123,23 @@ export async function cancelPayout(id: string, reason: string, actor: Actor): Pr
     const payout = await tx.courseTeacherPayout.findUnique({ where: { id } });
     if (!payout || payout.status === "CANCELLED") throw new ActionError("courses.payouts.errors.notFound");
     if (payout.status === "DRAFT") {
-      await tx.courseTeacherPayout.delete({ where: { id } });
+      const deleted = await tx.courseTeacherPayout.deleteMany({ where: { id, status: "DRAFT" } });
+      if (deleted.count !== 1) throw new ActionError("courses.payouts.errors.notFound");
       return;
     }
+    const claimed = await tx.courseTeacherPayout.updateMany({
+      where: { id, status: payout.status },
+      data: { status: "CANCELLED", cancelledAt: new Date() },
+    });
+    if (claimed.count !== 1) throw new ActionError("courses.payouts.errors.notFound");
     if (payout.status === "PAID") await reverseSourcedBooking({ tx, actor, sourceType: SOURCE, sourceId: payout.id, reason });
-    await tx.courseTeacherPayout.update({ where: { id }, data: { status: "CANCELLED", cancelledAt: new Date() } });
   });
 }
 
-export type PayoutRow = {
-  id: string;
-  teacherId: string;
-  teacherName: string;
-  period: string;
-  status: "DRAFT" | "APPROVED" | "PAID" | "CANCELLED";
-  number: string | null;
-  compensation: string;
-  sessionCount: number;
-  minutes: number;
-  amountCents: number;
-  bookingNumber: string | null;
-  paidAt: Date | null;
-  hasPaymentProfile: boolean;
-  limitExceeded: boolean;
-};
-
-/** Hakediş listesi; onlyTeacherUserId verilirse yalnızca o öğretmenin kayıtları. */
+/** Hakediş listesi; onlyTeacherUserId verilirse yalnızca o öğretmenin kayıtları (N+1'siz toplu sorgu — #579). */
 export async function listPayouts(filter: { period?: string | null; onlyTeacherUserId?: string | null }): Promise<PayoutRow[]> {
-  const db = getDb();
   const settings = await getCoursesSettings();
-  const rows = await db.courseTeacherPayout.findMany({
-    where: {
-      ...(filter.period ? { period: filter.period } : {}),
-      ...(filter.onlyTeacherUserId ? { teacher: { userId: filter.onlyTeacherUserId } } : {}),
-    },
-    include: { teacher: { select: { firstName: true, lastName: true, userId: true } } },
-    orderBy: [{ period: "desc" }, { teacher: { lastName: "asc" } }],
-  });
-  const profileCache = new Map<string, boolean>();
-  const yearTotals = new Map<string, number>();
-  const result: PayoutRow[] = [];
-  for (const row of rows) {
-    const userId = row.teacher.userId;
-    if (userId && !profileCache.has(userId)) profileCache.set(userId, Boolean((await getPaymentProfile(userId))?.iban));
-    const key = `${row.teacherId}:${row.period.slice(0, 4)}`;
-    if (!yearTotals.has(key)) {
-      const sum = await db.courseTeacherPayout.aggregate({
-        where: { teacherId: row.teacherId, period: { startsWith: row.period.slice(0, 4) }, status: { in: ["DRAFT", "APPROVED", "PAID"] } },
-        _sum: { amountCents: true },
-      });
-      yearTotals.set(key, sum._sum.amountCents ?? 0);
-    }
-    result.push({
-      id: row.id,
-      teacherId: row.teacherId,
-      teacherName: `${row.teacher.firstName} ${row.teacher.lastName}`.trim(),
-      period: row.period,
-      status: row.status,
-      number: row.number,
-      compensation: row.compensation,
-      sessionCount: row.sessionCount,
-      minutes: row.minutes,
-      amountCents: row.amountCents,
-      bookingNumber: row.bookingNumber,
-      paidAt: row.paidAt,
-      hasPaymentProfile: userId ? (profileCache.get(userId) ?? false) : false,
-      limitExceeded: row.status !== "CANCELLED" && exceedsLimit(row.compensation, yearTotals.get(key) ?? 0, settings),
-    });
-  }
-  return result;
+  return listPayoutsCore(filter, settings, async (uid) => Boolean((await getPaymentProfile(uid))?.iban));
 }
 
 /** PDF için: hakediş + öğretmenin ödeme profili (IBAN vb. yalnızca bellekte, şifreli kaynaktan). */

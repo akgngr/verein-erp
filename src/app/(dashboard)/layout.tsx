@@ -36,7 +36,7 @@ export default async function DashboardLayout({
 }) {
   let user: SessionUser;
   try {
-    user = await requireUser();
+    user = await requireUser({ allowPasswordChangePending: true });
   } catch {
     // KARAR: Pasife alınmış kullanıcı için bilgilendirme gösterilir;
     // "?pasif=1" parametresi middleware'deki yönlendirme döngüsünü kırar.
@@ -60,8 +60,11 @@ export default async function DashboardLayout({
   }).format(new Date());
   // All module, tenant, permission and admin-policy checks stay on the server.
   // A failed lookup removes widgets; no client-side fallback may grant access.
-  const widgetAccess = await resolveWidgetsForUser(user, activeModuleKeys)
-    .catch(() => ({ allowedIds: [], preferences: [] }));
+  // Zorunlu parola değişimi beklenirken SSE bildirim zili gibi üst widget'lar açılmaz.
+  const widgetAccess = user.mustChangePassword
+    ? { allowedIds: [], preferences: [] }
+    : await resolveWidgetsForUser(user, activeModuleKeys)
+        .catch(() => ({ allowedIds: [], preferences: [] }));
   const collapsed =
     (await cookies()).get(SIDEBAR_COLLAPSED_COOKIE)?.value === "1";
 
@@ -93,7 +96,9 @@ export default async function DashboardLayout({
                 dateLabel={dateLabel}
                 widgetAccess={widgetAccess}
               />
-              <main className="workspace-main flex-1 px-4 py-6 md:px-7 lg:py-8">
+              {/* #586: Alt boşluk (güvenli alan dahil): yüzen AI/geri bildirim düğmeleri son satırları,
+                sayfalamayı ve kaydet düğmelerini örtmez. */}
+              <main className="workspace-main flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] md:px-7 lg:pt-8 lg:pb-28">
                 {children}
               </main>
             </div>

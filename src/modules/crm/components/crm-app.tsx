@@ -3,7 +3,7 @@
 import { notify } from "@/shared/components/ui/notify";
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import { Card, Checkbox, Dialog, Input, InputGroup, Label, Select, Sheet, Spinner, StatusChip, Tabs, TextArea, TextField, Button } from "@/shared/components/kit";
+import { DateTimeInput, DateInput, Card, Checkbox, Dialog, Input, InputGroup, Label, Select, Sheet, Spinner, StatusChip, Tabs, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -39,6 +39,7 @@ import {
   searchCandidatesAction,
   updatePartyAction,
 } from "../actions/crm-actions";
+import { MAX_DEAL_AMOUNT } from "../lib/limits";
 
 const STAGES = ["LEAD", "ACTIVE", "CUSTOMER", "INACTIVE"] as const;
 const DEAL_STAGES = ["OPEN", "PROPOSAL", "WON", "LOST"] as const;
@@ -62,6 +63,8 @@ export type PartyRow = {
   email: string | null;
   phone: string | null;
   missing: boolean;
+  /** #582: Rol kaynak modülün kişi verisini göremiyor; ad yerine çevrilmiş "kısıtlı" metni gelir. */
+  restricted: boolean;
 };
 export type DealRow = {
   id: string;
@@ -254,7 +257,7 @@ export function CrmApp({
                       onClick={() => setOpenId(row.id)}
                     >
                       <td className="px-3 py-2">
-                        <div className="font-medium">{row.name}</div>
+                        <div className={row.restricted ? "font-medium italic text-ink-500" : "font-medium"}>{row.name}</div>
                         {row.detail ? (
                           <div className="text-xs text-ink-500">
                             {row.detail}
@@ -814,12 +817,16 @@ function PartyDrawer({
                           <Label>{t("amount")}</Label>
                           <Input
                             type="number"
+                            min={0}
+                            max={MAX_DEAL_AMOUNT}
                             className={["h-9 text-sm"]
                               .filter(Boolean)
                               .join(" ")}
                           />
                         </TextField>
-                        <TextField
+                        <DateInput
+                          label={t("expectedClose")}
+                          ariaLabel={t("expectedClose")}
                           value={deal.close}
                           onChange={(close) =>
                             setDeal((current) => ({ ...current, close }))
@@ -827,16 +834,7 @@ function PartyDrawer({
                           className={["max-w-[170px]"]
                             .filter(Boolean)
                             .join(" ")}
-                        >
-                          <Label>{t("expectedClose")}</Label>
-                          <Input
-                            type="date"
-                            placeholder=" "
-                            className={["h-9 text-sm"]
-                              .filter(Boolean)
-                              .join(" ")}
-                          />
-                        </TextField>
+                        />
                         <Button
                           size="sm"
                           isDisabled={deal.title.trim().length < 2}
@@ -897,7 +895,9 @@ function PartyDrawer({
                     ))}
                     {can.update ? (
                       <div className="flex flex-wrap items-end gap-2">
-                        <TextField
+                        <DateTimeInput
+                          label={t("dueAt")}
+                          ariaLabel={t("dueAt")}
                           value={follow.dueAt}
                           onChange={(dueAt) =>
                             setFollow((current) => ({ ...current, dueAt }))
@@ -905,16 +905,7 @@ function PartyDrawer({
                           className={["max-w-[220px]"]
                             .filter(Boolean)
                             .join(" ")}
-                        >
-                          <Label>{t("dueAt")}</Label>
-                          <Input
-                            type="datetime-local"
-                            placeholder=" "
-                            className={["h-9 text-sm"]
-                              .filter(Boolean)
-                              .join(" ")}
-                          />
-                        </TextField>
+                        />
                         <TextField
                           value={follow.note}
                           onChange={(note) =>

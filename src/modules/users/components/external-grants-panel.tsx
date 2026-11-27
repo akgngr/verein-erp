@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import { Button, Card, StatusChip } from "@/shared/components/kit";
+import { Button, Card, DateTimeInput, StatusChip } from "@/shared/components/kit";
 import { isTimeBoxActive } from "@/shared/security/external-grant";
 
 import { createExternalGrantAction, revokeExternalGrantAction } from "../actions/external-grants";
@@ -25,14 +25,21 @@ type Props = {
   defaultExpiresAt: string;
 };
 
+function toLocalDatetimeInput(iso: string): string {
+  const date = new Date(iso);
+  if (Number.isNaN(date.getTime())) return iso.slice(0, 16);
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}T${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
+
 export function ExternalGrantsPanel({ userId, grants, defaultStartsAt, defaultExpiresAt }: Props) {
   const t = useTranslations("users.grants");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | null>(null);
 
-  const [startsAt, setStartsAt] = useState(defaultStartsAt.slice(0, 16));
-  const [expiresAt, setExpiresAt] = useState(defaultExpiresAt.slice(0, 16));
+  const [startsAt, setStartsAt] = useState(() => toLocalDatetimeInput(defaultStartsAt));
+  const [expiresAt, setExpiresAt] = useState(() => toLocalDatetimeInput(defaultExpiresAt));
   const [moduleScope, setModuleScope] = useState<string>("");
   const [note, setNote] = useState("");
 
@@ -78,26 +85,21 @@ export function ExternalGrantsPanel({ userId, grants, defaultStartsAt, defaultEx
         {error ? <p className="text-sm text-danger">{error}</p> : null}
 
         <form onSubmit={handleCreate} className="grid gap-3 md:grid-cols-2">
-          <label className="flex flex-col gap-1 text-xs font-medium text-ink-700">
-            {t("startsAt")}
-            <input
-              type="datetime-local"
-              value={startsAt}
-              onChange={(e) => setStartsAt(e.target.value)}
-              className="rounded-lg border border-ink-200 bg-surface-0 px-3 py-2 text-sm text-ink-900"
-              required
-            />
-          </label>
-          <label className="flex flex-col gap-1 text-xs font-medium text-ink-700">
-            {t("expiresAt")}
-            <input
-              type="datetime-local"
-              value={expiresAt}
-              onChange={(e) => setExpiresAt(e.target.value)}
-              className="rounded-lg border border-ink-200 bg-surface-0 px-3 py-2 text-sm text-ink-900"
-              required
-            />
-          </label>
+          <DateTimeInput
+            label={t("startsAt")}
+            ariaLabel={t("startsAt")}
+            value={startsAt}
+            onChange={setStartsAt}
+            isRequired
+          />
+          <DateTimeInput
+            label={t("expiresAt")}
+            ariaLabel={t("expiresAt")}
+            value={expiresAt}
+            onChange={setExpiresAt}
+            minValue={startsAt || undefined}
+            isRequired
+          />
           <label className="flex flex-col gap-1 text-xs font-medium text-ink-700">
             {t("moduleScope")}
             <select
@@ -121,7 +123,7 @@ export function ExternalGrantsPanel({ userId, grants, defaultStartsAt, defaultEx
             />
           </label>
           <div className="md:col-span-2">
-            <Button type="submit" isDisabled={isPending} size="sm" variant="primary">
+            <Button type="submit" isDisabled={isPending || !startsAt || !expiresAt} size="sm" variant="primary">
               {t("createButton")}
             </Button>
           </div>
@@ -132,12 +134,33 @@ export function ExternalGrantsPanel({ userId, grants, defaultStartsAt, defaultEx
         ) : (
           <ul className="space-y-2">
             {grants.map((grant) => {
-              const active = isTimeBoxActive({
-                startsAt: new Date(grant.startsAt),
-                expiresAt: new Date(grant.expiresAt),
-                revokedAt: grant.revokedAt ? new Date(grant.revokedAt) : null,
-              });
-              const statusKey = grant.revokedAt ? "revoked" : active ? "active" : "expired";
+              const now = new Date();
+              const startDate = new Date(grant.startsAt);
+              const endDate = new Date(grant.expiresAt);
+              const active = isTimeBoxActive(
+                {
+                  startsAt: startDate,
+                  expiresAt: endDate,
+                  revokedAt: grant.revokedAt ? new Date(grant.revokedAt) : null,
+                },
+                now,
+              );
+              const scheduled = !grant.revokedAt && startDate > now && endDate > startDate;
+              const statusKey = grant.revokedAt
+                ? "revoked"
+                : active
+                  ? "active"
+                  : scheduled
+                    ? "scheduled"
+                    : "expired";
+              const chipTone =
+                statusKey === "active"
+                  ? "success"
+                  : statusKey === "scheduled"
+                    ? "primary"
+                    : statusKey === "revoked"
+                      ? "danger"
+                      : "warning";
               return (
                 <li
                   key={grant.id}
@@ -145,7 +168,7 @@ export function ExternalGrantsPanel({ userId, grants, defaultStartsAt, defaultEx
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <StatusChip tone={statusKey === "active" ? "success" : statusKey === "revoked" ? "danger" : "warning"}>
+                      <StatusChip tone={chipTone}>
                         {t(`statuses.${statusKey}`)}
                       </StatusChip>
                       <span className="text-xs font-medium text-ink-700">
@@ -157,11 +180,11 @@ export function ExternalGrantsPanel({ userId, grants, defaultStartsAt, defaultEx
                       </span>
                     </div>
                     <p className="text-xs text-ink-500">
-                      {new Date(grant.startsAt).toLocaleString()} → {new Date(grant.expiresAt).toLocaleString()}
+                      {startDate.toLocaleString()} → {endDate.toLocaleString()}
                     </p>
                     {grant.note ? <p className="text-xs text-ink-600">{grant.note}</p> : null}
                   </div>
-                  {statusKey === "active" ? (
+                  {statusKey === "active" || statusKey === "scheduled" ? (
                     <Button
                       size="sm"
                       variant="danger-soft"

@@ -1,5 +1,6 @@
 import { PrismaPg } from "@prisma/adapter-pg";
 import { PrismaClient } from "@prisma/client";
+import { Client as PgClient } from "pg";
 
 /**
  * Prisma 7: istemci bir sürücü adaptörüyle oluşturulur (Rust sorgu motoru yok). PostgreSQL için
@@ -11,6 +12,12 @@ import { PrismaClient } from "@prisma/client";
 export function createPrismaClient(connectionString: string | undefined = process.env.DATABASE_URL): PrismaClient {
   if (!connectionString) throw new Error("DATABASE_URL is not set"); // i18n-ignore (geliştirici hatası)
   return new PrismaClient({ adapter: new PrismaPg({ connectionString: stripPrismaOnlyParams(connectionString) }) });
+}
+
+/** Doğrudan salt-okunur PostgreSQL bakım/yedekleme bağlantısı açar (Prisma dışı parametreleri temizler). */
+export function createPgClient(connectionString: string | undefined = process.env.DATABASE_URL): PgClient {
+  if (!connectionString) throw new Error("DATABASE_URL is not set"); // i18n-ignore (geliştirici hatası)
+  return new PgClient({ connectionString: stripPrismaOnlyParams(connectionString) });
 }
 
 /** Yalnızca eski Prisma sorgu motorunun anladığı parametreler pg sürücüsüne gönderilmez. */

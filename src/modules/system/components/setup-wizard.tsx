@@ -22,13 +22,16 @@ import { applySetupAction } from "../actions/setup-actions";
 
 type OrgType =
   "VEREIN" | "KLEINGEWERBE" | "MITTELSTAND" | "FREELANCER" | "NACHHILFE";
-type ModuleOption = { key: string; label: string; needsApproval: boolean };
+type ModuleOption = { key: string; label: string; needsApproval: boolean; enabled: boolean };
 type Result = {
   enabled: string[];
   disabled: string[];
+  kept: string[];
   needsApproval: string[];
   categories: number;
   accounts: number;
+  mapped: string[];
+  mappingError: string | null;
 };
 
 const ICONS: Record<OrgType, ReactNode> = {
@@ -76,6 +79,9 @@ export function SetupWizard({
   );
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState<Result | null>(null);
+  // #583: Açık olup seçilmeyen modüller sessizce kapatılmaz; özet adımında açık onay gerekir.
+  const [confirmDisable, setConfirmDisable] = useState(false);
+  const willDisable = modules.filter((module) => module.enabled && !selected.has(module.key)).map((module) => module.key);
   const label = (key: string) =>
     modules.find((module) => module.key === key)?.label ?? key;
 
@@ -96,6 +102,7 @@ export function SetupWizard({
       smallBusiness,
       chart,
       accountingPreset: accountingPreset && selected.has("accounting"),
+      confirmDisable: confirmDisable ? willDisable : [],
     });
     setBusy(false);
     if (!response.ok) return void notify.error(response.error);
@@ -258,6 +265,18 @@ export function SetupWizard({
                 ? t("summary.presetOn")
                 : t("summary.presetOff")}
             </p>
+            {willDisable.length ? (
+              <div className="mt-2 flex flex-col gap-2 rounded-lg border border-warning-300 bg-warning-50 p-3" role="alert">
+                <p className="text-warning-800">
+                  {t("summary.willDisable", { modules: willDisable.map(label).join(", ") })}
+                </p>
+                <Checkbox isSelected={confirmDisable} onChange={setConfirmDisable}>
+                  <Label>
+                    <span className="text-sm">{t("summary.confirmDisable")}</span>
+                  </Label>
+                </Checkbox>
+              </div>
+            ) : null}
             <p className="text-xs text-ink-500">{t("summary.note")}</p>
           </Card.Content>
         </Card>
@@ -284,6 +303,9 @@ export function SetupWizard({
                 })}
               </p>
             ) : null}
+            {result.kept.length ? (
+              <p>{t("done.kept", { modules: result.kept.map(label).join(", ") })}</p>
+            ) : null}
             {accountingPreset ? (
               <p>
                 {t("done.accounting", {
@@ -292,6 +314,8 @@ export function SetupWizard({
                 })}
               </p>
             ) : null}
+            {result.mapped.length ? <p>{t("done.mapped")}</p> : null}
+            {result.mappingError ? <p className="text-warning-700">{t("done.mappingFailed")}</p> : null}
             <div className="flex flex-wrap gap-2 pt-2">
               <ActionLink
                 href="/ayarlar/dernek"

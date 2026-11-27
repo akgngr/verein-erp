@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.10.2 |
+| Sürüm | 1.10.3 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.10.3 — Sunucu paketine yerel dosyalar girmiyor
+
+_2026-11-25_
+
+- **Güvenlik:** Dosya depolama yolu derleme sırasında artık izlenmiyor; kaynak kodu, testler ve yerel yüklemeler standalone sunucu paketine kopyalanmıyor.
 
 ### 1.10.2 — nav.json kategori ve alt modül tanımı
 
@@ -87,10 +93,4 @@ _2026-11-17_
 
 - **İyileştirme:** Eylem butonları ve bildirimler ortak ActionButton/notify adapter katmanına taşındı; ilgili ekran artık bu kullanımda HeroUI Button/Toast implementasyonuna doğrudan bağlı değil.
 
-### 1.8.1 — Evrak rozetleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Tekrarlanan HeroUI durum/tür rozetleri ortak StatusChip pattern'ine taşındı; modül görsel sözleşmesi framework implementasyonundan ayrıştırıldı.
-
-Daha eski 18 herkese açık sürüm notu.
+Daha eski 19 herkese açık sürüm notu.

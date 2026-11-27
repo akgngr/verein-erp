@@ -49,3 +49,28 @@ export {
   type ApplyPrivacyPresetResult,
 } from "./services/privacy-presets";
 export { hasLicensedFeature } from "./services/license-store";
+export {
+  downloadBackupHandler,
+  verifyUploadedBackupHandler,
+} from "./services/backup-handlers";
+export {
+  getBackupOverview,
+  getBackupConfig,
+  saveBackupConfig,
+  createSystemBackup,
+  verifySystemBackup,
+  verifyUploadedSystemBackup,
+  deleteSystemBackup,
+  runScheduledBackupIfDue,
+  type BackupConfig,
+  type BackupOverview,
+  type BackupRecordItem,
+} from "./services/backups";
+export {
+  packAndEncryptBackup,
+  decryptAndVerifyBackupArchive,
+  isSafeBackupRelativePath,
+  compareSchemaVersions,
+  type BackupManifest,
+  type BackupVerificationResult,
+} from "./services/backup-bundle";

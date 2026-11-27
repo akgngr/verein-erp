@@ -135,6 +135,7 @@
     "progress": "Lernfortschritt",
     "secretary": "Sekretariat",
     "securityMonitor": "Sicherheitsüberwachung",
+    "socialLogin": "Externe Anmeldung",
     "students": "Schüler",
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
@@ -146,12 +147,14 @@
     "widgetlar": "Widget-Einstellungen",
     "privacyPresets": "Datenschutzprofile",
     "egressReport": "Datenausgangsbericht",
+    "yedekleme": "Datensicherung & Prüfung",
     "tasks": "Aufgaben",
     "kullanicilar": "Benutzer",
     "weather": "Wetter",
     "youth-protection": "Jugendschutz"
   },
   "sidebar": {
+    "brandShort": "Verein ERP",
     "brand": "Vereinsverwaltung",
     "collapse": "Menü einklappen",
     "expand": "Menü ausklappen",
@@ -187,7 +190,9 @@
       "resetButton": "Zurücksetzen",
       "saveButton": "Speichern",
       "savedMessage": "Menüanordnung gespeichert.",
-      "resetMessage": "Menüanordnung zurückgesetzt."
+      "resetMessage": "Menüanordnung zurückgesetzt.",
+      "groupBadge": "Gruppe",
+      "iconLabel": "Symbol"
     }
   },
   "panel": {
@@ -286,20 +291,76 @@
     "noResults": "Keine Einstellung passt zu Ihrer Suche.",
     "open": "Öffnen",
     "sections": {
-      "general": {
-        "title": "Verein und System",
-        "description": "Vereinsdaten, Benutzer und Systemverwaltung."
-      },
-      "modules": {
-        "title": "Moduleinstellungen",
-        "description": "Eigene Konfigurationsseiten der Module."
-      },
       "personal": {
         "title": "Persönliche Einstellungen",
         "description": "Wirkt sich nur auf Ihre Oberfläche aus."
       }
     },
-    "moduleSettings": "Einstellungen: {module}"
+    "moduleSettings": "Einstellungen: {module}",
+    "itemDescriptions": {
+      "ai": "KI-Anbieter, Einwilligung und Regeln für die Datenweitergabe.",
+      "kullanicilar": "Benutzerkonten, Rollen und Einladungen.",
+      "automationMonitor": "Workflows, geplante Aufgaben und Ausführungsverlauf.",
+      "securityMonitor": "Sicherheitsprüfung der Installation und Warnungen.",
+      "denetimKaydi": "Wer hat wann was geändert: unveränderliches Protokoll.",
+      "mail": "Konto für ausgehende E-Mails und Versandeinstellungen.",
+      "gelenKutusu": "Verbundenes Postfach und Verarbeitung eingehender E-Mails.",
+      "notifications": "Benachrichtigungsarten, Kanäle und Ruhezeiten.",
+      "duyurular": "Mitteilungen nach Rollen an alle Benutzer senden.",
+      "aboneler": "Abonnenten der Benachrichtigungskanäle.",
+      "demoVeri": "Beispieldaten zum Ausprobieren laden oder entfernen.",
+      "widgetlar": "Widgets in der Kopfzeile und ihre Freigaben.",
+      "moduller": "Module aktivieren, deaktivieren und ihre Zugriffe freigeben.",
+      "modulSagligi": "Status- und Konfigurationsprüfung der Module.",
+      "modulPaketleri": "Vorgefertigte Modulpakete.",
+      "kurulum": "Die Schritte der Ersteinrichtung erneut ausführen.",
+      "lisans": "Lizenzinformationen und Nutzungsbedingungen.",
+      "privacyPresets": "Datenschutz-Voreinstellungen: welche Daten nach außen dürfen.",
+      "egressReport": "Bericht über Daten, die an externe Dienste gehen.",
+      "yedekleme": "Verschlüsselte Datenbank- und Dateisicherungen sowie Wiederherstellungsprüfung.",
+      "menuDuzeni": "Reihenfolge und Sichtbarkeit des Seitenmenüs.",
+      "surumNotlari": "Versionshinweise der App und der Module.",
+      "organization": "Vereinsname, Anschrift, Logo und Angaben zur Gemeinnützigkeit.",
+      "bankaBaglantisi": "Bankverbindung und Import von Kontoumsätzen."
+    },
+    "groups": {
+      "general": {
+        "title": "Allgemein",
+        "description": "Vereinsdaten, Einrichtung, Lizenz und Versionshinweise."
+      },
+      "users-access": {
+        "title": "Benutzer und Zugriff",
+        "description": "Benutzer, Rollen und Einladungen."
+      },
+      "security-privacy": {
+        "title": "Sicherheit und Datenschutz",
+        "description": "Datenschutzeinstellungen, Datenabfluss, Audit-Log und Sicherheitsüberwachung."
+      },
+      "integrations": {
+        "title": "Integrationen",
+        "description": "Bankanbindung und externe Dienste."
+      },
+      "appearance": {
+        "title": "Darstellung",
+        "description": "Dashboard-Widgets und Menüanordnung."
+      },
+      "communication": {
+        "title": "Kommunikation",
+        "description": "E-Mail, Posteingang und Benachrichtigungskanäle."
+      },
+      "ai-automation": {
+        "title": "KI und Automatisierung",
+        "description": "KI-Assistent und Automatisierungsmonitor."
+      },
+      "module-management": {
+        "title": "Modulverwaltung",
+        "description": "Module, Modulzustand, Pakete und die eigenen Einstellungen der Module."
+      },
+      "system-management": {
+        "title": "Systemverwaltung",
+        "description": "Demodaten und Wartungswerkzeuge."
+      }
+    }
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -918,7 +979,10 @@
       "bookingNotFound2": "Buchung nicht gefunden.",
       "reversedNoFile": "Einer stornierten Buchung können keine Belege hinzugefügt werden.",
       "reversedSuffix": "STORNIERT",
-      "cashClosed": "Die Kasse ist bis {date} abgeschlossen; für diesen Zeitraum sind keine Änderungen mehr möglich."
+      "cashClosed": "Die Kasse ist bis {date} abgeschlossen; für diesen Zeitraum sind keine Änderungen mehr möglich.",
+      "yearNotFinished": "Das Geschäftsjahr {year} ist noch nicht abgeschlossen und kann noch nicht gesperrt werden.",
+      "yearCloseGobdFailed": "Die GoBD-Journalprüfung ist fehlgeschlagen; vor dem Jahresabschluss muss die Inkonsistenz behoben werden.",
+      "unlockRequiresOtherApprover": "Die Entsperrung muss von einer anderen berechtigten Person oder einem Administrator durchgeführt werden (Vier-Augen-Prinzip)."
     },
     "settings": {
       "donationShort": "Spende"
@@ -1045,10 +1109,12 @@
       }
     },
     "access": {
-      "members": "Liest Mitgliedsbeitragszahlungen, um sie in die Buchhaltung zu übernehmen.",
+      "members": "Liest offene Mitgliedsbeiträge und verbucht Zahlungen direkt beim Bankabgleich sowie bei der Beitragsübernahme.",
+      "courses": "Liest offene Kursgebühren und markiert sie beim Bankabgleich als bezahlt.",
+      "donations": "Liest aktive Spender und legt Bankeingänge per Ein-Klick als Spende an.",
       "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten.",
       "inventory": "Hält Anlagen mit Inventargegenständen synchron (Name, Datum, Kosten, Ausmusterung).",
-      "system": "Liest, ob das Inventarmodul aktiv ist."
+      "system": "Liest, ob das Inventar- und verknüpfte Module aktiv sind."
     },
     "pdf": {
       "voucher": {
@@ -1409,7 +1475,7 @@
     },
     "bank": {
       "title": "Bank",
-      "description": "Kontoauszüge importieren (CAMT.053, MT940, CSV) und Vorschläge bestätigt verbuchen oder offenen Rechnungen zuordnen.",
+      "description": "Kontoauszüge importieren (CAMT.053, MT940, CSV) und Vorschläge bestätigt verbuchen oder offenen Rechnungen, Beiträgen, Kursgebühren und Spenden zuordnen.",
       "import": {
         "title": "Kontoauszug importieren",
         "hint": "Laden Sie den CAMT.053- (XML), MT940- oder CSV-Export aus Ihrem Online-Banking hoch. Bereits importierte Umsätze werden übersprungen.",
@@ -1440,20 +1506,48 @@
         "invoiceNumber": "Rechnungsnr.",
         "amount": "Betrag",
         "name": "Name",
-        "rule": "Regel"
+        "rule": "Regel",
+        "memberNumber": "Mitgliedsnr.",
+        "iban": "IBAN",
+        "courseCode": "Kurscode",
+        "debtorNumber": "Debitorennr.",
+        "donationKeyword": "Spende",
+        "donor": "Spender"
       },
       "actions": {
         "book": "Verbuchen",
         "private": "Privat",
         "ignore": "Ignorieren",
         "reopen": "Wieder öffnen",
-        "openBooking": "Buchung öffnen"
+        "openBooking": "Buchung öffnen",
+        "reverse": "Stornieren"
+      },
+      "reversed": "Bankbuchung wurde storniert und der Umsatz zur erneuten Zuordnung geöffnet.",
+      "reverseModal": {
+        "title": "Bankbuchung stornieren",
+        "description": "Die verknüpfte Buchung wird GoBD-konform storniert und diese Bankzeile wieder auf offen gesetzt.",
+        "reasonLabel": "Stornogrund",
+        "reasonPlaceholder": "z. B. falsche Kategorie gewählt",
+        "submit": "Stornieren"
       },
       "modal": {
         "title": "Bankumsatz verbuchen",
         "invoice": "Offene Rechnung",
+        "memberDue": "Mitgliedsbeitrag",
+        "courseCharge": "Kursgebühr",
+        "donation": "Spende",
         "category": "Kategorie",
         "invoiceSelect": "Rechnung",
+        "memberDueSelect": "Offener Mitgliedsbeitrag",
+        "courseChargeSelect": "Offene Kursgebühr",
+        "courseAmountMismatchHint": "Kursgebühren können nur bei exakter Betragsübereinstimmung zugeordnet werden.",
+        "donorSelect": "Spender",
+        "donorCreateNew": "+ Neuen Spender anlegen",
+        "newDonorName": "Name des Spenders",
+        "newDonorType": "Spendertyp",
+        "donorPerson": "Privatperson",
+        "donorOrganization": "Unternehmen / Organisation",
+        "purposeNote": "Verwendungszweck / Notiz (optional)",
         "categorySelect": "Kategorie",
         "taxRate": "Steuersatz",
         "learn": "Regel lernen",
@@ -1485,10 +1579,25 @@
         "currency": "Es werden nur EUR-Umsätze unterstützt.",
         "notFound": "Umsatz nicht gefunden.",
         "notOpen": "Der Umsatz ist nicht mehr offen.",
+        "notBooked": "Nur bereits verbuchte Bankumsätze können storniert werden.",
+        "reverseInvoiceManaged": "Mit Rechnungen, Mitgliedsbeiträgen, Kursgebühren oder Spenden verknüpfte Umsätze müssen im jeweiligen Modul storniert werden.",
         "invoiceRequired": "Bitte eine Rechnung wählen.",
         "invoiceNeedsCredit": "Nur Zahlungseingänge können Rechnungen zugeordnet werden.",
         "payableRequired": "Bitte eine Eingangsrechnung wählen.",
-        "payableNeedsDebit": "Nur Zahlungsausgänge können Eingangsrechnungen zugeordnet werden."
+        "payableNeedsDebit": "Nur Zahlungsausgänge können Eingangsrechnungen zugeordnet werden.",
+        "creditNoteNeedsCredit": "Eine Gutschrift kann nur mit einer Erstattung des Lieferanten (Zahlungseingang) abgeglichen werden.",
+        "memberDueRequired": "Bitte einen offenen Mitgliedsbeitrag wählen.",
+        "memberDueNeedsCredit": "Nur Zahlungseingänge können Mitgliedsbeiträgen zugeordnet werden.",
+        "memberDueNotFound": "Der gewählte Mitgliedsbeitrag wurde nicht gefunden.",
+        "memberDueAlreadySettled": "Dieser Mitgliedsbeitrag ist bereits vollständig bezahlt.",
+        "memberDueOverpayment": "Der Bankbetrag übersteigt den offenen Restbetrag dieses Mitgliedsbeitrags.",
+        "courseChargeRequired": "Bitte eine offene Kursgebühr wählen.",
+        "courseChargeNeedsCredit": "Nur Zahlungseingänge können Kursgebühren zugeordnet werden.",
+        "courseChargeNotFound": "Die gewählte Kursgebühr wurde nicht gefunden.",
+        "courseChargeAlreadySettled": "Diese Kursgebühr ist bereits beglichen.",
+        "courseChargeAmountMismatch": "Der Bankbetrag muss exakt der offenen Kursgebühr entsprechen.",
+        "donationNeedsCredit": "Nur Zahlungseingänge können als Spende verbucht werden.",
+        "donorRequired": "Bitte einen Spender auswählen oder einen neuen Spendernamen eingeben."
       }
     },
     "payables": {
@@ -1783,7 +1892,8 @@
       },
       "errors": {
         "gwgLimit": "GWG nur bis 800 € netto.",
-        "poolRange": "Sammelposten nur von 250,01 bis 1.000 € netto."
+        "poolRange": "Sammelposten nur von 250,01 bis 1.000 € netto.",
+        "disposalBeforeAcquisition": "Das Abgangsdatum darf nicht vor dem Anschaffungsdatum liegen."
       }
     },
     "einvoice": {
@@ -2101,7 +2211,8 @@
       "reportNotFound": "Bericht nicht gefunden.",
       "staleProposal": "Der Datensatz wurde geändert oder der Vorschlag ist abgelaufen. Bitte erstellen Sie einen neuen Vorschlag.",
       "cloudIntentRequired": "Beim Cloud-Anbieter sind nur feste Anfragen wie „Mitgliederstatistik 2026“, „Spendenübersicht 2026“ oder „Beitragsdatei 2026“ verfügbar. Wählen Sie für Freitext einen lokalen Anbieter.",
-      "cloudDisabled": "Die Cloud-Verarbeitung ist ausgeschaltet. Die Administration kann ein lokales Modell wählen oder Einstellungen → KI-Assistent → Cloud-Datenrichtlinie ändern."
+      "cloudDisabled": "Die Cloud-Verarbeitung ist ausgeschaltet. Die Administration kann ein lokales Modell wählen oder Einstellungen → KI-Assistent → Cloud-Datenrichtlinie ändern.",
+      "providerNotAllowed": "Dieser Anbieter ist durch die angewendete Datenschutz-Voreinstellung nicht erlaubt (Einstellungen → Datenschutz)."
     },
     "panel": {
       "title": "Assistent",
@@ -2537,6 +2648,16 @@
         "label": "Sicherheits- & Änderungsprotokoll",
         "description": "Unveränderliche Prüfspuren und Sicherheitsereignisse."
       }
+    },
+    "details": {
+      "open": "Details",
+      "title": "Änderungsdetails",
+      "before": "Vorher",
+      "after": "Nachher",
+      "none": "Keine Angaben"
+    },
+    "errors": {
+      "notFound": "Protokolleintrag nicht gefunden."
     }
   },
   "auth": {
@@ -2546,12 +2667,13 @@
     "loginButton": "Anmelden",
     "logout": "Abmelden",
     "mustChangePasswordBanner": "Passwort muss aktualisiert werden",
+    "mustChangePasswordHint": "Zu Ihrer Sicherheit müssen Sie unten zuerst ein neues Passwort festlegen, bevor Sie fortfahren können.",
     "meta": {
       "profile": "Profil"
     },
     "appTitle": "Vereinsverwaltung",
     "loginSubtitle": "Melden Sie sich an, um fortzufahren",
-    "passiveNotice": "Ihre Sitzung wurde beendet. Ihr Konto wurde möglicherweise deaktiviert; bitte wenden Sie sich an Ihren Administrator.",
+    "passiveNotice": "Ihre Sitzung wurde beendet (z. B. Passwortänderung, Abmeldung auf allen Geräten oder deaktiviertes Konto). Bitte melden Sie sich erneut an; bei Problemen wenden Sie sich an Ihren Administrator.",
     "profile": {
       "title": "Profil",
       "description": "Ihre Kontodaten und Passwortänderung.",
@@ -2562,21 +2684,36 @@
       "changePassword": "Passwort ändern",
       "currentPassword": "Aktuelles Passwort",
       "newPassword": "Neues Passwort",
+      "confirmPassword": "Neues Passwort bestätigen",
       "submit": "Passwort aktualisieren",
       "updated": "Ihr Passwort wurde aktualisiert.",
       "details": "Meine Profildaten",
-      "detailsHint": "Kontakt-, Adress-, Zahlungs- und Rechnungsdaten. Nur Sie und berechtigte Verantwortliche können sie sehen."
+      "detailsHint": "Kontakt-, Adress-, Zahlungs- und Rechnungsdaten. Nur Sie und berechtigte Verantwortliche können sie sehen.",
+      "sessions": {
+        "title": "Sitzungen",
+        "hint": "Melden Sie sich auf allen anderen Geräten und Browsern ab (z. B. verlorenes Handy, gemeinsam genutzter Computer). Auf diesem Gerät bleiben Sie angemeldet.",
+        "currentPassword": "Aktuelles Passwort",
+        "submit": "Auf allen anderen Geräten abmelden",
+        "done": "Die Sitzungen auf allen anderen Geräten wurden beendet."
+      },
+      "twoFactor": "Zwei-Faktor-Anmeldung"
     },
     "errors": {
       "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
       "currentPasswordWrong": "Das aktuelle Passwort ist falsch.",
+      "samePassword": "Das neue Passwort darf nicht mit dem aktuellen Passwort übereinstimmen.",
       "invalidCredentials": "E-Mail oder Passwort ist falsch.",
       "accountLocked": "Das Konto ist vorübergehend gesperrt. Bitte versuchen Sie es später erneut.",
+      "rateLimited": "Zu viele Anmeldeversuche. Bitte versuchen Sie es später erneut.",
       "loginFailed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
-      "invalidLocale": "Ungültige Sprachauswahl."
+      "invalidLocale": "Ungültige Sprachauswahl.",
+      "twoFactorRequired": "Geben Sie den Code aus Ihrer Authenticator-App ein.",
+      "twoFactorInvalid": "Der Code ist falsch, abgelaufen oder wurde bereits verwendet."
     },
     "validation": {
       "currentPasswordRequired": "Bitte das aktuelle Passwort eingeben.",
+      "confirmPasswordRequired": "Bitte das neue Passwort wiederholen.",
+      "passwordsMismatch": "Die neuen Passwörter stimmen nicht überein.",
       "emailRequired": "E-Mail ist erforderlich.",
       "passwordRequired": "Passwort ist erforderlich."
     },
@@ -2621,7 +2758,55 @@
         "bic": "Bitte eine gültige BIC eingeben (8 oder 11 Zeichen).",
         "vatId": "Bitte eine gültige USt-IdNr. eingeben (z. B. DE123456789)."
       }
-    }
+    },
+    "forgotPassword": "Passwort vergessen?",
+    "twoFactorCode": "Bestätigungscode",
+    "twoFactorCodeHint": "Geben Sie den 6-stelligen Code aus Ihrer Authenticator-App oder einen Ihrer Wiederherstellungscodes ein.",
+    "twoFactorBack": "Mit einem anderen Konto anmelden",
+    "twoFactor": {
+      "loading": "Wird geladen…",
+      "off": "Die Zwei-Faktor-Anmeldung ist ausgeschaltet.",
+      "on": "Die Zwei-Faktor-Anmeldung ist aktiv — {count, plural, one {# Wiederherstellungscode} other {# Wiederherstellungscodes}} übrig.",
+      "hint": "Fragt bei der Anmeldung zusätzlich zum Passwort einen Code aus einer Authenticator-App ab (z. B. Google Authenticator, Microsoft Authenticator, 2FAS). Empfohlen für Administrations- und Kassenkonten.",
+      "manageHint": "Zum Ausschalten oder für neue Wiederherstellungscodes geben Sie den aktuellen Code aus Ihrer App (oder einen Wiederherstellungscode) ein.",
+      "currentPassword": "Aktuelles Passwort",
+      "currentPasswordForDisable": "Aktuelles Passwort (zum Ausschalten)",
+      "code": "Code",
+      "cancel": "Abbrechen",
+      "enabled": "Die Zwei-Faktor-Anmeldung ist eingeschaltet.",
+      "disabled": "Die Zwei-Faktor-Anmeldung ist ausgeschaltet.",
+      "disable": "Zwei-Faktor-Anmeldung ausschalten",
+      "error": "Der Vorgang konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut.",
+      "setup": {
+        "start": "Einrichtung starten",
+        "step1": "1. Fügen Sie in Ihrer Authenticator-App ein neues Konto hinzu und geben Sie den folgenden Schlüssel ein (auf dem Smartphone genügt ein Tippen auf den Link).",
+        "manualKey": "Einrichtungsschlüssel",
+        "openApp": "In der Authenticator-App öffnen",
+        "step2": "2. Geben Sie den 6-stelligen Code aus der App ein.",
+        "confirm": "Bestätigen und einschalten"
+      },
+      "recovery": {
+        "title": "Wiederherstellungscodes",
+        "hint": "Ohne Zugriff auf Ihr Smartphone melden Sie sich mit diesen Codes an; jeder Code funktioniert einmal. Bewahren Sie sie sicher auf — sie werden nicht erneut angezeigt.",
+        "copy": "Codes kopieren",
+        "copied": "Wiederherstellungscodes kopiert.",
+        "done": "Gespeichert",
+        "replace": "Neue Wiederherstellungscodes erstellen"
+      },
+      "errors": {
+        "alreadyEnabled": "Die Zwei-Faktor-Anmeldung ist bereits aktiv.",
+        "noEnrolment": "Starten Sie zuerst die Einrichtung.",
+        "codeInvalid": "Der Code ist falsch, abgelaufen oder wurde bereits verwendet."
+      }
+    },
+    "oauthDenied": "Die Anmeldung mit diesem Konto war nicht möglich. Wenn das Konto nicht verknüpft oder deaktiviert ist oder die Zwei-Faktor-Authentifizierung aktiv ist, melden Sie sich mit E-Mail und Passwort an.",
+    "oauth": {
+      "errors": {
+        "invalidLink": "Die Kontoverknüpfung ist ungültig.",
+        "alreadyLinked": "Dieses Konto ist bereits mit einem anderen Benutzer verknüpft."
+      }
+    },
+    "externalLogin": "Mit {provider} anmelden"
   },
   "automation": {
     "module": {
@@ -2664,7 +2849,8 @@
       "cancel": "Abbrechen",
       "retry": "Erneut versuchen",
       "cancelled": "Aufgabe abgebrochen.",
-      "retried": "Aufgabe erneut eingereiht."
+      "retried": "Aufgabe erneut eingereiht.",
+      "detailsHidden": "Technische Details sind nur für Rollen sichtbar, die Automationen verwalten dürfen."
     },
     "access": {
       "mailings": "Zur Registrierung der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis.",
@@ -2685,10 +2871,41 @@
       "deleted": "Zeitplan gelöscht.",
       "empty": "Noch keine geplanten Aufgaben.",
       "every": "Alle {hours} Stunden",
+      "everyMinutes": "Alle {minutes} Minuten",
+      "everyDays": "Alle {days} Tage",
       "next": "Nächster Lauf: {date}",
       "last": "Letzter Lauf: {date}",
       "enabled": "Aktiv",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "taskLabels": {
+        "ai": {
+          "cleanup_history": "KI-Verlauf bereinigen"
+        },
+        "calendar": {
+          "sync_external": "Externe Kalender synchronisieren"
+        },
+        "exports": {
+          "cleanup_files": "Abgelaufene Exportdateien löschen"
+        },
+        "meetings": {
+          "vote_purge": "Alte Abstimmungsdaten bereinigen"
+        },
+        "notifications": {
+          "purge": "Alte Benachrichtigungen bereinigen",
+          "dispatch": "Ausstehende Benachrichtigungen senden"
+        },
+        "secretary": {
+          "daily_briefing": "Tagesübersicht des Sekretärs",
+          "follow_up_reminders": "Wiedervorlage-Erinnerungen",
+          "migrate_notifications": "Sekretär-Benachrichtigungen migrieren"
+        },
+        "security-monitor": {
+          "run_tests": "Sicherheitsprüfung ausführen"
+        },
+        "youth-protection": {
+          "statutory_purge": "Einträge nach Ablauf der gesetzlichen Frist löschen"
+        }
+      }
     },
     "errors": {
       "notCancellable": "Diese Aufgabe kann nicht mehr abgebrochen werden.",
@@ -3081,6 +3298,9 @@
     "errors": {
       "credentials": "Die Anbieter-Schlüssel wurden abgelehnt. Bitte Einstellungen prüfen.",
       "provider": "Der Bankanbieter ist nicht erreichbar oder hat die Anfrage abgelehnt. Bitte später erneut versuchen.",
+      "rateLimit": "Der Bankanbieter hat das Anfragelimit erreicht. Bitte versuchen Sie es später erneut.",
+      "invalidAccount": "Es kann nur ein aktives Bankkonto zugeordnet werden.",
+      "appUrlRequired": "Für die Bankverbindung muss die öffentliche Anwendungsadresse (APP_URL) konfiguriert sein.",
       "notConfigured": "Anbieter nicht eingerichtet.",
       "mockDisabled": "Der Testanbieter ist in dieser Umgebung nicht verfügbar."
     },
@@ -3277,7 +3497,8 @@
         "unavailable": "Dieses Plugin ist nicht aktiv.",
         "secretRequired": "Beim ersten Speichern ist das Client-Secret erforderlich.",
         "auth": "Zugangsdaten abgelehnt.",
-        "failed": "Kalender konnte nicht verbunden werden."
+        "failed": "Kalender konnte nicht verbunden werden.",
+        "hostNotAllowed": "Diese Serveradresse ist nicht erlaubt. Verwenden Sie die offizielle Adresse des Anbieters (für iCloud caldav.icloud.com)."
       },
       "settingsTitle": "Kalendereinstellungen",
       "settingsDescription": "Daten eurer eigenen OAuth-Apps für die Google- und Outlook-Synchronisation. Benutzer verbinden ihre Konten in den Kalendereinstellungen.",
@@ -3366,7 +3587,7 @@
       }
     },
     "access": {
-      "mailings": "Um im Webhook die (verschlüsselten) Bot-Einstellungen zu lesen."
+      "mailings": "Liest im Webhook die (verschlüsselten) Bot-Einstellungen und schreibt die per /start bzw. /stop erteilte oder widerrufene Telegram-Einwilligung in den Datensatz der Person."
     },
     "replies": {
       "linked": "✅ Abo bestätigt. Zum Beenden /stop senden.",
@@ -3453,7 +3674,9 @@
     "errors": {
       "unknownRule": "Regel nicht gefunden.",
       "noTask": "Für diese Regel gibt es keinen Aufgabenvorschlag.",
-      "noFinding": "Kein aktueller Befund; bitte Seite neu laden."
+      "noFinding": "Kein aktueller Befund; bitte Seite neu laden.",
+      "tasksUnavailable": "Das Aufgabenmodul ist nicht aktiv; bitte zuerst in der Modulverwaltung aktivieren.",
+      "tasksForbidden": "Sie dürfen keine Aufgaben anlegen."
     },
     "ui": {
       "yearLabel": "Jahr",
@@ -3465,7 +3688,9 @@
       "downloadExport": "{format} herunterladen",
       "computedValue": "Berechneter Wert",
       "askAdvisorLink": "Steuerberatung verwalten"
-    }
+    },
+    "draftOnly": "Die Prüfregeln sind noch nicht rechtlich geprüft; sie erscheinen hier nach Freigabe durch die Verwaltung.",
+    "draftOnlyAdmin": "Alle Regeln sind Entwürfe (rechtliche Prüfung ausstehend). Mit der Vorschau sehen Sie die Ergebnisse; nach Prüfung und Freigabe werden sie allen angezeigt."
   },
   "courses": {
     "module": {
@@ -3782,7 +4007,8 @@
       "chargeNotOpen": "Diese Forderung ist nicht offen.",
       "paymentNotFound": "Zahlung nicht gefunden oder bereits zurückgenommen.",
       "categoryMissing": "In den Kurs-Einstellungen ist keine Einnahmekategorie gewählt.",
-      "teacherHasAccount": "Diese Lehrkraft hat bereits ein Konto."
+      "teacherHasAccount": "Diese Lehrkraft hat bereits ein Konto.",
+      "sessionInLockedPayout": "Dieser Termin ist Teil einer freigegebenen oder bezahlten Honorarabrechnung und kann nicht gelöscht werden."
     },
     "validation": {
       "textMax": "Der Text ist zu lang.",
@@ -3833,7 +4059,8 @@
       "mail": "Versendet Einladungs-E-Mails an Lehrkräfte.",
       "students": "Liest Schüler und Zahlungspflichtige für Kursanmeldungen.",
       "users": "Legt für eingeladene Lehrkräfte ein Benutzerkonto mit der Rolle Lehrkraft an und liest Name und E-Mail verknüpfter Lehrkräfte aus dem Benutzerkonto.",
-      "organization": "Liest Vereinsdaten und Logo für den Briefkopf der Honorarabrechnung."
+      "organization": "Liest Vereinsdaten und Logo für den Briefkopf der Honorarabrechnung.",
+      "progress": "Bereinigt verwaiste Anwesenheitseinträge, wenn ein Kurstermin gelöscht wird."
     },
     "ai": {
       "create": {
@@ -4041,7 +4268,10 @@
       "sourceMissing": "Quelldatensatz nicht gefunden oder Modul deaktiviert.",
       "notFound": "Eintrag nicht gefunden.",
       "summary": "Bitte mindestens 2 Zeichen eingeben.",
-      "title": "Der Titel muss mindestens 2 Zeichen lang sein."
+      "title": "Der Titel muss mindestens 2 Zeichen lang sein.",
+      "sourceForbidden": "Sie dürfen Kontakte aus dieser Quelle nicht sehen.",
+      "amount": "Der Betrag darf nicht negativ sein.",
+      "amountMax": "Der Betrag darf höchstens 20.000.000 € betragen."
     },
     "access": {
       "members": "Liest Name und Kontaktdaten der CRM-Kontakte aus dem Mitgliedsdatensatz (ohne Kopie).",
@@ -4077,7 +4307,8 @@
           }
         }
       }
-    }
+    },
+    "restricted": "Eingeschränkt (keine Berechtigung für das Quellmodul)"
   },
   "demo": {
     "module": {
@@ -4601,6 +4832,7 @@
       "donorFromMember": "Aus Mitglied anlegen",
       "date": "Datum der Zuwendung",
       "amount": "Betrag (€)",
+      "inKindValue": "Wert der Sachzuwendung (€)",
       "amountHint": "Bis 300 € ist keine formelle Bestätigung erforderlich (Kontoauszug genügt).",
       "methodLabel": "Zahlungsart",
       "method": {
@@ -4608,9 +4840,19 @@
         "BANK_TRANSFER": "Überweisung",
         "CARD": "Kartenzahlung",
         "PAYPAL": "PayPal",
+        "IN_KIND": "Sachzuwendung",
         "REIMBURSEMENT_WAIVER": "Aufwandsspende",
         "OTHER": "Sonstige"
       },
+      "inKindNotice": "Sachzuwendungen lösen keinen Geldfluss aus und erzeugen daher keine Kassen- oder Bankbuchung. Eine Einzelbestätigung nach BMF-Muster Anlage 4 kann ausgestellt werden.",
+      "itemDescription": "Genaue Bezeichnung der Sachzuwendung (Alter, Zustand, Kaufpreis usw.)",
+      "inKindOrigin": "Herkunft des Wirtschaftsgutes (BMF)",
+      "origin": {
+        "BUSINESS_ASSETS": "Betriebsvermögen",
+        "PRIVATE_ASSETS": "Privatvermögen",
+        "UNKNOWN": "Keine Angabe zur Herkunft"
+      },
+      "valuationRecordsAvailable": "Unterlagen zur Wertermittlung (z. B. Rechnung, Gutachten) liegen vor",
       "paypalHint": "Nur den beim Verein netto eingehenden Betrag eingeben (PayPal-Gebühr ist keine Spende).",
       "reference": "Referenz",
       "purposeNote": "Verwendungshinweis",
@@ -4634,6 +4876,9 @@
         "method": "Zahlungsart",
         "reference": "Referenz",
         "purposeNote": "Verwendungshinweis",
+        "itemDescription": "Bezeichnung der Sachzuwendung",
+        "inKindOrigin": "Herkunft",
+        "valuationRecordsAvailable": "Wertermittlungsunterlagen vorhanden",
         "waived": "Aufwandsspende",
         "claimBasis": "Grundlage",
         "waiverDeclaredAt": "Erklärt am",
@@ -4650,7 +4895,8 @@
       "cancelReason": "Grund (5-300 Zeichen)",
       "cancelHint": "Die Buchungen werden storniert; stornierte Spenden bleiben durchgestrichen sichtbar und zählen nicht in Statistiken.",
       "toastCancelled": "Spende storniert.",
-      "issue": "Bestätigung erstellen"
+      "issue": "Bestätigung erstellen",
+      "simplifiedProofPdf": "≤ 300 € Vereinfachter Nachweis (PDF)"
     },
     "donors": {
       "title": "Spender/innen",
@@ -4681,6 +4927,8 @@
         "note": "Notiz",
         "fromMember": "Aus Mitglied anlegen",
         "fromMemberHint": "Name und Adresse des Mitglieds werden einmalig kopiert; keine Live-Verknüpfung.",
+        "duplicateWarning": "Ein ähnlicher Spender ist bereits vorhanden ({number}). Wenn Sie dennoch einen neuen Spender anlegen möchten, bestätigen Sie unten.",
+        "confirmCreateDuplicate": "Trotzdem speichern",
         "save": "Speichern",
         "cancel": "Abbrechen",
         "toastSaved": "Spender/in gespeichert: {number}"
@@ -4715,6 +4963,7 @@
       },
       "content": {
         "DONATION": "Spende",
+        "IN_KIND_DONATION": "Sachzuwendung",
         "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
       },
       "status": {
@@ -4826,9 +5075,11 @@
       "readiness": "Bereitschaftsprüfung",
       "preview": "Mustervorschauen (MUSTER)",
       "previewSingleDonation": "Einzelne Spende",
+      "previewSingleInKind": "Einzelne Sachzuwendung (BMF Anlage 4)",
       "previewCollectiveDonation": "Sammelbestätigung mit Anlage",
       "previewSingleFee": "Einzelner Mitgliedsbeitrag",
       "previewCollectiveFee": "Mitgliedsbeiträge (Sammel)",
+      "simplifiedProofDownload": "≤ 300 € Vereinfachter Spendennachweis (§ 50 Abs. 4 Nr. 2 EStDV + GiroCode)",
       "bmflink": "BMF amtliche Muster (Formularcenter)",
       "bmflinkHref": "https://www.bundesfinanzministerium.de/Formularcenter",
       "confirmLabel": "Ich habe den Mustertext mit dem offiziellen BMF-Muster verglichen; er passt zu unserem Verein",
@@ -4910,13 +5161,19 @@
       "reversedDonation": "Für eine stornierte Spende kann keine Bestätigung ausgestellt werden.",
       "someDonationsMissing": "Einige der ausgewählten Spenden wurden nicht gefunden.",
       "periodSingleYear": "Der Zeitraum einer Sammelbestätigung muss innerhalb eines Kalenderjahres liegen.",
+      "periodOrderInvalid": "Das Startdatum des Zeitraums darf nicht nach dem Enddatum liegen.",
       "donationReversed": "{number} ist storniert.",
       "donationOutsidePeriod": "{number} liegt außerhalb des Zeitraums.",
       "noFeePayments": "Für dieses Mitglied und Jahr gibt es keine bestätigbaren Zahlungen.",
       "feePaymentsCovered": "Alle Zahlungen sind bereits in einer aktiven Bestätigung enthalten.",
       "noDonationsInYear": "Für diesen Spender gibt es in diesem Jahr keine bestätigbaren Spenden.",
       "replaceNotCancelled": "Nur für eine stornierte Bestätigung kann ein Ersatz erstellt werden.",
-      "alreadyReplaced": "Für diese Bestätigung wurde bereits ein Ersatz erstellt."
+      "alreadyReplaced": "Für diese Bestätigung wurde bereits ein Ersatz erstellt.",
+      "inKindDetailsMissing": "Für eine Sachzuwendungsbestätigung sind Gegenstandsbeschreibung und Herkunft erforderlich.",
+      "inKindNoCollective": "Sachzuwendungen ({number}) dürfen nicht in einer Sammelbestätigung zusammengefasst werden; bitte als Einzelbestätigung ausstellen.",
+      "simplifiedProofNotInKind": "Der vereinfachte Spendennachweis (§ 50 Abs. 4 Nr. 2 EStDV) gilt nur für Geldzuwendungen, nicht für Sachzuwendungen.",
+      "simplifiedProofLimit": "Der vereinfachte Spendennachweis gilt nur für Zuwendungen bis 300,00 €.",
+      "simplifiedProofIncompleteExemption": "Vereinfachter Spendennachweis kann nicht erstellt werden: Bitte vervollständigen Sie die Angaben zur Gemeinnützigkeit (Freistellungsbescheid, Steuernummer, Datum) unter Vereinsdaten (/ayarlar/dernek)."
     },
     "validation": {
       "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",
@@ -4931,6 +5188,11 @@
       "amountTooLarge": "Der Betrag ist zu hoch.",
       "referenceMax": "Die Referenz darf höchstens 100 Zeichen lang sein.",
       "purposeMax": "Der Verwendungszweck darf höchstens 300 Zeichen lang sein.",
+      "itemDescriptionRequired": "Bitte die Sachzuwendung genau bezeichnen (mindestens 5 Zeichen).",
+      "itemDescriptionMax": "Die Bezeichnung der Sachzuwendung darf höchstens 500 Zeichen lang sein.",
+      "inKindOriginRequired": "Bitte die Herkunft des Wirtschaftsgutes (BMF) auswählen.",
+      "inKindNoWaiver": "Bei Sachzuwendungen ist kein Verzicht auf Aufwendungsersatz (Aufwandsspende) möglich.",
+      "waiverMethodRequired": "Für eine Aufwandsspende muss die Zahlungsart 'Aufwandsspende' gewählt werden.",
       "basisMax": "Die Rechtsgrundlage darf höchstens 300 Zeichen lang sein.",
       "basisRequired": "Die Grundlage des zuvor entstandenen Anspruchs ist erforderlich (mindestens 5 Zeichen).",
       "waiverDateRequired": "Das Datum der Verzichtserklärung ist erforderlich.",
@@ -4974,6 +5236,7 @@
         },
         "contents": {
           "DONATION": "Geldspende",
+          "IN_KIND_DONATION": "Sachzuwendung",
           "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
         }
       },
@@ -4997,6 +5260,7 @@
           "BANK_TRANSFER": "Überweisung",
           "CARD": "Kartenzahlung",
           "PAYPAL": "PayPal",
+          "IN_KIND": "Sachzuwendung",
           "REIMBURSEMENT_WAIVER": "Aufwandsspende",
           "OTHER": "Sonstige"
         }
@@ -5049,6 +5313,7 @@
               "BANK_TRANSFER": "Überweisung",
               "CARD": "Karte",
               "PAYPAL": "PayPal",
+              "IN_KIND": "Sachzuwendung",
               "REIMBURSEMENT_WAIVER": "Aufwandsspende",
               "OTHER": "Sonstige"
             }
@@ -5148,7 +5413,9 @@
       "removedToast": "{name} wurde aus der Teilnehmerliste entfernt.",
       "addFailed": "Der Teilnehmer konnte nicht hinzugefügt werden.",
       "statusFailed": "Der Status konnte nicht aktualisiert werden.",
-      "removeFailed": "Der Teilnehmer konnte nicht entfernt werden."
+      "removeFailed": "Der Teilnehmer konnte nicht entfernt werden.",
+      "memberPicker": "Mitglied auswählen (optional)",
+      "memberPickerHint": "Bei Auswahl werden die Namensfelder ausgefüllt und die Anmeldung mit dem Mitglied verknüpft; für Gäste leer lassen."
     },
     "attendeeStatus": {
       "REGISTERED": "Angemeldet",
@@ -5186,7 +5453,9 @@
       "invalidStatus": "Ungültiger Status.",
       "statusUpdateFailed": "Der Teilnahmestatus konnte nicht aktualisiert werden.",
       "invalidAttendeeId": "Ungültige Teilnehmer-ID.",
-      "attendeeDeleteFailed": "Der Teilnehmer konnte nicht entfernt werden."
+      "attendeeDeleteFailed": "Der Teilnehmer konnte nicht entfernt werden.",
+      "alreadyRegistered": "Dieses Mitglied ist bereits für die Veranstaltung angemeldet.",
+      "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden."
     },
     "validation": {
       "titleMin": "Der Titel muss mindestens 3 Zeichen lang sein.",
@@ -5196,7 +5465,16 @@
       "eventIdInvalid": "Ungültige Veranstaltungs-ID.",
       "firstNameMin": "Der Vorname muss mindestens 2 Zeichen lang sein.",
       "lastNameMin": "Der Nachname muss mindestens 2 Zeichen lang sein.",
-      "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben."
+      "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben.",
+      "titleMax": "Der Titel darf höchstens 200 Zeichen lang sein.",
+      "descriptionMax": "Die Beschreibung darf höchstens 5000 Zeichen lang sein.",
+      "dateInvalid": "Bitte ein gültiges Datum mit Uhrzeit eingeben.",
+      "endBeforeStart": "Das Ende darf nicht vor dem Beginn liegen.",
+      "locationMax": "Der Ort darf höchstens 300 Zeichen lang sein.",
+      "capacityMax": "Die Kapazität darf höchstens 100000 betragen.",
+      "nameMax": "Vor- und Nachname dürfen höchstens 100 Zeichen lang sein.",
+      "phoneMax": "Die Telefonnummer darf höchstens 40 Zeichen lang sein.",
+      "notesMax": "Die Notiz darf höchstens 1000 Zeichen lang sein."
     },
     "form": {
       "createTitle": "Neue Veranstaltung anlegen",
@@ -5649,7 +5927,8 @@
       "amount": "Betrag",
       "receipt": "Beleg",
       "narrative": "Sachbericht",
-      "narrativePlaceholder": "Durchgeführte Maßnahmen, erreichte Ziele, Teilnehmendenzahlen, Begründung von Abweichungen …"
+      "narrativePlaceholder": "Durchgeführte Maßnahmen, erreichte Ziele, Teilnehmendenzahlen, Begründung von Abweichungen …",
+      "detailsHidden": "Belegdetails sind Buchhaltungsdaten und werden nur mit Leserecht für die Buchhaltung angezeigt. Die Summen oben enthalten alle Belege."
     },
     "financing": {
       "approvedCents": "Bewilligte Zuwendung",
@@ -5779,7 +6058,8 @@
       "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
       "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
       "notFound": "Der Inventareintrag wurde nicht gefunden. Möglicherweise wurde er gelöscht.",
-      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+      "assetForbidden": "Dieser Gegenstand wird in der Buchhaltung als Anlagegut (AfA) geführt. Für Änderungen an Name, Betrag, Datum, Ausmusterung oder AfA-Kennzeichen ist eine Schreibberechtigung in der Buchhaltung erforderlich."
     },
     "export": {
       "filePrefix": "inventar"
@@ -6325,7 +6605,8 @@
         "templateLanguage": "Vorlagensprache",
         "countryCode": "Standard-Ländervorwahl",
         "appSecret": "App Secret (Signatur der Benachrichtigungen)",
-        "verifyToken": "Verify-Token (identisch bei Meta eintragen, mind. 8 Zeichen)"
+        "verifyToken": "Verify-Token (identisch bei Meta eintragen, mind. 8 Zeichen)",
+        "utilityTemplateName": "Vorlage für Transaktionsnachrichten (Utility; Einzelnachrichten wie Signatur-Links, eine Variable '{{1}}' im Text)"
       },
       "telegram": {
         "botToken": "Bot-Token (BotFather)",
@@ -6434,6 +6715,14 @@
       "columnsHelp": "Zum Befüllen auf eine Spalte im Arbeitsbereich klicken, dann links einen Baustein wählen. Mobil werden Spalten untereinander angezeigt.",
       "designSettings": "Allgemeines Design",
       "selectHint": "Zum Bearbeiten auf einen Block im Arbeitsbereich klicken."
+    },
+    "unsubscribe": {
+      "title": "Newsletter abbestellen",
+      "confirm": "Möchten Sie keine Rundschreiben per E-Mail mehr erhalten?",
+      "button": "Abbestellen",
+      "done": "Sie wurden abgemeldet und erhalten keine Rundschreiben per E-Mail mehr.",
+      "unknown": "Dieser Abmeldelink ist ungültig.",
+      "unsupported": "Die Abmeldung konnte nicht automatisch gespeichert werden. Bitte wenden Sie sich an den Verein."
     }
   },
   "meetings": {
@@ -6889,7 +7178,8 @@
       "notEditable": "Die Sitzung kann nicht bearbeitet werden.",
       "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten.",
       "membersAlreadyAdded": "Die ausgewählten Mitglieder sind bereits in dieser Sitzung.",
-      "assigneeNotAttendee": "Die ausgewählte verantwortliche Person nimmt nicht an dieser Sitzung teil."
+      "assigneeNotAttendee": "Die ausgewählte verantwortliche Person nimmt nicht an dieser Sitzung teil.",
+      "approveHasOpenVotes": "Das Protokoll kann nicht freigegeben werden, solange geheime Abstimmungen offen sind; bitte zuerst alle Abstimmungen schließen."
     },
     "validation": {
       "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
@@ -6910,6 +7200,7 @@
       "votesRange": "Die Stimmenzahl muss zwischen 0 und 1000 liegen.",
       "decisionMin": "Der Beschlusstext muss mindestens 3 Zeichen lang sein.",
       "decisionMax": "Der Beschlusstext darf höchstens 3000 Zeichen lang sein.",
+      "decisionRequired": "Bitte einen gültigen Beschluss auswählen.",
       "titleMin": "Der Titel muss mindestens 3 Zeichen lang sein.",
       "titleMax": "Der Titel darf höchstens 200 Zeichen lang sein.",
       "dateRequired": "Das Sitzungsdatum ist erforderlich.",
@@ -7193,7 +7484,11 @@
         "houseNumber": "Hausnummer",
         "postalCode": "Postleitzahl",
         "city": "Ort"
-      }
+      },
+      "stepUpRequest": "Per E-Mail bestätigen",
+      "stepUpSent": "Ein Bestätigungslink wurde an Ihre E-Mail-Adresse gesendet (15 Minuten gültig).",
+      "stepUpFailed": "Der Link konnte nicht gesendet werden; bitte später erneut versuchen.",
+      "stepUpRateLimited": "Zu viele Anfragen in kurzer Zeit. Der vorherige Link bleibt gültig; bitte in einigen Minuten erneut versuchen."
     },
     "corrections": {
       "title": "Korrekturvorschlag",
@@ -7231,7 +7526,7 @@
     "receipts": {
       "title": "Belege und Zuwendungsbestätigungen",
       "subtitle": "Für den PDF-Download sind Step-up und eine signierte Kurzzeit-Referenz erforderlich.",
-      "stepUpHint": "Bitte führen Sie zuerst ein Step-up mit Ihrem Passkey durch, um Belege herunterzuladen.",
+      "stepUpHint": "Bitte bestätigen Sie zuerst Ihre Identität per E-Mail (Schaltfläche oben), um Belege herunterzuladen.",
       "downloadButton": "PDF herunterladen",
       "empty": "Keine Belege vorhanden.",
       "kinds": {
@@ -7242,7 +7537,7 @@
     "art15": {
       "title": "DSGVO Art. 15 Datenauskunft",
       "subtitle": "Fordern Sie eine verschlüsselte Kopie Ihrer Daten an (7 Tage gültig, max. 1 offener Antrag).",
-      "stepUpHint": "Bitte führen Sie zuerst ein Step-up mit Ihrem Passkey durch, um einen Art.-15-Export anzufordern.",
+      "stepUpHint": "Bitte bestätigen Sie zuerst Ihre Identität per E-Mail (Schaltfläche oben), um einen Art.-15-Export anzufordern.",
       "requestButton": "Verschlüsselten Export anfordern",
       "createdNotice": "Ihr verschlüsselter Art.-15-Export steht bereit (7 Tage gültig).",
       "errorNotice": "Es liegt bereits ein offener Antrag vor oder ein Step-up ist erforderlich.",
@@ -7280,7 +7575,13 @@
       "subtitle": "Unterzeichnen Sie offene Online-Formulare direkt im Portal.",
       "empty": "Keine offenen Dokumente zur Signatur.",
       "signerNameLabel": "Name des Unterzeichners",
-      "signButton": "Dokument unterzeichnen"
+      "signButton": "Dokument unterzeichnen",
+      "useEmailLink": "Bitte öffnen Sie offene Formulare über den Link in Ihrer E-Mail, lesen Sie die Dokumente und unterschreiben Sie dort; das unterschriebene Dokument wird als PDF gespeichert."
+    },
+    "consentConfirm": {
+      "title": "Einwilligung bestätigen",
+      "text": "Möchten Sie Ihre Einwilligung für Mitteilungen über diesen Kanal bestätigen?",
+      "button": "Bestätigen"
     }
   },
   "members": {
@@ -7655,7 +7956,24 @@
       "paymentNotSpecified": "Keine Zahlung angegeben.",
       "paymentNotFound2": "Zahlung nicht gefunden.",
       "datesInvalid": "Die Datumsangaben sind nicht stimmig; bitte markierte Felder prüfen.",
-      "exitDateRequired": "Für ausgetretene oder verstorbene Mitglieder ist ein Austrittsdatum erforderlich."
+      "exitDateRequired": "Für ausgetretene oder verstorbene Mitglieder ist ein Austrittsdatum erforderlich.",
+      "paymentExceedsOpenDue": "Der Zahlungsbetrag darf den offenen Beitragsbetrag ({remaining} €) nicht überschreiten."
+    },
+    "corrections": {
+      "title": "Offene Änderungsvorschläge aus dem Mitgliederportal",
+      "description": "Prüfen, genehmigen oder lehnen Sie Kontakt- und Adressänderungen aus dem Portal ab.",
+      "pendingCount": "{count} offen",
+      "emptyValue": "—",
+      "noteLabel": "Prüfnotiz",
+      "notePlaceholder": "Optionale Notiz",
+      "approve": "Genehmigen",
+      "reject": "Ablehnen",
+      "approved": "Änderungsvorschlag genehmigt und Mitgliedsdaten aktualisiert.",
+      "rejected": "Änderungsvorschlag abgelehnt."
+    },
+    "duplicateWarning": {
+      "title": "Mögliches Duplikat gefunden",
+      "description": "Bestehende Einträge mit gleicher E-Mail oder Name/Geburtsdatum: {matches}. Klicken Sie erneut auf Speichern, um trotzdem anzulegen."
     },
     "validation": {
       "yearMinPrev": "Das Jahr darf höchstens das Vorjahr sein.",
@@ -7702,6 +8020,7 @@
       "voidReasonMax": "Der Stornogrund darf höchstens 300 Zeichen lang sein.",
       "exitDateRequired": "Austrittsdatum ist erforderlich.",
       "amountBelowPaid": "Der Betrag muss mindestens dem bereits gezahlten Betrag entsprechen.",
+      "paymentExceedsOpenDue": "Der Zahlungsbetrag darf den offenen Beitrag nicht überschreiten.",
       "amountInvalid": "Bitte einen Betrag größer 0 eingeben (höchstens 2 Nachkommastellen).",
       "annualDueInvalid": "Bitte einen gültigen Betrag eingeben (höchstens 2 Nachkommastellen, nicht negativ).",
       "birthDateFuture": "Das Geburtsdatum darf nicht in der Zukunft liegen.",
@@ -7784,11 +8103,23 @@
         "caption": "{collected} / {expected}",
         "open": "Offen",
         "overdue": "Überfällig"
+      },
+      "celebrations": {
+        "title": "Geburtstage und Jubiläen",
+        "description": "Geburtstage und Mitgliedsjubiläen (10/25/40/50/60 Jahre) in den nächsten 30 Tagen.",
+        "empty": "In den nächsten 30 Tagen gibt es keine Geburtstage oder Jubiläen.",
+        "colName": "Mitglied",
+        "colOccasion": "Anlass",
+        "colDate": "Datum",
+        "birthday": "{years}. Geburtstag",
+        "anniversary": "{years} Jahre Mitglied",
+        "today": "Heute"
       }
     },
     "access": {
       "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten.",
-      "online-forms": "Um von der Mitgliederseite E-Signatur-/Online-Formular-Links zu senden und signierte Dokumente anzuzeigen."
+      "online-forms": "Um von der Mitgliederseite E-Signatur-/Online-Formular-Links zu senden, signierte Dokumente anzuzeigen und beim Löschen offene Einladungen zu stornieren.",
+      "member-portal": "Widerruft aktive Mitgliederportal-Sitzungen, wenn ein Mitglied gelöscht wird."
     },
     "permissions": {
       "memberPayments": {
@@ -8041,6 +8372,24 @@
       "preferencesTable": "Benachrichtigungsarten und Kanäle",
       "settingsTitle": "Ruhezeiten und Zusammenfassung",
       "type": "Benachrichtigungsart",
+      "typeLabels": {
+        "mail": {
+          "triage": "Neue E-Mail im Posteingang"
+        },
+        "meetings": {
+          "invited": "Als Teilnehmer zu einer Sitzung hinzugefügt"
+        },
+        "notifications": {
+          "announcement": "Mitteilungen"
+        },
+        "secretary": {
+          "daily-digest": "Tagesübersicht des Sekretärs",
+          "proposal": "Sekretär-Vorschläge zur Bestätigung"
+        },
+        "tasks": {
+          "assigned": "Mir zugewiesene Aufgaben"
+        }
+      },
       "inApp": "In der Anwendung (immer aktiv)",
       "loading": "Einstellungen werden geladen…",
       "preferencesError": "Einstellungen konnten nicht gespeichert werden.",
@@ -8142,6 +8491,46 @@
         "prevPage": "Zurück",
         "nextPage": "Weiter",
         "pageInfo": "Seite {page} / {totalPages} ({total} Einträge)"
+      },
+      "phoneLink": {
+        "title": {
+          "sms": "SMS-Nummer",
+          "whatsapp": "WhatsApp-Nummer"
+        },
+        "loading": "Wird geladen …",
+        "linked": "Verknüpfte Nummer: {number}",
+        "pending": "Der Bestätigungscode wurde an {number} gesendet; er ist 15 Minuten gültig.",
+        "none": "Keine Nummer verknüpft. Bestätigen Sie Ihre Nummer, um Benachrichtigungen über diesen Kanal zu erhalten.",
+        "revoke": "Verknüpfung entfernen",
+        "revoked": "Die Nummer wurde entfernt.",
+        "phone": "Telefonnummer",
+        "sendCode": "Code senden",
+        "codeSent": "Der Bestätigungscode wurde gesendet.",
+        "code": "6-stelliger Code",
+        "confirm": "Bestätigen",
+        "confirmed": "Die Nummer wurde bestätigt.",
+        "error": "Der Vorgang konnte nicht abgeschlossen werden."
+      },
+      "channelAdmin": {
+        "smsTitle": "SMS-Kanal (Administration)",
+        "whatsappTitle": "WhatsApp-Kanal (Administration)",
+        "whatsappHint": "Meta WhatsApp Cloud API. Zum Aktivieren sind Zugriffstoken, Telefonnummer-ID, eine genehmigte Benachrichtigungsvorlage und die Bestätigung der Meta-Freigabe nötig. Für die Nummernbestätigung zusätzlich eine genehmigte Authentifizierungsvorlage angeben.",
+        "enabled": "Kanal aktiv",
+        "provider": "Anbieter",
+        "apiKey": "API-Schlüssel",
+        "accountSid": "Twilio Account SID",
+        "sender": "Absendername/-nummer",
+        "accessToken": "Dauerhaftes Zugriffstoken",
+        "phoneNumberId": "Telefonnummer-ID",
+        "templateLanguage": "Vorlagensprache (z. B. de, tr)",
+        "templateName": "Benachrichtigungsvorlage (Utility)",
+        "verifyTemplateName": "Bestätigungsvorlage (Authentication)",
+        "templateApproved": "Meta hat die Benachrichtigungsvorlage genehmigt",
+        "save": "Speichern",
+        "saved": "Kanaleinstellungen gespeichert.",
+        "error": "Die Einstellungen konnten nicht gespeichert werden.",
+        "secretStored": "Schlüssel gespeichert (wird nicht angezeigt; zum Ändern einen neuen eingeben).",
+        "secretMissing": "Noch kein Schlüssel gespeichert."
       }
     },
     "widget": {
@@ -8224,7 +8613,8 @@
       "noEncryption": "Zum Verschlüsseln der Unterschriften ist kein Schlüssel eingerichtet (AUTH_SECRET).",
       "invalid": "Bitte prüfen Sie die markierten Felder.",
       "linkInvalid": "Der Link ist ungültig, abgelaufen oder wurde bereits verwendet.",
-      "textsChanged": "Die Formulartexte wurden inzwischen geändert. Bitte Seite neu laden, Text lesen und erneut unterschreiben."
+      "textsChanged": "Die Formulartexte wurden inzwischen geändert. Bitte Seite neu laden, Text lesen und erneut unterschreiben.",
+      "rateLimited": "Zu viele Versuche; bitte warten Sie kurz und versuchen Sie es erneut."
     },
     "validation": {
       "tooLong": "Zu lang.",
@@ -8236,7 +8626,9 @@
       "bic": "Bitte eine gültige BIC eingeben.",
       "signerName": "Bitte Vor- und Nachnamen eingeben.",
       "signature": "Bitte im Unterschriftsfeld unterschreiben.",
-      "privacy": "Die Datenschutzerklärung muss bestätigt werden."
+      "privacy": "Die Datenschutzerklärung muss bestätigt werden.",
+      "ibanRequired": "Für das SEPA-Mandat bitte die IBAN angeben.",
+      "accountHolderRequired": "Für das SEPA-Mandat bitte den Kontoinhaber angeben."
     },
     "public": {
       "title": "Anmeldeformular",
@@ -8495,7 +8887,9 @@
         "label": "Vereinsstammdaten",
         "description": "Registernummer, Steuernummer, Bankverbindungen und Briefkopf-Logo."
       }
-    }
+    },
+    "yes": "Ja",
+    "no": "Nein"
   },
   "progress": {
     "module": {
@@ -8601,6 +8995,8 @@
       "assessmentNotFound": "Leistung nicht gefunden.",
       "pointsAboveMax": "Die Punkte dürfen das Maximum ({max}) nicht überschreiten.",
       "enrollmentNotFound": "Der Schüler ist in diesem Kurs nicht angemeldet.",
+      "sessionCancelled": "Für einen ausgefallenen Termin kann keine Anwesenheit gespeichert werden.",
+      "enrollmentWithdrawn": "Für abgemeldete Schüler kann keine Anwesenheit gespeichert werden.",
       "noteNotFound": "Eintrag nicht gefunden.",
       "noteNotYours": "Sie können nur eigene Einträge löschen."
     },
@@ -8983,6 +9379,16 @@
           }
         }
       }
+    },
+    "checks": {
+      "authSecret": "App-Geheimnis (AUTH_SECRET) mindestens 32 Zeichen",
+      "secretEncryption": "Gespeicherte Geheimnisse können verschlüsselt werden",
+      "appUrlHttps": "Öffentliche Adresse (APP_URL) gesetzt und in Produktion HTTPS",
+      "uploadsNotPublic": "Uploads liegen nicht im öffentlichen Ordner",
+      "auditAppendOnly": "Protokoll ist unveränderlich (Datenbank-Trigger)",
+      "migrations": "Keine fehlgeschlagene Datenbankmigration",
+      "productionMode": "Läuft im Produktionsmodus",
+      "RUNTIME_CHECKS_FAILED": "Prüfungen konnten nicht ausgeführt werden (siehe Serverprotokoll)"
     }
   },
   "sepa": {
@@ -9016,6 +9422,8 @@
       "noMandate": "Kein SEPA-Mandat",
       "invalidIban": "IBAN ungültig",
       "alreadyInRun": "Bereits in einem offenen Einzug",
+      "futureSignatureDate": "Mandatsdatum liegt in der Zukunft",
+      "missingDebtorName": "Name des Zahlungspflichtigen leer oder ungültig",
       "dormant": "Mandat 36 Monate ungenutzt",
       "renewAfterReturn": "Nach Rückgabe neues Mandat nötig",
       "pausedAfterReturns": "Wegen wiederholter Rückgaben pausiert"
@@ -9069,6 +9477,8 @@
       "date": "Bitte ein gültiges Datum eingeben.",
       "year": "Bitte ein gültiges Jahr eingeben.",
       "pastDate": "Das Einzugsdatum darf nicht in der Vergangenheit liegen.",
+      "invalidCollectionDate": "Das Einzugsdatum muss mindestens 1 TARGET2-Bankarbeitstag in der Zukunft liegen (keine Wochenenden oder TARGET2-Feiertage).",
+      "invalidName": "Name des Zahlungsempfängers oder Zahlungspflichtigen darf im SEPA-Zeichensatz nicht leer sein.",
       "nothingToCollect": "Keine einziehbaren Posten.",
       "notOpen": "Der Einzug ist nicht offen.",
       "notCollected": "Der Posten ist nicht eingezogen.",
@@ -9176,6 +9586,59 @@
         "EXPIRED": "Link abgelaufen ({date})"
       }
     }
+  },
+  "social-login": {
+    "module": {
+      "label": "Externe Anmeldung",
+      "description": "Externe Identitätsanbieter."
+    },
+    "meta": {
+      "title": "Externe Anmeldung"
+    },
+    "title": "Externe Anmeldung",
+    "description": "Externe Anmeldung ist optional; Authentifizierungsdaten werden an den Anbieter übertragen.",
+    "permissions": {
+      "socialLogin": {
+        "label": "Externe Anmeldung",
+        "description": "Verbindungen ansehen und Anbietereinstellungen verwalten."
+      }
+    },
+    "access": {
+      "system": "Prüft die Modulverfügbarkeit."
+    },
+    "providers": {
+      "google": "Google",
+      "microsoft-entra-id": "Microsoft Entra ID",
+      "twitter": "X",
+      "facebook": "Facebook"
+    },
+    "enabled": "Aktiv",
+    "clientId": "Client ID",
+    "tenantId": "Tenant ID",
+    "secret": "Client Secret",
+    "stored": "Gespeichert; zum Ändern eingeben",
+    "callback": "Callback",
+    "save": "Speichern",
+    "saved": "Gespeichert",
+    "errors": {
+      "invalid": "Bitte prüfen Sie die Einstellungen.",
+      "unavailable": "Modul nicht verfügbar.",
+      "applicationImmutable": "Die bestehende OAuth-Anwendungskennung kann nicht geändert werden."
+    },
+    "linkedAccounts": "Meine verknüpften Konten",
+    "noLinkedAccounts": "Keine verknüpften externen Konten.",
+    "confirmUnlink": "Verknüpfung entfernen? Alle Sitzungen werden beendet.",
+    "unlink": "Verknüpfung entfernen",
+    "cancel": "Abbrechen",
+    "unlinked": "Verknüpfung entfernt.",
+    "link": "{provider}-Konto verknüpfen",
+    "password": "Aktuelles ERP-Passwort",
+    "linkHint": "Sie bestätigen Ihr Konto beim Anbieter. Bei aktiver Zwei-Faktor-Anmeldung ist die externe Anmeldung nicht verfügbar.",
+    "continue": "Weiter",
+    "linkSuccess": "Konto verknüpft.",
+    "linkDenied": "Konto konnte nicht verknüpft werden. Bitte erneut versuchen.",
+    "otp": "Bestätigungscode (bei aktiver Zwei-Faktor-Anmeldung)",
+    "applicationLocked": "Zum Schutz der Kontoverknüpfungen bleibt die gespeicherte Anwendungskennung unverändert; der geheime Schlüssel kann erneuert werden."
   },
   "students": {
     "module": {
@@ -9495,7 +9958,9 @@
       "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden).",
       "users": "Prüft das Vorhandensein eines Administratorkontos im Modul- und Workflow-Gesundheitscockpit.",
       "ai": "Liest den Status konfigurierter KI-Anbieter für Datenschutz-Voreinstellungen und den monatlichen Datenausgangsbericht.",
-      "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer."
+      "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer.",
+      "automation": "Liest im Modul-Gesundheitscockpit fehlgeschlagene Hintergrundaufgaben und den Worker-Heartbeat (keine Ein-/Ausgabedaten).",
+      "notifications": "Liest im Modul-Gesundheitscockpit, welche Benachrichtigungskanäle aktiv sind (keine Geheimnisse oder Einstellungen)."
     },
     "gate": {
       "manage": "Zur Modulverwaltung",
@@ -9510,6 +9975,10 @@
       "unlicensed": {
         "title": "Dieses Modul erfordert eine Lizenz",
         "description": "Diese Funktion ist nur mit einer gültigen Enterprise-Lizenz verfügbar. Admins können sie unter Einstellungen → Lizenz hinterlegen."
+      },
+      "public": {
+        "title": "Diese Seite ist derzeit nicht verfügbar",
+        "description": "Die gesuchte Seite ist vorübergehend nicht verfügbar. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Verein."
       }
     },
     "releases": {
@@ -9596,7 +10065,9 @@
         "smallBusinessOff": "Regelbesteuerung",
         "presetOn": "Kategorien und Konten werden angelegt",
         "presetOff": "nein",
-        "note": "Nicht ausgewählte optionale Module werden deaktiviert (Daten bleiben erhalten)."
+        "note": "Daten nicht ausgewählter Module werden nicht gelöscht; deaktiviert wird nur, was Sie unten bestätigen.",
+        "willDisable": "Derzeit aktive, nicht ausgewählte Module: {modules}.",
+        "confirmDisable": "Diese Module deaktivieren (ohne Bestätigung bleiben sie aktiv)"
       },
       "back": "Zurück",
       "next": "Weiter",
@@ -9609,7 +10080,10 @@
         "profile": "Organisationsdaten erfassen",
         "accountingSettings": "Buchhaltungseinstellungen",
         "modulesPage": "Modulverwaltung",
-        "dashboard": "Zum Dashboard"
+        "dashboard": "Zum Dashboard",
+        "kept": "Aktiv gelassen, da nicht bestätigt: {modules}",
+        "mapped": "Leere Standardzuordnungen in den Buchhaltungseinstellungen (Kasse/Bank, Spenden- und Beitragskategorie) wurden ergänzt.",
+        "mappingFailed": "Die Buchhaltungs-Standardzuordnung war nicht möglich; bitte unter Buchhaltung → Einstellungen ergänzen."
       },
       "errors": {
         "accountingOff": "Für die Buchhaltungsvorbereitung muss das Modul Buchhaltung ausgewählt sein."
@@ -9750,7 +10224,11 @@
             "right": "Kopfzeile · rechts"
           }
         },
-        "resetSuccess": "Standardeinstellungen wiederhergestellt."
+        "resetSuccess": "Standardeinstellungen wiederhergestellt.",
+        "policy": {
+          "label": "Für alle erlaubt",
+          "toggle": "Widget {title} für alle Benutzer erlauben oder sperren"
+        }
       }
     },
     "readiness": {
@@ -9808,7 +10286,8 @@
         "accessGrantsPending": "Die von diesem Modul angeforderten Berechtigungen warten auf Administratorfreigabe.",
         "failedJobsDetected": "In der Hintergrund-Warteschlange wurden fehlgeschlagene Aufgaben festgestellt.",
         "notificationsNoChannel": "Für das Benachrichtigungsmodul ist kein aktiver Kanal (E-Mail, Telegram etc.) eingerichtet.",
-        "generalIssue": "Es liegen Konfigurations- oder Workflow-Hinweise für dieses Modul vor."
+        "generalIssue": "Es liegen Konfigurations- oder Workflow-Hinweise für dieses Modul vor.",
+        "portalDisabledByEnv": "Das Mitgliederportal ist aktiv, aber PORTAL_ENABLED=true ist auf dem Server nicht gesetzt; /portal ist für Besucher gesperrt (404)."
       }
     },
     "privacyUi": {
@@ -9851,7 +10330,15 @@
       "apply": "Bestätigen und anwenden",
       "applying": "Wird angewendet…",
       "noChanges": "Das Profil ist bereits aktiv; keine Änderungen.",
-      "readOnly": "Zur Änderung sind Systemadministratorrechte erforderlich."
+      "readOnly": "Zur Änderung sind Systemadministratorrechte erforderlich.",
+      "blocked": "Voreinstellung nicht angewendet: Einige Moduländerungen sind wegen Abhängigkeiten oder fehlender Zugriffsfreigabe blockiert.",
+      "blockersTitle": "Vor dem Anwenden zu lösen",
+      "blockers": {
+        "requires": "{module} würde aktiviert, aber erforderliche Module bleiben deaktiviert: {modules}.",
+        "missing": "Für {module} erforderliche Module fehlen oder sind zu alt: {modules}.",
+        "approval": "Der Zugriff von {module} ist nicht freigegeben; bitte zuerst in der Modulverwaltung freigeben.",
+        "dependents": "{module} würde deaktiviert, aber abhängige Module bleiben aktiv: {modules}."
+      }
     },
     "egressUi": {
       "title": "Monatlicher Datenausgangsbericht",
@@ -9891,6 +10378,104 @@
       "yes": "Ja",
       "no": "Nein",
       "unknown": "Nicht angegeben"
+    },
+    "backups": {
+      "title": "Datensicherung & Wiederherstellungsprüfung",
+      "subtitle": "Sichern Sie PostgreSQL-Datenbank und UPLOAD_DIR-Dokumente verschlüsselt mit AES-256-GCM und prüfen Sie Integrität sowie Schemakompatibilität.",
+      "encryptionMissingTitle": "Verschlüsselungsschlüssel nicht konfiguriert",
+      "encryptionMissingBody": "Da kein Datenverschlüsselungsschlüssel (DATA_ENCRYPTION_KEYS oder AUTH_SECRET) verfügbar ist, sind verschlüsselte Sicherungen und Prüfungen aus Sicherheitsgründen deaktiviert.",
+      "stats": {
+        "encryption": "Verschlüsselungsstatus",
+        "encryptionReady": "Bereit",
+        "encryptionUnavailable": "Schlüssel fehlt",
+        "cipherLabel": "AES-256-GCM + SHA-256-Manifest",
+        "lastBackup": "Letzte Sicherung",
+        "never": "Noch keine",
+        "readySummary": "{count} bereite Sicherungen · {size}",
+        "lastVerification": "Letzte Prüfung",
+        "notVerifiedYet": "Noch nicht geprüft",
+        "schemaVersion": "Aktive Schemaversion",
+        "unknown": "Unbekannt",
+        "migrationCount": "{count} Migrationen angewendet"
+      },
+      "manual": {
+        "title": "Verschlüsselte Sicherung jetzt erstellen",
+        "description": "Datenbank-Schnappschuss, hochgeladene Dokumente (UPLOAD_DIR) und SHA-256-Manifest werden in ein verschlüsseltes .vbak-Archiv verpackt und sofort selbst geprüft.",
+        "cta": "Verschlüsselte Sicherung erstellen",
+        "running": "Wird gesichert und geprüft..."
+      },
+      "policy": {
+        "title": "Automatische Sicherung & Aufbewahrung",
+        "description": "Der Automatisierungs-Worker (system.run_backup) erstellt regelmäßig Sicherungen und bereinigt ältere Archive gemäß der Aufbewahrungsanzahl.",
+        "enabled": "Geplante automatische Sicherung aktivieren",
+        "retentionCount": "Aufzubewahrende Sicherungen (1–90)",
+        "intervalHours": "Sicherungsintervall (Stunden, 6–168)",
+        "save": "Richtlinie speichern",
+        "saving": "Wird gespeichert..."
+      },
+      "uploadVerify": {
+        "title": "Externes Archiv zerstörungsfrei prüfen (Probelauf)",
+        "description": "Laden Sie ein heruntergeladenes .vbak-Archiv hoch, um Entschlüsselung, Datei-Prüfsummen und Schemakompatibilität ohne Änderung der Live-Daten zu prüfen.",
+        "cta": ".vbak-Archiv wählen und prüfen",
+        "running": "Archiv wird geprüft..."
+      },
+      "verifyDetail": {
+        "passedHeading": "Wiederherstellungsprüfung bestanden — Archiv ist intakt und entschlüsselbar.",
+        "failedHeading": "Wiederherstellungsprüfung fehlgeschlagen ({code}).",
+        "archiveSha": "Archiv-SHA-256",
+        "dbIntegrity": "Datenbankintegrität",
+        "filesChecked": "Geprüfte Dateien",
+        "schemaCompatibility": "Schemakompatibilität",
+        "ok": "Bestanden",
+        "failed": "Fehlerhaft"
+      },
+      "schemaCompatibility": {
+        "compatible": "Vollständig kompatibel",
+        "older": "Älteres Schema (Migration erforderlich)",
+        "newer": "Neueres Schema (App-Update erforderlich)",
+        "unknown": "Unklar"
+      },
+      "status": {
+        "ready": "Bereit",
+        "failed": "Fehlgeschlagen",
+        "verifiedPassed": "Geprüft",
+        "verifiedFailed": "Prüfung fehlgeschlagen"
+      },
+      "trigger": {
+        "manual": "Manuell",
+        "scheduled": "Geplant"
+      },
+      "list": {
+        "title": "Sicherungsverlauf",
+        "empty": "Es wurden noch keine Systemsicherungen erstellt.",
+        "date": "Datum / Auslöser",
+        "status": "Status",
+        "contents": "Inhalt",
+        "size": "Größe / SHA-256",
+        "verification": "Prüfung",
+        "actions": "Aktionen",
+        "dbSummary": "{tables} Tabellen · {rows} Zeilen",
+        "uploadSummary": "{files} Dokumentdateien"
+      },
+      "actions": {
+        "verify": "Prüfen",
+        "download": "Herunterladen",
+        "delete": "Löschen"
+      },
+      "messages": {
+        "created": "Verschlüsselte Sicherung erstellt und erfolgreich geprüft.",
+        "createdWithPrune": "Verschlüsselte Sicherung erstellt, geprüft und {count} ältere Sicherungen gemäß Richtlinie bereinigt.",
+        "createFailed": "Fehler beim Erstellen der Sicherung.",
+        "configSaved": "Sicherungsrichtlinie gespeichert.",
+        "configFailed": "Sicherungsrichtlinie konnte nicht gespeichert werden.",
+        "verifyPassed": "Archiv entschlüsselt, alle SHA-256-Prüfsummen und Datenbankintegrität bestätigt.",
+        "uploadVerifyPassed": "Hochgeladenes Archiv erfolgreich entschlüsselt und geprüft (Live-Daten unverändert).",
+        "verifyFailed": "Archivprüfung fehlgeschlagen: {code}",
+        "verifyError": "Unerwarteter Fehler bei der Prüfung.",
+        "deleteConfirm": "Dieses verschlüsselte Sicherungsarchiv dauerhaft vom Datenträger und aus dem Verlauf löschen?",
+        "deleted": "Sicherungsarchiv gelöscht.",
+        "deleteFailed": "Sicherungsarchiv konnte nicht gelöscht werden."
+      }
     }
   },
   "tasks": {
@@ -9972,7 +10557,8 @@
     },
     "errors": {
       "notFound": "Aufgabe nicht gefunden.",
-      "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten."
+      "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten.",
+      "meetingNotFound": "Die ausgewählte Sitzung wurde nicht gefunden."
     },
     "validation": {
       "titleRequired": "Titel ist erforderlich.",
@@ -10089,7 +10675,15 @@
       "delete": "Endgültig löschen",
       "deleted": "Benutzer gelöscht.",
       "deleteTitle": "Benutzer endgültig löschen",
-      "deleteConfirm": "\"{name}\" wird endgültig gelöscht; dies kann nicht rückgängig gemacht werden. In anderen Datensätzen bleibt der Name sichtbar. Wenn Sie nur den Zugang sperren möchten, deaktivieren Sie den Benutzer stattdessen. Fortfahren?"
+      "deleteConfirm": "\"{name}\" wird endgültig gelöscht; dies kann nicht rückgängig gemacht werden. In anderen Datensätzen bleibt der Name sichtbar. Wenn Sie nur den Zugang sperren möchten, deaktivieren Sie den Benutzer stattdessen. Fortfahren?",
+      "revokeSessions": "Alle Sitzungen beenden",
+      "revokeSessionsTitle": "Alle Sitzungen beenden?",
+      "revokeSessionsConfirm": "{name} wird auf allen Geräten abgemeldet und muss sich neu anmelden.",
+      "sessionsRevoked": "Alle Sitzungen von {name} wurden beendet.",
+      "resetTwoFactor": "Zwei-Faktor-Anmeldung zurücksetzen",
+      "resetTwoFactorTitle": "Zwei-Faktor-Anmeldung zurücksetzen?",
+      "resetTwoFactorConfirm": "Authenticator-App und Wiederherstellungscodes von {name} werden entfernt, alle Sitzungen enden. Die Person meldet sich danach nur mit dem Passwort an und kann die Einrichtung wiederholen.",
+      "twoFactorReset": "Die Zwei-Faktor-Anmeldung von {name} wurde zurückgesetzt."
     },
     "form": {
       "name": "Vor- und Nachname",
@@ -10125,7 +10719,8 @@
       "roleUnavailable": "Diese Rolle kann nicht zugewiesen werden: Sie existiert nicht oder ihr Modul ist nicht aktiv.",
       "adminOnly": "Nur ein Administrator kann die Administratorrolle vergeben oder ändern.",
       "grantExceedsMaxDuration": "Die Zugriffsdauer darf höchstens 90 Tage betragen.",
-      "grantEndBeforeStart": "Das Enddatum muss nach dem Startdatum liegen."
+      "grantEndBeforeStart": "Das Enddatum muss nach dem Startdatum liegen.",
+      "twoFactorNotEnabled": "Für dieses Konto ist die Zwei-Faktor-Anmeldung nicht aktiv."
     },
     "validation": {
       "nameRequired": "Name ist erforderlich.",
@@ -10354,6 +10949,7 @@
       "empty": "Noch kein Zugriffsfenster hinterlegt.",
       "statuses": {
         "active": "Aktiv",
+        "scheduled": "Geplant",
         "expired": "Abgelaufen",
         "revoked": "Widerrufen"
       }
@@ -10370,11 +10966,31 @@
       "toLogin": "Zur Anmeldung",
       "errors": {
         "invalid": "Dieser Einladungslink ist ungültig, abgelaufen oder bereits verwendet. Bitten Sie Ihre Verwaltung um eine neue Einladung.",
+        "rateLimited": "Zu viele Versuche. Bitte versuchen Sie es später erneut.",
         "inactive": "An inaktive Nutzer kann keine Einladung gesendet werden.",
         "mailNotConfigured": "E-Mail-Versand ist nicht eingerichtet (Einstellungen → E-Mail).",
         "appUrl": "Die App-Adresse (APP_URL) muss mit https definiert sein.",
         "sendFailed": "Einladungs-E-Mail konnte nicht gesendet werden.",
         "mismatch": "Die Passwörter stimmen nicht überein."
+      }
+    },
+    "passwordReset": {
+      "requestTitle": "Passwort vergessen",
+      "requestIntro": "Geben Sie die E-Mail-Adresse Ihres Kontos ein. Falls ein Konto existiert, erhalten Sie einen einmaligen Link zum Zurücksetzen, der 30 Minuten gültig ist.",
+      "email": "E-Mail",
+      "submitRequest": "Link zum Zurücksetzen senden",
+      "sent": "Falls zu dieser Adresse ein aktives Konto existiert, wurde ein Link zum Zurücksetzen gesendet. Bitte prüfen Sie Ihr Postfach (auch den Spam-Ordner).",
+      "toLogin": "Zurück zur Anmeldung",
+      "resetTitle": "Neues Passwort festlegen",
+      "resetIntro": "Legen Sie ein neues Passwort für {email} fest. Alle anderen Sitzungen werden beendet.",
+      "password": "Neues Passwort",
+      "confirm": "Neues Passwort (Wiederholung)",
+      "submitReset": "Passwort speichern",
+      "done": "Ihr Passwort wurde geändert. Sie können sich jetzt mit dem neuen Passwort anmelden.",
+      "errors": {
+        "email": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+        "rateLimited": "Zu viele Versuche. Bitte versuchen Sie es später erneut.",
+        "invalid": "Dieser Link ist ungültig, abgelaufen oder wurde bereits verwendet. Fordern Sie einen neuen Link an."
       }
     }
   },
@@ -10442,6 +11058,7 @@
       "71": "Leichter Schneefall",
       "73": "Mäßiger Schneefall",
       "75": "Starker Schneefall",
+      "77": "Schneegriesel",
       "80": "Leichter Regenschauer",
       "81": "Mäßiger Regenschauer",
       "82": "Heftiger Regenschauer",
@@ -10553,7 +11170,11 @@
       "save": "Speichern",
       "cancel": "Abbrechen",
       "created": "Eintrag angelegt.",
-      "updated": "Eintrag aktualisiert."
+      "updated": "Eintrag aktualisiert.",
+      "member": "Mitglied (optional)",
+      "memberNone": "Keine Verknüpfung mit einem Mitglied",
+      "memberHistorical": "Bisherige Mitgliedsverknüpfung (nicht mehr aktiv)",
+      "memberHelp": "Wählen Sie das Mitglied, falls die Person Vereinsmitglied ist; ein leeres Namensfeld wird mit dem Mitgliedsnamen gefüllt."
     },
     "letter": {
       "title": "Vorlage für Gebührenbefreiungsantrag",
@@ -10580,7 +11201,8 @@
       "dueCount": "{count, plural, one {Bei # Person ist die Einsichtnahme in das Führungszeugnis fällig oder läuft in 3 Monaten ab.} other {Bei # Personen ist die Einsichtnahme in das Führungszeugnis fällig oder läuft in 3 Monaten ab.}}"
     },
     "errors": {
-      "notFound": "Eintrag nicht gefunden."
+      "notFound": "Eintrag nicht gefunden.",
+      "memberNotFound": "Das gewählte Mitglied wurde nicht gefunden oder ist nicht aktiv."
     },
     "validation": {
       "personNameRequired": "Name ist erforderlich.",
@@ -10592,6 +11214,10 @@
       "nextDueDateInvalid": "Gültiges Fälligkeitsdatum auswählen (JJJJ-MM-TT).",
       "activityEndedAtInvalid": "Gültiges Tätigkeitsendedatum auswählen (JJJJ-MM-TT).",
       "dateInvalid": "Ungültiges Datumsformat."
+    },
+    "access": {
+      "organization": "Liest Name und Ort der Organisation für das Gebührenbefreiungsschreiben.",
+      "members": "Liest beim Verknüpfen eines Eintrags mit einem Mitglied die Mitgliederliste (Name, Mitgliedsnummer) und prüft das gewählte Mitglied."
     }
   }
 }

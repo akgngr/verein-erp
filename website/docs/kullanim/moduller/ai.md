@@ -1,5 +1,5 @@
 ---
-sidebar_position: 45
+sidebar_position: 46
 title: "Yapay zekâ asistanı"
 description: "Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan."
 slug: /kullanim/moduller/ai
@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.15.10 |
+| Sürüm | 1.15.13 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,24 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.13 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
+
+### 1.15.12 — Arayüz düzeltmeleri (#586)
+
+_2026-11-25_
+
+- **İyileştirme:** Yüzen asistan çubuğu mobilde ve sağlayıcı yapılandırılmamışken küçük bir düğmeye dönüşür; açık diyalog veya çekmece varken gizlenir.
+
+### 1.15.11 — Gizlilik ön ayarı sağlayıcı politikası
+
+_2026-11-25_
+
+- **Güvenlik:** Uygulanan gizlilik ön ayarının izin vermediği sağlayıcı seçilemez ve kullanılmaz (örn. 'Yalnız yerel' ön ayarında bulut sağlayıcı kapalıdır).
 
 ### 1.15.10 — TAX_ADVISOR rolü izin tanımı
 
@@ -71,22 +89,4 @@ _2026-11-19_
 
 - **Düzeltme:** AI sohbet kutusunda Enter tuşuyla gönderim yapılırken IME kompozisyonu (Japonca, Çince, Korece vb.) denetimi eklendi; metin dönüşümü sırasındaki erken gönderimler engellendi.
 
-### 1.15.4 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-### 1.15.2 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-### 1.15.1 — Rıza eylemleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Eylem butonları ve kullanıcı bildirimleri ortak ActionButton/notify adapter katmanına taşındı; bu kullanımda doğrudan HeroUI bağımlılığı kaldırıldı.
-
-Daha eski 30 herkese açık sürüm notu.
+Daha eski 33 herkese açık sürüm notu.

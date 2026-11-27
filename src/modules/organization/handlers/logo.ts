@@ -135,15 +135,12 @@ export async function uploadOrganizationLogoHandler(request: Request): Promise<R
       logoUpdatedAt: now,
     };
 
-    if (existing) {
-      await db.organizationProfile.update({ where: { id: "singleton" }, data });
-    } else {
-      // KARAR: profil satırı yoksa fallback adla oluşturulur; form daha sonra
-      // gerçek adla güncellenir (getOrganizationProfile aynı fallback'i kullanır).
-      await db.organizationProfile.create({
-        data: { id: "singleton", name: getEnv().ORGANIZATION_NAME, ...data },
-      });
-    }
+    const editor = { updatedById: user.id, updatedByLabel: buildUserLabel(user.name, user.email) };
+    // KARAR: profil satırı yoksa fallback adla oluşturulur; form daha sonra
+    // gerçek adla güncellenir (getOrganizationProfile aynı fallback'i kullanır).
+    const saved = existing
+      ? await db.organizationProfile.update({ where: { id: "singleton" }, data: { ...data, ...editor }, select: { updatedAt: true } })
+      : await db.organizationProfile.create({ data: { id: "singleton", name: getEnv().ORGANIZATION_NAME, ...data, ...editor }, select: { updatedAt: true } });
 
     // Eski logo dosyası yalnızca yeni kayıt başarılı olduktan sonra silinir.
     if (existing?.logoPath && existing.logoPath !== storagePath) {
@@ -163,10 +160,13 @@ export async function uploadOrganizationLogoHandler(request: Request): Promise<R
       },
     });
 
+    // #583: Profilin yeni updatedAt değeri döner; açık form eşzamanlılık belirtecini günceller.
     return NextResponse.json({
       ok: true,
       logoVersion: String(now.getTime()),
       logoOriginalName: validation.file.originalName,
+      updatedAt: saved.updatedAt.toISOString(),
+      inSync: isInSync(request, existing?.updatedAt),
     });
   } catch (error) {
     await deleteLogoFile(storagePath);
@@ -175,8 +175,18 @@ export async function uploadOrganizationLogoHandler(request: Request): Promise<R
   }
 }
 
+/**
+ * #583: Açık formun sürüm belirteci (`X-Expected-Updated-At`). Logo değişikliğinden önce profil bu sürümdeyse
+ * yanıt `inSync: true` döner ve form belirtecini ilerletir; değilse (araya başka bir kayıt girdi) form eski
+ * belirteci korur ve sonraki kayıt "staleRecord" ile durur (başkasının değişikliği sessizce ezilmez).
+ */
+function isInSync(request: Request, previousUpdatedAt: Date | null | undefined): boolean {
+  const expected = request.headers.get("x-expected-updated-at");
+  return Boolean(expected && previousUpdatedAt && expected === previousUpdatedAt.toISOString());
+}
+
 /** Logo kaldırma: DB alanları null'a çekilir, disk dosyası silinir. */
-export async function deleteOrganizationLogoHandler(): Promise<Response> {
+export async function deleteOrganizationLogoHandler(request: Request): Promise<Response> {
   const auth = await authenticate();
   if (!auth.ok) return auth.response;
 
@@ -188,15 +198,16 @@ export async function deleteOrganizationLogoHandler(): Promise<Response> {
   const db = getDb();
   const existing = await db.organizationProfile.findUnique({
     where: { id: "singleton" },
-    select: { logoPath: true, logoOriginalName: true },
+    select: { logoPath: true, logoOriginalName: true, updatedAt: true },
   });
   if (!existing?.logoPath) {
     return NextResponse.json({ ok: false, error: await translateMessage("organization.errors.logoMissing") }, { status: 404 });
   }
 
-  await db.organizationProfile.update({
+  const saved = await db.organizationProfile.update({
     where: { id: "singleton" },
-    data: { logoPath: null, logoMime: null, logoOriginalName: null, logoUpdatedAt: null },
+    data: { logoPath: null, logoMime: null, logoOriginalName: null, logoUpdatedAt: null, updatedById: user.id, updatedByLabel: buildUserLabel(user.name, user.email) },
+    select: { updatedAt: true },
   });
   await deleteLogoFile(existing.logoPath);
 
@@ -210,5 +221,5 @@ export async function deleteOrganizationLogoHandler(): Promise<Response> {
     after: null,
   });
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, updatedAt: saved.updatedAt.toISOString(), inSync: isInSync(request, existing.updatedAt) });
 }

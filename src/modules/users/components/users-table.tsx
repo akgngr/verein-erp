@@ -6,7 +6,7 @@ import { StatusChip } from "@/shared/components/kit";
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { useTranslations } from "next-intl";
 
-import { KeyRound, MailPlus, Pencil, Power, RefreshCcw, Trash2 } from "lucide-react";
+import { KeyRound, MailPlus, Pencil, Power, RefreshCcw, ShieldOff, Trash2, LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -20,6 +20,7 @@ import { ResetPasswordDialog } from "./reset-password-dialog";
 import { deleteUserAction } from "../actions/delete-user";
 import { setUserActiveAction } from "../actions/set-active";
 import { inviteUserAction } from "../actions/invitations";
+import { resetUserTwoFactorAction, revokeUserSessionsAction } from "../actions/sessions";
 import type { UserRow } from "../queries/list-users";
 
 /**
@@ -113,6 +114,28 @@ export function UsersTable({
     notify.success(tInvite("sent", { email: user.email }));
   };
 
+  // #603: Kullanıcının tüm oturumlarını sonlandır (kayıp cihaz vb.).
+  const [sessionsTarget, setSessionsTarget] = useState<UserRow | null>(null);
+  const handleRevokeSessions = async (user: UserRow) => {
+    const result = await revokeUserSessionsAction({ id: user.id });
+    if (!result.ok) {
+      notify.error(result.error);
+      return;
+    }
+    notify.success(t("sessionsRevoked", { name: user.name }));
+  };
+
+  // #603: İkinci faktörü sıfırla (telefon ve kurtarma kodları kayıp).
+  const [twoFactorTarget, setTwoFactorTarget] = useState<UserRow | null>(null);
+  const handleResetTwoFactor = async (user: UserRow) => {
+    const result = await resetUserTwoFactorAction({ id: user.id });
+    if (!result.ok) {
+      notify.error(result.error);
+      return;
+    }
+    notify.success(t("twoFactorReset", { name: user.name }));
+  };
+
   const handleDelete = async (user: UserRow) => {
     const result = await deleteUserAction({ id: user.id });
     if (!result.ok) {
@@ -178,6 +201,20 @@ export function UsersTable({
             hidden: !canUpdate || !row.isActive,
           },
           {
+            key: "revoke-sessions",
+            label: t("revokeSessions"),
+            icon: <LogOut className="h-4 w-4" />,
+            onPress: () => setSessionsTarget(row),
+            hidden: !canUpdate || !row.isActive,
+          },
+          {
+            key: "reset-two-factor",
+            label: t("resetTwoFactor"),
+            icon: <ShieldOff className="h-4 w-4" />,
+            onPress: () => setTwoFactorTarget(row),
+            hidden: !canUpdate,
+          },
+          {
             key: "toggle-active",
             label: row.isActive ? t("deactivate") : t("activate"),
             icon: row.isActive ? (
@@ -224,6 +261,34 @@ export function UsersTable({
         onConfirm={async () => {
           if (activeTarget)
             await handleSetActive(activeTarget.user, activeTarget.isActive);
+        }}
+      />
+
+      <ConfirmDialog
+        isOpen={sessionsTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setSessionsTarget(null);
+        }}
+        title={t("revokeSessionsTitle")}
+        message={sessionsTarget ? t("revokeSessionsConfirm", { name: sessionsTarget.name }) : ""}
+        confirmLabel={t("revokeSessions")}
+        confirmColor="danger"
+        onConfirm={async () => {
+          if (sessionsTarget) await handleRevokeSessions(sessionsTarget);
+        }}
+      />
+
+      <ConfirmDialog
+        isOpen={twoFactorTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setTwoFactorTarget(null);
+        }}
+        title={t("resetTwoFactorTitle")}
+        message={twoFactorTarget ? t("resetTwoFactorConfirm", { name: twoFactorTarget.name }) : ""}
+        confirmLabel={t("resetTwoFactor")}
+        confirmColor="danger"
+        onConfirm={async () => {
+          if (twoFactorTarget) await handleResetTwoFactor(twoFactorTarget);
         }}
       />
 

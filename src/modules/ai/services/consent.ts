@@ -2,6 +2,7 @@ import "server-only";
 
 import { revokeAiReferences } from "./references";
 import { providerRevision } from "./provider-revision";
+import { getAllowedAiProviders, isAiProviderAllowed } from "@/modules/system/automation";
 import { getDb } from "@/shared/db";
 
 import { AI_PROVIDER_IDS, isProviderReady, type AiProviderId } from "./providers";
@@ -16,11 +17,18 @@ const isProviderId = (value: string | null | undefined): value is AiProviderId =
  * Etkin sağlayıcı: yöneticinin seçtiği (hazırsa). Seçim yoksa izinli listedeki sıraya göre
  * hazır olan ilki — sıra bilinçli olarak en korumalıdan başlar (yerel → Mistral → …).
  */
+/**
+ * Etkin sağlayıcı. #583: Gizlilik ön ayarının izin listesindeki sağlayıcılarla sınırlıdır; seçili sağlayıcı
+ * izinli değilse başka bir sağlayıcıya sessizce geçilmez (rıza o sağlayıcı içindir), asistan kapalı sayılır.
+ * Keşif, rıza ve her çalıştırma sınırı (requireCurrentAiAccess) bu fonksiyonu kullanır.
+ */
 export async function getActiveProvider(): Promise<AiProviderId | null> {
-  const row = await getDb().aiSettings.findUnique({ where: { id: "singleton" } });
-  if (isProviderId(row?.provider)) return (await isProviderReady(row.provider)) ? row.provider : null;
+  const [row, allowed] = await Promise.all([getDb().aiSettings.findUnique({ where: { id: "singleton" } }), getAllowedAiProviders()]);
+  if (isProviderId(row?.provider)) {
+    return isAiProviderAllowed(allowed, row.provider) && (await isProviderReady(row.provider)) ? row.provider : null;
+  }
   for (const id of AI_PROVIDER_IDS) {
-    if (await isProviderReady(id)) return id;
+    if (isAiProviderAllowed(allowed, id) && (await isProviderReady(id))) return id;
   }
   return null;
 }

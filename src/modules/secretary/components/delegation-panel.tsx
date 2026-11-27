@@ -3,7 +3,8 @@
 import Link from "next/link";
 import { useState } from "react";
 
-import { Button, Input, Label, TextField } from "@/shared/components/kit";
+import { Button, DateInput, Input, Label, TextField } from "@/shared/components/kit";
+import { formatDate } from "@/shared/utils";
 import type { Briefing } from "@/shared/secretary/define";
 
 import { createDelegationAction, getDelegatedBriefingAction, revokeDelegationAction } from "../actions/delegation";
@@ -68,7 +69,7 @@ export function SecretaryDelegationPanel({ initialRows, labels }: { initialRows:
       <div><h2 className="font-semibold">{labels.title}</h2><p className="text-sm text-ink-500">{labels.description}</p></div>
       <div className="grid gap-3 sm:grid-cols-2">
         <TextField isDisabled={pending}><Label>{labels.userId}</Label><Input value={delegateId} maxLength={64} onChange={(e) => setDelegateId(e.target.value)} /></TextField>
-        <TextField isDisabled={pending}><Label>{labels.expiry}</Label><Input type="date" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} /></TextField>
+        <DateInput label={labels.expiry} ariaLabel={labels.expiry} value={expiresAt} onChange={setExpiresAt} isDisabled={pending} />
       </div>
       <fieldset disabled={pending} className="flex flex-wrap gap-4 text-sm">
         <legend className="mb-2 font-medium">{labels.title}</legend>
@@ -78,7 +79,7 @@ export function SecretaryDelegationPanel({ initialRows, labels }: { initialRows:
       {message ? <p role={message === "error" ? "alert" : "status"} className={message === "error" ? "text-sm text-danger" : "text-sm text-success"}>{labels[message]}</p> : null}
       {rows.length === 0 ? <p className="text-sm text-ink-500">{labels.empty}</p> : (
         <ul className="space-y-2">{rows.map((row) => <li key={row.id} className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-ink-200/80 p-3">
-          <div className="min-w-0 text-sm"><p className="font-medium">{row.direction === "given" ? labels.given : labels.received}: {row.otherUserName}</p><p className="text-xs text-ink-500">{labels.expiry}: <time dateTime={row.expiresAt}>{row.expiresAt.slice(0, 10)}</time> · {row.active ? row.scopes.map((scope) => scope === "briefing.view" ? labels.briefing : labels.followUps).join(", ") : labels.expired}</p></div>
+          <div className="min-w-0 text-sm"><p className="font-medium">{row.direction === "given" ? labels.given : labels.received}: {row.otherUserName}</p><p className="text-xs text-ink-500">{labels.expiry}: <time dateTime={row.expiresAt}>{formatDate(row.expiresAt)}</time> · {row.active ? row.scopes.map((scope) => scope === "briefing.view" ? labels.briefing : labels.followUps).join(", ") : labels.expired}</p></div>
           <div className="flex flex-wrap gap-2">
             {row.direction === "received" && row.active && row.scopes.includes("briefing.view") ? <Button size="sm" variant="secondary" isDisabled={pending} onPress={() => void view(row)}>{labels.view}</Button> : null}
             {confirmId === row.id ? <><Button size="sm" variant="danger" isDisabled={pending} onPress={() => void revoke(row.id)}>{labels.confirm}</Button><Button size="sm" variant="tertiary" isDisabled={pending} onPress={() => setConfirmId(null)}>{labels.cancel}</Button></> : <Button size="sm" variant="tertiary" isDisabled={pending} onPress={() => setConfirmId(row.id)}>{labels.revoke}</Button>}

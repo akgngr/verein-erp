@@ -141,6 +141,8 @@ export type MemberAddressBlock = {
   /** UYE-2026-0001 biçimli üyelik numarası */
   memberNumber: string;
   name: string;
+  firstName?: string;
+  lastName?: string;
   street: string | null;
   postalCode: string | null;
   city: string | null;
@@ -173,6 +175,8 @@ export async function getMemberAddressBlock(
     memberId: member.id,
     memberNumber: member.membershipNumber,
     name: `${member.firstName} ${member.lastName}`.trim(),
+    firstName: member.firstName,
+    lastName: member.lastName,
     street: [member.street, member.houseNumber].filter(Boolean).join(" ") || null,
     postalCode: member.postalCode,
     city: member.city,
@@ -288,8 +292,15 @@ export async function listMemberOptions(options: { ids?: string[] } = {}): Promi
 
 /** Bu e-posta adresine sahip (silinmemiş) üyelerin kimlikleri; kullanıcıyı üye kaydıyla eşleştirmek için. */
 export { findMemberIdsByEmail } from "./queries/find-member-ids-by-email";
+// #580: Üye portalı ana verisinde maskeli IBAN (yalnız ilk/son 4 karakter).
+export { getMemberMandate, saveMemberMandate } from "./services/sepa-mandate";
 export { getMemberSelfService, applyMemberSelfService } from "./services/online-form";
 export type { MemberSelfService, MemberSelfServiceInput } from "./services/online-form";
 export { listDebitableDues, recordSepaDuePayments, voidSepaDuePayment, type DebitableDue } from "./services/sepa-debit";
 
 export { describeDuesDataset, streamDuesDataset, duesSnapshotHasher, loadDuesDataset, duesDatasetQuerySchema, parseDuesDatasetQuery, DUES_DATASET_COLUMNS } from "./services/ai-dataset";
+export {
+  listOpenMemberDuesForBankMatch,
+  recordBankDuePayment,
+  type OpenMemberDueForBankMatch,
+} from "./services/bank-reconciliation";

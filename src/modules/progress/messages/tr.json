@@ -105,6 +105,8 @@
     "assessmentNotFound": "Değerlendirme bulunamadı.",
     "pointsAboveMax": "Puan en yüksek puanı ({max}) aşamaz.",
     "enrollmentNotFound": "Öğrenci bu kursta kayıtlı değil.",
+    "sessionCancelled": "İptal edilen derse yoklama kaydedilemez.",
+    "enrollmentWithdrawn": "Kurstan ayrılmış öğrenciye yoklama kaydedilemez.",
     "noteNotFound": "Not bulunamadı.",
     "noteNotYours": "Yalnızca kendi yazdığınız notu silebilirsiniz."
   },

@@ -2,7 +2,7 @@ import "server-only";
 
 import { defineModuleSecretary, type BriefingItem, type SecretaryContext } from "@/shared/secretary/define";
 import { weatherPermissions } from "./permissions";
-import { getCachedWeatherData, getConditionInfo, DEFAULT_COORDINATES, findCityCoordinates } from "./services/weather";
+import { getCachedWeatherData, getConditionInfo, DEFAULT_COORDINATES, resolveOrganizationLocation } from "./services/weather";
 
 function berlinDay(now: Date): string {
   return new Intl.DateTimeFormat("en-CA", {
@@ -15,22 +15,11 @@ function berlinDay(now: Date): string {
 
 export async function buildWeatherBriefing(context: SecretaryContext): Promise<BriefingItem[]> {
   try {
-    let lat = DEFAULT_COORDINATES.latitude;
-    let lon = DEFAULT_COORDINATES.longitude;
-
-    try {
-      const { getOrganizationProfile } = await import("@/modules/organization/server");
-      const profile = await getOrganizationProfile();
-      if (profile?.city) {
-        const coords = findCityCoordinates(profile.city);
-        if (coords) {
-          lat = coords.lat;
-          lon = coords.lon;
-        }
-      }
-    } catch {
-      // organization profili okunamıyorsa varsayılan koordinatları kullan
-    }
+    // #585: Sayfa/kart ile aynı konum çözümü (hazır listede olmayan şehirler dahil). Sıcak patika: çevrimiçi
+    // arama yapılmaz; konum önceden sayfa/kart tarafından çözülüp önbelleğe alınmış olmalıdır.
+    const location = await resolveOrganizationLocation({ allowNetwork: false });
+    const lat = location.lat;
+    const lon = location.lon;
 
     // Sıcak patika (hot path): Dış API çağrısı yapılmaz, yalnız önbellekteki değer kullanılır
     const data =

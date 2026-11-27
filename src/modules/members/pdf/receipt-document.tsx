@@ -20,6 +20,8 @@ export type ReceiptPdfData = {
   dueYear: number;
   /** "1.234,56 €" — handler formatPdfMoney ile üretir. */
   amountLabel: string;
+  /** Yıllık aidat tutarı (MemberDue satırı varsa makbuzda gösterilir). */
+  dueAmountLabel?: string | null;
   paidAtLabel: string;
   methodLabel: string;
   reference: string | null;
@@ -123,6 +125,9 @@ export function ReceiptDocument({ data }: { data: ReceiptPdfData }) {
         <View style={styles.infoGrid}>
           <InfoRow label={data.strings.labelPaidAt} value={data.paidAtLabel} />
           <InfoRow label={data.strings.labelMethod} value={data.methodLabel} />
+          {data.dueAmountLabel ? (
+            <InfoRow label={data.strings.labelDueAmount} value={data.dueAmountLabel} />
+          ) : null}
           <InfoRow
             label={data.strings.labelReference}
             value={data.reference ?? data.strings.none}

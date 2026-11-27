@@ -5,6 +5,8 @@ import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { revokePortalSessionsForMember } from "@/modules/member-portal/server";
+import { cancelPendingMemberForms } from "@/modules/online-forms/server";
 
 import { membersPermissions } from "../permissions";
 import { deleteMemberSchema } from "../schemas/member";
@@ -24,13 +26,25 @@ export async function deleteMemberAction(input: unknown): Promise<ActionResult> 
       if (!member) throw new ActionError("members.errors.memberNotFound");
 
       const deletedAt = new Date();
-      await db.member.update({
-        where: { id: member.id },
-        data: {
-          deletedAt,
-          deletedById: user.id,
-          deletedByLabel: buildUserLabel(user.name, user.email),
-        },
+      const deletedByLabel = buildUserLabel(user.name, user.email);
+      await db.$transaction(async (tx) => {
+        await tx.member.update({
+          where: { id: member.id },
+          data: {
+            deletedAt,
+            deletedById: user.id,
+            deletedByLabel,
+            // Release unique SEPA mandate reference and clear mandate credentials on soft-delete (#578).
+            sepaMandateReference: null,
+            sepaIban: null,
+            sepaBic: null,
+            sepaAccountHolder: null,
+            sepaMandateDate: null,
+          },
+        });
+        // Revoke active member portal sessions and cancel pending online form invitations via module server APIs.
+        await revokePortalSessionsForMember(tx, member.id, deletedAt);
+        await cancelPendingMemberForms(tx, member.id);
       });
 
       await audit({

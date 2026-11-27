@@ -8,10 +8,10 @@
   },
   "scripts": {
     "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next start",
+    "build": "NODE_OPTIONS=\"--max-old-space-size=4096\" next build && node scripts/check-standalone.mjs",
+    "start": "node scripts/start-standalone.mjs",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit",
+    "typecheck": "NODE_OPTIONS=\"--max-old-space-size=4096\" tsc --noEmit",
     "typecheck:large": "NODE_OPTIONS=\"--max-old-space-size=4096\" tsc --noEmit",
     "test": "NODE_OPTIONS=\"--conditions=react-server\" tsx --test \"tests/**/*.test.ts\"",
     "test:accounting": "NODE_OPTIONS=\"--conditions=react-server\" tsx --test \"tests/accounting/*.test.ts\"",
@@ -41,8 +41,8 @@
     "pretypecheck": "node -e \"for (const d of ['.next/types', '.next/dev/types']) require('fs').rmSync(d, { recursive: true, force: true })\" && tsx scripts/sync-schemas.ts && prisma generate",
     "pretypecheck:large": "pnpm pretypecheck",
     "db:migrate": "tsx scripts/sync-schemas.ts && prisma migrate dev",
-    "db:deploy": "tsx scripts/sync-schemas.ts && prisma migrate deploy && node scripts/verify-db-integrity.mjs",
-    "db:verify": "node scripts/verify-db-integrity.mjs",
+    "db:deploy": "tsx scripts/sync-schemas.ts && prisma generate && prisma migrate deploy && node scripts/verify-db-integrity.mjs",
+    "db:verify": "prisma generate && node scripts/verify-db-integrity.mjs",
     "db:baseline": "tsx scripts/sync-schemas.ts && node scripts/db-baseline.mjs",
     "db:push:dev": "tsx scripts/sync-schemas.ts && node scripts/db-push-dev.mjs",
     "db:seed": "tsx prisma/seed.ts",
@@ -85,7 +85,7 @@
     "date-fns": "^4.1.0",
     "docx": "^9.16.0",
     "exceljs": "^4.4.0",
-    "i18next": "24.2.3",
+    "i18next": "26.3.4",
     "imapflow": "^2.12.2",
     "lucide-react": "^0.577.0",
     "mailparser": "^3.15.0",
@@ -131,7 +131,8 @@
   },
   "overrides": {
     "@internationalized/date": "3.12.4",
-    "effect": "3.22.4"
+    "effect": "3.22.4",
+    "i18next": "26.3.4"
   },
   "moduleDependencies": {
     "pdf-lib": [

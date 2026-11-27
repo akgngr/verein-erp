@@ -36,8 +36,15 @@ interface Alert {
   status: string;
 }
 
-export function SecurityMonitorView() {
+export function SecurityMonitorView({ canRun = false }: { canRun?: boolean }) {
   const t = useTranslations("security-monitor.monitor");
+  const tc = useTranslations("security-monitor.checks");
+  // #585: Uyarı metni makine anahtarlarıdır (başarısız denetimler, virgülle); burada çevrilir.
+  const alertText = (message: string) =>
+    message
+      .split(",")
+      .map((key) => (tc.has(key as never) ? tc(key as never) : key))
+      .join(" · ");
   const [statistics, setStatistics] = useState<TestStatistics | null>(null);
   const [recentRuns, setRecentRuns] = useState<TestRun[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);
@@ -171,14 +178,16 @@ export function SecurityMonitorView() {
           <ShieldCheck className="h-6 w-6 text-accent" />
           <h1 className="text-xl font-bold">{t("title")}</h1>
         </div>
-        <ActionButton
-          size="md"
-          isPending={running}
-          startIcon={<PlayCircle className="h-4 w-4" />}
-          onPress={() => void runTests()}
-        >
-          {t("runTests")}
-        </ActionButton>
+        {canRun ? (
+          <ActionButton
+            size="md"
+            isPending={running}
+            startIcon={<PlayCircle className="h-4 w-4" />}
+            onPress={() => void runTests()}
+          >
+            {t("runTests")}
+          </ActionButton>
+        ) : null}
       </div>
 
       {queueMessage ? (
@@ -268,7 +277,7 @@ export function SecurityMonitorView() {
                   />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
-                      <p className="font-medium">{alert.message}</p>
+                      <p className="font-medium">{alertText(alert.message)}</p>
                       <StatusChip
                         tone={alert.severity === "critical" ? "danger" : "default"}
                       >

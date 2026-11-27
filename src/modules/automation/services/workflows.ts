@@ -12,6 +12,7 @@ import {
 } from "@/shared/automation/workflow-graph";
 
 import { automationEvents, automationTasks } from "../tasks/registry";
+import type { AutomationLocale } from "./automation-locale";
 import { assertTaskModulesUsable } from "./execution-control";
 import { recordAutomationLog } from "./log-store";
 import { createWorkflowRun, queueWorkflowAdvance } from "./workflow-runtime";
@@ -69,8 +70,9 @@ export async function saveWorkflowDraft(id: string, draft: unknown, actorId: str
   if (updated.count === 0) throw new Error("WORKFLOW_NOT_FOUND");
 }
 
-export async function renameWorkflow(id: string, name: string, description: string, actorId: string) {
-  await getDb().automationWorkflow.updateMany({ where: { id }, data: { name, description, updatedById: actorId } });
+/** Güncellenen kayıt sayısı (0: akış yok). */
+export async function renameWorkflow(id: string, name: string, description: string, actorId: string): Promise<number> {
+  return (await getDb().automationWorkflow.updateMany({ where: { id }, data: { name, description, updatedById: actorId } })).count;
 }
 
 /** Compile + validate only, for editor feedback. */
@@ -122,12 +124,13 @@ export async function setWorkflowEnabled(id: string, enabled: boolean, actorId: 
   await db.automationWorkflow.update({ where: { id }, data: { enabled, updatedById: actorId } });
 }
 
-export async function deleteWorkflow(id: string) {
-  await getDb().automationWorkflow.deleteMany({ where: { id } });
+/** Silinen kayıt sayısı (0: akış yok). */
+export async function deleteWorkflow(id: string): Promise<number> {
+  return (await getDb().automationWorkflow.deleteMany({ where: { id } })).count;
 }
 
 /** Start the active version manually (trigger type must be "manual"). */
-export async function startWorkflow(workflowId: string, input: unknown, context: { actorId: string | null; organizationId?: string }) {
+export async function startWorkflow(workflowId: string, input: unknown, context: { actorId: string | null; organizationId?: string; locale?: AutomationLocale }) {
   const db = getDb();
   const workflow = await db.automationWorkflow.findFirst({ where: { id: workflowId, organizationId: context.organizationId ?? "default" } });
   if (!workflow?.activeVersionId || !workflow.enabled) throw new Error("WORKFLOW_NOT_ACTIVE");
@@ -146,6 +149,7 @@ export async function startWorkflow(workflowId: string, input: unknown, context:
     requestedById: context.actorId,
     trigger: input ?? {},
     idempotencyKey: null,
+    locale: context.locale,
   }));
 }
 

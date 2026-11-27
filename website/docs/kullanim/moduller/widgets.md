@@ -1,5 +1,5 @@
 ---
-sidebar_position: 44
+sidebar_position: 45
 title: "Widget Platformu"
 description: "Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde toplar."
 slug: /kullanim/moduller/widgets
@@ -13,7 +13,7 @@ Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde topla
 |---|---|
 | Anahtar | `widgets` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.3.1 |
+| Sürüm | 0.3.2 |
 
 ## Varsayılan yetkiler
 
@@ -24,6 +24,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Widget'lar | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.3.2 — Yönetici widget politikası
+
+_2026-11-25_
+
+- **İyileştirme:** Widget ayarlarında yöneticiler isteğe bağlı widget'ları tüm kullanıcılar için açıp kapatabilir.
 
 ### 0.3.1 — TAX_ADVISOR rolü izin tanımı
 

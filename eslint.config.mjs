@@ -15,6 +15,7 @@ import nextTypescript from "eslint-config-next/typescript";
 //   @/modules/<modül>/secretary → sabah özeti katkıları (yalnızca üretilen src/secretary-registry.ts)
 //   @/modules/<modül>/notifications → bildirim türleri (yalnızca üretilen src/notification-registry.ts, ADR 0006)
 //   @/modules/<modül>/header → üst çubuk eylemleri (yalnızca üretilen src/header-registry.ts, RFC-002)
+//   @/modules/<modül>/auth-providers → yalnızca üretilen src/auth-provider-registry.ts (#612)
 //   @/modules/<modül>/demo, /lifecycle → yalnızca üretilen src/demo-registry.ts, src/lifecycle-registry.ts
 // KARAR: Desen; "@ /modules/x/queries/y" gibi derin içe aktarmaları da kapsasın diye
 // "@ /modules/*/**" ile genişletildi. İstisnalar yalnızca tam public giriş yollarıdır.
@@ -69,6 +70,24 @@ const eslintConfig = [
     },
   },
   {
+    // #612: Only the generated server-side registry may import OAuth provider contributions.
+    // Keep the module-internal import restriction everywhere else.
+    files: ["src/auth-provider-registry.ts"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        {
+          patterns: [
+            {
+              ...MODULE_INTERNAL_IMPORTS,
+              group: [...MODULE_INTERNAL_IMPORTS.group, "!@/modules/*/auth-providers"],
+            },
+          ],
+        },
+      ],
+    },
+  },
+  {
     // Testler modüllerin gerçek iç servislerini doğrular; bu nedenle testlerde
     // public olmayan modül dosyalarına doğrudan import bilinçli olarak serbesttir.
     files: ["tests/**/*.{ts,tsx}"],
@@ -93,6 +112,23 @@ const eslintConfig = [
     },
   },
   {
+    // Her yerde: next/link <Link> ile /api/ rotalarına bağlantı yasaktır (RSC prefetch export/PDF tetikler — #577).
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-syntax": [
+        "error",
+        {
+          selector: "JSXOpeningElement[name.name='Link'] > JSXAttribute[name.name='href'][value.value=/^\\/api\\//]",
+          message: "Do not use Next.js <Link> for /api/ routes (causes automatic prefetch of export/PDF endpoints). Use <a download> or <LinkButton download>.",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='Link'] > JSXAttribute[name.name='href'] > JSXExpressionContainer > TemplateLiteral[quasis.0.value.raw=/^\\/api\\//]",
+          message: "Do not use Next.js <Link> for /api/ routes (causes automatic prefetch of export/PDF endpoints). Use <a download> or <LinkButton download>.",
+        },
+      ],
+    },
+  },
+  {
     // modüller: src/app'i import edemez (3.1)
     files: ["src/modules/**/*.{ts,tsx}"],
     rules: {
@@ -101,16 +137,24 @@ const eslintConfig = [
       "no-restricted-syntax": [
         "error",
         {
-          selector: "ImportDeclaration[source.value=\'@heroui/react\']",
+          selector: "ImportDeclaration[source.value='@heroui/react']",
           message: "ERP UI platform: modules must import shared UI patterns instead of @heroui/react (W6).",
         },
         {
-          selector: "ExportNamedDeclaration[source.value=\'@heroui/react\']",
+          selector: "ExportNamedDeclaration[source.value='@heroui/react']",
           message: "ERP UI platform: do not re-export @heroui/react from modules (W6).",
         },
         {
-          selector: "ExportAllDeclaration[source.value=\'@heroui/react\']",
+          selector: "ExportAllDeclaration[source.value='@heroui/react']",
           message: "ERP UI platform: do not re-export @heroui/react from modules (W6).",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='Link'] > JSXAttribute[name.name='href'][value.value=/^\\/api\\//]",
+          message: "Do not use Next.js <Link> for /api/ routes (causes automatic prefetch of export/PDF endpoints). Use <a download> or <LinkButton download>.",
+        },
+        {
+          selector: "JSXOpeningElement[name.name='Link'] > JSXAttribute[name.name='href'] > JSXExpressionContainer > TemplateLiteral[quasis.0.value.raw=/^\\/api\\//]",
+          message: "Do not use Next.js <Link> for /api/ routes (causes automatic prefetch of export/PDF endpoints). Use <a download> or <LinkButton download>.",
         },
       ],
       "no-restricted-imports": [

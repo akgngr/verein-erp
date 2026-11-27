@@ -14,6 +14,7 @@ export type ReceiptStrings = {
   bodyLine: (name: string, memberNo: string, year: number, amount: string) => string;
   /** Etiketler */
   labelReceiptNumber: string;
+  labelDueAmount: string;
   labelMethod: string;
   labelPaidAt: string;
   labelReference: string;
@@ -30,6 +31,7 @@ export const RECEIPT_STRINGS: { de: ReceiptStrings; tr: ReceiptStrings } = {
     bodyLine: (name, memberNo, year, amount) =>
       `${name} (Mitglied-Nr. ${memberNo}) hat den Mitgliedsbeitrag für das Jahr ${year} in Höhe von ${amount} gezahlt.`,
     labelReceiptNumber: "Quittungs-Nr.",
+    labelDueAmount: "Jahresbeitrag",
     labelMethod: "Zahlungsart",
     labelPaidAt: "Zahlungsdatum",
     labelReference: "Referenz",
@@ -51,6 +53,7 @@ export const RECEIPT_STRINGS: { de: ReceiptStrings; tr: ReceiptStrings } = {
     bodyLine: (name, memberNo, year, amount) =>
       `${name} (Üye No. ${memberNo}), ${year} yılı üyelik aidatı olarak ${amount} tutarını ödemiştir.`,
     labelReceiptNumber: "Makbuz No",
+    labelDueAmount: "Yıllık aidat",
     labelMethod: "Ödeme yöntemi",
     labelPaidAt: "Ödeme tarihi",
     labelReference: "Referans",

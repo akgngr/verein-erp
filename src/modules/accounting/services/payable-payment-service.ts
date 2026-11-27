@@ -4,7 +4,8 @@ import type { Prisma } from "@prisma/client";
 
 import { ActionError } from "@/modules/auth/server";
 
-import { allocatePayment, type RateGroup } from "./invoice-payments";
+import type { RateGroup } from "./invoice-payments";
+import { planPayablePayment } from "./payable-payment-plan";
 import { createSourcedBooking } from "./sourced-bookings";
 
 export const PAYABLE_SOURCE = "PAYABLE";
@@ -28,12 +29,12 @@ export async function applyPayablePayment(
   if (!payable) throw new ActionError("accounting.payables.errors.notFound");
   if (payable.status !== "OPEN") throw new ActionError("accounting.payables.errors.notPayable");
   if (!payable.categoryId) throw new ActionError("accounting.validation.categoryRequired");
-  const open = payable.grossCents - payable.paidCents;
-  const amountCents = input.amountCents ?? open;
-  if (amountCents <= 0 || amountCents > open) {
+  // Alacak dekontunda (negatif tutarlar) tahsilat tedarikçi iadesidir; plan işareti dekonta göre uygular.
+  const plan = planPayablePayment(payableRates(payable.byRate), payable, input.amountCents);
+  if (!plan) {
     throw new ActionError("accounting.invoices.errors.amountInvalid", { amount: ["accounting.invoices.errors.amountInvalid"] });
   }
-  const parts = allocatePayment(payableRates(payable.byRate), amountCents).filter((part) => part.netCents + part.taxCents !== 0);
+  const { amountCents, parts, settled } = plan;
   const existing = await tx.accountingBooking.count({
     where: { sourceType: PAYABLE_SOURCE, OR: [{ sourceId: payable.id }, { sourceId: { startsWith: `${payable.id}:` } }] },
   });
@@ -59,7 +60,6 @@ export async function applyPayablePayment(
   }
   const first = bookings[0];
   if (!first) throw new ActionError("common.errors.unexpected");
-  const settled = amountCents === open;
   await tx.accountingPayable.update({
     where: { id: payable.id },
     data: { paidCents: { increment: amountCents }, ...(settled ? { status: "PAID", paidAt: input.paidDate } : {}) },

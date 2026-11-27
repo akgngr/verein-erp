@@ -53,7 +53,11 @@
       "houseNumber": "Hausnummer",
       "postalCode": "Postleitzahl",
       "city": "Ort"
-    }
+    },
+    "stepUpRequest": "Per E-Mail bestätigen",
+    "stepUpSent": "Ein Bestätigungslink wurde an Ihre E-Mail-Adresse gesendet (15 Minuten gültig).",
+    "stepUpFailed": "Der Link konnte nicht gesendet werden; bitte später erneut versuchen.",
+    "stepUpRateLimited": "Zu viele Anfragen in kurzer Zeit. Der vorherige Link bleibt gültig; bitte in einigen Minuten erneut versuchen."
   },
   "corrections": {
     "title": "Korrekturvorschlag",
@@ -91,7 +95,7 @@
   "receipts": {
     "title": "Belege und Zuwendungsbestätigungen",
     "subtitle": "Für den PDF-Download sind Step-up und eine signierte Kurzzeit-Referenz erforderlich.",
-    "stepUpHint": "Bitte führen Sie zuerst ein Step-up mit Ihrem Passkey durch, um Belege herunterzuladen.",
+    "stepUpHint": "Bitte bestätigen Sie zuerst Ihre Identität per E-Mail (Schaltfläche oben), um Belege herunterzuladen.",
     "downloadButton": "PDF herunterladen",
     "empty": "Keine Belege vorhanden.",
     "kinds": {
@@ -102,7 +106,7 @@
   "art15": {
     "title": "DSGVO Art. 15 Datenauskunft",
     "subtitle": "Fordern Sie eine verschlüsselte Kopie Ihrer Daten an (7 Tage gültig, max. 1 offener Antrag).",
-    "stepUpHint": "Bitte führen Sie zuerst ein Step-up mit Ihrem Passkey durch, um einen Art.-15-Export anzufordern.",
+    "stepUpHint": "Bitte bestätigen Sie zuerst Ihre Identität per E-Mail (Schaltfläche oben), um einen Art.-15-Export anzufordern.",
     "requestButton": "Verschlüsselten Export anfordern",
     "createdNotice": "Ihr verschlüsselter Art.-15-Export steht bereit (7 Tage gültig).",
     "errorNotice": "Es liegt bereits ein offener Antrag vor oder ein Step-up ist erforderlich.",
@@ -140,6 +144,12 @@
     "subtitle": "Unterzeichnen Sie offene Online-Formulare direkt im Portal.",
     "empty": "Keine offenen Dokumente zur Signatur.",
     "signerNameLabel": "Name des Unterzeichners",
-    "signButton": "Dokument unterzeichnen"
+    "signButton": "Dokument unterzeichnen",
+    "useEmailLink": "Bitte öffnen Sie offene Formulare über den Link in Ihrer E-Mail, lesen Sie die Dokumente und unterschreiben Sie dort; das unterschriebene Dokument wird als PDF gespeichert."
+  },
+  "consentConfirm": {
+    "title": "Einwilligung bestätigen",
+    "text": "Möchten Sie Ihre Einwilligung für Mitteilungen über diesen Kanal bestätigen?",
+    "button": "Bestätigen"
   }
 }

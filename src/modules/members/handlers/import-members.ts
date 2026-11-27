@@ -15,9 +15,9 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { IMPORT_MAX_FILE_MB } from "../constants";
 import { membersPermissions } from "../permissions";
-import { allocateMembershipNumber } from "../services/membership-number";
+import { allocateMembershipNumber, membershipNumberYear } from "../services/membership-number";
 import { ImportParseError, parseImportWorkbook } from "../services/import-parser";
-import { berlinYear, parseDateOnly } from "../utils";
+import { parseDateOnly } from "../utils";
 import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
@@ -105,7 +105,10 @@ export async function importMembersHandler(request: Request): Promise<Response> 
     emails.length
       ? (
           await db.member.findMany({
-            where: { deletedAt: null, email: { in: emails } },
+            where: {
+              deletedAt: null,
+              OR: emails.map((email) => ({ email: { equals: email, mode: "insensitive" as const } })),
+            },
             select: { email: true },
           })
         )
@@ -125,7 +128,10 @@ export async function importMembersHandler(request: Request): Promise<Response> 
     lastNames.length
       ? (
           await db.member.findMany({
-            where: { deletedAt: null, lastName: { in: lastNames } },
+            where: {
+              deletedAt: null,
+              OR: lastNames.map((lastName) => ({ lastName: { equals: lastName, mode: "insensitive" as const } })),
+            },
             select: { firstName: true, lastName: true, birthDate: true },
           })
         )
@@ -189,42 +195,52 @@ export async function importMembersHandler(request: Request): Promise<Response> 
     });
   }
 
-  // --- Commit: tek transaction, hatalı satırlar atlanır ------------------
+  // --- Commit: 50'şer satırlık partilerle yazılır (büyük dosyalarda 5s TX zaman aşımını önler — #578) ---
   const userLabel = buildUserLabel(user.name, user.email);
-  const registrationYear = berlinYear(new Date());
+  const BATCH_SIZE = 50;
+  let imported = 0;
 
-  const imported = await db.$transaction(async (tx) => {
-    let count = 0;
-    for (const row of validRows) {
-      const { sequence, membershipNumber } = await allocateMembershipNumber(tx, registrationYear);
-      await tx.member.create({
-        data: {
-          year: registrationYear,
-          sequence,
-          membershipNumber,
-          type: row.data.type,
-          status: row.data.status,
-          firstName: row.data.firstName,
-          lastName: row.data.lastName,
-          email: row.data.email,
-          phone: row.data.phone,
-          street: row.data.street,
-          houseNumber: row.data.houseNumber,
-          postalCode: row.data.postalCode,
-          city: row.data.city,
-          state: row.data.state,
-          country: row.data.country,
-          birthDate: row.data.birthDate ? parseDateOnly(row.data.birthDate) : null,
-          joinDate: parseDateOnly(row.data.joinDate)!,
-          notes: row.data.notes,
-          createdById: user.id,
-          createdByLabel: userLabel,
-        },
-      });
-      count += 1;
-    }
-    return count;
-  });
+  for (let offset = 0; offset < validRows.length; offset += BATCH_SIZE) {
+    const batch = validRows.slice(offset, offset + BATCH_SIZE);
+    const batchCount = await db.$transaction(
+      async (tx) => {
+        let count = 0;
+        for (const row of batch) {
+          // #605: numaradaki yıl satırın üyelik başlangıç yılı (joinDate).
+          const numberYear = membershipNumberYear(parseDateOnly(row.data.joinDate)!);
+          const { sequence, membershipNumber } = await allocateMembershipNumber(tx, numberYear);
+          await tx.member.create({
+            data: {
+              year: numberYear,
+              sequence,
+              membershipNumber,
+              type: row.data.type,
+              status: row.data.status,
+              firstName: row.data.firstName,
+              lastName: row.data.lastName,
+              email: row.data.email,
+              phone: row.data.phone,
+              street: row.data.street,
+              houseNumber: row.data.houseNumber,
+              postalCode: row.data.postalCode,
+              city: row.data.city,
+              state: row.data.state,
+              country: row.data.country,
+              birthDate: row.data.birthDate ? parseDateOnly(row.data.birthDate) : null,
+              joinDate: parseDateOnly(row.data.joinDate)!,
+              notes: row.data.notes,
+              createdById: user.id,
+              createdByLabel: userLabel,
+            },
+          });
+          count += 1;
+        }
+        return count;
+      },
+      { timeout: 30_000 },
+    );
+    imported += batchCount;
+  }
 
   await writeAudit({
     userId: user.id,
@@ -233,7 +249,7 @@ export async function importMembersHandler(request: Request): Promise<Response> 
     entity: "Member",
     entityId: null,
     // Gizlilik: audit'e yalnızca sayılar yazılır (kişisel veri yok).
-    after: { total: parsedFile.total, valid: validRows.length, imported, registrationYear },
+    after: { total: parsedFile.total, valid: validRows.length, imported, numberYearBasis: "joinDate" },
   });
 
   return NextResponse.json({

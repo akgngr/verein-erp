@@ -16,14 +16,27 @@ import { SurfaceCard } from "@/shared/components/ui/surface-card";
 export function LogoUploader({
   logoVersion,
   logoOriginalName,
+  getProfileVersion,
+  onProfileUpdated,
 }: {
   logoVersion: string | null;
   logoOriginalName: string | null;
+  /**
+   * #583: Açık formun sürüm belirteci ve güncelleme geri çağrısı. Belirteç yalnız profil logo değişikliğinden
+   * hemen önce bu sürümdeyse ilerletilir (sunucu `inSync`); araya başka bir kayıt girdiyse form eski belirteci
+   * korur ve sonraki kayıt "staleRecord" ile durur.
+   */
+  getProfileVersion?: () => string;
+  onProfileUpdated?: (updatedAt: string) => void;
 }) {
   const t = useTranslations("organization");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [version, setVersion] = useState<string | null>(logoVersion);
+  const versionHeader = (): Record<string, string> => {
+    const current = getProfileVersion?.();
+    return current ? { "X-Expected-Updated-At": current } : {};
+  };
   const [busy, setBusy] = useState(false);
 
   const previewSrc = version ? `/api/organization/logo?v=${version}` : null;
@@ -36,17 +49,21 @@ export function LogoUploader({
       const res = await fetch("/api/organization/logo", {
         method: "POST",
         body,
+        headers: versionHeader(),
       });
       const json = (await res.json().catch(() => null)) as {
         ok: boolean;
         error?: string;
         logoVersion?: string;
+        updatedAt?: string;
+        inSync?: boolean;
       } | null;
       if (!res.ok || !json?.ok) {
         notify(json?.error ?? t("logoError"), "danger");
         return;
       }
       setVersion(json.logoVersion ?? null);
+      if (json.updatedAt && json.inSync) onProfileUpdated?.(json.updatedAt);
       notify(t("logoUploadedToast"), "success");
       router.refresh();
     } finally {
@@ -58,16 +75,19 @@ export function LogoUploader({
   const remove = async () => {
     setBusy(true);
     try {
-      const res = await fetch("/api/organization/logo", { method: "DELETE" });
+      const res = await fetch("/api/organization/logo", { method: "DELETE", headers: versionHeader() });
       const json = (await res.json().catch(() => null)) as {
         ok: boolean;
         error?: string;
+        updatedAt?: string;
+        inSync?: boolean;
       } | null;
       if (!res.ok || !json?.ok) {
         notify(json?.error ?? t("logoError"), "danger");
         return;
       }
       setVersion(null);
+      if (json.updatedAt && json.inSync) onProfileUpdated?.(json.updatedAt);
       notify(t("logoRemovedToast"), "success");
       router.refresh();
     } finally {

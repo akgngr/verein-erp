@@ -1,5 +1,5 @@
 ---
-sidebar_position: 36
+sidebar_position: 37
 title: "Takvim"
 description: "Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde."
 slug: /kullanim/moduller/calendar
@@ -13,7 +13,7 @@ Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek gö
 |---|---|
 | Anahtar | `calendar` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.15 |
+| Sürüm | 1.3.18 |
 | Sayfalar | `/calendar`, `/calendar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,27 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_shared_calendar_entries` · `list_shared_calendars` · `propose_calendar_entry`
 
 ## Sürüm notları
+
+### 1.3.18 — Yerel tarih alanları
+
+_2026-11-26_
+
+- **İyileştirme:** Tekrarlayan randevunun bitiş tarihi yerel biçimde (GG.AA.YYYY, 24 saat) takvimle seçilir; tarayıcıya bağlı aa/gg/yyyy biçimi kaldırıldı.
+
+### 1.3.17 — Kanonik APP_URL abonelik bağlantıları
+
+_2026-11-25_
+
+- **Güvenlik:** Takvim abonelik bağlantıları artık kanonik APP_URL kökü üzerinden üretiliyor (#574).
+
+### 1.3.16 — ICS aboneliği ve ortak takvim düzeltmeleri
+
+_2026-11-25_
+
+- **Düzeltme:** ICS: noktalı virgül doğru kaçışlanır; tüm gün kayıtlar Berlin tarihine göre ve dışlayıcı bitişle yazılır (tek günlük kayıtlar Apple/Google'da kaybolmaz).
+- **Düzeltme:** Abonelik dış takvimlerden senkronlanan kayıtları geri yayımlamaz, sahibinin takvim yetkisini denetler ve bağlantı dilini kullanır.
+- **Düzeltme:** Ortak takvimden silmek silme yetkisi ister; ortak takvim, abonelik bağlantısı ve dış takvim işlemleri denetim kaydına yazılır.
+- **Düzeltme:** iCloud yönlendirmeleri izinli sunuculara izlenir; izin verilmeyen sunucu adresi için anlaşılır hata.
 
 ### 1.3.15 — nav.json kategori ve alt modül tanımı
 
@@ -72,22 +93,4 @@ _2026-11-18_
 
 - **Yeni:** Kişisel ve ortak takvimlerin bugünkü/yarınki kayıt sayıları ve saat çakışmaları, gizlilik sınırları korunarak özetlenir.
 
-### 1.3.10 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-### 1.3.8 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-### 1.3.7 — Mobilde alttan açılan çekmece
-
-_2026-11-16_
-
-- **İyileştirme:** Form/ayrıntı çekmecesi mobilde alttan açılır (masaüstünde sağdan).
-
-Daha eski 13 herkese açık sürüm notu.
+Daha eski 16 herkese açık sürüm notu.

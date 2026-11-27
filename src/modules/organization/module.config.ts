@@ -6,7 +6,7 @@ import { organizationPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "organization",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.8",
+  version: "1.0.11",
   label: "Dernek Bilgileri",
   description: "Dernek ana verileri, resmi iletişim ve antet logosu.",
   category: "CORE",
@@ -20,6 +20,8 @@ export const moduleConfig: ModuleConfig = {
       icon: Building2,
       group: "settings",
       order: 1,
+      settingsGroup: "general",
+      settingsOrder: 10,
       permission: { definition: organizationPermissions, action: "view" },
     },
   ],

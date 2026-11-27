@@ -5,12 +5,13 @@
   "loginButton": "Giriş yap",
   "logout": "Çıkış yap",
   "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur",
+  "mustChangePasswordHint": "Güvenliğiniz için devam etmeden önce aşağıdan yeni bir parola belirlemeniz gerekir.",
   "meta": {
     "profile": "Profil"
   },
   "appTitle": "Dernek Yönetim Sistemi",
   "loginSubtitle": "Devam etmek için oturum açın",
-  "passiveNotice": "Oturumunuz sonlandırıldı. Hesabınız pasif duruma alınmış olabilir; lütfen yöneticinizle görüşün.",
+  "passiveNotice": "Oturumunuz sonlandırıldı (ör. şifre değişikliği, tüm cihazlardan çıkış veya hesabın pasife alınması). Lütfen yeniden giriş yapın; sorun sürerse yöneticinizle görüşün.",
   "profile": {
     "title": "Profil",
     "description": "Hesap bilgileriniz ve parola değişikliği.",
@@ -21,21 +22,36 @@
     "changePassword": "Parola Değiştir",
     "currentPassword": "Mevcut parola",
     "newPassword": "Yeni parola",
+    "confirmPassword": "Yeni parola (tekrar)",
     "submit": "Parolayı güncelle",
     "updated": "Parolanız güncellendi.",
     "details": "Profil Bilgilerim",
-    "detailsHint": "İletişim, adres, ödeme ve fatura bilgileriniz. Yalnızca siz ve yetkili yöneticiler görebilir."
+    "detailsHint": "İletişim, adres, ödeme ve fatura bilgileriniz. Yalnızca siz ve yetkili yöneticiler görebilir.",
+    "sessions": {
+      "title": "Oturumlar",
+      "hint": "Hesabınızın açık olduğu diğer tüm cihaz ve tarayıcılardan çıkış yapın (örn. kayıp telefon, ortak bilgisayar). Bu cihazda oturumunuz açık kalır.",
+      "currentPassword": "Mevcut şifre",
+      "submit": "Diğer tüm cihazlardan çıkış yap",
+      "done": "Diğer tüm cihazlardaki oturumlar sonlandırıldı."
+    },
+    "twoFactor": "İki adımlı doğrulama"
   },
   "errors": {
     "sessionInvalid": "Oturumunuz geçersiz. Lütfen tekrar giriş yapın.",
     "currentPasswordWrong": "Mevcut parolanız hatalı.",
+    "samePassword": "Yeni parola mevcut parolanızla aynı olamaz.",
     "invalidCredentials": "E-posta veya parola hatalı.",
     "accountLocked": "Hesap geçici olarak kilitlendi, daha sonra tekrar deneyin.",
+    "rateLimited": "Çok fazla giriş denemesi yapıldı. Lütfen daha sonra tekrar deneyin.",
     "loginFailed": "Giriş yapılamadı. Lütfen tekrar deneyin.",
-    "invalidLocale": "Geçersiz dil seçimi."
+    "invalidLocale": "Geçersiz dil seçimi.",
+    "twoFactorRequired": "Doğrulama uygulamanızdaki kodu girin.",
+    "twoFactorInvalid": "Kod hatalı, süresi dolmuş veya daha önce kullanılmış."
   },
   "validation": {
     "currentPasswordRequired": "Mevcut parolanızı girin.",
+    "confirmPasswordRequired": "Yeni parolanızı tekrar girin.",
+    "passwordsMismatch": "Yeni parolalar eşleşmiyor.",
     "emailRequired": "E-posta zorunludur.",
     "passwordRequired": "Parola zorunludur."
   },
@@ -80,5 +96,53 @@
       "bic": "Geçerli bir BIC girin (8 veya 11 karakter).",
       "vatId": "Geçerli bir KDV kimlik numarası girin (ör. DE123456789)."
     }
-  }
+  },
+  "forgotPassword": "Şifremi unuttum",
+  "twoFactorCode": "Doğrulama kodu",
+  "twoFactorCodeHint": "Doğrulama uygulamanızdaki 6 haneli kodu veya kurtarma kodlarınızdan birini girin.",
+  "twoFactorBack": "Başka bir hesapla giriş yap",
+  "twoFactor": {
+    "loading": "Yükleniyor…",
+    "off": "İki adımlı doğrulama kapalı.",
+    "on": "İki adımlı doğrulama açık — {count, plural, one {# kurtarma kodu} other {# kurtarma kodu}} kaldı.",
+    "hint": "Girişte parolanıza ek olarak bir doğrulama uygulamasındaki (örn. Google Authenticator, Microsoft Authenticator, 2FAS) kodu sorar. Yönetici ve sayman hesapları için önerilir.",
+    "manageHint": "Kapatmak veya yeni kurtarma kodları almak için uygulamanızdaki güncel kodu (ya da bir kurtarma kodunu) girin.",
+    "currentPassword": "Mevcut şifre",
+    "currentPasswordForDisable": "Mevcut şifre (kapatmak için)",
+    "code": "Kod",
+    "cancel": "Vazgeç",
+    "enabled": "İki adımlı doğrulama açıldı.",
+    "disabled": "İki adımlı doğrulama kapatıldı.",
+    "disable": "İki adımlı doğrulamayı kapat",
+    "error": "İşlem tamamlanamadı. Lütfen tekrar deneyin.",
+    "setup": {
+      "start": "Kurulumu başlat",
+      "step1": "1. Doğrulama uygulamanızda yeni hesap ekleyin ve aşağıdaki anahtarı girin (telefonda bağlantıya dokunarak da ekleyebilirsiniz).",
+      "manualKey": "Kurulum anahtarı",
+      "openApp": "Doğrulama uygulamasında aç",
+      "step2": "2. Uygulamanın gösterdiği 6 haneli kodu girin.",
+      "confirm": "Onayla ve aç"
+    },
+    "recovery": {
+      "title": "Kurtarma kodları",
+      "hint": "Telefonunuza erişemezseniz bu kodlarla giriş yapabilirsiniz; her kod bir kez çalışır. Kodları güvenli bir yere kaydedin — bir daha gösterilmeyecek.",
+      "copy": "Kodları kopyala",
+      "copied": "Kurtarma kodları kopyalandı.",
+      "done": "Kaydettim",
+      "replace": "Yeni kurtarma kodları oluştur"
+    },
+    "errors": {
+      "alreadyEnabled": "İki adımlı doğrulama zaten açık.",
+      "noEnrolment": "Önce kurulumu başlatın.",
+      "codeInvalid": "Kod hatalı, süresi dolmuş veya daha önce kullanılmış."
+    }
+  },
+  "oauthDenied": "Bu hesapla giriş yapılamadı. Hesap bağlı değilse, kapalıysa veya iki adımlı doğrulama açıksa e-posta ve şifrenizle giriş yapın.",
+  "oauth": {
+    "errors": {
+      "invalidLink": "Giriş bağlantısı geçersiz.",
+      "alreadyLinked": "Bu hesap başka bir kullanıcıya bağlı."
+    }
+  },
+  "externalLogin": "{provider} ile giriş yap"
 }

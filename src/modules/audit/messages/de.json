@@ -111,5 +111,15 @@
       "label": "Sicherheits- & Änderungsprotokoll",
       "description": "Unveränderliche Prüfspuren und Sicherheitsereignisse."
     }
+  },
+  "details": {
+    "open": "Details",
+    "title": "Änderungsdetails",
+    "before": "Vorher",
+    "after": "Nachher",
+    "none": "Keine Angaben"
+  },
+  "errors": {
+    "notFound": "Protokolleintrag nicht gefunden."
   }
 }

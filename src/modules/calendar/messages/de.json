@@ -184,7 +184,8 @@
       "unavailable": "Dieses Plugin ist nicht aktiv.",
       "secretRequired": "Beim ersten Speichern ist das Client-Secret erforderlich.",
       "auth": "Zugangsdaten abgelehnt.",
-      "failed": "Kalender konnte nicht verbunden werden."
+      "failed": "Kalender konnte nicht verbunden werden.",
+      "hostNotAllowed": "Diese Serveradresse ist nicht erlaubt. Verwenden Sie die offizielle Adresse des Anbieters (für iCloud caldav.icloud.com)."
     },
     "settingsTitle": "Kalendereinstellungen",
     "settingsDescription": "Daten eurer eigenen OAuth-Apps für die Google- und Outlook-Synchronisation. Benutzer verbinden ihre Konten in den Kalendereinstellungen.",

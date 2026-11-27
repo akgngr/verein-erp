@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Checkbox, Input, InputGroup, Label, Select, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
+import { DateInput, Checkbox, Input, InputGroup, Label, Select, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -98,15 +98,14 @@ export function GrantForm({
     </TextField>
   );
   const dateField = (key: "periodStart" | "periodEnd" | "reportDueAt") => (
-    <TextField
+    <DateInput
+      label={t(`fields.${key}`)}
+      ariaLabel={t(`fields.${key}`)}
       value={value[key] ?? ""}
-      isDisabled={!canEdit}
       onChange={(next) => set({ [key]: next })}
-      className={["w-full"].filter(Boolean).join(" ")}
-    >
-      <Label>{t(`fields.${key}`)}</Label>
-      <Input placeholder=" " type="date" />
-    </TextField>
+      isDisabled={!canEdit}
+      className="w-full"
+    />
   );
 
   return (

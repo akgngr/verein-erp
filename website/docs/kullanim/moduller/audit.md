@@ -13,7 +13,7 @@ Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları.
 |---|---|
 | Anahtar | `audit` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.4 |
+| Sürüm | 1.1.1 |
 | Sayfalar | `/ayarlar/denetim-kaydi` |
 
 ## Varsayılan yetkiler
@@ -25,6 +25,19 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Güvenlik & Değişiklik Günlüğü | görüntüleme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.1 — Ayar merkezi grubu
+
+_2026-11-26_
+
+- **İyileştirme:** Ayar sayfaları ayar merkezinde kendi grubunda ve sırasında gösterilir.
+
+### 1.1.0 — Değişiklik ayrıntısı ve tarih filtresi
+
+_2026-11-25_
+
+- **Yeni:** Denetim kaydında önce/sonra ayrıntısı, tarih aralığı filtresi ve veritabanındaki gerçek işlem/varlık değerleriyle filtreler.
+- **Düzeltme:** Portal işlem günlüğü yönetimin kaydettiği ödeme/makbuz işlemlerini de gösterir.
 
 ### 1.0.4 — Üye portalı kişi adı içermeyen işleme günlüğü sözleşmesi
 

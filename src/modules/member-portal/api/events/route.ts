@@ -7,6 +7,7 @@ import { z } from "zod";
 import { getActivePortalSession } from "../../services/auth";
 import { isPortalEnabled, PORTAL_SESSION_COOKIE } from "../../services/auth-core";
 import { registerPortalEvent } from "../../services/rights";
+import { isPortalActionLimited } from "../../services/portal-guard";
 
 const EVENT_REGISTER_SCHEMA = z.object({
   eventId: z.string().min(1),
@@ -21,6 +22,9 @@ export async function POST(request: Request): Promise<NextResponse> {
   const session = await getActivePortalSession(cookieStore.get(PORTAL_SESSION_COOKIE)?.value);
   if (!session) {
     return NextResponse.json({ ok: false, error: "unauthorized" }, { status: 401 });
+  }
+  if (await isPortalActionLimited("events", session.subjectRef)) {
+    return NextResponse.json({ ok: false, error: "rateLimited" }, { status: 429 });
   }
 
   let body: unknown;

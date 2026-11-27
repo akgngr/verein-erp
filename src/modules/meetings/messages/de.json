@@ -454,7 +454,8 @@
     "notEditable": "Die Sitzung kann nicht bearbeitet werden.",
     "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten.",
     "membersAlreadyAdded": "Die ausgewählten Mitglieder sind bereits in dieser Sitzung.",
-    "assigneeNotAttendee": "Die ausgewählte verantwortliche Person nimmt nicht an dieser Sitzung teil."
+    "assigneeNotAttendee": "Die ausgewählte verantwortliche Person nimmt nicht an dieser Sitzung teil.",
+    "approveHasOpenVotes": "Das Protokoll kann nicht freigegeben werden, solange geheime Abstimmungen offen sind; bitte zuerst alle Abstimmungen schließen."
   },
   "validation": {
     "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
@@ -475,6 +476,7 @@
     "votesRange": "Die Stimmenzahl muss zwischen 0 und 1000 liegen.",
     "decisionMin": "Der Beschlusstext muss mindestens 3 Zeichen lang sein.",
     "decisionMax": "Der Beschlusstext darf höchstens 3000 Zeichen lang sein.",
+    "decisionRequired": "Bitte einen gültigen Beschluss auswählen.",
     "titleMin": "Der Titel muss mindestens 3 Zeichen lang sein.",
     "titleMax": "Der Titel darf höchstens 200 Zeichen lang sein.",
     "dateRequired": "Das Sitzungsdatum ist erforderlich.",

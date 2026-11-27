@@ -43,7 +43,8 @@
     "cancel": "İptal et",
     "retry": "Yeniden dene",
     "cancelled": "Görev iptal edildi.",
-    "retried": "Görev yeniden kuyruğa alındı."
+    "retried": "Görev yeniden kuyruğa alındı.",
+    "detailsHidden": "Teknik ayrıntılar yalnız otomasyonu yönetebilen rollere gösterilir."
   },
   "access": {
     "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için.",
@@ -64,10 +65,41 @@
     "deleted": "Zamanlama silindi.",
     "empty": "Henüz zamanlanmış görev yok.",
     "every": "Her {hours} saatte",
+    "everyMinutes": "Her {minutes} dakikada",
+    "everyDays": "Her {days} günde",
     "next": "Sonraki: {date}",
     "last": "Son: {date}",
     "enabled": "Etkin",
-    "delete": "Sil"
+    "delete": "Sil",
+    "taskLabels": {
+      "ai": {
+        "cleanup_history": "AI geçmişini temizle"
+      },
+      "calendar": {
+        "sync_external": "Harici takvimleri eşitle"
+      },
+      "exports": {
+        "cleanup_files": "Süresi dolan dışa aktarım dosyalarını sil"
+      },
+      "meetings": {
+        "vote_purge": "Eski oy kayıtlarını temizle"
+      },
+      "notifications": {
+        "purge": "Eski bildirimleri temizle",
+        "dispatch": "Bekleyen bildirimleri gönder"
+      },
+      "secretary": {
+        "daily_briefing": "Sekreter günlük özeti",
+        "follow_up_reminders": "Takip hatırlatmaları",
+        "migrate_notifications": "Sekreter bildirimlerini taşı"
+      },
+      "security-monitor": {
+        "run_tests": "Güvenlik denetimini çalıştır"
+      },
+      "youth-protection": {
+        "statutory_purge": "Yasal saklama süresi dolan kayıtları sil"
+      }
+    }
   },
   "errors": {
     "notCancellable": "Bu görev artık iptal edilemez.",

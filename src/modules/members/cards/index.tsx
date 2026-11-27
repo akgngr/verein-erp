@@ -1,12 +1,14 @@
-import { Gauge, Users } from "lucide-react";
+import { Cake, Gauge, Users } from "lucide-react";
 
-import { GaugeCardBody, StatCardBody } from "@/shared/components/dashboard/card-bodies";
+import { GaugeCardBody, StatCardBody, TableCardBody } from "@/shared/components/dashboard/card-bodies";
 import { formatMoney } from "@/shared/money";
+import { formatDate } from "@/shared/utils";
 import { defineCards } from "@/shared/types/dashboard";
 
 import { memberPaymentsPermissions, membersPermissions } from "../permissions";
 import { getDuesStats } from "../queries/get-dues-stats";
 import { getMemberStats } from "../queries/get-member-stats";
+import { listUpcomingCelebrations } from "../queries/list-celebrations";
 import { berlinYear } from "../utils";
 
 export const cards = defineCards([
@@ -30,6 +32,38 @@ export const cards = defineCards([
             { label: t("cards.members.passive"), value: stats.passive },
             { label: t("cards.members.resigned"), value: stats.resigned },
           ]}
+        />
+      );
+    },
+  },
+  {
+    // #605: Yaklaşan doğum günleri ve üyelik yıldönümleri (30 gün). Kişisel veri: yalnız üye düzenleyebilen roller.
+    key: "celebrations",
+    titleKey: "cards.celebrations.title",
+    descriptionKey: "cards.celebrations.description",
+    icon: Cake,
+    size: "md",
+    href: "/uyeler",
+    permission: { definition: membersPermissions, action: "update" },
+    render: async ({ t }) => {
+      const items = await listUpcomingCelebrations();
+      return (
+        <TableCardBody
+          emptyText={t("cards.celebrations.empty")}
+          columns={[
+            { key: "name", label: t("cards.celebrations.colName") },
+            { key: "occasion", label: t("cards.celebrations.colOccasion") },
+            { key: "date", label: t("cards.celebrations.colDate") },
+          ]}
+          rows={items.map((item) => ({
+            id: `${item.memberId}-${item.kind}`,
+            href: `/uyeler/${item.memberId}`,
+            cells: {
+              name: item.name,
+              occasion: t(item.kind === "birthday" ? "cards.celebrations.birthday" : "cards.celebrations.anniversary", { years: item.years }),
+              date: item.daysUntil === 0 ? t("cards.celebrations.today") : formatDate(item.date),
+            },
+          }))}
         />
       );
     },

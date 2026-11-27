@@ -44,7 +44,8 @@ async function calendarHome(credentials: SyncCredentials): Promise<string> {
 export function parseCalendarList(xml: string, homeUrl: string): RemoteCalendar[] {
   return xmlBlocks(xml, "response").flatMap((response) => {
     const resourceType = xmlBlocks(response, "resourcetype")[0] ?? "";
-    if (!/<(?:[\w-]+:)?calendar\s*\/>/i.test(resourceType)) return [];
+    // #584: Bazı CalDAV sunucuları kendinden kapanan <calendar/> yerine <cal:calendar></cal:calendar> döner.
+    if (!/<(?:[\w-]+:)?calendar(?:\s[^>]*)?(?:\/>|>\s*<\/(?:[\w-]+:)?calendar>)/i.test(resourceType)) return [];
     const components = xmlBlocks(response, "supported-calendar-component-set")[0];
     if (components && !/name="VEVENT"/i.test(components)) return [];
     const href = new URL(firstHref(response), homeUrl).toString();

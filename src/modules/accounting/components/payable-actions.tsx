@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
+import { DateInput, Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -35,7 +35,9 @@ export function PayableActions({
   const [payOpen, setPayOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const openLabel = (payable.openCents / 100).toFixed(2).replace(".", ",");
+  // Supplier credit notes have a negative open amount; the refund is entered positive (the server applies the sign).
+  const openAbsCents = Math.abs(payable.openCents);
+  const openLabel = (openAbsCents / 100).toFixed(2).replace(".", ",");
   const [amount, setAmount] = useState(openLabel);
   const [paidDate, setPaidDate] = useState(
     new Date().toISOString().slice(0, 10),
@@ -114,15 +116,14 @@ export function PayableActions({
                         {t("open", { amount: openLabel })}
                       </Description>
                     </TextField>
-                    <TextField
+                    <DateInput
+                      label={t("paidDate")}
+                      ariaLabel={t("paidDate")}
                       value={paidDate}
-                      isRequired
                       onChange={setPaidDate}
-                      className={["w-full"].filter(Boolean).join(" ")}
-                    >
-                      <Label>{t("paidDate")}</Label>
-                      <Input type="date" />
-                    </TextField>
+                      isRequired
+                      className="w-full"
+                    />
                     <Select
                       isRequired
                       value={accountId ? accountId : null}
@@ -159,7 +160,7 @@ export function PayableActions({
                         !paidDate ||
                         amountCents === null ||
                         amountCents <= 0 ||
-                        amountCents > payable.openCents
+                        amountCents > openAbsCents
                       }
                       onPress={async () => {
                         setBusy(true);

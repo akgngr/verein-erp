@@ -5,6 +5,7 @@ import { getWidgetSettings } from "@/modules/widgets/server";
 import { widgetsPermissions } from "@/modules/widgets";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
+import { can } from "@/shared/permissions/define";
 import { settingsPermissions } from "@/shared/permissions/system";
 
 import { WidgetSettingsForm } from "../components/widget-settings-form";
@@ -33,7 +34,11 @@ export async function WidgetSettingsView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t("title")} description={t("description")} />
-      <WidgetSettingsForm key={JSON.stringify(widgets.map(({ id, enabled, order }) => [id, enabled, order]))} initialRows={widgets} />
+      <WidgetSettingsForm
+        key={JSON.stringify(widgets.map(({ id, enabled, order, adminDisabled }) => [id, enabled, order, adminDisabled]))}
+        initialRows={widgets}
+        canManagePolicy={can(user.role, widgetsPermissions, "update")}
+      />
     </div>
   );
 }

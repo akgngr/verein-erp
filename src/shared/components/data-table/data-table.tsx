@@ -28,7 +28,9 @@ const ACTIONS_COLUMN_KEY = "_actions";
 
 // KARAR: Satır işlemleri ("…") sütunu sağ kenara sabitlenir (sticky). Çok sütunlu tablolar
 // kapsayıcıdan taştığında (yatay kaydırma) işlem menüsü her zaman görünür kalır.
-const ACTIONS_STICKY_CLASS = "sticky right-0 z-10";
+// #586: Sol kenar gölgesi, altında kayan sütunun "yarım kesilmiş" görünmesi yerine üstte kalan bir katman
+// olduğunu belli eder (mobilde "Durum" sütunu "…" düğmesinin arkasında kesik görünüyordu).
+const ACTIONS_STICKY_CLASS = "sticky right-0 z-10 shadow-[-8px_0_8px_-8px_rgb(0_0_0/0.25)] dark:shadow-[-8px_0_8px_-8px_rgb(0_0_0/0.6)]";
 
 /**
  * Sunucu taraflı ortak DataTable (9.2): arama/sıralama/sayfalama veritabanında

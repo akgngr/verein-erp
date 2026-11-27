@@ -1,10 +1,11 @@
 import "server-only";
 
 import { listAccountOptions } from "@/modules/accounting/server";
+import { getAutomationHealthByModule } from "@/modules/automation/server";
+import { listEnabledNotificationChannels } from "@/modules/notifications/server";
 import { getOrganizationProfile } from "@/modules/organization/server";
 import { countUsersByRole } from "@/modules/users/server";
 import { allModules } from "@/registry";
-import { getDb } from "@/shared/db";
 import { isAccessApproved } from "@/shared/modules/module-access";
 
 import { getAccessRecords } from "./module-access-store";
@@ -21,7 +22,6 @@ export * from "./readiness-core";
  * Database query loader: loads live states and delegates to pure computation.
  */
 export async function getModuleReadinessReport(): Promise<ModuleReadinessReport> {
-  const db = getDb();
   const states = await getEffectiveModuleStates();
   const records = await getAccessRecords();
 
@@ -88,73 +88,18 @@ export async function getModuleReadinessReport(): Promise<ModuleReadinessReport>
     configurationMap["auth"] = { status: "COMPLETE", missingKeys: [] };
   }
 
-  // 2. Notification channel configuration via read-only SQL
-  let notificationChannelInfo: { configured: boolean; enabledChannels: string[] } | undefined;
-  try {
-    const channels = await db.$queryRaw<Array<{ channel: string }>>`
-      SELECT channel FROM notification_channel_configs WHERE enabled = true
-    `;
-    const enabledChannels = channels.map((c) => c.channel);
-    notificationChannelInfo = {
-      configured: enabledChannels.length > 0,
-      enabledChannels,
-    };
-  } catch {
-    notificationChannelInfo = { configured: true, enabledChannels: [] };
+  // #580: Üye portalı modülü açık ama PORTAL_ENABLED kapalıysa portal 404 döner; kokpitte belirtilir.
+  if (states["member-portal"] === true && process.env.PORTAL_ENABLED !== "true") {
+    configurationMap["member-portal"] = { status: "INCOMPLETE", missingKeys: ["PORTAL_ENABLED"], guidanceKey: "portalDisabledByEnv" };
   }
 
-  // 3. Failed queue executions via read-only SQL
-  const failedJobsMap: Record<string, Array<{ code?: string | null; message?: string | null }>> =
-    {};
-  const heartbeatMap: Record<
-    string,
-    { lastHeartbeatAt: string | null; activeCount: number; isStale: boolean }
-  > = {};
-
-  try {
-    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000);
-
-    const executions = await db.$queryRaw<
-      Array<{
-        sourceModule: string;
-        status: string;
-        lastErrorCode: string | null;
-        heartbeatAt: Date | null;
-        updatedAt: Date;
-      }>
-    >`
-      SELECT "sourceModule", status, "lastErrorCode", "heartbeatAt", "updatedAt"
-      FROM "AutomationExecution"
-      WHERE status IN ('FAILED', 'RUNNING')
-      ORDER BY "createdAt" DESC
-      LIMIT 200
-    `;
-
-    for (const exec of executions) {
-      const mod = exec.sourceModule;
-      if (exec.status === "FAILED") {
-        if (!failedJobsMap[mod]) failedJobsMap[mod] = [];
-        failedJobsMap[mod].push({ code: exec.lastErrorCode });
-      } else if (exec.status === "RUNNING") {
-        if (!heartbeatMap[mod]) {
-          heartbeatMap[mod] = { lastHeartbeatAt: null, activeCount: 0, isStale: false };
-        }
-        heartbeatMap[mod].activeCount++;
-        const hbTime = exec.heartbeatAt ? new Date(exec.heartbeatAt) : new Date(exec.updatedAt);
-        if (
-          !heartbeatMap[mod].lastHeartbeatAt ||
-          hbTime > new Date(heartbeatMap[mod].lastHeartbeatAt!)
-        ) {
-          heartbeatMap[mod].lastHeartbeatAt = hbTime.toISOString();
-        }
-        if (hbTime < fiveMinutesAgo) {
-          heartbeatMap[mod].isStale = true;
-        }
-      }
-    }
-  } catch {
-    // Automation tables may be empty in new setups
-  }
+  // 2. Etkin bildirim kanalları ve 3. arka plan işleri: modüllerin public API'leri (#583). Önceden ham SQL
+  //    yanlış tabloyu ("AutomationExecution") sorgulayıp hatayı yutuyordu; kokpit başarısız işleri hiç
+  //    göstermiyordu. Ham SQL ayrıca DATA_POLICY'yi atlıyordu. Sorgu hatası artık yutulmaz.
+  const [enabledChannels, automationHealth] = await Promise.all([listEnabledNotificationChannels(), getAutomationHealthByModule()]);
+  const notificationChannelInfo = { configured: enabledChannels.length > 0, enabledChannels };
+  const failedJobsMap: Record<string, Array<{ code?: string | null; message?: string | null }>> = automationHealth.failed;
+  const heartbeatMap = automationHealth.running;
 
   return computeModuleReadiness({
     modules: allModules.map((m) => ({

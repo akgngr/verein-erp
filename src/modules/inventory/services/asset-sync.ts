@@ -1,11 +1,41 @@
 import "server-only";
 
 import { unlinkAssetFromInventoryItem, saveAssetForInventoryItem } from "@/modules/accounting/server";
+import { permissionResources } from "@/permissions-registry";
 import { listUsableModuleKeys } from "@/modules/system/server";
 import { getDb } from "@/shared/db";
+import { can, type PermissionDefinition } from "@/shared/permissions/define";
+import type { Role } from "@/shared/roles";
+
+import { changesAccountingAsset, type AssetRelevantFields } from "../helpers/asset-projection";
+
+export type { AssetRelevantFields };
 
 export async function isAccountingUsable(): Promise<boolean> {
   return (await listUsableModuleKeys()).includes("accounting");
+}
+
+/**
+ * #582: Envanter işlemi muhasebe demirbaşını (AfA kaydı) oluşturacak, değiştirecek veya elden çıkaracaksa
+ * kullanıcının muhasebede yazma (`update`) izni olmalıdır. Örn. SECRETARY/BOARD envanteri düzenleyebilir ama
+ * AfA'da izlenen eşyanın adını, bedelini, tarihini veya hurda durumunu değiştiremez; izleme işaretini açamaz.
+ * Muhasebe kapalıysa senkron yapılmadığı için kontrol de yapılmaz.
+ */
+export async function canWriteAssetChange(role: Role, before: AssetRelevantFields | null, after: AssetRelevantFields | null): Promise<boolean> {
+  if (!changesAccountingAsset(before, after)) return true;
+  if (!(await isAccountingUsable())) return true;
+  const definition = accountingPermissionDefinition();
+  // Muhasebe açık ama tanım bulunamadıysa (beklenmez) fail closed.
+  return definition ? can(role, definition, "update") : false;
+}
+
+/**
+ * Muhasebe izin tanımı üretilmiş izin kaydından okunur (users ve widgets ile aynı yol). Böylece inventory,
+ * mevcut `accounting: write` erişim bildirimine yeni bir `read` işlemi eklemeden (yönetici yeniden onayı
+ * gerektirmeden) muhasebe yazma iznini denetler.
+ */
+function accountingPermissionDefinition(): PermissionDefinition | null {
+  return permissionResources.find((entry) => entry.moduleKey === "accounting")?.definitions.find((definition) => definition.resource === "accounting") ?? null;
 }
 
 /**
@@ -21,7 +51,10 @@ export async function syncItemToAccounting(itemId: string, options: { deleted?: 
       return;
     }
     const item = await getDb().inventoryItem.findUnique({ where: { id: itemId } });
-    if (!item) return;
+    if (!item || item.deletedAt) {
+      await unlinkAssetFromInventoryItem(itemId, true);
+      return;
+    }
     const costCents = item.purchasePrice ? Math.round(Number(item.purchasePrice) * 100) : 0;
     if (item.trackAsAsset && item.purchaseDate && costCents > 0) {
       await saveAssetForInventoryItem({ inventoryItemId: item.id, name: item.name, acquisitionDate: item.purchaseDate, costCents, scrapped: item.status === "SCRAPPED" });
@@ -44,7 +77,7 @@ export async function saveItemForAsset(input: { inventoryItemId: string | null; 
     ...(input.disposed ? { status: "SCRAPPED" } : {}),
   };
   if (input.inventoryItemId) {
-    const existing = await db.inventoryItem.findUnique({ where: { id: input.inventoryItemId }, select: { id: true, status: true } });
+    const existing = await db.inventoryItem.findFirst({ where: { id: input.inventoryItemId, deletedAt: null }, select: { id: true, status: true } });
     if (existing) {
       await db.inventoryItem.update({ where: { id: existing.id }, data: { ...data, ...(input.disposed ? {} : existing.status === "SCRAPPED" ? {} : {}) } });
       return existing.id;
@@ -55,5 +88,5 @@ export async function saveItemForAsset(input: { inventoryItemId: string | null; 
 }
 
 export async function markItemScrapped(itemId: string): Promise<void> {
-  await getDb().inventoryItem.updateMany({ where: { id: itemId }, data: { status: "SCRAPPED" } });
+  await getDb().inventoryItem.updateMany({ where: { id: itemId, deletedAt: null }, data: { status: "SCRAPPED" } });
 }

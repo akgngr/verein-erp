@@ -12,7 +12,7 @@ import { demoPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "demo",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.3",
+  version: "1.0.5",
   label: "Demo veri",
   description:
     "Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler.",
@@ -27,6 +27,8 @@ export const moduleConfig: ModuleConfig = {
       icon: FlaskConical,
       group: "settings",
       order: 90,
+      settingsGroup: "system-management",
+      settingsOrder: 10,
       permission: { definition: demoPermissions, action: "view" },
     },
   ],

@@ -1,271 +1,220 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+
+import { ActionError, createAction } from "@/modules/auth/server"
 import { getDb } from "@/shared/db"
-import { requirePermission } from "@/modules/auth/server";
-import { getMessageTranslator } from "@/shared/i18n/translate-message";
+import type { ActionResult } from "@/shared/types/action"
+
+import { berlinLocalToUtc, utcToBerlinLocalInput } from "../helpers/berlin-time"
 import { eventsPermissions } from "../permissions"
 import {
-  eventCreateSchema,
-  eventUpdateSchema,
   attendeeAddSchema,
+  attendeeIdSchema,
   attendeeStatusUpdateSchema,
-  type EventCreateInput,
-  type EventUpdateInput,
-  type AttendeeAddInput,
-  type AttendeeStatusUpdateInput,
+  eventCreateSchema,
+  eventIdSchema,
+  eventUpdateSchema,
+  isEndBeforeStart,
 } from "../schemas/event-schema"
-import type { ActionResult } from "../types"
+import { changeAttendeeStatus, registerAttendee, type RegistrationFailure } from "../services/attendee-registration"
 
-/** Beklenmeyen hata: ayrıntı loglanır, kullanıcıya çevrilmiş genel mesaj döner (ham DB mesajı sızmaz). */
-function failure(error: unknown, message: string): string {
-  console.error("[events]", error)
-  return message
+/**
+ * #584: Tüm yazma işlemleri createAction ile çalışır: yetki, Zod doğrulaması ve denetim kaydı (A-*).
+ * Denetim kaydına kişi adı yazılmaz; katılımcılar kimlik ve durumla izlenir.
+ * Saatler Europe/Berlin duvar saati olarak gelir ve UTC'ye çevrilir (helpers/berlin-time.ts).
+ */
+
+const EVENTS_PATH = "/events"
+
+const REGISTRATION_ERRORS: Record<RegistrationFailure, string> = {
+  notFound: "events.errors.notFound",
+  full: "events.errors.capacityFull",
+  alreadyRegistered: "events.errors.alreadyRegistered",
 }
 
-export async function createEventAction(
-  rawInput: EventCreateInput,
-): Promise<ActionResult<{ id: string }>> {
-  const translate = await getMessageTranslator()
-  await requirePermission(eventsPermissions, "create")
-
-  const parsed = eventCreateSchema.safeParse(rawInput)
-  if (!parsed.success) {
-    return {
-      success: false,
-      error: translate(parsed.error.issues[0]?.message ?? "events.errors.invalidInput"),
-    }
-  }
-
-  const data = parsed.data
-  const db = getDb()
-
-  try {
-    const newEvent = await db.event.create({
-      data: {
-        title: data.title,
-        description: data.description ?? null,
-        type: data.type,
-        status: data.status,
-        startDate: new Date(data.startDate),
-        endDate: data.endDate ? new Date(data.endDate) : null,
-        location: data.location ?? null,
-        isOnline: Boolean(data.isOnline),
-        onlineUrl: data.onlineUrl ?? null,
-        capacity: data.capacity !== undefined ? data.capacity : null,
-      },
-      select: { id: true },
-    })
-
-    revalidatePath("/events")
-    return { success: true, data: { id: newEvent.id } }
-  } catch (error) {
-    return {
-      success: false,
-      error: failure(error, translate("events.errors.createFailed")),
-    }
-  }
+/** Doğrulanmış Berlin duvar saatini UTC'ye çevirir (şema geçersiz değeri zaten reddetti). */
+function toUtc(value: string): Date {
+  const date = berlinLocalToUtc(value)
+  if (!date) throw new ActionError("events.validation.dateInvalid", { startDate: ["events.validation.dateInvalid"] })
+  return date
 }
 
-export async function updateEventAction(
-  rawInput: EventUpdateInput,
-): Promise<ActionResult> {
-  const translate = await getMessageTranslator()
-  await requirePermission(eventsPermissions, "update")
+const emptyToNull = (value: string | null | undefined) => (value ? value : null)
 
-  const parsed = eventUpdateSchema.safeParse(rawInput)
-  if (!parsed.success) {
-    return {
-      success: false,
-      error: translate(parsed.error.issues[0]?.message ?? "events.errors.invalidInput"),
-    }
-  }
-
-  const { id, ...data } = parsed.data
-  if (!id) {
-    return { success: false, error: translate("events.errors.idMissing") }
-  }
-
-  const db = getDb()
-
-  try {
-    const updateData: {
-      title?: string
-      description?: string | null
-      type?: string
-      status?: string
-      startDate?: Date
-      endDate?: Date | null
-      location?: string | null
-      isOnline?: boolean
-      onlineUrl?: string | null
-      capacity?: number | null
-    } = {}
-    if (data.title !== undefined) updateData.title = data.title
-    if (data.description !== undefined)
-      updateData.description = data.description
-    if (data.type !== undefined) updateData.type = data.type
-    if (data.status !== undefined) updateData.status = data.status
-    if (data.startDate !== undefined)
-      updateData.startDate = new Date(data.startDate)
-    if (data.endDate !== undefined)
-      updateData.endDate = data.endDate ? new Date(data.endDate) : null
-    if (data.location !== undefined) updateData.location = data.location
-    if (data.isOnline !== undefined) updateData.isOnline = data.isOnline
-    if (data.onlineUrl !== undefined) updateData.onlineUrl = data.onlineUrl
-    if (data.capacity !== undefined) updateData.capacity = data.capacity
-
-    await db.event.update({
-      where: { id },
-      data: updateData,
-    })
-
-    revalidatePath("/events")
-    return { success: true }
-  } catch (error) {
-    return {
-      success: false,
-      error: failure(error, translate("events.errors.updateFailed")),
-    }
-  }
-}
-
-export async function deleteEventAction(id: string): Promise<ActionResult> {
-  const translate = await getMessageTranslator()
-  await requirePermission(eventsPermissions, "delete")
-
-  if (!id) {
-    return { success: false, error: translate("events.errors.invalidId") }
-  }
-
-  const db = getDb()
-
-  try {
-    await db.event.delete({ where: { id } })
-    revalidatePath("/events")
-    return { success: true }
-  } catch (error) {
-    return {
-      success: false,
-      error: failure(error, translate("events.errors.deleteFailed")),
-    }
-  }
-}
-
-export async function addAttendeeAction(
-  rawInput: AttendeeAddInput,
-): Promise<ActionResult<{ id: string }>> {
-  const translate = await getMessageTranslator()
-  await requirePermission(eventsPermissions, "update")
-
-  const parsed = attendeeAddSchema.safeParse(rawInput)
-  if (!parsed.success) {
-    return {
-      success: false,
-      error: translate(parsed.error.issues[0]?.message ?? "events.errors.invalidInput"),
-    }
-  }
-
-  const data = parsed.data
-  const db = getDb()
-
-  try {
-    const event = await db.event.findUnique({
-      where: { id: data.eventId },
-      select: {
-        capacity: true,
-        _count: {
-          select: {
-            attendees: { where: { status: { not: "CANCELLED" } } },
-          },
+export async function createEventAction(rawInput: unknown): Promise<ActionResult<{ id: string }>> {
+  const run = createAction({
+    permission: { definition: eventsPermissions, action: "create" },
+    schema: eventCreateSchema,
+    handler: async ({ input, user, audit }) => {
+      const event = await getDb().event.create({
+        data: {
+          title: input.title,
+          description: emptyToNull(input.description),
+          type: input.type,
+          status: input.status,
+          startDate: toUtc(input.startDate),
+          endDate: input.endDate ? toUtc(input.endDate) : null,
+          location: emptyToNull(input.location),
+          isOnline: input.isOnline,
+          onlineUrl: emptyToNull(input.onlineUrl),
+          capacity: input.capacity ?? null,
+          createdById: user.id,
         },
-      },
-    })
-
-    if (!event) {
-      return { success: false, error: translate("events.errors.notFound") }
-    }
-
-    if (event.capacity && event._count.attendees >= event.capacity) {
-      return { success: false, error: translate("events.errors.capacityFull") }
-    }
-
-    const newAttendee = await db.eventAttendee.create({
-      data: {
-        eventId: data.eventId,
-        memberId: data.memberId ?? null,
-        firstName: data.firstName,
-        lastName: data.lastName,
-        email: data.email ?? null,
-        phone: data.phone ?? null,
-        status: data.status,
-        notes: data.notes ?? null,
-      },
-      select: { id: true },
-    })
-
-    revalidatePath("/events")
-    return { success: true, data: { id: newAttendee.id } }
-  } catch (error) {
-    return {
-      success: false,
-      error: failure(error, translate("events.errors.attendeeAddFailed")),
-    }
-  }
+        select: { id: true, title: true, type: true, status: true, startDate: true, endDate: true, capacity: true },
+      })
+      await audit({ action: "CREATE", entity: "Event", entityId: event.id, after: event })
+      revalidatePath(EVENTS_PATH)
+      return { id: event.id }
+    },
+  })
+  return run(rawInput)
 }
 
-export async function updateAttendeeStatusAction(
-  rawInput: AttendeeStatusUpdateInput,
-): Promise<ActionResult> {
-  const translate = await getMessageTranslator()
-  await requirePermission(eventsPermissions, "update")
+export async function updateEventAction(rawInput: unknown): Promise<ActionResult> {
+  const run = createAction({
+    permission: { definition: eventsPermissions, action: "update" },
+    schema: eventUpdateSchema,
+    handler: async ({ input, audit }) => {
+      const db = getDb()
+      const { id, ...changes } = input
+      const before = await db.event.findFirst({
+        where: { id, deletedAt: null },
+        select: { title: true, type: true, status: true, startDate: true, endDate: true, capacity: true, location: true, isOnline: true },
+      })
+      if (!before) throw new ActionError("events.errors.notFound")
 
-  const parsed = attendeeStatusUpdateSchema.safeParse(rawInput)
-  if (!parsed.success) {
-    return { success: false, error: translate("events.errors.invalidStatus") }
-  }
+      // Yalnız biri gönderildiyse bitiş kontrolü kayıttaki diğer değerle yapılır.
+      const effectiveStart = changes.startDate ?? utcToBerlinLocalInput(before.startDate)
+      const effectiveEnd = changes.endDate !== undefined ? changes.endDate : utcToBerlinLocalInput(before.endDate)
+      if (isEndBeforeStart(effectiveStart, effectiveEnd)) {
+        throw new ActionError("events.validation.endBeforeStart", { endDate: ["events.validation.endBeforeStart"] })
+      }
 
-  const db = getDb()
+      const data: Parameters<typeof db.event.update>[0]["data"] = {}
+      if (changes.title !== undefined) data.title = changes.title
+      if (changes.description !== undefined) data.description = emptyToNull(changes.description)
+      if (changes.type !== undefined) data.type = changes.type
+      if (changes.status !== undefined) data.status = changes.status
+      if (changes.startDate !== undefined) data.startDate = toUtc(changes.startDate)
+      if (changes.endDate !== undefined) data.endDate = changes.endDate ? toUtc(changes.endDate) : null
+      if (changes.location !== undefined) data.location = emptyToNull(changes.location)
+      if (changes.isOnline !== undefined) data.isOnline = changes.isOnline
+      if (changes.onlineUrl !== undefined) data.onlineUrl = emptyToNull(changes.onlineUrl)
+      if (changes.capacity !== undefined) data.capacity = changes.capacity ?? null
 
-  try {
-    await db.eventAttendee.update({
-      where: { id: parsed.data.attendeeId },
-      data: { status: parsed.data.status },
-    })
-
-    revalidatePath("/events")
-    return { success: true }
-  } catch (error) {
-    return {
-      success: false,
-      error: failure(error, translate("events.errors.statusUpdateFailed")),
-    }
-  }
+      const after = await db.event.update({
+        where: { id },
+        data,
+        select: { title: true, type: true, status: true, startDate: true, endDate: true, capacity: true, location: true, isOnline: true },
+      })
+      await audit({ action: "UPDATE", entity: "Event", entityId: id, before, after })
+      revalidatePath(EVENTS_PATH)
+      return undefined
+    },
+  })
+  return run(rawInput)
 }
 
-export async function deleteAttendeeAction(
-  attendeeId: string,
-): Promise<ActionResult> {
-  const translate = await getMessageTranslator()
-  await requirePermission(eventsPermissions, "update")
+/** Yumuşak silme: etkinlik listelerden kalkar; kayıt ve katılımcılar denetim için korunur. */
+export async function deleteEventAction(rawId: unknown): Promise<ActionResult> {
+  const run = createAction({
+    permission: { definition: eventsPermissions, action: "delete" },
+    schema: eventIdSchema,
+    handler: async ({ input: id, user, audit }) => {
+      const result = await getDb().event.updateMany({
+        where: { id, deletedAt: null },
+        data: { deletedAt: new Date(), deletedById: user.id },
+      })
+      if (result.count !== 1) throw new ActionError("events.errors.notFound")
+      await audit({ action: "DELETE", entity: "Event", entityId: id })
+      revalidatePath(EVENTS_PATH)
+      return undefined
+    },
+  })
+  return run(rawId)
+}
 
-  if (!attendeeId) {
-    return { success: false, error: translate("events.errors.invalidAttendeeId") }
-  }
+/**
+ * Üye seçildiyse kaydın var ve etkin/pasif olduğu members modülünün public API'si ile doğrulanır.
+ * Ad alanları seçicide üye adıyla doldurulur; yönetici düzeltebilir.
+ */
+async function assertMemberExists(memberId: string): Promise<void> {
+  const { listMemberOptions } = await import("@/modules/members/server")
+  const [member] = await listMemberOptions({ ids: [memberId] })
+  if (!member) throw new ActionError("events.errors.memberNotFound", { memberId: ["events.errors.memberNotFound"] })
+}
 
-  const db = getDb()
+export async function addAttendeeAction(rawInput: unknown): Promise<ActionResult<{ id: string }>> {
+  const run = createAction({
+    permission: { definition: eventsPermissions, action: "update" },
+    schema: attendeeAddSchema,
+    handler: async ({ input, audit }) => {
+      const memberId = input.memberId || null
+      if (memberId) await assertMemberExists(memberId)
 
-  try {
-    await db.eventAttendee.delete({
-      where: { id: attendeeId },
-    })
+      const result = await registerAttendee({
+        eventId: input.eventId,
+        memberId,
+        firstName: input.firstName,
+        lastName: input.lastName,
+        email: input.email || null,
+        phone: emptyToNull(input.phone),
+        notes: emptyToNull(input.notes),
+        status: input.status,
+      })
+      if (!result.ok) throw new ActionError(REGISTRATION_ERRORS[result.reason])
 
-    revalidatePath("/events")
-    return { success: true }
-  } catch (error) {
-    return {
-      success: false,
-      error: failure(error, translate("events.errors.attendeeDeleteFailed")),
-    }
-  }
+      await audit({
+        action: "CREATE",
+        entity: "EventAttendee",
+        entityId: result.id,
+        after: { eventId: input.eventId, memberId, status: input.status },
+      })
+      revalidatePath(EVENTS_PATH)
+      return { id: result.id }
+    },
+  })
+  return run(rawInput)
+}
+
+export async function updateAttendeeStatusAction(rawInput: unknown): Promise<ActionResult> {
+  const run = createAction({
+    permission: { definition: eventsPermissions, action: "update" },
+    schema: attendeeStatusUpdateSchema,
+    handler: async ({ input, audit }) => {
+      const result = await changeAttendeeStatus(input.attendeeId, input.status)
+      if (!result.ok) throw new ActionError(REGISTRATION_ERRORS[result.reason])
+      await audit({
+        action: "STATUS_CHANGE",
+        entity: "EventAttendee",
+        entityId: input.attendeeId,
+        before: { status: result.previous },
+        after: { eventId: result.eventId, status: input.status },
+      })
+      revalidatePath(EVENTS_PATH)
+      return undefined
+    },
+  })
+  return run(rawInput)
+}
+
+export async function deleteAttendeeAction(rawInput: unknown): Promise<ActionResult> {
+  const run = createAction({
+    permission: { definition: eventsPermissions, action: "update" },
+    schema: attendeeIdSchema,
+    handler: async ({ input, audit }) => {
+      const db = getDb()
+      const attendee = await db.eventAttendee.findUnique({
+        where: { id: input.attendeeId },
+        select: { eventId: true, memberId: true, status: true },
+      })
+      if (!attendee) throw new ActionError("events.errors.invalidAttendeeId")
+      await db.eventAttendee.delete({ where: { id: input.attendeeId } })
+      await audit({ action: "DELETE", entity: "EventAttendee", entityId: input.attendeeId, before: attendee })
+      revalidatePath(EVENTS_PATH)
+      return undefined
+    },
+  })
+  return run(rawInput)
 }

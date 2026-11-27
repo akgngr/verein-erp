@@ -82,8 +82,8 @@ export async function applyStudentSelfService(id: string, input: StudentSelfServ
 }
 
 export async function getGuardianSelfService(id: string): Promise<GuardianSelfService | null> {
-  const row = await getDb().studentGuardian.findUnique({
-    where: { id },
+  const row = await getDb().studentGuardian.findFirst({
+    where: { id, deletedAt: null },
     select: { id: true, firstName: true, lastName: true, email: true, phone: true, street: true, houseNumber: true, postalCode: true, city: true, state: true, country: true, iban: true, accountHolder: true, messagingConsents: true, bulkMailOptOut: true },
   });
   if (!row) return null;
@@ -95,12 +95,12 @@ export async function getGuardianSelfService(id: string): Promise<GuardianSelfSe
 export async function applyGuardianSelfService(id: string, input: GuardianSelfServiceInput, signedAt: Date): Promise<boolean> {
   const { iban, bic, sepaMandate, ...rest } = input;
   const db = getDb();
-  const current = await db.studentGuardian.findUnique({ where: { id }, select: { debtorNumber: true, iban: true } });
+  const current = await db.studentGuardian.findFirst({ where: { id, deletedAt: null }, select: { debtorNumber: true, iban: true } });
   if (!current) return false;
   const bank = iban ? { iban: iban.replace(/\s/g, "").toUpperCase(), bic: bic ? bic.toUpperCase() : null } : {};
   const mandate = sepaMandate && (iban || current.iban) ? { sepaMandateDate: signedAt, sepaMandateReference: `D${current.debtorNumber}-${signedAt.toISOString().slice(0, 10).replace(/-/g, "")}` } : {};
-  await db.studentGuardian.update({ where: { id }, data: { ...rest, ...bank, ...mandate } });
-  return true;
+  const updated = await db.studentGuardian.updateMany({ where: { id, deletedAt: null }, data: { ...rest, ...bank, ...mandate } });
+  return updated.count === 1;
 }
 
 /** SEPA yetki yenileme (online-forms) için: Debitor numarası → veli kimliği. Yalnız kimlik döner, kişi verisi yok. */
@@ -113,7 +113,7 @@ export async function getGuardianIdsByDebtorNumber(debtorNumbers: number[]): Pro
 /** SEPA modülü için: Debitor numarasına göre velinin yetki bilgisi (IBAN tam; yalnız sunucuda kullanılır). */
 export async function getGuardianMandates(debtorNumbers: number[]) {
   const rows = await getDb().studentGuardian.findMany({
-    where: { debtorNumber: { in: debtorNumbers } },
+    where: { debtorNumber: { in: debtorNumbers }, deletedAt: null },
     select: { debtorNumber: true, firstName: true, lastName: true, iban: true, bic: true, accountHolder: true, sepaMandateReference: true, sepaMandateDate: true },
   });
   return new Map(rows.map((row) => [row.debtorNumber, {
