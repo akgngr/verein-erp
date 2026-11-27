@@ -68,6 +68,13 @@ export function MeetingDetailActions({
       {/* Faz 4 (4.3): PDF dil seçimi — ana tıklama varsayılan dil, açılır menü de/tr. */}
       <PdfSplitButton
         buildHref={(lang) =>
+          `/api/meetings/${meetingId}/invitation-pdf?lang=${lang}`
+        }
+        label={t("actions.invitationPdf")}
+        aria={t("actions.invitationPdfAria")}
+      />
+      <PdfSplitButton
+        buildHref={(lang) =>
           `/api/meetings/${meetingId}/minutes-pdf?lang=${lang}`
         }
         label={t("actions.minutesPdf")}

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.0.13",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "Birleşik Görev Merkezi için açık takip sözleşmesi (#636)",
+        "de": "Wiedervorlagen-Schnittstelle für die zentrale Aufgabenübersicht (#636)"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Görevler modülünün Birleşik Görev Merkezi'nde açık CRM takiplerini gösterebilmesi için listOpenFollowUpsForHub sunucu yardımcısı dışa aktarıldı.",
+          "de": "Server-Hilfsfunktion listOpenFollowUpsForHub exportiert, damit offene CRM-Wiedervorlagen im Aufgaben-Hub erscheinen."
+        }
+      ]
+    },
+    {
       "version": "1.0.12",
       "date": "2026-11-26",
       "title": {

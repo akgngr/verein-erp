@@ -91,6 +91,11 @@
   "detail": {
     "approvedLine": "Genehmigt am: {date} – {by}",
     "draftNote": "Das Protokoll liegt im Entwurfsstatus vor.",
+    "noticePeriod": {
+      "compliant": "Ladungsfrist eingehalten ({actual}/{required} Tage)",
+      "shortNotice": "Kurze Ladungsfrist ({actual}/{required} Tage)",
+      "notSent": "Einladung noch nicht versandt (Richtwert: mind. {required} Tage)"
+    },
     "tabsAria": "Sitzungsregisterkarten",
     "tabGeneral": "Allgemein",
     "tabAgenda": "Tagesordnung ({count})",
@@ -132,8 +137,10 @@
   },
   "actions": {
     "minutesPdf": "Protokoll (PDF)",
+    "invitationPdf": "Einladung & TOP (PDF)",
     "statusButton": "Status",
-    "minutesPdfAria": "PDF-Sprache für Protokoll wählen"
+    "minutesPdfAria": "PDF-Sprache für Protokoll wählen",
+    "invitationPdfAria": "PDF-Sprache für Einladung wählen"
   },
   "statusMenu": {
     "button": "Status",

@@ -6787,6 +6787,11 @@
     "detail": {
       "approvedLine": "Onaylandı: {date} – {by}",
       "draftNote": "Tutanak taslak durumundadır.",
+      "noticePeriod": {
+        "compliant": "Davet süresi tüzüğe uygun ({actual}/{required} gün)",
+        "shortNotice": "Kısa davet süresi ({actual}/{required} gün)",
+        "notSent": "Davet henüz gönderilmedi (tüzük: en az {required} gün)"
+      },
       "tabsAria": "Toplantı sekmeleri",
       "tabGeneral": "Genel",
       "tabAgenda": "Gündem ({count})",
@@ -6828,8 +6833,10 @@
     },
     "actions": {
       "minutesPdf": "Tutanak (PDF)",
+      "invitationPdf": "Davetiye & Gündem (PDF)",
       "statusButton": "Durum",
-      "minutesPdfAria": "Tutanak PDF dili seçimi"
+      "minutesPdfAria": "Tutanak PDF dili seçimi",
+      "invitationPdfAria": "Davetiye PDF dili seçimi"
     },
     "statusMenu": {
       "button": "Durum",
@@ -10537,7 +10544,9 @@
     },
     "access": {
       "members": "Görev sorumlusu seçmek için üye listesini okur.",
-      "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur.",
+      "meetings": "Görevi bir toplantıya bağlamak ve toplantı aksiyonlarını Birleşik Görev Merkezi'nde göstermek için toplantı verilerini okur.",
+      "crm": "Açık CRM takiplerini Birleşik Görev Merkezi'nde listelemek için okur.",
+      "system": "Birleşik Görev Merkezi'nde yalnızca etkin modülleri göstermek için modül durumunu okur.",
       "users": "Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur.",
       "notifications": "Görev atandığında atanan kişiye bildirim gönderir."
     },
@@ -10602,6 +10611,17 @@
       "assigned": {
         "title": "Size görev atandı: {title}",
         "body": "Görevlerim sayfasında açın."
+      }
+    },
+    "unifiedHub": {
+      "title": "Bağlı görevler ve takipler",
+      "description": "Toplantı aksiyon maddeleri ve açık CRM takipleri kaynak bağlantılarıyla birlikte.",
+      "count": "{count} açık kayıt",
+      "overdue": "Gecikmiş",
+      "openSource": "Kaynağı aç",
+      "sources": {
+        "meetings": "Toplantı",
+        "crm": "CRM"
       }
     }
   },
