@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.21",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "i18next güvenlik güncellemesi",
+        "de": "Sicherheitsupdate für i18next"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Akış düzenleyicisinin çeviri kütüphanesi i18next 26.3.4 sürümüne yükseltildi (deepExtend prototip özyinelemesi düzeltmesi). Düzenleyici ve uygulama tek bir kopya kullanır; Türkçe/Almanca düzenleyici metinleri korunur.",
+          "de": "Die Übersetzungsbibliothek des Ablauf-Editors wurde auf i18next 26.3.4 aktualisiert (Korrektur der deepExtend-Prototyp-Rekursion). Editor und Anwendung nutzen eine einzige Kopie; die türkischen/deutschen Editortexte bleiben erhalten."
+        }
+      ]
+    },
+    {
       "version": "0.10.20",
       "date": "2026-11-26",
       "title": {

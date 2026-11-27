@@ -14,3 +14,8 @@ export { generatePayoutsAction, approvePayoutAction, markPayoutPaidAction, cance
 export { listDebitableCharges, recordSepaChargePayments, voidSepaChargePayment, type DebitableCharge } from "./services/sepa-debit";
 
 export {listAiCourses} from "./queries/ai-courses";
+export {
+  listOpenCourseChargesForBankMatch,
+  recordBankCourseChargePayment,
+  type OpenCourseChargeForBankMatch,
+} from "./services/bank-reconciliation";

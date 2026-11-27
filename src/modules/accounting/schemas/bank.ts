@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-/** ACC-4 banka içe aktarma / eşleştirme şemaları. Dosya içeriği istemcide metne çevrilir (≤ 5 MB). */
+/** ACC-4 / #616 banka içe aktarma / eşleştirme şemaları. Dosya içeriği istemcide metne çevrilir (≤ 5 MB). */
 export const BANK_MAX_CHARS = 5_000_000;
 
 export const bankImportSchema = z.object({
@@ -22,6 +22,25 @@ export const bankBookSchema = z.discriminatedUnion("mode", [
     mode: z.literal("payable"),
     id: z.string().min(1),
     payableId: z.string().min(1, "accounting.bank.errors.payableRequired"),
+  }),
+  z.object({
+    mode: z.literal("memberDue"),
+    id: z.string().min(1),
+    dueId: z.string().min(1, "accounting.bank.errors.memberDueRequired"),
+    categoryId: z.string().trim().min(1, "accounting.validation.categoryRequired"),
+  }),
+  z.object({
+    mode: z.literal("courseCharge"),
+    id: z.string().min(1),
+    chargeId: z.string().min(1, "accounting.bank.errors.courseChargeRequired"),
+  }),
+  z.object({
+    mode: z.literal("donation"),
+    id: z.string().min(1),
+    donorId: z.string().trim().optional().nullable(),
+    newDonorName: z.string().trim().max(200).optional().nullable(),
+    newDonorType: z.enum(["PERSON", "ORGANIZATION"]).default("PERSON"),
+    purposeNote: z.string().trim().max(300).optional().nullable(),
   }),
   z.object({
     mode: z.literal("category"),

@@ -1109,10 +1109,12 @@
       }
     },
     "access": {
-      "members": "Liest Mitgliedsbeitragszahlungen, um sie in die Buchhaltung zu übernehmen.",
+      "members": "Liest offene Mitgliedsbeiträge und verbucht Zahlungen direkt beim Bankabgleich sowie bei der Beitragsübernahme.",
+      "courses": "Liest offene Kursgebühren und markiert sie beim Bankabgleich als bezahlt.",
+      "donations": "Liest aktive Spender und legt Bankeingänge per Ein-Klick als Spende an.",
       "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten.",
       "inventory": "Hält Anlagen mit Inventargegenständen synchron (Name, Datum, Kosten, Ausmusterung).",
-      "system": "Liest, ob das Inventarmodul aktiv ist."
+      "system": "Liest, ob das Inventar- und verknüpfte Module aktiv sind."
     },
     "pdf": {
       "voucher": {
@@ -1473,7 +1475,7 @@
     },
     "bank": {
       "title": "Bank",
-      "description": "Kontoauszüge importieren (CAMT.053, MT940, CSV) und Vorschläge bestätigt verbuchen oder offenen Rechnungen zuordnen.",
+      "description": "Kontoauszüge importieren (CAMT.053, MT940, CSV) und Vorschläge bestätigt verbuchen oder offenen Rechnungen, Beiträgen, Kursgebühren und Spenden zuordnen.",
       "import": {
         "title": "Kontoauszug importieren",
         "hint": "Laden Sie den CAMT.053- (XML), MT940- oder CSV-Export aus Ihrem Online-Banking hoch. Bereits importierte Umsätze werden übersprungen.",
@@ -1504,7 +1506,13 @@
         "invoiceNumber": "Rechnungsnr.",
         "amount": "Betrag",
         "name": "Name",
-        "rule": "Regel"
+        "rule": "Regel",
+        "memberNumber": "Mitgliedsnr.",
+        "iban": "IBAN",
+        "courseCode": "Kurscode",
+        "debtorNumber": "Debitorennr.",
+        "donationKeyword": "Spende",
+        "donor": "Spender"
       },
       "actions": {
         "book": "Verbuchen",
@@ -1525,8 +1533,21 @@
       "modal": {
         "title": "Bankumsatz verbuchen",
         "invoice": "Offene Rechnung",
+        "memberDue": "Mitgliedsbeitrag",
+        "courseCharge": "Kursgebühr",
+        "donation": "Spende",
         "category": "Kategorie",
         "invoiceSelect": "Rechnung",
+        "memberDueSelect": "Offener Mitgliedsbeitrag",
+        "courseChargeSelect": "Offene Kursgebühr",
+        "courseAmountMismatchHint": "Kursgebühren können nur bei exakter Betragsübereinstimmung zugeordnet werden.",
+        "donorSelect": "Spender",
+        "donorCreateNew": "+ Neuen Spender anlegen",
+        "newDonorName": "Name des Spenders",
+        "newDonorType": "Spendertyp",
+        "donorPerson": "Privatperson",
+        "donorOrganization": "Unternehmen / Organisation",
+        "purposeNote": "Verwendungszweck / Notiz (optional)",
         "categorySelect": "Kategorie",
         "taxRate": "Steuersatz",
         "learn": "Regel lernen",
@@ -1559,12 +1580,24 @@
         "notFound": "Umsatz nicht gefunden.",
         "notOpen": "Der Umsatz ist nicht mehr offen.",
         "notBooked": "Nur bereits verbuchte Bankumsätze können storniert werden.",
-        "reverseInvoiceManaged": "Mit Rechnungen oder Eingangsrechnungen verknüpfte Umsätze müssen über die jeweilige Rechnung storniert werden.",
+        "reverseInvoiceManaged": "Mit Rechnungen, Mitgliedsbeiträgen, Kursgebühren oder Spenden verknüpfte Umsätze müssen im jeweiligen Modul storniert werden.",
         "invoiceRequired": "Bitte eine Rechnung wählen.",
         "invoiceNeedsCredit": "Nur Zahlungseingänge können Rechnungen zugeordnet werden.",
         "payableRequired": "Bitte eine Eingangsrechnung wählen.",
         "payableNeedsDebit": "Nur Zahlungsausgänge können Eingangsrechnungen zugeordnet werden.",
-        "creditNoteNeedsCredit": "Eine Gutschrift kann nur mit einer Erstattung des Lieferanten (Zahlungseingang) abgeglichen werden."
+        "creditNoteNeedsCredit": "Eine Gutschrift kann nur mit einer Erstattung des Lieferanten (Zahlungseingang) abgeglichen werden.",
+        "memberDueRequired": "Bitte einen offenen Mitgliedsbeitrag wählen.",
+        "memberDueNeedsCredit": "Nur Zahlungseingänge können Mitgliedsbeiträgen zugeordnet werden.",
+        "memberDueNotFound": "Der gewählte Mitgliedsbeitrag wurde nicht gefunden.",
+        "memberDueAlreadySettled": "Dieser Mitgliedsbeitrag ist bereits vollständig bezahlt.",
+        "memberDueOverpayment": "Der Bankbetrag übersteigt den offenen Restbetrag dieses Mitgliedsbeitrags.",
+        "courseChargeRequired": "Bitte eine offene Kursgebühr wählen.",
+        "courseChargeNeedsCredit": "Nur Zahlungseingänge können Kursgebühren zugeordnet werden.",
+        "courseChargeNotFound": "Die gewählte Kursgebühr wurde nicht gefunden.",
+        "courseChargeAlreadySettled": "Diese Kursgebühr ist bereits beglichen.",
+        "courseChargeAmountMismatch": "Der Bankbetrag muss exakt der offenen Kursgebühr entsprechen.",
+        "donationNeedsCredit": "Nur Zahlungseingänge können als Spende verbucht werden.",
+        "donorRequired": "Bitte einen Spender auswählen oder einen neuen Spendernamen eingeben."
       }
     },
     "payables": {

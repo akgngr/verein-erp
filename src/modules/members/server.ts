@@ -299,3 +299,8 @@ export type { MemberSelfService, MemberSelfServiceInput } from "./services/onlin
 export { listDebitableDues, recordSepaDuePayments, voidSepaDuePayment, type DebitableDue } from "./services/sepa-debit";
 
 export { describeDuesDataset, streamDuesDataset, duesSnapshotHasher, loadDuesDataset, duesDatasetQuerySchema, parseDuesDatasetQuery, DUES_DATASET_COLUMNS } from "./services/ai-dataset";
+export {
+  listOpenMemberDuesForBankMatch,
+  recordBankDuePayment,
+  type OpenMemberDueForBankMatch,
+} from "./services/bank-reconciliation";
