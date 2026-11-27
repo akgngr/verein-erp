@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { ImapFlow } from "imapflow";
 
 import { importPayableFile } from "@/modules/accounting/server";
+import { createDocumentWithFiles } from "@/modules/documents/server";
 import { listUsableModuleKeys } from "@/modules/system/server";
 import { getDb } from "@/shared/db";
 import { makeStoredName, readFile, removeFile, saveFile } from "@/shared/files";
@@ -199,6 +200,28 @@ export async function isAccountingUsable(): Promise<boolean> {
   return (await listUsableModuleKeys()).includes("accounting");
 }
 
+export async function isDocumentsUsable(): Promise<boolean> {
+  return (await listUsableModuleKeys()).includes("documents");
+}
+
+/**
+ * Scheduled IMAP fetch wrapper for automation worker (`mail.fetch_inbox`).
+ * Returns a clean no-op when IMAP is not configured so the cron job never logs spurious errors.
+ */
+export async function runScheduledImapFetch(): Promise<{
+  skipped: boolean;
+  reason?: string;
+  fetched: number;
+  created: number;
+}> {
+  const settings = await getDb().mailInboxSettings.findUnique({ where: { id: "default" } });
+  if (!settings?.host || !settings.username || !settings.passwordEncrypted) {
+    return { skipped: true, reason: "not_configured", fetched: 0, created: 0 };
+  }
+  const result = await fetchImap();
+  return { skipped: false, ...result };
+}
+
 /** Eki muhasebe gelen faturalar kutusuna aktarır. Tüm ekler aktarıldıysa e-posta "tamamlandı" olur. */
 export async function importAttachmentToAccounting(attachmentId: string, actor: { id: string; label: string }): Promise<{ ok: true; payableId: string; source: string } | { ok: false; reason: "duplicate"; payableId: string }> {
   const db = getDb();
@@ -210,6 +233,86 @@ export async function importAttachmentToAccounting(attachmentId: string, actor: 
   const open = await db.mailInboxAttachment.count({ where: { messageId: attachment.messageId, importedTo: null } });
   if (open === 0) await db.mailInboxMessage.update({ where: { id: attachment.messageId }, data: { status: "DONE" } });
   return result.ok ? { ok: true, payableId, source: result.source } : { ok: false, reason: "duplicate", payableId };
+}
+
+/**
+ * Gelen e-postayı (meta veriler + belge ekleri) Evrak Kayıt modülüne gelen evrak olarak aktarır.
+ * Aynı e-postanın ekleri zaten Evrak Kayıt'a aktarıldıysa tekrar kayıt açmaz.
+ */
+export async function importMessageToDocuments(
+  messageId: string,
+  actor: { id: string; label: string },
+): Promise<
+  | { ok: true; documentId: string; registryNumber: string; attachedCount: number; skippedCount: number }
+  | { ok: false; reason: "duplicate"; documentId: string }
+> {
+  const db = getDb();
+  const message = await db.mailInboxMessage.findUniqueOrThrow({
+    where: { id: messageId },
+    include: { attachments: true },
+  });
+
+  const existingDocAttachment = message.attachments.find((att) =>
+    att.importedTo?.startsWith("documents.document:"),
+  );
+  if (existingDocAttachment?.importedTo) {
+    return {
+      ok: false,
+      reason: "duplicate",
+      documentId: existingDocAttachment.importedTo.slice("documents.document:".length),
+    };
+  }
+
+  const files: Array<{ originalName: string; mimeType: string; buffer: Buffer }> = [];
+  for (const att of message.attachments) {
+    try {
+      const buffer = await readFile(att.storagePath);
+      files.push({
+        originalName: att.fileName,
+        mimeType: att.mimeType,
+        buffer,
+      });
+    } catch {
+      // If a stored attachment file is missing on disk, proceed with remaining attachments.
+    }
+  }
+
+  const counterparty =
+    [message.fromName, message.fromAddress].filter(Boolean).join(" · ") || "—";
+  const created = await createDocumentWithFiles({
+    direction: "INCOMING",
+    documentDate: message.receivedAt,
+    counterparty,
+    subject: message.subject || "—",
+    summary: message.snippet,
+    referenceNumber: message.messageId?.slice(0, 100) ?? null,
+    deliveryMethod: "EMAIL",
+    files,
+    actor,
+  });
+
+  const now = new Date();
+  const unimportedIds = message.attachments
+    .filter((att) => !att.importedTo)
+    .map((att) => att.id);
+  if (unimportedIds.length > 0) {
+    await db.mailInboxAttachment.updateMany({
+      where: { id: { in: unimportedIds }, importedTo: null },
+      data: { importedTo: `documents.document:${created.id}`, importedAt: now },
+    });
+  }
+  await db.mailInboxMessage.update({
+    where: { id: message.id },
+    data: { status: "DONE" },
+  });
+
+  return {
+    ok: true,
+    documentId: created.id,
+    registryNumber: created.registryNumber,
+    attachedCount: created.attachedCount,
+    skippedCount: created.skippedFiles.length,
+  };
 }
 
 export async function setMessageStatus(id: string, status: "NEW" | "DONE") {

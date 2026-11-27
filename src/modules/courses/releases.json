@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.0",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "Toplu e-posta için kurs bazlı veli alıcı kaynağı (#631)",
+        "de": "Kursbasierte Eltern-Empfängerquelle für Rundmails (#631)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Toplu e-posta/kampanya modülünde kursa, kayıt durumuna ve ödeme sorumlusu filtresine göre veli seçimi sağlayan alıcı kaynağı (courses/recipients.ts) eklendi.",
+          "de": "Empfängerquelle für Kampagnen/Rundmails ergänzt, um Erziehungsberechtigte nach Kurs, Anmeldestatus und Zahlungspflichtigen gezielt anzuschreiben."
+        }
+      ]
+    },
+    {
       "version": "1.4.18",
       "date": "2026-11-26",
       "title": {

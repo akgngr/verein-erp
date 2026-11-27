@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.10.3 |
+| Sürüm | 1.11.0 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.11.0 — Programatik evrak kayıt ve dosya ekleme API'si (#631)
+
+_2026-11-27_
+
+- **Yeni:** Diğer modüllerin (ör. E-posta gelen kutusu) otomatik kayıt numarasıyla evrak oluşturup doğrulanmış ek dosyaları saklayabilmesi için createDocumentWithFiles sunucu sözleşmesi eklendi.
 
 ### 1.10.3 — Sunucu paketine yerel dosyalar girmiyor
 
@@ -87,10 +93,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.8.2 — Muhasebeye aktar eylemi ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Eylem butonları ve bildirimler ortak ActionButton/notify adapter katmanına taşındı; ilgili ekran artık bu kullanımda HeroUI Button/Toast implementasyonuna doğrudan bağlı değil.
-
-Daha eski 19 herkese açık sürüm notu.
+Daha eski 20 herkese açık sürüm notu.

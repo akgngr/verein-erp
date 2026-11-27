@@ -7,11 +7,13 @@ import { actionVariant } from "@/shared/components/ui/action-appearance";
 import {
   CheckCircle2,
   Download,
+  FileText,
   FileUp,
   Inbox,
   RotateCcw,
   Trash2,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
@@ -22,6 +24,7 @@ import {
   deleteInboxMessageAction,
   fetchInboxAction,
   importAttachmentAction,
+  importMessageToDocumentsAction,
   setInboxStatusAction,
 } from "../actions/inbox-actions";
 
@@ -42,11 +45,12 @@ export type InboxRow = {
   }[];
 };
 
-/** Gelen kutusu: IMAP'ten al, .eml yükle, ekleri muhasebeye aktar. */
+/** Gelen kutusu: IMAP'ten al, .eml yükle, ekleri muhasebeye veya Evrak Kayıt'a aktar. */
 export function InboxPanel({
   rows,
   imapConfigured,
   accountingUsable,
+  documentsUsable,
   canManage,
   canDelete,
   filter,
@@ -54,6 +58,7 @@ export function InboxPanel({
   rows: InboxRow[];
   imapConfigured: boolean;
   accountingUsable: boolean;
+  documentsUsable: boolean;
   canManage: boolean;
   canDelete: boolean;
   filter: "NEW" | "DONE" | "ALL";
@@ -103,6 +108,25 @@ export function InboxPanel({
     setBusy(null);
     if (!response.ok) return void notify.error(response.error);
     (response.data.duplicate ? notify.warning : notify.success)(response.data.duplicate ? t("importDuplicate") : t("imported"));
+    router.refresh();
+  };
+
+  const importToDocuments = async (messageId: string) => {
+    const key = `doc:${messageId}`;
+    setBusy(key);
+    const response = await importMessageToDocumentsAction({ id: messageId });
+    setBusy(null);
+    if (!response.ok) return void notify.error(response.error);
+    if (response.data.duplicate) {
+      notify.warning(t("importToDocumentsDuplicate"));
+    } else {
+      notify.success(
+        t("importedToDocuments", {
+          registryNumber: response.data.registryNumber ?? "",
+          attachments: response.data.attachedCount,
+        }),
+      );
+    }
     router.refresh();
   };
 
@@ -203,6 +227,42 @@ export function InboxPanel({
                 >
                   {t(`status.${row.status}`)}
                 </StatusChip>
+                {(() => {
+                  const docTag = row.attachments.find((a) =>
+                    a.importedTo?.startsWith("documents.document:"),
+                  )?.importedTo;
+                  if (docTag) {
+                    const docId = docTag.slice("documents.document:".length);
+                    return (
+                      <Link
+                        href={`/evrak/${docId}`}
+                        className="inline-flex items-center gap-1 rounded-md border border-ink-200 px-2 py-1 text-xs font-medium text-accent hover:bg-ink-50"
+                      >
+                        <FileText size={14} />
+                        {t("importedToDocumentsChip")}
+                      </Link>
+                    );
+                  }
+                  if (canManage && documentsUsable) {
+                    const busyKey = `doc:${row.id}`;
+                    return (
+                      <Button
+                        size="sm"
+                        onPress={() => importToDocuments(row.id)}
+                        variant={actionVariant("default", "flat")}
+                        isPending={busy === busyKey}
+                      >
+                        {busy === busyKey ? (
+                          <Spinner size="sm" tone="current" />
+                        ) : (
+                          <FileText size={14} />
+                        )}
+                        {t("importToDocuments")}
+                      </Button>
+                    );
+                  }
+                  return null;
+                })()}
                 {canManage ? (
                   <Button
                     size="sm"
@@ -260,9 +320,17 @@ export function InboxPanel({
                         KB
                       </span>
                       {attachment.importedTo ? (
-                        <StatusChip tone="success">
-                          {t("importedChip")}
-                        </StatusChip>
+                        attachment.importedTo.startsWith("documents.document:") ? (
+                          <Link href={`/evrak/${attachment.importedTo.slice("documents.document:".length)}`}>
+                            <StatusChip tone="success">
+                              {t("importedToDocumentsChip")}
+                            </StatusChip>
+                          </Link>
+                        ) : (
+                          <StatusChip tone="success">
+                            {t("importedChip")}
+                          </StatusChip>
+                        )
                       ) : canManage && accountingUsable ? (
                         <Button
                           size="sm"

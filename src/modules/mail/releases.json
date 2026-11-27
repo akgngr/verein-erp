@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.6.0",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "Evrak Kayıta aktarım ve zamanlanmış IMAP kontrolü (#631)",
+        "de": "Übernahme ins Dokumentenregister und geplanter IMAP-Abruf (#631)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Gelen kutusundan e-posta ve eklerini tek tıkla Evrak Kayıt modülüne aktarma ve her 15 dakikada bir çalışan zamanlanmış mail.fetch_inbox IMAP görevi eklendi.",
+          "de": "Ein-Klick-Übernahme von E-Mails samt Anhängen ins Dokumentenregister sowie geplanter 15-Minuten-IMAP-Abruf (mail.fetch_inbox) ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.5.6",
       "date": "2026-11-26",
       "title": {

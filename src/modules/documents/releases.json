@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.11.0",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "Programatik evrak kayıt ve dosya ekleme API'si (#631)",
+        "de": "Programmatische Dokumenten- und Dateianlage (#631)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Diğer modüllerin (ör. E-posta gelen kutusu) otomatik kayıt numarasıyla evrak oluşturup doğrulanmış ek dosyaları saklayabilmesi için createDocumentWithFiles sunucu sözleşmesi eklendi.",
+          "de": "Server-Vertrag createDocumentWithFiles ergänzt, damit berechtigte Module (z. B. Posteingang) Dokumente mit fortlaufender Registernummer und geprüften Anhängen anlegen können."
+        }
+      ]
+    },
+    {
       "version": "1.10.3",
       "date": "2026-11-25",
       "title": {
