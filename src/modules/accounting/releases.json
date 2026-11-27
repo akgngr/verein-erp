@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.29.1",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "Gelen fatura ödeme dağılımı ve KoSIT yanıt sınırı düzeltmesi",
+        "de": "Korrektur: Zahlungsaufteilung bei Eingangsrechnungen und KoSIT-Antwortlimit"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Pozitif ve negatif vergi grupları içeren gelen faturalarda (ör. indirim veya avans kesintisi satırı) ödeme artık grupların işaretlerini korur; negatif grup gidere dönüşmez ve ön vergi dağılımı belgeyle aynı kalır.",
+          "de": "Bei Eingangsrechnungen mit positiven und negativen Steuergruppen (z. B. Rabatt- oder Anzahlungszeile) behält die Zahlung die Vorzeichen der Gruppen bei; die negative Gruppe wird nicht zum Aufwand und die Vorsteueraufteilung entspricht dem Beleg."
+        },
+        {
+          "type": "fix",
+          "tr": "KoSIT doğrulayıcısı 2 MB sınırını aşan bir yanıt döndürdüğünde doğrulama artık takılmaz; 'doğrulanamadı' sonucu döner.",
+          "de": "Liefert der KoSIT-Validator eine Antwort über dem 2-MB-Limit, hängt die Prüfung nicht mehr, sondern meldet „nicht prüfbar“."
+        }
+      ]
+    },
+    {
       "version": "1.29.0",
       "date": "2026-11-26",
       "title": {

@@ -133,8 +133,9 @@ export async function validateWithKosit(
           incoming.on("data", (chunk: Buffer) => {
             bytes += chunk.length;
             if (bytes > MAX_RESPONSE_BYTES) {
-              chunks.push(chunk.subarray(0, Math.max(0, MAX_RESPONSE_BYTES - (bytes - chunk.length))));
+              // destroy() without an error emits neither "end" nor "error": settle explicitly, or validation hangs.
               incoming.destroy();
+              reject(new Error("KOSIT_RESPONSE_TOO_LARGE"));
               return;
             }
             chunks.push(chunk);
