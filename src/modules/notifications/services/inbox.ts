@@ -168,22 +168,28 @@ export async function unreadCount(userId: string, now = new Date()): Promise<num
 
 export async function markRead(userId: string, ids: readonly string[], now = new Date()): Promise<number> {
   if (!ids.length) return 0;
-  return (await getDb().notification.updateMany({ where: { userId, id: { in: [...ids].slice(0, 100) }, readAt: null }, data: { readAt: now } })).count;
+  const count = (await getDb().notification.updateMany({ where: { userId, id: { in: [...ids].slice(0, 100) }, readAt: null }, data: { readAt: now } })).count;
+  if (count > 0) emitNotificationUpdate(userId);
+  return count;
 }
 
 export async function markAllRead(userId: string, now = new Date()): Promise<number> {
-  return (await getDb().notification.updateMany({ where: { userId, readAt: null }, data: { readAt: now } })).count;
+  const count = (await getDb().notification.updateMany({ where: { userId, readAt: null }, data: { readAt: now } })).count;
+  if (count > 0) emitNotificationUpdate(userId);
+  return count;
 }
 
 export async function snooze(userId: string, id: string, until: Date, now = new Date()): Promise<void> {
   if (until <= now || until.getTime() - now.getTime() > MAX_SNOOZE_DAYS * 86_400_000) throw new NotificationError("notifications.errors.snoozeRange");
   const result = await getDb().notification.updateMany({ where: { id, userId, dismissedAt: null }, data: { snoozedUntil: until } });
   if (result.count !== 1) throw new NotificationError("notifications.errors.notFound");
+  emitNotificationUpdate(userId);
 }
 
 export async function dismiss(userId: string, id: string, now = new Date()): Promise<void> {
   const result = await getDb().notification.updateMany({ where: { id, userId, dismissedAt: null }, data: { dismissedAt: now, readAt: now } });
   if (result.count !== 1) throw new NotificationError("notifications.errors.notFound");
+  emitNotificationUpdate(userId);
 }
 
 /** Saklama: 90 günden eski bildirimler silinir. */

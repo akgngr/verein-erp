@@ -341,5 +341,27 @@
     "tooLarge": "Dosya en fazla {maxMb} MB olabilir.",
     "uploadFailed": "Dosya yüklenemedi.",
     "maxPerRecord": "Kayıt başına en fazla {max} dosya eklenebilir."
+  },
+  "quickSearch": {
+    "trigger": "Hızlı arama",
+    "triggerAria": "Hızlı arama paletini aç (Ctrl+K)",
+    "shortcut": "Ctrl K",
+    "placeholder": "Sayfa, üye, evrak, toplantı, görev, etkinlik veya envanter ara…",
+    "close": "Kapat",
+    "pagesSection": "Sayfalar ve modüller",
+    "recordsSection": "Kayıtlar",
+    "searching": "Aranıyor…",
+    "noResults": "Eşleşen kayıt bulunamadı.",
+    "minCharsHint": "Kayıt aramak için en az 2 karakter yazın.",
+    "navigateHint": "↑↓ ile seç · Enter ile aç",
+    "closeHint": "Esc ile kapat",
+    "modules": {
+      "members": "Üyeler",
+      "documents": "Evrak Kayıt",
+      "meetings": "Toplantılar",
+      "tasks": "Görevler",
+      "events": "Etkinlikler",
+      "inventory": "Envanter"
+    }
   }
 }

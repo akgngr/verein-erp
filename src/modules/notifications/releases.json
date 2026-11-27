@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.17.0",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "PostgreSQL LISTEN/NOTIFY ile süreçler arası canlı SSE bildirimleri (#633)",
+        "de": "Prozessübergreifende Live-SSE-Benachrichtigungen per PostgreSQL LISTEN/NOTIFY (#633)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bildirim SSE veriyolu PostgreSQL LISTEN/NOTIFY kanalıyla güçlendirildi; otomasyon worker'ının oluşturduğu bildirimler ve okundu/erteleme işlemleri tüm sekmelere anında ulaşır.",
+          "de": "Der Benachrichtigungs-SSE-Bus nutzt nun PostgreSQL LISTEN/NOTIFY; vom Worker erzeugte Benachrichtigungen sowie Gelesen-/Schlummer-Aktionen erscheinen sofort in allen Tabs."
+        }
+      ]
+    },
+    {
       "version": "0.16.1",
       "date": "2026-11-26",
       "title": {
