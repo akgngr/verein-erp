@@ -90,6 +90,10 @@ export const MODULE_NAV_DEFAULTS: Record<string, ModuleNavDefault> = {
     "categoryGroup": "operations",
     "order": 20
   },
+  "sponsors": {
+    "categoryGroup": "finance",
+    "order": 55
+  },
   "students": {
     "categoryGroup": "education",
     "order": 10

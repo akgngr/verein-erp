@@ -136,6 +136,7 @@
     "secretary": "Sekretariat",
     "securityMonitor": "Sicherheitsüberwachung",
     "socialLogin": "Externe Anmeldung",
+    "sponsors": "Sponsoren",
     "students": "Schüler",
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
@@ -1559,7 +1560,9 @@
         "cancel": "Abbrechen",
         "submit": "Buchung anlegen",
         "payable": "Eingangsrechnung",
-        "payableSelect": "Eingangsrechnung"
+        "payableSelect": "Eingangsrechnung",
+        "creditNote": "Gutschrift (Erstattung)",
+        "creditNoteSelect": "Offene Gutschrift"
       },
       "rules": {
         "title": "Gelernte Regeln",
@@ -9647,6 +9650,102 @@
     "linkDenied": "Konto konnte nicht verknüpft werden. Bitte erneut versuchen.",
     "otp": "Bestätigungscode (bei aktiver Zwei-Faktor-Anmeldung)",
     "applicationLocked": "Zum Schutz der Kontoverknüpfungen bleibt die gespeicherte Anwendungskennung unverändert; der geheime Schlüssel kann erneuert werden."
+  },
+  "sponsors": {
+    "module": {
+      "label": "Sponsoren",
+      "description": "Verwaltung von Unternehmens- und Einzelsponsorings, Förderstufen und Zusagen."
+    },
+    "permissions": {
+      "sponsors": {
+        "label": "Sponsoren",
+        "description": "Sponsoreneinträge ansehen, anlegen, bearbeiten und löschen."
+      }
+    },
+    "meta": {
+      "list": "Sponsoren"
+    },
+    "title": "Sponsoren",
+    "description": "Verwalten Sie Sponsoren, Förderstufen und zugesagte Förderbeträge des Vereins.",
+    "newSponsor": "Neuer Sponsor",
+    "summary": {
+      "total": "Sponsoren gesamt",
+      "active": "Aktive Sponsoren",
+      "activeAmount": "Aktive Jahreszusage",
+      "leads": "In Vorbereitung"
+    },
+    "tier": {
+      "PLATINUM": "Platin",
+      "GOLD": "Gold",
+      "SILVER": "Silber",
+      "BRONZE": "Bronze",
+      "SUPPORTER": "Förderer"
+    },
+    "status": {
+      "LEAD": "Interessent",
+      "ACTIVE": "Aktiv",
+      "PAUSED": "Pausiert",
+      "ENDED": "Beendet"
+    },
+    "table": {
+      "aria": "Sponsorenliste",
+      "name": "Sponsor",
+      "tier": "Stufe",
+      "status": "Status",
+      "amount": "Betrag",
+      "contact": "Ansprechperson",
+      "period": "Zeitraum",
+      "updatedAt": "Zuletzt geändert",
+      "search": "Sponsorname, Ansprechperson oder Notiz suchen...",
+      "empty": "Noch keine Sponsoren vorhanden. Legen Sie mit „Neuer Sponsor“ den ersten Eintrag an.",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "deleteTitle": "Sponsor löschen",
+      "deleteMessage": "„{name}“ wird dauerhaft gelöscht. Fortfahren?",
+      "deleted": "Sponsoreneintrag gelöscht.",
+      "bulkActivate": "Aktiv setzen",
+      "bulkPause": "Pausieren",
+      "bulkEnd": "Beenden",
+      "bulkSuccess": "{updated} Sponsoren aktualisiert, {skipped} Einträge waren bereits im Zielstatus."
+    },
+    "form": {
+      "createTitle": "Neuer Sponsor",
+      "editTitle": "Sponsor bearbeiten",
+      "name": "Sponsor / Unternehmen",
+      "tier": "Förderstufe",
+      "status": "Status",
+      "amount": "Förderbetrag (EUR)",
+      "amountPlaceholder": "z. B. 1250,00",
+      "contactName": "Ansprechperson",
+      "contactEmail": "E-Mail",
+      "contactPhone": "Telefon",
+      "website": "Website",
+      "websitePlaceholder": "https://beispiel.de",
+      "startDate": "Beginn",
+      "endDate": "Ende",
+      "notes": "Notizen",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "created": "Sponsoreneintrag angelegt.",
+      "updated": "Sponsoreneintrag aktualisiert."
+    },
+    "errors": {
+      "notFound": "Sponsoreneintrag nicht gefunden."
+    },
+    "validation": {
+      "nameRequired": "Der Name des Sponsors ist erforderlich.",
+      "nameMax": "Der Name darf höchstens 200 Zeichen lang sein.",
+      "amountInvalid": "Bitte geben Sie einen gültigen EUR-Betrag ein (nicht negativ).",
+      "contactNameMax": "Die Ansprechperson darf höchstens 150 Zeichen lang sein.",
+      "contactEmailMax": "Die E-Mail-Adresse darf höchstens 200 Zeichen lang sein.",
+      "contactEmailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "contactPhoneMax": "Die Telefonnummer darf höchstens 50 Zeichen lang sein.",
+      "websiteMax": "Die Website-Adresse darf höchstens 300 Zeichen lang sein.",
+      "websiteInvalid": "Die Website muss mit http:// oder https:// beginnen.",
+      "dateInvalid": "Bitte wählen Sie ein gültiges Datum.",
+      "endBeforeStart": "Das Enddatum darf nicht vor dem Beginn liegen.",
+      "notesMax": "Notizen dürfen höchstens 2000 Zeichen lang sein."
+    }
   },
   "students": {
     "module": {

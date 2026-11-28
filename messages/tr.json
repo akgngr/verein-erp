@@ -136,6 +136,7 @@
     "secretary": "Sekreter",
     "securityMonitor": "Güvenlik İzleme",
     "socialLogin": "Sosyal Giriş",
+    "sponsors": "Sponsorlar",
     "students": "Öğrenciler",
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi",
@@ -1559,7 +1560,9 @@
         "cancel": "Vazgeç",
         "submit": "Fişi oluştur",
         "payable": "Gelen fatura",
-        "payableSelect": "Gelen fatura"
+        "payableSelect": "Gelen fatura",
+        "creditNote": "Alacak dekontu (iade)",
+        "creditNoteSelect": "Açık alacak dekontu"
       },
       "rules": {
         "title": "Öğrenilmiş kurallar",
@@ -9647,6 +9650,102 @@
     "linkDenied": "Hesap bağlanamadı. Yeniden deneyin.",
     "otp": "Doğrulama kodu (iki adımlı doğrulama açıksa)",
     "applicationLocked": "Kimlik eşleştirmelerini korumak için kayıtlı uygulama kimliği sabittir; gizli anahtar yenilenebilir."
+  },
+  "sponsors": {
+    "module": {
+      "label": "Sponsorlar",
+      "description": "Kurumsal ve bireysel sponsorluk kayıtları, seviye ve taahhüt tutarlarının yönetimi."
+    },
+    "permissions": {
+      "sponsors": {
+        "label": "Sponsorlar",
+        "description": "Sponsorluk kayıtlarını görüntüleme, oluşturma, düzenleme ve silme."
+      }
+    },
+    "meta": {
+      "list": "Sponsorlar"
+    },
+    "title": "Sponsorlar",
+    "description": "Derneğin sponsorlarını, destek seviyelerini ve taahhüt tutarlarını yönetin.",
+    "newSponsor": "Yeni sponsor",
+    "summary": {
+      "total": "Toplam sponsor",
+      "active": "Aktif sponsor",
+      "activeAmount": "Aktif yıllık taahhüt",
+      "leads": "Görüşme aşamasında"
+    },
+    "tier": {
+      "PLATINUM": "Platin",
+      "GOLD": "Altın",
+      "SILVER": "Gümüş",
+      "BRONZE": "Bronz",
+      "SUPPORTER": "Destekçi"
+    },
+    "status": {
+      "LEAD": "Aday",
+      "ACTIVE": "Aktif",
+      "PAUSED": "Duraklatıldı",
+      "ENDED": "Sona erdi"
+    },
+    "table": {
+      "aria": "Sponsor listesi",
+      "name": "Sponsor",
+      "tier": "Seviye",
+      "status": "Durum",
+      "amount": "Tutar",
+      "contact": "İletişim kişisi",
+      "period": "Süre",
+      "updatedAt": "Son değişiklik",
+      "search": "Sponsor adı, iletişim kişisi veya not ara...",
+      "empty": "Henüz sponsor kaydı yok. 'Yeni sponsor' ile ilk kaydı ekleyin.",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "deleteTitle": "Sponsoru sil",
+      "deleteMessage": "\"{name}\" kalıcı olarak silinecek. Onaylıyor musunuz?",
+      "deleted": "Sponsor kaydı silindi.",
+      "bulkActivate": "Aktif yap",
+      "bulkPause": "Duraklat",
+      "bulkEnd": "Sona erdir",
+      "bulkSuccess": "{updated} sponsor güncellendi, {skipped} kayıt zaten hedef durumdaydı."
+    },
+    "form": {
+      "createTitle": "Yeni sponsor",
+      "editTitle": "Sponsoru düzenle",
+      "name": "Sponsor / Kurum adı",
+      "tier": "Destek seviyesi",
+      "status": "Durum",
+      "amount": "Taahhüt tutarı (EUR)",
+      "amountPlaceholder": "Örn. 1250,00",
+      "contactName": "İletişim kişisi",
+      "contactEmail": "E-posta",
+      "contactPhone": "Telefon",
+      "website": "Web sitesi",
+      "websitePlaceholder": "https://ornek.de",
+      "startDate": "Başlangıç tarihi",
+      "endDate": "Bitiş tarihi",
+      "notes": "Notlar",
+      "save": "Kaydet",
+      "cancel": "Vazgeç",
+      "created": "Sponsor kaydı oluşturuldu.",
+      "updated": "Sponsor kaydı güncellendi."
+    },
+    "errors": {
+      "notFound": "Sponsor kaydı bulunamadı."
+    },
+    "validation": {
+      "nameRequired": "Sponsor adı zorunludur.",
+      "nameMax": "Sponsor adı en fazla 200 karakter olabilir.",
+      "amountInvalid": "Geçerli bir EUR tutarı girin (negatif olamaz).",
+      "contactNameMax": "İletişim kişisi en fazla 150 karakter olabilir.",
+      "contactEmailMax": "E-posta en fazla 200 karakter olabilir.",
+      "contactEmailInvalid": "Geçerli bir e-posta adresi girin.",
+      "contactPhoneMax": "Telefon en fazla 50 karakter olabilir.",
+      "websiteMax": "Web sitesi adresi en fazla 300 karakter olabilir.",
+      "websiteInvalid": "Web sitesi http:// veya https:// ile başlamalıdır.",
+      "dateInvalid": "Geçerli bir tarih seçin.",
+      "endBeforeStart": "Bitiş tarihi başlangıç tarihinden önce olamaz.",
+      "notesMax": "Notlar en fazla 2000 karakter olabilir."
+    }
   },
   "students": {
     "module": {
