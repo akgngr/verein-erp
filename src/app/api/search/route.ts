@@ -1,6 +1,11 @@
 import { NextResponse } from "next/server";
 
-import { UnauthorizedError, requireUser } from "@/modules/auth/server";
+import {
+  ForbiddenError,
+  UnauthorizedError,
+  requirePermission,
+  requireUser,
+} from "@/modules/auth/server";
 import { documentsPermissions } from "@/modules/documents";
 import { listDocuments } from "@/modules/documents/server";
 import { eventsPermissions } from "@/modules/events";
@@ -15,7 +20,8 @@ import { listUsableModuleKeys } from "@/modules/system/server";
 import { tasksPermissions } from "@/modules/tasks";
 import { listTasks } from "@/modules/tasks/server";
 import type { ListParams } from "@/shared/list-params";
-import { can } from "@/shared/permissions/define";
+import { can, type PermissionDefinition } from "@/shared/permissions/define";
+import { isTimeBoxedRole } from "@/shared/security/external-grant";
 import type { QuickSearchItem } from "@/shared/search/types";
 
 const MAX_PER_MODULE = 5;
@@ -46,11 +52,11 @@ export async function GET(request: Request): Promise<Response> {
     if (error instanceof UnauthorizedError) {
       return NextResponse.json({ ok: false, items: [] }, { status: 401 });
     }
+    // Pending password change: requireUser refuses the session for everything but the change itself.
+    if (error instanceof ForbiddenError) {
+      return NextResponse.json({ ok: false, items: [] }, { status: 403 });
+    }
     throw error;
-  }
-
-  if (user.mustChangePassword) {
-    return NextResponse.json({ ok: true, items: [] });
   }
 
   const url = new URL(request.url);
@@ -61,8 +67,24 @@ export async function GET(request: Request): Promise<Response> {
 
   const usable = new Set(await listUsableModuleKeys());
   const tasks: Promise<QuickSearchItem[]>[] = [];
+  const sessionUser = user;
+  /**
+   * Same rule as the module's own list page (`requirePermission`): time-boxed external reviewers
+   * additionally need an active grant covering the module, and such a view is audited.
+   */
+  const mayView = async (moduleKey: string, definition: PermissionDefinition): Promise<boolean> => {
+    if (!usable.has(moduleKey) || !can(sessionUser.role, definition, "view")) return false;
+    if (!isTimeBoxedRole(sessionUser.role)) return true;
+    try {
+      await requirePermission(definition, "view");
+      return true;
+    } catch (error) {
+      if (error instanceof ForbiddenError || error instanceof UnauthorizedError) return false;
+      throw error;
+    }
+  };
 
-  if (usable.has("members") && can(user.role, membersPermissions, "view")) {
+  if (await mayView("members", membersPermissions)) {
     tasks.push(
       listMembers(makeListParams(q, "lastName"))
         .then((res) =>
@@ -79,7 +101,7 @@ export async function GET(request: Request): Promise<Response> {
     );
   }
 
-  if (usable.has("documents") && can(user.role, documentsPermissions, "view")) {
+  if (await mayView("documents", documentsPermissions)) {
     tasks.push(
       listDocuments(makeListParams(q, "documentDate"), user.id)
         .then((res) =>
@@ -96,7 +118,7 @@ export async function GET(request: Request): Promise<Response> {
     );
   }
 
-  if (usable.has("meetings") && can(user.role, meetingsPermissions, "view")) {
+  if (await mayView("meetings", meetingsPermissions)) {
     tasks.push(
       listMeetings(makeListParams(q, "meetingDate"))
         .then((res) =>
@@ -113,7 +135,7 @@ export async function GET(request: Request): Promise<Response> {
     );
   }
 
-  if (usable.has("tasks") && can(user.role, tasksPermissions, "view")) {
+  if (await mayView("tasks", tasksPermissions)) {
     tasks.push(
       listTasks(makeListParams(q, "dueDate"), { id: user.id, email: user.email })
         .then((res) =>
@@ -130,7 +152,7 @@ export async function GET(request: Request): Promise<Response> {
     );
   }
 
-  if (usable.has("events") && can(user.role, eventsPermissions, "view")) {
+  if (await mayView("events", eventsPermissions)) {
     tasks.push(
       listEvents({ q, page: 1, pageSize: MAX_PER_MODULE })
         .then((res) =>
@@ -147,7 +169,7 @@ export async function GET(request: Request): Promise<Response> {
     );
   }
 
-  if (usable.has("inventory") && can(user.role, inventoryPermissions, "view")) {
+  if (await mayView("inventory", inventoryPermissions)) {
     tasks.push(
       listInventoryItems({
         search: q,

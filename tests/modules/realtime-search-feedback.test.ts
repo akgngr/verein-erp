@@ -85,14 +85,24 @@ describe("Roadmap E2.7 Realtime SSE, Feedback Context & Global Quick Search (#63
     assert.ok(src.includes("await requireUser()"));
     assert.ok(src.includes("listUsableModuleKeys()"));
     for (const perm of [
-      'can(user.role, membersPermissions, "view")',
-      'can(user.role, documentsPermissions, "view")',
-      'can(user.role, meetingsPermissions, "view")',
-      'can(user.role, tasksPermissions, "view")',
-      'can(user.role, eventsPermissions, "view")',
-      'can(user.role, inventoryPermissions, "view")',
+      'mayView("members", membersPermissions)',
+      'mayView("documents", documentsPermissions)',
+      'mayView("meetings", meetingsPermissions)',
+      'mayView("tasks", tasksPermissions)',
+      'mayView("events", eventsPermissions)',
+      'mayView("inventory", inventoryPermissions)',
     ]) {
       assert.ok(src.includes(perm), `/api/search must enforce ${perm}`);
     }
+  });
+
+  it("applies the list pages' time-boxed reviewer rule and answers a pending password change without a 500", () => {
+    const src = readFileSync(path.join(process.cwd(), "src/app/api/search/route.ts"), "utf8");
+    const gate = src.slice(src.indexOf("const mayView"), src.indexOf('if (await mayView("members"'));
+    assert.ok(gate.includes('can(sessionUser.role, definition, "view")'), "role permission first");
+    assert.ok(gate.includes("isTimeBoxedRole(sessionUser.role)"), "time-boxed roles take the grant check");
+    assert.ok(gate.includes('await requirePermission(definition, "view")'), "same grant check and audit as the list pages");
+    assert.doesNotMatch(src, /if \(usable\.has\("[a-z]+"\) && can\(user\.role/, "no module may bypass mayView");
+    assert.match(src, /error instanceof ForbiddenError\) \{\s*return NextResponse\.json\(\{ ok: false, items: \[\] \}, \{ status: 403 \}\)/);
   });
 });
