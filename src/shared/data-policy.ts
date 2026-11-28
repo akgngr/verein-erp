@@ -340,6 +340,8 @@ export const AI_TOOL_POLICY = {
   get_organization_info: { module: "organization", reads: ["OrganizationProfile"], serverReads: ["OrganizationProfile"], modelFields: ["name", "address", "email", "phone", "website", "registerCourt", "registerNumber", "charitablePurposes", "membershipFeesDeductible"] },
   // progress
   get_progress_statistics: {"module": "progress", "reads": [], "serverReads": ["ProgressAttendance", "ProgressAssessment"], "modelFields": ["days", "attendance.present", "attendance.late", "attendance.absent", "attendance.excused", "attendance.ratePercent", "assessments"]},
+  // sponsors
+  get_sponsor_statistics: { module: "sponsors", reads: [], serverReads: ["Sponsor"], modelFields: ["totalCount", "activeCount", "activeAmountEur", "leadCount"] },
   // students
   get_student_statistics: {"module": "students", "reads": [], "serverReads": ["Student", "StudentGuardian"], "modelFields": ["active", "inactive", "guardians", "withSepaMandate"]},
   // tasks

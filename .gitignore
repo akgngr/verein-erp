@@ -47,6 +47,8 @@ next-env.d.ts
 local-*
 .claude/*
 !.claude/settings.json
+!.claude/skills/
+!.claude/skills/**
 .z-ai-config
 *.log
 dev.log

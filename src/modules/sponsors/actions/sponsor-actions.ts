@@ -3,9 +3,11 @@
 import { revalidatePath } from "next/cache";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { emitAutomationEvent } from "@/shared/automation/emit";
 import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
 
+import { sponsorCreatedEvent } from "../automation";
 import { sponsorsPermissions } from "../permissions";
 import {
   parseOptionalIsoDate,
@@ -47,6 +49,11 @@ export async function createSponsorAction(input: unknown): Promise<ActionResult<
           amountCents: created.amountCents,
         },
       });
+      await emitAutomationEvent(sponsorCreatedEvent, {
+        sponsorId: created.id,
+        tier: input.tier,
+        status: input.status,
+      }).catch(() => false);
       revalidatePath("/sponsors");
       return { id: created.id };
     },

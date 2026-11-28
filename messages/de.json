@@ -9834,6 +9834,48 @@
       "dateInvalid": "Bitte wählen Sie ein gültiges Datum.",
       "endBeforeStart": "Das Enddatum darf nicht vor dem Beginn liegen.",
       "notesMax": "Notizen dürfen höchstens 2000 Zeichen lang sein."
+    },
+    "cards": {
+      "overview": {
+        "title": "Sponsoren",
+        "description": "Anzahl aktiver Sponsoren, aktive Jahreszusage und Interessenten.",
+        "active": "aktive Sponsoren",
+        "activeAmount": "Aktive Jahreszusage",
+        "leads": "Interessenten",
+        "total": "Einträge gesamt"
+      }
+    },
+    "automation": {
+      "events": {
+        "created": {
+          "label": "Wenn ein neuer Sponsor angelegt wird",
+          "fields": {
+            "sponsorId": "Sponsor-ID",
+            "tier": "Förderstufe",
+            "status": "Status"
+          },
+          "options": {
+            "tier": {
+              "PLATINUM": "Platin",
+              "GOLD": "Gold",
+              "SILVER": "Silber",
+              "BRONZE": "Bronze",
+              "SUPPORTER": "Förderer"
+            },
+            "status": {
+              "LEAD": "Interessent",
+              "ACTIVE": "Aktiv",
+              "PAUSED": "Pausiert",
+              "ENDED": "Beendet"
+            }
+          },
+          "variables": {
+            "name": "Sponsorname",
+            "tier": "Förderstufe",
+            "status": "Status"
+          }
+        }
+      }
     }
   },
   "students": {

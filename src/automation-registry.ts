@@ -21,6 +21,7 @@ import * as notificationsAutomationExports from "@/modules/notifications/automat
 import * as onlineformsAutomationExports from "@/modules/online-forms/automation";
 import * as secretaryAutomationExports from "@/modules/secretary/automation";
 import * as securitymonitorAutomationExports from "@/modules/security-monitor/automation";
+import * as sponsorsAutomationExports from "@/modules/sponsors/automation";
 import * as studentsAutomationExports from "@/modules/students/automation";
 import * as tasksAutomationExports from "@/modules/tasks/automation";
 import * as youthprotectionAutomationExports from "@/modules/youth-protection/automation";
@@ -57,6 +58,7 @@ export const moduleAutomationTasks: TaskDefinition[] = [
   ...tasksOf("online-forms", onlineformsAutomationExports),
   ...tasksOf("secretary", secretaryAutomationExports),
   ...tasksOf("security-monitor", securitymonitorAutomationExports),
+  ...tasksOf("sponsors", sponsorsAutomationExports),
   ...tasksOf("students", studentsAutomationExports),
   ...tasksOf("tasks", tasksAutomationExports),
   ...tasksOf("youth-protection", youthprotectionAutomationExports),
@@ -82,6 +84,7 @@ export const moduleAutomationEvents: EventDefinition[] = [
   ...eventsOf("online-forms", onlineformsAutomationExports),
   ...eventsOf("secretary", secretaryAutomationExports),
   ...eventsOf("security-monitor", securitymonitorAutomationExports),
+  ...eventsOf("sponsors", sponsorsAutomationExports),
   ...eventsOf("students", studentsAutomationExports),
   ...eventsOf("tasks", tasksAutomationExports),
   ...eventsOf("youth-protection", youthprotectionAutomationExports),

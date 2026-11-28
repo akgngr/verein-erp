@@ -1,6 +1,10 @@
 import assert from "node:assert/strict";
+import fs from "node:fs";
+import path from "node:path";
 import { describe, test } from "node:test";
 
+import { ai as sponsorsAi } from "@/modules/sponsors/ai";
+import { sponsorCreatedEvent } from "@/modules/sponsors/automation";
 import { buildSponsorWhere } from "@/modules/sponsors/queries/list-sponsors";
 import {
   parseOptionalIsoDate,
@@ -95,5 +99,39 @@ describe("sponsors module — query builder & permissions", () => {
     assert.equal(can("VIEWER", sponsorsPermissions, "view"), true);
     assert.equal(can("VIEWER", sponsorsPermissions, "create"), false);
     assert.equal(can("TEACHER", sponsorsPermissions, "view"), false);
+  });
+});
+
+describe("sponsors module — extension points (cards, ai v2, automation)", () => {
+  test("exports dashboard overview card gated by sponsors view permission", () => {
+    const cardSource = fs.readFileSync(path.join(process.cwd(), "src/modules/sponsors/cards/index.tsx"), "utf8");
+    assert.match(cardSource, /export const cards = defineCards\(/);
+    assert.match(cardSource, /key:\s*"overview"/);
+    assert.match(cardSource, /href:\s*"\/sponsors"/);
+    assert.match(cardSource, /permission:\s*\{\s*definition:\s*sponsorsPermissions,\s*action:\s*"view"\s*\}/);
+  });
+
+  test("exports AI v2 aggregate-only statistics tool", () => {
+    assert.equal(sponsorsAi.module, "sponsors");
+    assert.equal(sponsorsAi.tools.length, 1);
+    assert.equal(sponsorsAi.tools[0]?.name, "get_sponsor_statistics");
+    assert.equal(sponsorsAi.tools[0]?.operation, "read");
+  });
+
+  test("sponsors.created event validates strict PII-free payload", () => {
+    assert.equal(sponsorCreatedEvent.key, "sponsors.created");
+    const ok = sponsorCreatedEvent.payloadSchema.safeParse({
+      sponsorId: "sp-1",
+      tier: "GOLD",
+      status: "ACTIVE",
+    });
+    assert.equal(ok.success, true);
+    const bad = sponsorCreatedEvent.payloadSchema.safeParse({
+      sponsorId: "sp-1",
+      tier: "GOLD",
+      status: "ACTIVE",
+      extra: "denied",
+    });
+    assert.equal(bad.success, false);
   });
 });

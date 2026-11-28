@@ -10,7 +10,7 @@ import { sponsorsPermissions } from "./permissions";
  */
 export const moduleConfig: ModuleConfig = {
   key: "sponsors",
-  version: "1.0.0",
+  version: "1.1.0",
   label: "Sponsorlar",
   description: "Kurumsal ve bireysel sponsorluk kayıtlarının yönetimi.",
   category: "EXTENSION",
