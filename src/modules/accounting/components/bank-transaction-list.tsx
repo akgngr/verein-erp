@@ -18,6 +18,10 @@ import {
   setBankTransactionStatusAction,
 } from "../actions/bank-actions";
 import type { BankRow } from "../queries/bank";
+import {
+  canMatchPayableToBankAmount,
+  filterOpenPayablesForDirection,
+} from "../services/bank-matching";
 
 type Option = { value: string; label: string };
 type OpenOption = Option & { openCents: number };
@@ -261,10 +265,13 @@ export function BankTransactionList({
 
   const categories =
     active && active.amountCents < 0 ? expenseCategories : incomeCategories;
+  const applicablePayables = active
+    ? filterOpenPayablesForDirection(payables, active.amountCents)
+    : [];
   const selectedInvoice = invoices.find(
     (invoice) => invoice.value === invoiceId,
   );
-  const selectedPayable = payables.find(
+  const selectedPayable = applicablePayables.find(
     (payable) => payable.value === payableId,
   );
   const selectedMemberDue = memberDues.find((due) => due.value === dueId);
@@ -291,9 +298,8 @@ export function BankTransactionList({
     if (mode === "payable") {
       return (
         !payableId ||
-        (selectedPayable
-          ? selectedPayable.openCents < Math.abs(active.amountCents)
-          : true)
+        !selectedPayable ||
+        !canMatchPayableToBankAmount(selectedPayable.openCents, active.amountCents)
       );
     }
     if (mode === "memberDue") {
@@ -541,12 +547,17 @@ export function BankTransactionList({
                           {t("modal.donation")}
                         </Tabs.Tab>
                       ) : null}
+                      {applicablePayables.length > 0 ? (
+                        <Tabs.Tab id={"payable"} key={"payable"}>
+                          {t("modal.creditNote")}
+                        </Tabs.Tab>
+                      ) : null}
                       <Tabs.Tab id={"category"} key={"category"}>
                         {t("modal.category")}
                       </Tabs.Tab>
                     </Tabs.List>
                   </Tabs>
-                ) : payables.length ? (
+                ) : applicablePayables.length ? (
                   <Tabs
                     selectedKey={mode}
                     onSelectionChange={(key) =>
@@ -576,16 +587,20 @@ export function BankTransactionList({
                       return setPayableId(String(keys ?? ""));
                     }}
                   >
-                    <Label>{t("modal.payableSelect")}</Label>
-                    {payables.map((payable) => (
+                    <Label>
+                      {active.amountCents > 0
+                        ? t("modal.creditNoteSelect")
+                        : t("modal.payableSelect")}
+                    </Label>
+                    {applicablePayables.map((payable) => (
                       <Select.Item
                         key={payable.value}
                         id={payable.value}
                         textValue={String(
-                          `${payable.label} — ${euro(payable.openCents)}`,
+                          `${payable.label} — ${euro(Math.abs(payable.openCents))}`,
                         )}
                       >
-                        <Label>{`${payable.label} — ${euro(payable.openCents)}`}</Label>
+                        <Label>{`${payable.label} — ${euro(Math.abs(payable.openCents))}`}</Label>
                       </Select.Item>
                     ))}
                   </Select>

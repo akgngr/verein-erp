@@ -106,6 +106,64 @@ const tokens = (value: string) =>
 const DONATION_KEYWORD_RE =
   /\b(spende|spenden|zuwendung|zuwendungen|bagis|bagisi|donation|donations|foerderbeitrag|foerderung|sadaka|zekat|fitre)\b/;
 
+export function filterOpenPayablesForDirection<T extends { openCents: number }>(
+  payables: readonly T[],
+  bankAmountCents: number,
+): T[] {
+  if (bankAmountCents > 0) return payables.filter((p) => p.openCents < 0);
+  if (bankAmountCents < 0) return payables.filter((p) => p.openCents > 0);
+  return [];
+}
+
+export function canMatchPayableToBankAmount(
+  openCents: number,
+  bankAmountCents: number,
+): boolean {
+  if (bankAmountCents > 0) {
+    return openCents < 0 && Math.abs(openCents) >= bankAmountCents;
+  }
+  if (bankAmountCents < 0) {
+    return openCents > 0 && openCents >= Math.abs(bankAmountCents);
+  }
+  return false;
+}
+
+function scorePayables(
+  payables: MatchPayable[],
+  amount: number,
+  isIncomingCreditNote: boolean,
+  text: string,
+  compact: string,
+  nameTokens: Set<string>,
+  suggestions: Suggestion[],
+) {
+  for (const payable of payables) {
+    if (isIncomingCreditNote ? payable.openCents >= 0 : payable.openCents <= 0) continue;
+    const openAbs = Math.abs(payable.openCents);
+    const reasons: MatchReason[] = [];
+    let score = 0;
+    if (
+      payable.number &&
+      compactStr(payable.number).length >= 3 &&
+      compact.includes(compactStr(payable.number))
+    ) {
+      reasons.push("invoiceNumber");
+      score += 60;
+    }
+    if (openAbs === amount) {
+      reasons.push("amount");
+      score += 30;
+    }
+    if ([...tokens(payable.supplierName)].some((token) => nameTokens.has(token) || text.includes(token))) {
+      reasons.push("name");
+      score += 10;
+    }
+    if (score >= 30 && openAbs >= amount) {
+      suggestions.push({ kind: "payable", payableId: payable.id, score, reasons });
+    }
+  }
+}
+
 export function suggestMatches(
   tx: MatchTransaction,
   invoices: MatchInvoice[],
@@ -142,6 +200,9 @@ export function suggestMatches(
         suggestions.push({ kind: "invoice", invoiceId: invoice.id, score, reasons });
       }
     }
+
+    // Açık tedarikçi alacak dekontları (iade gelen ödeme): openCents < 0.
+    scorePayables(payables, tx.amountCents, true, text, compact, nameTokens, suggestions);
 
     // Open MemberDue suggestions (#616): never propose if bank inflow exceeds openCents.
     for (const due of extras.memberDues ?? []) {
@@ -288,29 +349,7 @@ export function suggestMatches(
     // Giden ödeme ↔ açık gelen fatura (ACC-5): aynı puanlama, tutar mutlak değerle.
     const amount = -tx.amountCents;
     const nameTokens = tokens(tx.counterpartyName ?? "");
-    for (const payable of payables) {
-      const reasons: MatchReason[] = [];
-      let score = 0;
-      if (
-        payable.number &&
-        compactStr(payable.number).length >= 3 &&
-        compact.includes(compactStr(payable.number))
-      ) {
-        reasons.push("invoiceNumber");
-        score += 60;
-      }
-      if (payable.openCents === amount) {
-        reasons.push("amount");
-        score += 30;
-      }
-      if ([...tokens(payable.supplierName)].some((token) => nameTokens.has(token) || text.includes(token))) {
-        reasons.push("name");
-        score += 10;
-      }
-      if (score >= 30 && payable.openCents >= amount) {
-        suggestions.push({ kind: "payable", payableId: payable.id, score, reasons });
-      }
-    }
+    scorePayables(payables, amount, false, text, compact, nameTokens, suggestions);
   }
 
   const direction = tx.amountCents >= 0 ? "INCOME" : "EXPENSE";
