@@ -80,6 +80,8 @@ export type DocumentStrings = {
   gross: string;
   proformaNote: string;
   paymentNote: (due: string, number: string) => string;
+  epcQrTitle: string;
+  epcQrCaption: (number: string) => string;
   bank: string;
   contact: string;
   taxNumber: string;
@@ -186,6 +188,8 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
     gross: "Rechnungsbetrag",
     proformaNote: "Dies ist eine Proforma-Rechnung und keine Rechnung im Sinne des § 14 UStG. Sie berechtigt nicht zum Vorsteuerabzug.",
     paymentNote: (due, number) => `Bitte überweisen Sie den Betrag bis zum ${due} unter Angabe der Nummer ${number}.`,
+    epcQrTitle: "Bequem per GiroCode (EPC-QR) bezahlen",
+    epcQrCaption: (number) => `QR-Code mit Ihrer Banking-App scannen – IBAN, Betrag und Verwendungszweck (${number}) werden automatisch übernommen.`,
     bank: "Bankverbindung",
     contact: "Kontakt",
     taxNumber: "Steuernummer",
@@ -290,6 +294,8 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
     gross: "Fatura tutarı",
     proformaNote: "Bu bir proforma faturadır; § 14 UStG anlamında fatura değildir ve indirim hakkı doğurmaz.",
     paymentNote: (due, number) => `Lütfen tutarı ${due} tarihine kadar ${number} numarasını belirterek havale edin.`,
+    epcQrTitle: "GiroCode (EPC-QR) ile hızlı ödeme",
+    epcQrCaption: (number) => `Bankacılık uygulamanızla QR kodu tarayın — IBAN, tutar ve açıklama (${number}) otomatik doldurulur.`,
     bank: "Banka bilgileri",
     contact: "İletişim",
     taxNumber: "Vergi numarası",

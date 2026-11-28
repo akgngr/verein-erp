@@ -2,7 +2,7 @@ import "server-only";
 
 import type { LetterheadProfile } from "@/shared/pdf/letterhead";
 
-import type { ConfirmationPdfData } from "../pdf/confirmation-document";
+import type { ConfirmationPdfData, InKindSnapshotData } from "../pdf/confirmation-document";
 import type { RecipientSnapshot } from "./confirmation-builder";
 import type { AnlageItemRow } from "../pdf/confirmation-document";
 
@@ -18,12 +18,13 @@ export async function confirmationIssuerSnapshotToPdf(args: {
   issuer: Record<string, unknown>;
   lang: "de";
   kind: "SINGLE" | "COLLECTIVE";
-  content: "DONATION" | "MEMBERSHIP_FEE";
+  content: "DONATION" | "IN_KIND_DONATION" | "MEMBERSHIP_FEE";
   totalCents: number;
   amountInWords: string;
   periodFrom: Date;
   periodTo: Date;
   waived: boolean;
+  inKind?: InKindSnapshotData | null;
   items: AnlageItemRow[];
 }): Promise<ConfirmationPdfData> {
   const issuer = args.issuer;
@@ -39,6 +40,10 @@ export async function confirmationIssuerSnapshotToPdf(args: {
     taxOffice: (issuer.taxOffice as string | null) ?? null,
   };
 
+  const inKind =
+    args.inKind ??
+    ((issuer.inKind as InKindSnapshotData | undefined) ?? null);
+
   return {
     organization,
     confirmationNumber: args.confirmationNumber,
@@ -51,6 +56,7 @@ export async function confirmationIssuerSnapshotToPdf(args: {
     periodFrom: args.periodFrom,
     periodTo: args.periodTo,
     waived: args.waived,
+    inKind,
     membershipFeesDeductible: Boolean(issuer.membershipFeesDeductible),
     items: args.items,
     issuedPlace: String(issuer.city ?? ""),

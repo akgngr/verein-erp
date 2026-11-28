@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { DonationEditView } from "./donation-edit-view";
 import { notFound } from "next/navigation";
-import { Ban, Pencil } from "lucide-react";
+import { Ban, FileDown, Pencil } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
@@ -10,6 +10,7 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 import { formatDate, formatDateTime } from "@/shared/utils";
 import { can } from "@/shared/permissions/define";
 
+import { SMALL_DONATION_LIMIT_CENTS } from "../constants";
 import { getDonation } from "../queries/get-donation";
 import { donationsPermissions } from "../permissions";
 
@@ -32,7 +33,7 @@ function InfoRow({
   );
 }
 
-/** Bağış detayı (§ 15 md. 3). */
+/** Bağış detayı (§ 15 md. 3 + #618 Sachzuwendung & <= 300 EUR vereinfachter Nachweis). */
 export async function DonationDetailView({
   id,
   searchParams,
@@ -43,6 +44,7 @@ export async function DonationDetailView({
 }) {
   const tD = await getTranslations("donations.common");
   const tMethod = await getTranslations("donations.form.method");
+  const tOrigin = await getTranslations("donations.form.origin");
   let user;
   try {
     user = await requirePermission(donationsPermissions, "view");
@@ -68,6 +70,10 @@ export async function DonationDetailView({
     can(user.role, donationsPermissions, "approve") &&
     !donation.reversedAt &&
     !donation.hasActiveConfirmationItem;
+  const canSimplifiedProof =
+    !donation.reversedAt &&
+    donation.method !== "IN_KIND" &&
+    donation.amountCents <= SMALL_DONATION_LIMIT_CENTS;
 
   const format = (cents: number) =>
     (cents / 100).toLocaleString("tr-TR", {
@@ -87,6 +93,16 @@ export async function DonationDetailView({
                 href={`/bagislar/${donation.id}?duzenle`}
                 label={tForm("editTitle")}
               />
+            ) : null}
+            {canSimplifiedProof ? (
+              <a
+                href={`/api/donations/simplified-proof/pdf?donationId=${donation.id}`}
+                download
+                className="inline-flex items-center gap-2 rounded-lg border border-ink-300 bg-surface px-3 py-1.5 text-sm font-medium text-foreground hover:bg-ink-50"
+              >
+                <FileDown className="h-4 w-4" aria-hidden />
+                {t("simplifiedProofPdf")}
+              </a>
             ) : null}
             {canIssue ? (
               <LinkButtonIssue
@@ -151,6 +167,19 @@ export async function DonationDetailView({
           <InfoRow label={t("fields.purposeNote")}>
             {donation.purposeNote ?? "—"}
           </InfoRow>
+          {donation.method === "IN_KIND" ? (
+            <>
+              <InfoRow label={t("fields.itemDescription")}>
+                {donation.itemDescription ?? "—"}
+              </InfoRow>
+              <InfoRow label={t("fields.inKindOrigin")}>
+                {donation.inKindOrigin ? tOrigin(donation.inKindOrigin) : "—"}
+              </InfoRow>
+              <InfoRow label={t("fields.valuationRecordsAvailable")}>
+                {donation.valuationRecordsAvailable ? tD("yes") : tD("no")}
+              </InfoRow>
+            </>
+          ) : null}
           {donation.waivedReimbursement ? (
             <>
               <InfoRow label={t("fields.waived")}>✓</InfoRow>

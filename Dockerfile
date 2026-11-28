@@ -26,10 +26,11 @@ RUN cp -rL prisma /app/prisma-resolved
 # ---------- migrator ----------
 # Konteyner açılışındaki `prisma migrate deploy` + bütünlük kontrolü için ayrı, düz (npm) bir
 # node_modules: pnpm'in sembolik bağlantıları runner'a kopyalanamaz. Sürümler package.json'dan okunur.
+# package.json "overrides" da aktarılır (ör. effect): aksi halde npm eski, güvenlik açığı olan geçişli sürümleri kurar.
 FROM node:22-alpine AS migrator
 WORKDIR /app/migrate
 COPY package.json /tmp/app-package.json
-RUN node -e 'const p=require("/tmp/app-package.json");const all={...p.dependencies,...p.devDependencies};const want=["prisma","@prisma/client","@prisma/adapter-pg","pg","@next/env"];for(const n of want){if(!all[n])throw new Error("missing "+n)};require("fs").writeFileSync("package.json",JSON.stringify({private:true,type:"commonjs",dependencies:Object.fromEntries(want.map(n=>[n,all[n]]))},null,2))' \
+RUN node -e 'const p=require("/tmp/app-package.json");const all={...p.dependencies,...p.devDependencies};const want=["prisma","@prisma/client","@prisma/adapter-pg","pg","@next/env"];for(const n of want){if(!all[n])throw new Error("missing "+n)};require("fs").writeFileSync("package.json",JSON.stringify({private:true,type:"commonjs",dependencies:Object.fromEntries(want.map(n=>[n,all[n]])),overrides:p.overrides??{}},null,2))' \
   && npm install --omit=dev --no-audit --no-fund --ignore-scripts
 # prisma/schema altındaki modül şemaları sembolik bağlantıdır; builder'da gerçek dosyaya çevrilmiş kopya.
 COPY --from=builder /app/prisma-resolved ./prisma
@@ -53,6 +54,10 @@ RUN pnpm exec tsx scripts/sync-schemas.ts \
 # Ayrı ve uzun ömürlü automation worker imajı.
 FROM node:22-alpine AS worker
 WORKDIR /app
+# Çalışma zamanında paket yöneticisi gerekmez: imajdaki npm/npx/corepack (ve geçişli bağımlılıklarının
+# CVE'leri) kaldırılır. Konteyner yalnızca `node` ve `sh` ile başlar.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+  /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
 ENV NODE_ENV=production
 ENV NODE_OPTIONS=--conditions=react-server
 
@@ -69,8 +74,11 @@ CMD ["./node_modules/.bin/tsx", "src/modules/automation/worker/main.ts"]
 
 # ---------- runner ----------
 FROM node:22-alpine AS runner
-RUN corepack enable
 WORKDIR /app
+# Çalışma zamanında paket yöneticisi gerekmez: imajdaki npm/npx/corepack (ve geçişli bağımlılıklarının
+# CVE'leri) kaldırılır. Konteyner yalnızca `node` ve `sh` ile başlar.
+RUN rm -rf /usr/local/lib/node_modules/npm /usr/local/lib/node_modules/corepack \
+  /usr/local/bin/npm /usr/local/bin/npx /usr/local/bin/corepack
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 

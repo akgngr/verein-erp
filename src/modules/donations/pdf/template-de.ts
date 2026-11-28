@@ -9,15 +9,16 @@
  * TEMPLATE_VERSION artırılır — eski onay otomatik geçersizleşir (§ 14).
  */
 
-export const TEMPLATE_VERSION = "BMF-2013-11-07/Geld-Mitgliedsbeitrag+Sammel/1";
+export const TEMPLATE_VERSION = "BMF-2013-11-07/Geld-Sach-Mitgliedsbeitrag+Sammel/2";
 
 export type ExemptionDocumentTypeKey =
   | "EXEMPTION_NOTICE"
   | "TAX_ASSESSMENT_ANNEX"
   | "SPECIAL_ASSESSMENT_60A";
 
-/** Başlık (§ 13 md. 2). */
+/** Başlık (§ 13 md. 2 + BMF Anlage 4 Sachzuwendung). */
 export const TITLE_SINGLE_DONATION = "Bestätigung über Geldzuwendungen";
+export const TITLE_SINGLE_IN_KIND = "Bestätigung über Sachzuwendungen";
 export const TITLE_SINGLE_FEE = "Bestätigung über Mitgliedsbeitrag";
 export const TITLE_COLLECTIVE_DONATION = "Sammelbestätigung über Geldzuwendungen";
 export const TITLE_COLLECTIVE_FEE = "Sammelbestätigung über Mitgliedsbeiträge";
@@ -31,12 +32,43 @@ export const LABEL_ISSUER =
   "Aussteller (Bezeichnung und Anschrift der steuerbegünstigten Einrichtung)";
 export const LABEL_RECIPIENT = "Name und Anschrift des Zuwendenden";
 export const LABEL_AMOUNT_DIGITS = "Betrag der Zuwendung – in Ziffern –";
+export const LABEL_IN_KIND_VALUE_DIGITS = "Wert der Zuwendung – in Ziffern –";
 export const LABEL_AMOUNT_WORDS = "– in Buchstaben –";
 export const LABEL_DAY_OF_DONATION = "Tag der Zuwendung";
 export const LABEL_TOTAL_DIGITS = "Gesamtsumme der Zuwendung – in Ziffern –";
 export const LABEL_PERIOD = "Zeitraum der Sammelbestätigung";
 export const LABEL_KIND_SEE_ATTACHMENT = "Art der Zuwendung: siehe Anlage zur Sammelbestätigung";
 export const LABEL_DAY_SEE_ATTACHMENT = "Tag der Zuwendung: siehe Anlage zur Sammelbestätigung";
+
+/** BMF Anlage 4 — Sachzuwendung (#618). */
+export const LABEL_IN_KIND_ITEM =
+  "Genaue Bezeichnung der Sachzuwendung mit Alter, Zustand, Kaufpreis usw.";
+export const LABEL_IN_KIND_ORIGIN_HEADING =
+  "Angaben über die Zugehörigkeit des zugewendeten Wirtschaftsgutes zum Betriebs- oder Privatvermögen:";
+export const IN_KIND_ORIGIN_BUSINESS =
+  "Die Sachzuwendung stammt nach den Angaben des Zuwendenden aus dem Betriebsvermögen. Die Zuwendung wurde nach dem Wert der Entnahme (ggf. mit dem niedrigeren gemeinen Wert) und nach der Umsatzsteuer, die auf die Entnahme entfällt, bewertet.";
+export const IN_KIND_ORIGIN_PRIVATE =
+  "Die Sachzuwendung stammt nach den Angaben des Zuwendenden aus dem Privatvermögen.";
+export const IN_KIND_ORIGIN_UNKNOWN =
+  "Der Zuwendende hat trotz Aufforderung keine Angaben zur Herkunft des Wirtschaftsgutes gemacht.";
+export const IN_KIND_VALUATION_RECORDS_YES =
+  "Geeignete Unterlagen, die zur Wertermittlung gedient haben, z. B. Rechnung, Gutachten, liegen vor.";
+export const IN_KIND_VALUATION_RECORDS_NO =
+  "Unterlagen zur Wertermittlung wurden dem Zuwendungsempfänger nicht vorgelegt.";
+
+/** § 50 Abs. 4 Satz 1 Nr. 2 EStDV — Vereinfachter Spendennachweis bis 300 € (#618). */
+export const SIMPLIFIED_PROOF_TITLE = "Vereinfachter Spendennachweis";
+export const SIMPLIFIED_PROOF_SUBTITLE =
+  "gemäß § 50 Abs. 4 Satz 1 Nr. 2 Einkommensteuer-Durchführungsverordnung (EStDV) für Zuwendungen bis 300,00 €";
+export const SIMPLIFIED_PROOF_USAGE =
+  "Für Geldzuwendungen (Spenden und ggf. steuerlich abziehbare Mitgliedsbeiträge) bis zu 300,00 € genügt als Nachweis gegenüber dem Finanzamt der Bareinzahlungsbeleg oder die Buchungsbestätigung eines Kreditinstituts (z. B. Kontoauszug, Lastschrifteinzugsbeleg oder PC-Ausdruck beim Online-Banking) in Verbindung mit diesem Beleg.";
+export const SIMPLIFIED_PROOF_PURPOSE_HEADING = "Steuerbegünstigung und Verwendungszweck";
+export const SIMPLIFIED_PROOF_DONATION_HEADING = "Angaben zur Spende";
+export const SIMPLIFIED_PROOF_QR_TITLE = "Bequem per GiroCode (EPC-QR) spenden";
+export const SIMPLIFIED_PROOF_QR_CAPTION =
+  "QR-Code mit Ihrer Banking-App scannen – IBAN und Verwendungszweck werden automatisch übernommen.";
+export const SIMPLIFIED_PROOF_DISCLAIMER =
+  "Hinweis: Dieser vereinfachte Nachweis gilt ausschließlich für Geldzuwendungen bis 300,00 € (§ 50 Abs. 4 Satz 1 Nr. 2 EStDV) zusammen mit dem Zahlungsnachweis Ihres Kreditinstituts. Für Sachzuwendungen sowie für Geldzuwendungen über 300,00 € ist eine formelle Zuwendungsbestätigung erforderlich.";
 
 /** Aufwandsspende satırı (§ 13 md. 5) — HER para bildiriminde zorunlu. */
 export const LABEL_WAIVER = "Es handelt sich um den Verzicht auf Erstattung von Aufwendungen";

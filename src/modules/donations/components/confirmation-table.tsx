@@ -169,6 +169,7 @@ export function ConfirmationTable({
           label: t("columns.kind"),
           options: [
             { value: "DONATION", label: t("content.DONATION") },
+            { value: "IN_KIND_DONATION", label: t("content.IN_KIND_DONATION") },
             { value: "MEMBERSHIP_FEE", label: t("content.MEMBERSHIP_FEE") },
           ],
         },
