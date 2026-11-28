@@ -111,4 +111,4 @@ export {
 export { getSepaCreditorSettings } from "./queries/sepa-creditor";
 export { AuditRoomView } from "./views/audit-room-view";
 
-export { reopenBankTransactionForBooking } from "./services/bank-reopen";
+export { reopenBankTransactionForBooking, transferBankSettlement } from "./services/bank-reopen";

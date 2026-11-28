@@ -136,14 +136,20 @@ export async function reverseSourcedBooking(input: {
   sourceType: string;
   sourceId: string;
   reason: string;
-}): Promise<void> {
-  const run = async (tx: Prisma.TransactionClient): Promise<void> => {
+  /**
+   * "reopen" (default): a cancelled course fee or donation frees its bank receipt again.
+   * "keep": the booking is being replaced by a corrected one; the caller moves the settlement
+   * with transferBankSettlement instead.
+   */
+  bankSettlement?: "reopen" | "keep";
+}): Promise<{ reversedIds: string[] }> {
+  const run = async (tx: Prisma.TransactionClient): Promise<{ reversedIds: string[] }> => {
     // Aynı kaynağın tüm fişleri: "<id>" ve oran başına ek fişler "<id>:<n>" (ör. karışık oranlı fatura).
     const bookings = await tx.accountingBooking.findMany({
       where: { sourceType: input.sourceType, OR: [{ sourceId: input.sourceId }, { sourceId: { startsWith: `${input.sourceId}:` } }], reversedAt: null },
       select: { id: true, year: true, accountId: true, bookingDate: true },
     });
-    if (!bookings.length) return; // idempotent no-op
+    if (!bookings.length) return { reversedIds: [] }; // idempotent no-op
     for (const booking of bookings) await assertCashNotClosed(tx, [booking.accountId], booking.bookingDate);
 
     for (const booking of bookings) {
@@ -161,9 +167,10 @@ export async function reverseSourcedBooking(input: {
       },
     });
     await recordJournal(tx, bookings.map((booking) => booking.id), "REVERSE", input.actor);
-    if (input.sourceType === "COURSE_FEE" || input.sourceType === "DONATION") {
+    if ((input.sourceType === "COURSE_FEE" || input.sourceType === "DONATION") && input.bankSettlement !== "keep") {
       for (const booking of bookings) await reopenBankTransactionForBooking(tx, booking.id);
     }
+    return { reversedIds: bookings.map((booking) => booking.id) };
   };
 
   if (input.tx) return run(input.tx);

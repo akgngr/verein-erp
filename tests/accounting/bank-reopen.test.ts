@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import type { Prisma } from "@prisma/client";
-import { reopenBankTransactionForBooking } from "@/modules/accounting/services/bank-reopen";
+import { reopenBankTransactionForBooking, transferBankSettlement } from "@/modules/accounting/services/bank-reopen";
 
 test("reopen only the exact booked single-settlement row, never unrelated or invoice rows", async () => {
   const rows = [
@@ -34,3 +34,31 @@ test("reopening propagates transaction failure rather than hiding it", async () 
   const tx = { accountingBankTransaction: { async updateMany() { throw new Error("database failure"); } } } as unknown as Prisma.TransactionClient;
   await assert.rejects(reopenBankTransactionForBooking(tx, "booking-1"), /database failure/);
 });
+
+test("a corrected donation moves its bank settlement to the replacement instead of reopening it", async () => {
+  const rows = [
+    { status: "BOOKED", bookingIds: "donation-old", invoiceId: null as string | null },
+    { status: "BOOKED", bookingIds: "donation-old,other", invoiceId: null as string | null },
+    { status: "OPEN", bookingIds: null as string | null, invoiceId: null as string | null },
+  ];
+  const tx = {
+    accountingBankTransaction: {
+      async updateMany({ where, data }: { where: { status: string; bookingIds: string; invoiceId: null }; data: { bookingIds: string } }) {
+        const matches = rows.filter(row => row.status === where.status && row.bookingIds === where.bookingIds && row.invoiceId === where.invoiceId);
+        matches.forEach(row => Object.assign(row, data));
+        return { count: matches.length };
+      },
+    },
+  } as unknown as Prisma.TransactionClient;
+  assert.equal(await transferBankSettlement(tx, "donation-old", "donation-new"), 1);
+  assert.deepEqual(rows[0], { status: "BOOKED", bookingIds: "donation-new", invoiceId: null });
+  assert.equal(rows[1].bookingIds, "donation-old,other", "multi-booking rows are left alone");
+
+  const fs = await import("node:fs");
+  const sourced = fs.readFileSync("src/modules/accounting/services/sourced-bookings.ts", "utf8");
+  assert.ok(sourced.includes('input.bankSettlement !== "keep"'), "a replacement keeps the settlement");
+  const action = fs.readFileSync("src/modules/donations/actions/donation-actions.ts", "utf8");
+  assert.ok(action.includes("replacing: !isInKind"), "a corrected cash donation is a replacement");
+  assert.ok(action.includes("await transferBankSettlement(tx, reversedId, bookings.bookingId)"), "the settlement moves to the new income booking");
+});
+

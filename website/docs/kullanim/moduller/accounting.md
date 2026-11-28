@@ -51,6 +51,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-28_
 
 - **Düzeltme:** Banka ile eşleştirilen kurs ödemeleri, bağışlar ve üyelik aktarımında iptal edilen ödemeler ters kaydedildiğinde ilgili banka hareketi aynı transaction içinde yeniden açılır (#630).
+- **Düzeltme:** Kaynak fişi düzeltme amaçlı değiştirildiğinde banka eşleşmesi yeniden açılmaz, transferBankSettlement ile yeni fişe taşınır.
 
 ### 1.29.4 — Proje fiş ekleri dışa aktarım sözleşmesi
 

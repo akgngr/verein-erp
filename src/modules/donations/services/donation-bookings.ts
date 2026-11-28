@@ -121,14 +121,17 @@ export async function reverseDonationBookings(
     actor: { id: string; label: string };
     donationId: string;
     reason: string;
+    /** The donation is corrected, not cancelled: its bank receipt stays settled (moved by the caller). */
+    replacing?: boolean;
   },
-): Promise<void> {
-  await reverseSourcedBooking({
+): Promise<{ reversedIncomeIds: string[] }> {
+  const income = await reverseSourcedBooking({
     tx,
     actor: args.actor,
     sourceType: "DONATION",
     sourceId: args.donationId,
     reason: args.reason,
+    bankSettlement: args.replacing ? "keep" : "reopen",
   });
   await reverseSourcedBooking({
     tx,
@@ -137,4 +140,5 @@ export async function reverseDonationBookings(
     sourceId: args.donationId,
     reason: args.reason,
   });
+  return { reversedIncomeIds: income.reversedIds };
 }

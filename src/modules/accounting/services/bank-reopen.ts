@@ -16,3 +16,20 @@ export async function reopenBankTransactionForBooking(
   });
   return result.count;
 }
+
+/**
+ * A corrected source booking replaces the reversed one but still represents the same bank receipt
+ * (e.g. a donation whose date changed). Move the settlement to the replacement instead of reopening
+ * it, so the receipt cannot be reconciled a second time. Same guards as the reopen.
+ */
+export async function transferBankSettlement(
+  tx: Pick<Prisma.TransactionClient, "accountingBankTransaction">,
+  fromBookingId: string,
+  toBookingId: string,
+): Promise<number> {
+  const result = await tx.accountingBankTransaction.updateMany({
+    where: { status: "BOOKED", bookingIds: fromBookingId, invoiceId: null },
+    data: { bookingIds: toBookingId },
+  });
+  return result.count;
+}
