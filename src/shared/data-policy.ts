@@ -127,6 +127,7 @@ export const DATA_POLICY = {
   MemberDue: { owner: "members", category: "K1", reason: "Kişi bazlı aidatlar", sensitiveFields: [] },
   MemberPayment: { owner: "members", category: "K1", reason: "Kişi bazlı ödemeler", sensitiveFields: [] },
   ProgressAssessment: { owner: "progress", category: "K1", reason: "Öğrenci bazlı değerlendirmeler", sensitiveFields: [] },
+  Sponsor: { owner: "sponsors", category: "K1", reason: "Sponsorluk kayıtları ve iletişim kişisi verisi", sensitiveFields: ["contactName", "contactEmail", "contactPhone"] },
   StudentGuardian: { owner: "students", category: "K1", reason: "Veli kişisel verisi", sensitiveFields: ["bic", "city", "email", "firstName", "houseNumber", "iban", "lastName", "phone", "postalCode", "state", "street"] },
   StudentGuardianLink: { owner: "students", category: "K1", reason: "Öğrenci-veli ilişkisi", sensitiveFields: [] },
   ZuwendungConfirmation: { owner: "donations", category: "K1", reason: "Bağış makbuzları (vergi)", sensitiveFields: [] },

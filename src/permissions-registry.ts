@@ -42,6 +42,7 @@ import * as secretaryPermissionExports from "@/modules/secretary/permissions";
 import * as securitymonitorPermissionExports from "@/modules/security-monitor/permissions";
 import * as sepaPermissionExports from "@/modules/sepa/permissions";
 import * as socialloginPermissionExports from "@/modules/social-login/permissions";
+import * as sponsorsPermissionExports from "@/modules/sponsors/permissions";
 import * as studentsPermissionExports from "@/modules/students/permissions";
 import * as tasksPermissionExports from "@/modules/tasks/permissions";
 import * as weatherPermissionExports from "@/modules/weather/permissions";
@@ -94,6 +95,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "security-monitor", definitions: definitionsOf(securitymonitorPermissionExports) },
   { moduleKey: "sepa", definitions: definitionsOf(sepaPermissionExports) },
   { moduleKey: "social-login", definitions: definitionsOf(socialloginPermissionExports) },
+  { moduleKey: "sponsors", definitions: definitionsOf(sponsorsPermissionExports) },
   { moduleKey: "students", definitions: definitionsOf(studentsPermissionExports) },
   { moduleKey: "tasks", definitions: definitionsOf(tasksPermissionExports) },
   { moduleKey: "weather", definitions: definitionsOf(weatherPermissionExports) },
