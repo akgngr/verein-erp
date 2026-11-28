@@ -13,7 +13,7 @@ Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı 
 |---|---|
 | Anahtar | `crm` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.13 |
+| Sürüm | 1.0.14 |
 | Sayfalar | `/crm` |
 | Önerir | [Üyeler](./members), [Muhasebe](./accounting) |
 
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_crm_pipeline`
 
 ## Sürüm notları
+
+### 1.0.14 — Görev Merkezi araması CRM takiplerinde
+
+_2026-11-28_
+
+- **Düzeltme:** Görev Merkezi araması, sonuç sınırından önce tüm açık takiplerde (not ve görünen kişi adı) uygulanır; geç tarihli eşleşmeler de bulunur.
 
 ### 1.0.13 — Birleşik Görev Merkezi için açık takip sözleşmesi (#636)
 
@@ -88,10 +94,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.0.5 — Mobilde alttan açılan çekmece
-
-_2026-11-16_
-
-- **İyileştirme:** Form/ayrıntı çekmecesi mobilde alttan açılır (masaüstünde sağdan).
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.

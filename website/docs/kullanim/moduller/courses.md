@@ -13,7 +13,7 @@ Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve
 |---|---|
 | Anahtar | `courses` |
 | Tür | Resmî modül |
-| Sürüm | 1.5.0 |
+| Sürüm | 1.5.1 |
 | Sayfalar | `/kurslar`, `/ogrenciler`, `/ogrenci-takibi`, `/kurslar/ogretmenler`, `/kurslar/odemeler`, `/kurslar/hakedisler`, `/kurslar/ayarlar` |
 | Gerektirir | [Öğrenciler](./students) |
 | Önerir | [Öğrenci takibi](./progress) |
@@ -52,6 +52,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_course_statistics` · `list_courses` · `propose_course` · `propose_course_status` · `propose_delete_course`
 
 ## Sürüm notları
+
+### 1.5.1 — Uzun kurs adlarıyla kampanya
+
+_2026-11-28_
+
+- **Düzeltme:** Kurs seçim değeri toplu e-posta filtre sınırı olan 40 karakterde kesilir; uzun adlı kurslarla da kampanya önizlenebilir ve başlatılabilir.
 
 ### 1.5.0 — Toplu e-posta için kurs bazlı veli alıcı kaynağı (#631)
 
@@ -98,10 +104,4 @@ _2026-11-23_
 
 - **Güvenlik:** Kurs kayıt, ücret ve ödeme ilişkileri onDelete: Restrict olarak güncellendi.
 
-### 1.4.11 — Çalışma zamanı modernizasyonu
-
-_2026-11-20_
-
-- **İyileştirme:** Öğretmen hakedişi hesaplamasında (calculatePayout) oturum sıralaması toSorted ile yenilendi.
-
-Daha eski 14 herkese açık sürüm notu.
+Daha eski 15 herkese açık sürüm notu.

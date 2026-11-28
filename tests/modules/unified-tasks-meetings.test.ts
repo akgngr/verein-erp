@@ -153,4 +153,18 @@ describe("Roadmap E2.6 Unified Task Hub & Meetings Governance (#636)", () => {
     assert.ok(view.includes("(await searchParams)?.kayit"), "CRM view reads the deep link");
     assert.ok(view.includes("parties.some((party) => party.id === openParam)"), "only a listed party can be opened");
   });
+
+  it("searches CRM follow-ups before the result limit, by note or visible party name", async () => {
+    const { matchHubFollowUps, HUB_SEARCH_SCAN } = await import("../../src/modules/crm/lib/hub-search");
+    const rows = Array.from({ length: 30 }, (_, i) => ({ id: `f${i}`, note: `Routine ${i}`, partyName: "Synthetic GmbH" }));
+    rows.push({ id: "late", note: "Sponsoring-Vertrag verlängern", partyName: "İstanbul Kulübü" });
+    assert.deepEqual(matchHubFollowUps(rows, "vertrag", 25).map((r) => r.id), ["late"], "a match beyond the first 25 is found");
+    assert.deepEqual(matchHubFollowUps(rows, "istanbul", 25).map((r) => r.id), ["late"], "Turkish-aware party name match");
+    assert.equal(matchHubFollowUps(rows, "", 25).length, 25, "without a search the limit applies as before");
+    assert.ok(HUB_SEARCH_SCAN >= 100);
+    const service = readFileSync(path.join(process.cwd(), "src/modules/crm/services/crm.ts"), "utf8");
+    assert.ok(service.includes("take: searching ? HUB_SEARCH_SCAN : limit"));
+    assert.ok(service.includes("return matchHubFollowUps(mapped, options.q, limit)"));
+  });
 });
+

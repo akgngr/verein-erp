@@ -29,7 +29,6 @@ export async function listUnifiedLinkedItems(
 ): Promise<UnifiedLinkedTaskItem[]> {
   const usable = new Set(await listUsableModuleKeys());
   const todayIso = formatDateOnly(berlinToday()) ?? new Date().toISOString().slice(0, 10);
-  const needle = (options.q ?? "").trim().toLocaleLowerCase("tr");
   const tasks: Promise<UnifiedLinkedTaskItem[]>[] = [];
 
   if (usable.has("meetings") && can(user.role, meetingsPermissions, "view")) {
@@ -70,17 +69,9 @@ export async function listUnifiedLinkedItems(
     tasks.push(
       listOpenFollowUpsForHub(
         { role: user.role, restrictedLabel: "—" },
-        { assigneeId: options.assignedToMe ? user.id : undefined, limit: 25 },
+        { assigneeId: options.assignedToMe ? user.id : undefined, limit: 25, q: options.q },
       )
-        .then((rows) =>
-          rows
-            .filter(
-              (row) =>
-                !needle ||
-                row.note.toLocaleLowerCase("tr").includes(needle) ||
-                row.partyName.toLocaleLowerCase("tr").includes(needle),
-            )
-            .map((row) => toCrmHubItem(row)),
+        .then((rows) => rows.map((row) => toCrmHubItem(row)),
         )
         .catch(() => []),
     );
