@@ -1,6 +1,7 @@
 import { getFormatter, getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
+import { documentsPermissions } from "@/modules/documents";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
@@ -11,6 +12,7 @@ import { mailInboxPermissions } from "../permissions";
 import {
   getInboxSettings,
   isAccountingUsable,
+  isDocumentsUsable,
   listInboxMessages,
 } from "../services/inbox";
 
@@ -28,10 +30,11 @@ export async function InboxView({ status }: { status?: string | null }) {
     getFormatter(),
   ]);
   const filter = status === "DONE" || status === "ALL" ? status : "NEW";
-  const [settings, rows, accountingUsable] = await Promise.all([
+  const [settings, rows, accountingUsable, documentsUsable] = await Promise.all([
     getInboxSettings(),
     listInboxMessages(filter === "ALL" ? null : filter),
     isAccountingUsable(),
+    isDocumentsUsable(),
   ]);
   const imapConfigured = Boolean(
     settings.host && settings.username && settings.hasPassword,
@@ -61,7 +64,12 @@ export async function InboxView({ status }: { status?: string | null }) {
         filter={filter}
         imapConfigured={imapConfigured}
         accountingUsable={accountingUsable}
+        documentsUsable={documentsUsable}
         canManage={can(user.role, mailInboxPermissions, "create")}
+        canTransferToDocuments={
+          can(user.role, mailInboxPermissions, "create") &&
+          can(user.role, documentsPermissions, "create")
+        }
         canDelete={can(user.role, mailInboxPermissions, "delete")}
         rows={rows.map((row) => ({
           id: row.id,

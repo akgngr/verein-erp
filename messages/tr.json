@@ -4177,6 +4177,31 @@
     },
     "calendar": {
       "sessions": "Kurs dersleri"
+    },
+    "recipients": {
+      "courseGuardians": {
+        "label": "Kurs velileri",
+        "filters": {
+          "course": {
+            "label": "Kurs"
+          },
+          "status": {
+            "label": "Kayıt durumu",
+            "options": {
+              "ACTIVE": "Aktif",
+              "COMPLETED": "Tamamlandı",
+              "WITHDRAWN": "Ayrıldı"
+            }
+          },
+          "role": {
+            "label": "Veli rolü",
+            "options": {
+              "PAYER_ONLY": "Yalnızca ödeme sorumlusu",
+              "ALL_GUARDIANS": "Tüm veliler"
+            }
+          }
+        }
+      }
     }
   },
   "crm": {
@@ -6247,11 +6272,12 @@
       }
     },
     "access": {
-      "accounting": "Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır.",
-      "system": "Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir).",
-      "tasks": "Sekreterin onaylı \"görev taslağı\" önerisinden görev oluşturur (yalnız kullanıcı onayıyla).",
-      "users": "Görevdeki \"oluşturan\" etiketi için kullanıcının adını okur.",
-      "notifications": "Sınıflamaya rıza veren kullanıcılara yeni e-posta bildirimi gönderir (gönderen ve konu olmadan)."
+      "notifications": "Gelen kutusu ve sınıflandırma bildirimleri göndermek için.",
+      "accounting": "Gelen fatura ve ekleri muhasebe fiş taslağı olarak aktarmak için.",
+      "documents": "Gelen kutusundaki e-posta ve eklerini Evrak Kayıt modülüne aktarmak için.",
+      "system": "Modül ayarları ve otomatik işleyiş durumunu okumak için.",
+      "tasks": "Gelen e-postalardan görev taslağı oluşturmak için.",
+      "users": "Bildirim alıcılarını ve işlem yapan kullanıcıları çözümlemek için."
     },
     "inbox": {
       "title": "Gelen kutusu",
@@ -6264,6 +6290,8 @@
       "imported": "Gelen faturalara taslak olarak aktarıldı.",
       "importDuplicate": "Bu belge zaten gelen faturalarda var; bağlantı kuruldu.",
       "importToAccounting": "Muhasebeye aktar",
+      "importToDocuments": "Evrak Kayıt'a aktar",
+      "documentCreated": "Evrak oluşturuldu ({registryNumber}).",
       "importedChip": "Aktarıldı",
       "accountingOff": "Muhasebe modülü kapalı; ekler aktarılamaz.",
       "empty": "Bu görünümde e-posta yok.",
@@ -6310,6 +6338,7 @@
         "encryptionKeyMissing": "Şifreleme anahtarı yok (AUTH_SECRET).",
         "emlInvalid": "Geçerli bir .eml dosyası değil.",
         "accountingOff": "Muhasebe modülü kapalı.",
+        "documentsOff": "Evrak Kayıt modülü kapalı.",
         "notFound": "Bulunamadı."
       },
       "drafts": {
@@ -6325,6 +6354,10 @@
     },
     "automation": {
       "tasks": {
+        "fetch_inbox": {
+          "label": "Gelen kutusunu IMAP ile tara",
+          "description": "Yapılandırılmış IMAP posta kutusundan yeni e-postaları alır (yapılandırılmamışsa işlem yapmaz)."
+        },
         "send_notification": {
           "label": "Bildirim e-postası gönder",
           "description": "Belirlediğiniz tek bir adrese (ör. yönetim kurulu) e-posta gönderir. Üyelere toplu e-posta için Toplu e-posta modülünü kullanın.",

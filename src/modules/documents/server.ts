@@ -34,3 +34,9 @@ export { analyzeFileHandler } from "./handlers/analyze-file";
 export { downloadFileHandler } from "./handlers/download-file";
 export { exportDocumentsHandler } from "./handlers/export-documents";
 export { getDocumentFileText } from "./queries/file-text";
+export {
+  createDocumentWithFiles,
+  type CreateDocumentWithFilesInput,
+  type CreateDocumentWithFilesResult,
+  type DocumentFileInput,
+} from "./services/create-with-files";

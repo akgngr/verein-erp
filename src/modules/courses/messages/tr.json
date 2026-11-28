@@ -486,5 +486,30 @@
   },
   "calendar": {
     "sessions": "Kurs dersleri"
+  },
+  "recipients": {
+    "courseGuardians": {
+      "label": "Kurs velileri",
+      "filters": {
+        "course": {
+          "label": "Kurs"
+        },
+        "status": {
+          "label": "Kayıt durumu",
+          "options": {
+            "ACTIVE": "Aktif",
+            "COMPLETED": "Tamamlandı",
+            "WITHDRAWN": "Ayrıldı"
+          }
+        },
+        "role": {
+          "label": "Veli rolü",
+          "options": {
+            "PAYER_ONLY": "Yalnızca ödeme sorumlusu",
+            "ALL_GUARDIANS": "Tüm veliler"
+          }
+        }
+      }
+    }
   }
 }

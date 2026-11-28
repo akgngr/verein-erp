@@ -3,7 +3,8 @@ import "server-only";
 // students modülü — sunucu public girişi (kurslar modülü öğrenci ve ödeme sorumlusu bilgisini buradan alır)
 export { studentsPermissions, studentsDatevPermissions } from "./permissions";
 export { listStudentOptions, getStudentPayer } from "./queries/students";
-export { listGuardianOptions } from "./queries/guardians";
+export { listGuardianOptions, listGuardianContactsForStudents } from "./queries/guardians";
+export type { GuardianContact } from "./queries/guardians";
 export type { StudentOption, StudentPayer } from "./types";
 export { getStudentStats } from "./queries/stats";
 export { getStudentSelfService, applyStudentSelfService, getGuardianSelfService, applyGuardianSelfService, getGuardianMandates, getGuardianIdsByDebtorNumber } from "./services/online-form";

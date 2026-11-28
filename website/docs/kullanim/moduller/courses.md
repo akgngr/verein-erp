@@ -13,7 +13,7 @@ Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve
 |---|---|
 | Anahtar | `courses` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.18 |
+| Sürüm | 1.4.19 |
 | Sayfalar | `/kurslar`, `/ogrenciler`, `/ogrenci-takibi`, `/kurslar/ogretmenler`, `/kurslar/odemeler`, `/kurslar/hakedisler`, `/kurslar/ayarlar` |
 | Gerektirir | [Öğrenciler](./students) |
 | Önerir | [Öğrenci takibi](./progress) |
@@ -52,6 +52,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_course_statistics` · `list_courses` · `propose_course` · `propose_course_status` · `propose_delete_course`
 
 ## Sürüm notları
+
+### 1.4.19 — Kurs velileri toplu e-posta alıcı kaynağı (#631)
+
+_2026-11-28_
+
+- **Yeni:** Toplu e-posta modülünde kurs, kayıt durumu ve veli rolüne göre filtrelenebilen Kurs Velileri alıcı kaynağı eklendi.
 
 ### 1.4.18 — Banka eşleştirme kurs ücreti sözleşmesi (#616)
 
@@ -96,10 +102,4 @@ _2026-11-20_
 
 - **İyileştirme:** Öğretmen hakedişi hesaplamasında (calculatePayout) oturum sıralaması toSorted ile yenilendi.
 
-### 1.4.10 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 13 herkese açık sürüm notu.
+Daha eski 14 herkese açık sürüm notu.

@@ -13,7 +13,7 @@ Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gön
 |---|---|
 | Anahtar | `mail` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.5.6 |
+| Sürüm | 1.5.7 |
 | Sayfalar | `/mail`, `/mail/gelen-kutusu`, `/mail/kayitlar` |
 
 ## Diğer modüllere erişim
@@ -22,11 +22,12 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 | Modül | İşlem | Gerekçe |
 |---|---|---|
-| [Bildirimler](./notifications) | yazma | Sınıflamaya rıza veren kullanıcılara yeni e-posta bildirimi gönderir (gönderen ve konu olmadan). |
-| [Muhasebe](./accounting) | yazma | Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır. |
-| [Modül Yönetimi](./system) | okuma | Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir). |
-| [Görevler](./tasks) | yazma | Sekreterin onaylı "görev taslağı" önerisinden görev oluşturur (yalnız kullanıcı onayıyla). |
-| [Kullanıcılar](./users) | okuma | Görevdeki "oluşturan" etiketi için kullanıcının adını okur. |
+| [Bildirimler](./notifications) | yazma | Gelen kutusu ve sınıflandırma bildirimleri göndermek için. |
+| [Muhasebe](./accounting) | yazma | Gelen fatura ve ekleri muhasebe fiş taslağı olarak aktarmak için. |
+| [Evrak Kayıt](./documents) | yazma | Gelen kutusundaki e-posta ve eklerini Evrak Kayıt modülüne aktarmak için. |
+| [Modül Yönetimi](./system) | okuma | Modül ayarları ve otomatik işleyiş durumunu okumak için. |
+| [Görevler](./tasks) | yazma | Gelen e-postalardan görev taslağı oluşturmak için. |
+| [Kullanıcılar](./users) | okuma | Bildirim alıcılarını ve işlem yapan kullanıcıları çözümlemek için. |
 
 ## Varsayılan yetkiler
 
@@ -38,6 +39,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | E-posta altyapısı | görüntüleme, oluşturma, düzenleme | — | — | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.5.7 — Evrak Kayıt aktarımı ve zamanlanmış IMAP alma
+
+_2026-11-28_
+
+- **Yeni:** Gelen kutusundaki e-postalar ekleriyle birlikte tek tıkla Evrak Kayıt'a aktarılabilir ve IMAP kutusu 15 dakikalık zamanlanmış görevle otomatik taranabilir.
 
 ### 1.5.6 — Ayar merkezi grubu
 
@@ -84,10 +91,4 @@ _2026-11-19_
 
 - **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
 
-### 1.4.4 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 13 herkese açık sürüm notu.
+Daha eski 14 herkese açık sürüm notu.

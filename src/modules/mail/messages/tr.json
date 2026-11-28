@@ -151,6 +151,8 @@
     "imported": "Gelen faturalara taslak olarak aktarıldı.",
     "importDuplicate": "Bu belge zaten gelen faturalarda var; bağlantı kuruldu.",
     "importToAccounting": "Muhasebeye aktar",
+    "importToDocuments": "Evrak Kayıt'a aktar",
+    "documentCreated": "Evrak oluşturuldu ({registryNumber}).",
     "importedChip": "Aktarıldı",
     "accountingOff": "Muhasebe modülü kapalı; ekler aktarılamaz.",
     "empty": "Bu görünümde e-posta yok.",
@@ -197,6 +199,7 @@
       "encryptionKeyMissing": "Şifreleme anahtarı yok (AUTH_SECRET).",
       "emlInvalid": "Geçerli bir .eml dosyası değil.",
       "accountingOff": "Muhasebe modülü kapalı.",
+      "documentsOff": "Evrak Kayıt modülü kapalı.",
       "notFound": "Bulunamadı."
     },
     "drafts": {
@@ -212,6 +215,10 @@
   },
   "automation": {
     "tasks": {
+      "fetch_inbox": {
+        "label": "Gelen kutusunu IMAP ile tara",
+        "description": "Yapılandırılmış IMAP posta kutusundan yeni e-postaları alır (yapılandırılmamışsa işlem yapmaz)."
+      },
       "send_notification": {
         "label": "Bildirim e-postası gönder",
         "description": "Belirlediğiniz tek bir adrese (ör. yönetim kurulu) e-posta gönderir. Üyelere toplu e-posta için Toplu e-posta modülünü kullanın.",
@@ -269,5 +276,13 @@
       "title": "Gelen kutusunda işlem önerilebilecek yeni e-posta",
       "body": "Gelen kutusunu açın."
     }
+  },
+  "access": {
+    "notifications": "Gelen kutusu ve sınıflandırma bildirimleri göndermek için.",
+    "accounting": "Gelen fatura ve ekleri muhasebe fiş taslağı olarak aktarmak için.",
+    "documents": "Gelen kutusundaki e-posta ve eklerini Evrak Kayıt modülüne aktarmak için.",
+    "system": "Modül ayarları ve otomatik işleyiş durumunu okumak için.",
+    "tasks": "Gelen e-postalardan görev taslağı oluşturmak için.",
+    "users": "Bildirim alıcılarını ve işlem yapan kullanıcıları çözümlemek için."
   }
 }

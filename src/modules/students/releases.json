@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.15",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Kurs veli alıcıları için veli iletişim sözleşmesi (#631)",
+        "de": "Erziehungsberechtigten-Kontaktvertrag für Kurs-Empfänger (#631)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Öğrenci listesi üzerinden veli iletişim ve izin bilgilerini döndüren listGuardianContactsForStudents sunucu sözleşmesi eklendi.",
+          "de": "Server-Vertrag listGuardianContactsForStudents für Erziehungsberechtigten-Kontakte und Einwilligungen nach Schülerliste ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.4.14",
       "date": "2026-11-25",
       "title": {

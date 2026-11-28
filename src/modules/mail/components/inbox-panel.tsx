@@ -7,11 +7,13 @@ import { actionVariant } from "@/shared/components/ui/action-appearance";
 import {
   CheckCircle2,
   Download,
+  FileText,
   FileUp,
   Inbox,
   RotateCcw,
   Trash2,
 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
@@ -22,6 +24,7 @@ import {
   deleteInboxMessageAction,
   fetchInboxAction,
   importAttachmentAction,
+  importMessageToDocumentAction,
   setInboxStatusAction,
 } from "../actions/inbox-actions";
 
@@ -42,19 +45,23 @@ export type InboxRow = {
   }[];
 };
 
-/** Gelen kutusu: IMAP'ten al, .eml yükle, ekleri muhasebeye aktar. */
+/** Gelen kutusu: IMAP'ten al, .eml yükle, ekleri muhasebeye veya Evrak Kayıt'a aktar. */
 export function InboxPanel({
   rows,
   imapConfigured,
   accountingUsable,
+  documentsUsable = false,
   canManage,
+  canTransferToDocuments = false,
   canDelete,
   filter,
 }: {
   rows: InboxRow[];
   imapConfigured: boolean;
   accountingUsable: boolean;
+  documentsUsable?: boolean;
   canManage: boolean;
+  canTransferToDocuments?: boolean;
   canDelete: boolean;
   filter: "NEW" | "DONE" | "ALL";
 }) {
@@ -97,12 +104,34 @@ export function InboxPanel({
     router.refresh();
   };
 
+  const [lastCreatedDoc, setLastCreatedDoc] = useState<{
+    messageId: string;
+    documentId: string;
+    registryNumber: string;
+  } | null>(null);
+
   const importAttachment = async (id: string) => {
     setBusy(id);
     const response = await importAttachmentAction({ id });
     setBusy(null);
     if (!response.ok) return void notify.error(response.error);
     (response.data.duplicate ? notify.warning : notify.success)(response.data.duplicate ? t("importDuplicate") : t("imported"));
+    router.refresh();
+  };
+
+  const importToDocuments = async (messageId: string) => {
+    setBusy(`doc:${messageId}`);
+    const response = await importMessageToDocumentAction({ id: messageId });
+    setBusy(null);
+    if (!response.ok) return void notify.error(response.error);
+    setLastCreatedDoc({
+      messageId,
+      documentId: response.data.documentId,
+      registryNumber: response.data.registryNumber,
+    });
+    notify.success(
+      t("documentCreated", { registryNumber: response.data.registryNumber }),
+    );
     router.refresh();
   };
 
@@ -198,11 +227,38 @@ export function InboxPanel({
                       {row.snippet}
                     </p>
                   ) : null}
+                  {lastCreatedDoc?.messageId === row.id ? (
+                    <p className="mt-1 text-xs">
+                      <Link
+                        href={`/evrak/${lastCreatedDoc.documentId}`}
+                        className="font-medium text-brand-700 underline underline-offset-2"
+                      >
+                        {t("documentCreated", {
+                          registryNumber: lastCreatedDoc.registryNumber,
+                        })}
+                      </Link>
+                    </p>
+                  ) : null}
                 </div>
                 <StatusChip tone={row.status === "NEW" ? "warning" : "success"}
                 >
                   {t(`status.${row.status}`)}
                 </StatusChip>
+                {canTransferToDocuments && documentsUsable ? (
+                  <Button
+                    size="sm"
+                    variant={actionVariant("default", "flat")}
+                    isPending={busy === `doc:${row.id}`}
+                    onPress={() => importToDocuments(row.id)}
+                  >
+                    {busy === `doc:${row.id}` ? (
+                      <Spinner size="sm" tone="current" />
+                    ) : (
+                      <FileText size={14} />
+                    )}
+                    {t("importToDocuments")}
+                  </Button>
+                ) : null}
                 {canManage ? (
                   <Button
                     size="sm"

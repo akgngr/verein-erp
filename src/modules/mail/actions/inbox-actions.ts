@@ -4,12 +4,23 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { documentsPermissions } from "@/modules/documents";
+import { can } from "@/shared/permissions/define";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
 import { mailInboxPermissions } from "../permissions";
 import { hasEncryptionKey } from "../services/mail-crypto";
-import { deleteInboxMessage, fetchImap, importAttachmentToAccounting, isAccountingUsable, saveInboxSettings, setMessageStatus } from "../services/inbox";
+import {
+  deleteInboxMessage,
+  fetchImap,
+  importAttachmentToAccounting,
+  importMessageToDocument,
+  isAccountingUsable,
+  isDocumentsUsable,
+  saveInboxSettings,
+  setMessageStatus,
+} from "../services/inbox";
 
 const refresh = () => revalidatePath("/mail/gelen-kutusu");
 
@@ -71,6 +82,44 @@ export async function importAttachmentAction(input: unknown): Promise<ActionResu
       refresh();
       revalidatePath("/muhasebe/gelen-faturalar");
       return { duplicate: !result.ok, payableId: result.payableId };
+    },
+  });
+  return run(input);
+}
+
+export async function importMessageToDocumentAction(
+  input: unknown,
+): Promise<ActionResult<{ documentId: string; registryNumber: string; fileCount: number }>> {
+  const run = createAction({
+    permission: { definition: mailInboxPermissions, action: "create" },
+    schema: idSchema,
+    handler: async ({ input, user, audit }) => {
+      if (!can(user.role, documentsPermissions, "create")) {
+        throw new ActionError("common.errors.forbidden");
+      }
+      if (!(await isDocumentsUsable())) {
+        throw new ActionError("mail.inbox.errors.documentsOff");
+      }
+      try {
+        const result = await importMessageToDocument(input.id, {
+          id: user.id,
+          label: buildUserLabel(user.name, user.email),
+        });
+        await audit({
+          action: "IMPORT",
+          entity: "MailInboxMessage",
+          entityId: input.id,
+          after: result,
+        });
+        refresh();
+        revalidatePath("/evrak");
+        return result;
+      } catch (error) {
+        if (error instanceof Error && error.message === "inbox:notFound") {
+          throw new ActionError("mail.inbox.errors.notFound");
+        }
+        throw error;
+      }
     },
   });
   return run(input);

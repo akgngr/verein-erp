@@ -91,3 +91,61 @@ export async function listGuardianOptions(): Promise<{ id: string; label: string
 export async function listGuardiansForDatev() {
   return getDb().studentGuardian.findMany({ where: { deletedAt: null }, orderBy: { debtorNumber: "asc" } });
 }
+
+export type GuardianContact = {
+  id: string;
+  studentId: string;
+  isPayer: boolean;
+  salutation: string | null;
+  firstName: string;
+  lastName: string;
+  email: string | null;
+  phone: string | null;
+  bulkMailOptOut: boolean;
+  messagingConsents: string[];
+};
+
+/** Verilen öğrenciler için silinmemiş veli iletişim bilgilerini döndürür (kurs/toplu e-posta köprüsü). */
+export async function listGuardianContactsForStudents(
+  studentIds: string[],
+  options?: { payerOnly?: boolean },
+): Promise<GuardianContact[]> {
+  const uniqueIds = Array.from(new Set(studentIds)).filter(Boolean);
+  if (uniqueIds.length === 0) return [];
+  const links = await getDb().studentGuardianLink.findMany({
+    where: {
+      studentId: { in: uniqueIds },
+      ...(options?.payerOnly ? { isPayer: true } : {}),
+      student: { deletedAt: null },
+      guardian: { deletedAt: null },
+    },
+    include: {
+      guardian: {
+        select: {
+          id: true,
+          salutation: true,
+          firstName: true,
+          lastName: true,
+          email: true,
+          phone: true,
+          bulkMailOptOut: true,
+          messagingConsents: true,
+        },
+      },
+    },
+    orderBy: [{ guardian: { lastName: "asc" } }, { guardian: { firstName: "asc" } }],
+  });
+  return links.map((link) => ({
+    id: link.guardian.id,
+    studentId: link.studentId,
+    isPayer: link.isPayer,
+    salutation: link.guardian.salutation,
+    firstName: link.guardian.firstName,
+    lastName: link.guardian.lastName,
+    email: link.guardian.email,
+    phone: link.guardian.phone,
+    bulkMailOptOut: link.guardian.bulkMailOptOut,
+    messagingConsents: link.guardian.messagingConsents,
+  }));
+}
+

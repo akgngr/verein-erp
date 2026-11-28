@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.10.4",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Programatik evrak ve ek arşivleme API'si",
+        "de": "Programmatische Dokument- und Anhangsarchivierung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yetkili modüllerin tek akışta kayıt numarası üretip dosya ekleriyle evrak oluşturabilmesi için createDocumentWithFiles eklendi.",
+          "de": "createDocumentWithFiles für modulübergreifende Dokumentenerstellung samt Aktenzeichen und validierten Anhängen ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.10.3",
       "date": "2026-11-25",
       "title": {

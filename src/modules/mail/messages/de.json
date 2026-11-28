@@ -151,6 +151,8 @@
     "imported": "Als Entwurf in den Belegeingang übernommen.",
     "importDuplicate": "Dieser Beleg ist bereits im Belegeingang; verknüpft.",
     "importToAccounting": "In Buchhaltung übernehmen",
+    "importToDocuments": "Ins Dokumentenregister übernehmen",
+    "documentCreated": "Dokument erstellt ({registryNumber}).",
     "importedChip": "Übernommen",
     "accountingOff": "Das Buchhaltungsmodul ist deaktiviert; Anhänge können nicht übernommen werden.",
     "empty": "Keine E-Mails in dieser Ansicht.",
@@ -197,6 +199,7 @@
       "encryptionKeyMissing": "Kein Verschlüsselungsschlüssel (AUTH_SECRET).",
       "emlInvalid": "Keine gültige .eml-Datei.",
       "accountingOff": "Das Buchhaltungsmodul ist deaktiviert.",
+      "documentsOff": "Das Dokumentenmodul ist deaktiviert.",
       "notFound": "Nicht gefunden."
     },
     "drafts": {
@@ -212,6 +215,10 @@
   },
   "automation": {
     "tasks": {
+      "fetch_inbox": {
+        "label": "Posteingang per IMAP abrufen",
+        "description": "Ruft neue E-Mails aus dem konfigurierten IMAP-Postfach ab (ohne Konfiguration erfolgt kein Abruf)."
+      },
       "send_notification": {
         "label": "Benachrichtigungs-E-Mail senden",
         "description": "Sendet eine E-Mail an eine feste Adresse (z. B. Vorstand). Für Rundmails an Mitglieder das Rundmail-Modul verwenden.",
@@ -269,5 +276,13 @@
       "title": "Neue E-Mail im Posteingang mit möglichem Vorschlag",
       "body": "Posteingang öffnen."
     }
+  },
+  "access": {
+    "notifications": "Zum Versenden von Posteingangs- und Triage-Benachrichtigungen.",
+    "accounting": "Zum Übertragen eingehender Rechnungen und Anhänge als Buchungsentwurf.",
+    "documents": "Zum Übertragen von E-Mails und Anhängen aus dem Posteingang in das Dokumentenmodul.",
+    "system": "Zum Lesen von Modulstatus und Automatisierungskonfiguration.",
+    "tasks": "Zum Erstellen von Aufgabenentwürfen aus eingehenden E-Mails.",
+    "users": "Zum Auflösen von Benachrichtigungsempfängern und Benutzern."
   }
 }

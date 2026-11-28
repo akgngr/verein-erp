@@ -5,6 +5,7 @@ import type { ModuleRecipients } from "@/shared/mailings/define";
 
 import { recipients as meetingsRecipients } from "@/modules/meetings/recipients";
 import { recipients as membersRecipients } from "@/modules/members/recipients";
+import { recipients as coursesRecipients } from "@/modules/courses/recipients";
 import { recipients as eventsRecipients } from "@/modules/events/recipients";
 import { recipients as studentsRecipients } from "@/modules/students/recipients";
 
@@ -12,6 +13,7 @@ import { recipients as studentsRecipients } from "@/modules/students/recipients"
 export const moduleRecipientRegistry: ModuleRecipients[] = [
   meetingsRecipients,
   membersRecipients,
+  coursesRecipients,
   eventsRecipients,
   studentsRecipients,
 ];

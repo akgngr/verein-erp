@@ -76,3 +76,31 @@ export const sendNotificationTask = defineTask({
     return { sent: true };
   },
 });
+
+/**
+ * Zamanlanmış görev: IMAP gelen kutusunu tarar; yapılandırılmamışsa temiz no-op döner.
+ */
+export const fetchInboxTask = defineTask({
+  key: "mail.fetch_inbox",
+  version: 1,
+  description: "mail.fetch_inbox",
+  inputSchema: z.object({}).strict(),
+  timeoutSeconds: 180,
+  retry: { maxAttempts: 2, initialDelaySeconds: 120, maxDelaySeconds: 15 * 60, backoffMultiplier: 2 },
+  schedule: { input: () => ({}), minIntervalMinutes: 15, automaticIntervalMinutes: 15 },
+  handler: async (_input, context) => {
+    const { fetchImap } = await import("./services/inbox");
+    try {
+      const result = await fetchImap();
+      automationTrace("mail", "inbox fetched", { execution: context.executionId, ...result });
+      return { ...result, skipped: false };
+    } catch (error) {
+      const msg = error instanceof Error ? error.message : String(error);
+      if (msg === "inbox:notConfigured" || msg === "inbox:passwordUnreadable") {
+        automationTrace("mail", "inbox fetch skipped (not configured)", { execution: context.executionId });
+        return { fetched: 0, created: 0, skipped: true };
+      }
+      throw error;
+    }
+  },
+});

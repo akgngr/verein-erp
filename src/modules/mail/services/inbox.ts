@@ -4,8 +4,6 @@ import { createHash } from "node:crypto";
 
 import { ImapFlow } from "imapflow";
 
-import { importPayableFile } from "@/modules/accounting/server";
-import { listUsableModuleKeys } from "@/modules/system/server";
 import { getDb } from "@/shared/db";
 import { makeStoredName, readFile, removeFile, saveFile } from "@/shared/files";
 
@@ -196,11 +194,13 @@ export async function listInboxMessages(status: "NEW" | "DONE" | null) {
 }
 
 export async function isAccountingUsable(): Promise<boolean> {
+  const { listUsableModuleKeys } = await import("@/modules/system/server");
   return (await listUsableModuleKeys()).includes("accounting");
 }
 
 /** Eki muhasebe gelen faturalar kutusuna aktarır. Tüm ekler aktarıldıysa e-posta "tamamlandı" olur. */
 export async function importAttachmentToAccounting(attachmentId: string, actor: { id: string; label: string }): Promise<{ ok: true; payableId: string; source: string } | { ok: false; reason: "duplicate"; payableId: string }> {
+  const { importPayableFile } = await import("@/modules/accounting/server");
   const db = getDb();
   const attachment = await db.mailInboxAttachment.findUniqueOrThrow({ where: { id: attachmentId } });
   const buffer = await readFile(attachment.storagePath);
@@ -210,6 +210,74 @@ export async function importAttachmentToAccounting(attachmentId: string, actor: 
   const open = await db.mailInboxAttachment.count({ where: { messageId: attachment.messageId, importedTo: null } });
   if (open === 0) await db.mailInboxMessage.update({ where: { id: attachment.messageId }, data: { status: "DONE" } });
   return result.ok ? { ok: true, payableId, source: result.source } : { ok: false, reason: "duplicate", payableId };
+}
+
+export async function isDocumentsUsable(): Promise<boolean> {
+  const { listUsableModuleKeys } = await import("@/modules/system/server");
+  return (await listUsableModuleKeys()).includes("documents");
+}
+
+/** E-postayı ve henüz aktarılmamış eklerini Evrak Kayıt'a (documents) aktarır; mesajı DONE yapar. */
+export async function importMessageToDocument(
+  messageId: string,
+  actor: { id: string; label: string },
+): Promise<{ documentId: string; registryNumber: string; fileCount: number }> {
+  const db = getDb();
+  const message = await db.mailInboxMessage.findUnique({
+    where: { id: messageId },
+    include: {
+      attachments: {
+        where: { importedTo: null },
+        select: { id: true, fileName: true, mimeType: true, storagePath: true },
+      },
+    },
+  });
+  if (!message) {
+    throw new Error("inbox:notFound"); // i18n-ignore (iç hata kodu; mail.inbox.errors.* ile çevrilir)
+  }
+
+  const files = await Promise.all(
+    message.attachments.map(async (att) => ({
+      originalName: att.fileName,
+      mimeType: att.mimeType,
+      buffer: await readFile(att.storagePath),
+    })),
+  );
+
+  const counterparty =
+    message.fromName?.trim() || message.fromAddress?.trim() || "E-posta"; // i18n-ignore (fallback gönderen)
+  const subject = message.subject?.trim() || "(konu yok)"; // i18n-ignore
+
+  const { createDocumentWithFiles } = await import("@/modules/documents/server");
+  const created = await createDocumentWithFiles({
+    direction: "INCOMING",
+    documentDate: message.receivedAt,
+    counterparty,
+    subject,
+    summary: message.snippet ?? null,
+    deliveryMethod: "EMAIL",
+    actor,
+    files,
+    auditMeta: { source: "mail", inboxMessageId: message.id },
+  });
+
+  const now = new Date();
+  if (message.attachments.length > 0) {
+    await db.mailInboxAttachment.updateMany({
+      where: { id: { in: message.attachments.map((a) => a.id) } },
+      data: { importedTo: `documents.document:${created.id}`, importedAt: now },
+    });
+  }
+  await db.mailInboxMessage.update({
+    where: { id: message.id },
+    data: { status: "DONE" },
+  });
+
+  return {
+    documentId: created.id,
+    registryNumber: created.registryNumber,
+    fileCount: created.fileCount,
+  };
 }
 
 export async function setMessageStatus(id: string, status: "NEW" | "DONE") {
