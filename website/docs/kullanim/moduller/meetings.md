@@ -43,11 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
-### 1.5.0 — Tüzük davet süresi kontrolü ve Davetiye & Gündem PDF'i (#636)
+### 1.5.0 — Davet süresi hatırlatıcısı ve Davetiye & Gündem PDF'i (#636)
 
 _2026-11-27_
 
-- **Yeni:** Toplantı türüne göre tüzük davet süresi (Genel Kurul 14 gün, Yönetim Kurulu 7 gün, Komite 3 gün) denetlenir ve çift dilli (TR/DE) Davetiye & Gündem PDF çıktısı eklendi.
+- **Yeni:** Toplantı ayrıntısında davetin kaç gün önce gönderildiği, toplantı türüne göre öneri değerle (Genel Kurul 14, Yönetim Kurulu 7, Komite 3 gün) karşılaştırılarak gösterilir; bağlayıcı süre derneğin tüzüğündedir. Gün sayımı Berlin takvimine göredir.
+- **Yeni:** Antetli, çift dilli (TR/DE) Davetiye & Gündem PDF çıktısı eklendi. Üyelere giden belgede iç süre değerlendirmesi yer almaz.
 
 ### 1.4.4 — Yerel tarih alanları
 

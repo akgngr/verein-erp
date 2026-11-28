@@ -19,7 +19,6 @@ import {
   type InvitationPdfData,
 } from "../pdf/invitation-document";
 import { meetingsPermissions } from "../permissions";
-import { evaluateInvitationNoticePeriod } from "../services/notice-period";
 
 /**
  * Toplantı davetiyesi ve gündem PDF dışa aktarımı (GET /api/meetings/[id]/invitation-pdf):
@@ -68,12 +67,6 @@ export async function exportInvitationPdfHandler(
     getOrganizationLogoDataUri(),
   ]);
 
-  const noticeEvaluation = evaluateInvitationNoticePeriod({
-    meetingType: meeting.type,
-    meetingDate: meeting.meetingDate,
-    invitationSentAt: meeting.invitationSentAt,
-  });
-
   const data: InvitationPdfData = {
     lang,
     organization: { ...profile, logoDataUri },
@@ -87,7 +80,6 @@ export async function exportInvitationPdfHandler(
     description: meeting.description,
     quorumRequired: meeting.quorumRequired,
     invitationSentAt: meeting.invitationSentAt,
-    noticeEvaluation,
     agendaItems: meeting.agendaItems.map((item) => ({
       position: item.position,
       title: item.title,

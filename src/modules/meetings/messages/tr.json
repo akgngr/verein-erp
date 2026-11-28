@@ -92,9 +92,9 @@
     "approvedLine": "Onaylandı: {date} – {by}",
     "draftNote": "Tutanak taslak durumundadır.",
     "noticePeriod": {
-      "compliant": "Davet süresi tüzüğe uygun ({actual}/{required} gün)",
-      "shortNotice": "Kısa davet süresi ({actual}/{required} gün)",
-      "notSent": "Davet henüz gönderilmedi (tüzük: en az {required} gün)"
+      "compliant": "Davet {actual} gün önce · {required} günlük öneri karşılandı",
+      "shortNotice": "Yalnız {actual} gün önce · öneri {required} gün, tüzüğü kontrol edin",
+      "notSent": "Davet henüz gönderilmedi (öneri: en az {required} gün)"
     },
     "tabsAria": "Toplantı sekmeleri",
     "tabGeneral": "Genel",

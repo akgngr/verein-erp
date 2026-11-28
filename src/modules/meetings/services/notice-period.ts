@@ -1,7 +1,11 @@
 import type { MeetingType } from "@prisma/client";
 
+import { berlinToday } from "../utils";
+
 /**
- * Default statutory / bylaw invitation lead times (calendar days) for German associations (§ 32 BGB):
+ * Guideline invitation lead times (calendar days). The binding period is set by the
+ * association's bylaws (Satzung); the BGB itself prescribes none. Shown internally as a
+ * reminder only and never printed on the invitation.
  * - General assembly (Mitgliederversammlung): 14 days
  * - Board meeting (Vorstandssitzung): 7 days
  * - Committee / Other: 3 days
@@ -29,7 +33,8 @@ function toUtcDayNumber(date: Date): number {
 }
 
 /**
- * Evaluates whether a meeting invitation satisfies the bylaw notice period.
+ * Compares the invitation lead time with the guideline. `meetingDate` is a date-only value
+ * (UTC midnight); the sending day is the Europe/Berlin calendar day of `invitationSentAt`.
  */
 export function evaluateInvitationNoticePeriod(input: {
   meetingType: MeetingType;
@@ -47,7 +52,7 @@ export function evaluateInvitationNoticePeriod(input: {
   }
 
   const actualDays =
-    toUtcDayNumber(input.meetingDate) - toUtcDayNumber(input.invitationSentAt);
+    toUtcDayNumber(input.meetingDate) - toUtcDayNumber(berlinToday(input.invitationSentAt));
 
   return {
     requiredDays,

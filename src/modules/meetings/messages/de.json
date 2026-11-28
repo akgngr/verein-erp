@@ -92,8 +92,8 @@
     "approvedLine": "Genehmigt am: {date} – {by}",
     "draftNote": "Das Protokoll liegt im Entwurfsstatus vor.",
     "noticePeriod": {
-      "compliant": "Ladungsfrist eingehalten ({actual}/{required} Tage)",
-      "shortNotice": "Kurze Ladungsfrist ({actual}/{required} Tage)",
+      "compliant": "Einladung {actual} Tage vorher · Richtwert {required} Tage erfüllt",
+      "shortNotice": "Nur {actual} Tage Vorlauf · Richtwert {required} Tage, Satzung prüfen",
       "notSent": "Einladung noch nicht versandt (Richtwert: mind. {required} Tage)"
     },
     "tabsAria": "Sitzungsregisterkarten",

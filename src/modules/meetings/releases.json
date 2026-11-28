@@ -5,14 +5,19 @@
       "version": "1.5.0",
       "date": "2026-11-27",
       "title": {
-        "tr": "Tüzük davet süresi kontrolü ve Davetiye & Gündem PDF'i (#636)",
-        "de": "Satzungs-Ladungsfristprüfung & Einladungs-/Tagesordnungs-PDF (#636)"
+        "tr": "Davet süresi hatırlatıcısı ve Davetiye & Gündem PDF'i (#636)",
+        "de": "Ladungsfrist-Hinweis & Einladungs-/Tagesordnungs-PDF (#636)"
       },
       "changes": [
         {
           "type": "feature",
-          "tr": "Toplantı türüne göre tüzük davet süresi (Genel Kurul 14 gün, Yönetim Kurulu 7 gün, Komite 3 gün) denetlenir ve çift dilli (TR/DE) Davetiye & Gündem PDF çıktısı eklendi.",
-          "de": "Prüfung der satzungsmäßigen Ladungsfrist (Mitgliederversammlung 14 Tage, Vorstand 7 Tage, Ausschuss 3 Tage) sowie zweisprachiges Einladungs- & Tagesordnungs-PDF (DE/TR) ergänzt."
+          "tr": "Toplantı ayrıntısında davetin kaç gün önce gönderildiği, toplantı türüne göre öneri değerle (Genel Kurul 14, Yönetim Kurulu 7, Komite 3 gün) karşılaştırılarak gösterilir; bağlayıcı süre derneğin tüzüğündedir. Gün sayımı Berlin takvimine göredir.",
+          "de": "Die Sitzungsansicht zeigt, wie viele Tage vor der Sitzung eingeladen wurde, im Vergleich zu einem Richtwert je Sitzungsart (Mitgliederversammlung 14, Vorstand 7, Ausschuss 3 Tage); maßgeblich ist die Satzung. Gezählt wird nach dem Berliner Kalendertag."
+        },
+        {
+          "type": "feature",
+          "tr": "Antetli, çift dilli (TR/DE) Davetiye & Gündem PDF çıktısı eklendi. Üyelere giden belgede iç süre değerlendirmesi yer almaz.",
+          "de": "Zweisprachiges Einladungs- & Tagesordnungs-PDF (DE/TR) mit Briefkopf ergänzt. Die interne Fristbewertung erscheint nicht im Dokument für die Mitglieder."
         }
       ]
     },

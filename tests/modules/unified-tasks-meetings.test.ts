@@ -13,7 +13,7 @@ import {
 } from "../../src/modules/tasks/services/unified-hub-sort";
 
 describe("Roadmap E2.6 Unified Task Hub & Meetings Governance (#636)", () => {
-  it("evaluates statutory bylaw invitation notice periods for General Assembly, Board, and Committee meetings", () => {
+  it("evaluates guideline invitation notice periods for General Assembly, Board, and Committee meetings", () => {
     assert.equal(DEFAULT_NOTICE_DAYS_BY_TYPE.GENERAL_ASSEMBLY, 14);
     assert.equal(DEFAULT_NOTICE_DAYS_BY_TYPE.BOARD, 7);
     assert.equal(DEFAULT_NOTICE_DAYS_BY_TYPE.COMMITTEE, 3);
@@ -51,6 +51,23 @@ describe("Roadmap E2.6 Unified Task Hub & Meetings Governance (#636)", () => {
       invitationSentAt: null,
     });
     assert.deepEqual(notSent, { requiredDays: 3, actualDays: null, status: "not_sent" });
+  });
+
+  it("counts the sending day on the Europe/Berlin calendar, not the UTC date", () => {
+    // 00:30 Berlin on 2026-12-07 is still 2026-12-06 in UTC: 13 days, not 14.
+    const shortByBerlinDay = evaluateInvitationNoticePeriod({
+      meetingType: "GENERAL_ASSEMBLY",
+      meetingDate: new Date("2026-12-20T00:00:00Z"),
+      invitationSentAt: new Date("2026-12-06T23:30:00Z"),
+    });
+    assert.deepEqual(shortByBerlinDay, { requiredDays: 14, actualDays: 13, status: "short_notice" });
+    // Summer time: 01:30 CEST on 2026-07-02 is 2026-07-01T23:30Z.
+    const summer = evaluateInvitationNoticePeriod({
+      meetingType: "BOARD",
+      meetingDate: new Date("2026-07-09T00:00:00Z"),
+      invitationSentAt: new Date("2026-07-01T23:30:00Z"),
+    });
+    assert.deepEqual(summer, { requiredDays: 7, actualDays: 7, status: "compliant" });
   });
 
   it("sorts unified linked items with earliest due dates first and undated items last", () => {
@@ -109,6 +126,13 @@ describe("Roadmap E2.6 Unified Task Hub & Meetings Governance (#636)", () => {
     );
     assert.ok(invSrc.includes("await requireUser()"));
     assert.ok(invSrc.includes('can(user.role, meetingsPermissions, "view")'));
-    assert.ok(invSrc.includes("evaluateInvitationNoticePeriod"));
+    // The member-facing invitation must not print the internal guideline check
+    // ("compliant with the bylaws" is not something the software can know).
+    assert.ok(!invSrc.includes("evaluateInvitationNoticePeriod"));
+    const docSrc = readFileSync(
+      path.join(process.cwd(), "src/modules/meetings/pdf/invitation-document.tsx"),
+      "utf8",
+    );
+    assert.doesNotMatch(docSrc, /satzungskonform|tüzüğe uygun|noticeEvaluation|Noch nicht versandt/);
   });
 });

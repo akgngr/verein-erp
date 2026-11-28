@@ -13,7 +13,6 @@ import { Letterhead, type LetterheadProfile } from "@/shared/pdf/letterhead";
 
 import { registerMinutesFonts } from "./fonts";
 import { MINUTES_STRINGS } from "./strings";
-import type { NoticePeriodEvaluation } from "../services/notice-period";
 
 export interface InvitationPdfData {
   lang: PdfLang;
@@ -28,7 +27,6 @@ export interface InvitationPdfData {
   description: string | null;
   quorumRequired: number | null;
   invitationSentAt: Date | null;
-  noticeEvaluation: NoticePeriodEvaluation;
   agendaItems: Array<{
     position: number;
     title: string;
@@ -50,13 +48,6 @@ export const INVITATION_PDF_STRINGS = {
     quorum: "Beschlussfähigkeit",
     quorumValue: (n: number) => `Mindestens ${n} stimmberechtigte Teilnehmende`,
     invitationDate: "Einladungsdatum",
-    noticeLeadTime: "Ladungsfrist",
-    noticeCompliant: (actual: number, req: number) =>
-      `${actual} Tage vor Sitzungstermin (satzungskonform, mind. ${req} Tage)`,
-    noticeShort: (actual: number, req: number) =>
-      `Hinweis: ${actual} Tage Vorlauf (Satzungsrichtwert: ${req} Tage)`,
-    noticeNotSent: (req: number) =>
-      `Noch nicht versandt (Satzungsrichtwert: mind. ${req} Tage vorher)`,
     agendaTitle: "Tagesordnung (TOP)",
     noAgenda: "Für diese Sitzung wurden noch keine Tagesordnungspunkte hinterlegt.",
     closingNote:
@@ -78,13 +69,6 @@ export const INVITATION_PDF_STRINGS = {
     quorum: "Toplantı yeter sayısı",
     quorumValue: (n: number) => `En az ${n} oy hakkına sahip katılımcı`,
     invitationDate: "Davet tarihi",
-    noticeLeadTime: "Davet süresi",
-    noticeCompliant: (actual: number, req: number) =>
-      `Toplantıdan ${actual} gün önce (tüzüğe uygun, en az ${req} gün)`,
-    noticeShort: (actual: number, req: number) =>
-      `Uyarı: ${actual} gün önceden (tüzük ölçütü: ${req} gün)`,
-    noticeNotSent: (req: number) =>
-      `Henüz gönderilmedi (tüzük ölçütü: en az ${req} gün önce)`,
     agendaTitle: "Gündem Maddeleri",
     noAgenda: "Bu toplantı için henüz gündem maddesi eklenmemiştir.",
     closingNote:
@@ -175,21 +159,6 @@ export function InvitationDocument({ data }: { data: InvitationPdfData }) {
       ? `${data.startTime} – ${data.endTime}`
       : (data.startTime ?? "—");
 
-  const noticeText =
-    data.noticeEvaluation.status === "compliant" &&
-    data.noticeEvaluation.actualDays !== null
-      ? s.noticeCompliant(
-          data.noticeEvaluation.actualDays,
-          data.noticeEvaluation.requiredDays,
-        )
-      : data.noticeEvaluation.status === "short_notice" &&
-          data.noticeEvaluation.actualDays !== null
-        ? s.noticeShort(
-            data.noticeEvaluation.actualDays,
-            data.noticeEvaluation.requiredDays,
-          )
-        : s.noticeNotSent(data.noticeEvaluation.requiredDays);
-
   return (
     <Document title={`${s.heading} ${data.meetingNumber}`}>
       <Page size="A4" style={styles.page}>
@@ -245,10 +214,6 @@ export function InvitationDocument({ data }: { data: InvitationPdfData }) {
               </Text>
             </View>
           ) : null}
-          <View style={styles.infoRow}>
-            <Text style={styles.infoLabel}>{s.noticeLeadTime}:</Text>
-            <Text style={styles.infoValue}>{noticeText}</Text>
-          </View>
         </View>
 
         <Text style={styles.sectionTitle}>{s.agendaTitle}</Text>
