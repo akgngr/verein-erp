@@ -7099,7 +7099,10 @@
       "markedToast": "{count} Teilnehmer als „anwesend“ markiert",
       "namePlaceholder": "Vor- und Nachname",
       "member": "Vereinsmitglied",
-      "openMember": "Mitgliedsdatensatz öffnen"
+      "openMember": "Mitgliedsdatensatz öffnen",
+      "proxy": "Stimmrechtsübertragung",
+      "noProxy": "Keine Übertragung",
+      "proxyWeight": "Stimmgewicht: {weight}"
     },
     "attendeeAdd": {
       "title": "Teilnehmer hinzufügen",
@@ -7261,6 +7264,13 @@
       "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
       "approveNeedsAgenda": "Zur Freigabe ist mindestens ein Tagesordnungspunkt erforderlich.",
       "approveNeedsPresent": "Zur Freigabe muss mindestens ein Teilnehmer als „anwesend“ markiert sein.",
+      "proxySelf": "Ein Teilnehmer kann sich nicht selbst bevollmächtigen.",
+      "proxySourceNoMember": "Nur Vereinsmitglieder können ihr Stimmrecht übertragen.",
+      "proxySourcePresent": "Ein anwesender Teilnehmer kann sein Stimmrecht nicht übertragen.",
+      "proxyTargetNotPresent": "Das Stimmrecht kann nur an ein anwesendes Mitglied übertragen werden.",
+      "proxyTargetNoMember": "Das Stimmrecht kann nur an ein Vereinsmitglied übertragen werden.",
+      "proxyTargetHasProxy": "Der Bevollmächtigte darf sein eigenes Stimmrecht nicht weiterübertragen haben.",
+      "proxyLockedByOpenVote": "Für dieses Mitglied wurden bereits Stimmrechte in einer offenen Abstimmung reserviert; Anwesenheit oder Vollmacht können nicht mehr geändert werden.",
       "meetingNotFound2": "Sitzung nicht gefunden.",
       "notEditable": "Die Sitzung kann nicht bearbeitet werden.",
       "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten.",
@@ -7449,6 +7459,7 @@
         "CLOSED": "Geschlossen"
       },
       "issuedCount": "{count} Codes ausgegeben",
+      "proxyWeight": "×{weight} Stimmen",
       "minBallotsInfo": "mindestens {count} Stimmen",
       "issued": "Code ausgegeben",
       "issue": "Code ausgeben",

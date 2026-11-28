@@ -376,7 +376,17 @@ export async function MeetingDetailView({
           votes={votes}
           present={meeting.attendees
             .filter((attendee) => attendee.memberId && attendee.attendance === "PRESENT")
-            .map((attendee) => ({ memberId: attendee.memberId as string, name: attendee.name }))}
+            .map((attendee) => ({
+              memberId: attendee.memberId as string,
+              name: attendee.name,
+              weight:
+                1 +
+                meeting.attendees.filter(
+                  (other) =>
+                    other.proxyToAttendeeId === attendee.id &&
+                    other.attendance !== "PRESENT",
+                ).length,
+            }))}
           agendaItems={meeting.agendaItems.map((item) => ({ id: item.id, position: item.position, title: item.title }))}
           editable={contentEditable}
         />

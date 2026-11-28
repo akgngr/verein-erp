@@ -45,7 +45,7 @@ Verein ERP 46 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [SEPA otomatik ödeme](./moduller/sepa) | Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı. | 1.2.3 |
 | [Sosyal Giriş](./moduller/social-login) | Harici kimlik sağlayıcıları ve bağlı hesaplar. | 1.0.0 |
 | [Takvim](./moduller/calendar) | Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde. | 1.3.18 |
-| [Toplantılar](./moduller/meetings) | Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar. | 1.5.0 |
+| [Toplantılar](./moduller/meetings) | Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar. | 1.6.0 |
 | [Toplu e-posta](./moduller/mailings) | Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta. | 2.7.3 |
 | [Üyeler](./moduller/members) | Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi. | 1.16.2 |
 

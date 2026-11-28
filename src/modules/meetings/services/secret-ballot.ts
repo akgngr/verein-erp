@@ -2,6 +2,7 @@ import "server-only";
 
 import { getDb } from "@/shared/db";
 
+import { getRepresentedMemberIds } from "../lib/proxy-voting";
 import {
   addMonthsUtc,
   ballotListHash,
@@ -44,27 +45,43 @@ export async function openVote(meetingId: string, input: { question: string; opt
 }
 
 /**
- * Check-in desk: the member must be a PRESENT attendee with a member id. Creates the eligibility row and a one-time
- * credential in one transaction and returns the plain code ONCE (printed or shown on the kiosk). Nothing links the
- * credential to the member: the credential row has no member id and no time.
+ * Check-in desk: the member must be a PRESENT attendee with a member id. Reserves an eligibility row for the
+ * holder and every represented proxy member, and issues N unit-weight (weight=1) one-time credentials in one
+ * transaction (RFC-004 §2.3: no combined-weight correlation key on credentials/ballots).
  */
-export async function issueBallot(voteId: string, memberId: string): Promise<{ ok: true; code: string } | Fail> {
+export async function issueBallot(voteId: string, memberId: string): Promise<{ ok: true; code: string; codes: string[] } | Fail> {
   const db = getDb();
   const vote = await db.meetingVote.findUnique({ where: { id: voteId }, select: { status: true, meetingId: true } });
   if (!vote || vote.status !== "OPEN") return { ok: false, error: "voteNotOpen" };
-  const attendee = await db.meetingAttendee.findFirst({ where: { meetingId: vote.meetingId, memberId, attendance: "PRESENT" }, select: { id: true } });
+  const attendees = await db.meetingAttendee.findMany({
+    where: { meetingId: vote.meetingId },
+    select: { id: true, memberId: true, attendance: true, proxyToAttendeeId: true },
+  });
+  const attendee = attendees.find((a) => a.memberId === memberId && a.attendance === "PRESENT");
   if (!attendee) return { ok: false, error: "notPresent" };
-  const code = newBallotCode();
+  const representedMemberIds = getRepresentedMemberIds(attendee.id, attendees);
+  if (representedMemberIds.length === 0) return { ok: false, error: "notPresent" };
+
+  const codes = representedMemberIds.map(() => newBallotCode());
+  const usedAt = minutePrecision(new Date());
   try {
     await db.$transaction([
-      db.meetingVoteEligibility.create({ data: { voteId, memberId, weight: 1, usedAt: minutePrecision(new Date()) } }),
-      db.meetingVoteCredential.create({ data: { voteId, credentialHash: hashBallotCode(code), weight: 1 } }),
+      ...representedMemberIds.map((representedMemberId) =>
+        db.meetingVoteEligibility.create({
+          data: { voteId, memberId: representedMemberId, weight: 1, usedAt },
+        }),
+      ),
+      ...codes.map((code) =>
+        db.meetingVoteCredential.create({
+          data: { voteId, credentialHash: hashBallotCode(code), weight: 1 },
+        }),
+      ),
     ]);
   } catch (error) {
     if ((error as { code?: string }).code === "P2002") return { ok: false, error: "alreadyIssued" };
     throw error;
   }
-  return { ok: true, code };
+  return { ok: true, code: codes[0]!, codes };
 }
 
 /** Public question for the kiosk after the code was typed (no personal data). */
