@@ -10,7 +10,7 @@ import { getMessageTranslator } from "@/shared/i18n/translate-message";
  * kalemler tek hatada listelenir (§ 18 kabul: "ALL missing items are listed").
  */
 
-export type IssueContent = "DONATION" | "MEMBERSHIP_FEE";
+export type IssueContent = "DONATION" | "IN_KIND_DONATION" | "MEMBERSHIP_FEE";
 
 export class ReadinessError extends Error {
   readonly items: string[];

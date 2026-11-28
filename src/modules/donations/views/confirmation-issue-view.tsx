@@ -116,7 +116,8 @@ export async function ConfirmationIssueView({
 
   let step2: ReactNode = null;
   if (mode === "tek" || mode === "toplu") {
-    const recipients = await findBatchRecipients("DONATION", year);
+    const excludeInKind = mode === "toplu";
+    const recipients = await findBatchRecipients("DONATION", year, { excludeInKind });
     const selected =
       donorId && recipients.some((recipient) => recipient.id === donorId)
         ? donorId
@@ -140,7 +141,9 @@ export async function ConfirmationIssueView({
             mode={mode}
             donorId={selected}
             year={year}
-            candidates={toRows(await findDonationCandidates(selected, year))}
+            candidates={toRows(
+              await findDonationCandidates(selected, year, { excludeInKind }),
+            )}
             canIssue={canIssue}
           />
         ) : null}
@@ -178,7 +181,9 @@ export async function ConfirmationIssueView({
     );
   } else if (mode === "yillik") {
     const content = batchContent === "aidat" ? "MEMBERSHIP_FEE" : "DONATION";
-    const recipients = await findBatchRecipients(content, year);
+    const recipients = await findBatchRecipients(content, year, {
+      excludeInKind: content === "DONATION",
+    });
     step2 = (
       <>
         <IssueFilters

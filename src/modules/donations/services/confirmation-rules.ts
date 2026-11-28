@@ -39,3 +39,28 @@ export function validateRecipientAddress(input: RecipientAddressInput):
     country: input.country?.trim() || "Deutschland",
   };
 }
+
+/**
+ * Validates that organization profile & exemption notice readiness checks from
+ * `getReadiness()` are complete and valid (§ 63 Abs. 5 AO) before generating a
+ * § 50 Abs. 4 Satz 1 Nr. 2 EStDV simplified proof PDF.
+ */
+export function checkSimplifiedProofReadiness(
+  items: Array<{ key: string; ok: boolean; label: string; fixHref: string | null }>,
+): { ok: true } | { ok: false; missing: string[]; fixHref: string } {
+  const requiredKeys = new Set(["organization", "validity"]);
+  const blockers = items.filter((item) => requiredKeys.has(item.key) && !item.ok);
+  const foundKeys = new Set(items.map((item) => item.key));
+  if (
+    blockers.length > 0 ||
+    !foundKeys.has("organization") ||
+    !foundKeys.has("validity")
+  ) {
+    return {
+      ok: false,
+      missing: blockers.map((item) => item.label),
+      fixHref: blockers.find((item) => item.fixHref)?.fixHref ?? "/ayarlar/dernek",
+    };
+  }
+  return { ok: true };
+}

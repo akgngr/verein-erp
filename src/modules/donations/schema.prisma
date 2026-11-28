@@ -19,7 +19,14 @@ enum DonationMethod {
   CARD // Kart
   PAYPAL // PayPal
   REIMBURSEMENT_WAIVER // Aufwandsspende (gider vazgeçimi) — bu yöntemle ZORUNLU
+  IN_KIND // Sachzuwendung (ayni bağış) — nakit/banka fişi açılmaz (#618)
   OTHER // Diğer
+}
+
+enum InKindOrigin {
+  BUSINESS_ASSETS // Betriebsvermögen
+  PRIVATE_ASSETS // Privatvermögen
+  UNKNOWN // Keine Angabe zur Herkunft
 }
 
 enum ConfirmationKind {
@@ -29,6 +36,7 @@ enum ConfirmationKind {
 
 enum ConfirmationContent {
   DONATION // Geldzuwendungen
+  IN_KIND_DONATION // Sachzuwendungen (#618)
   MEMBERSHIP_FEE // Mitgliedsbeiträge
 }
 
@@ -103,6 +111,11 @@ model Donation {
   method            DonationMethod
   reference         String? // dekont/eşleştirme referansı (≤ 100)
   purposeNote       String? // bağışın amacı notu (≤ 300)
+
+  // Sachzuwendung (#618): yalnız method = IN_KIND iken dolu; nakit/banka fişi açılmaz.
+  itemDescription           String? // Genaue Bezeichnung des Wirtschaftsgutes (5-500)
+  inKindOrigin              InKindOrigin?
+  valuationRecordsAvailable Boolean @default(false) // Unterlagen zur Wertermittlung liegen vor
 
   // Aufwandsspende (§ 11 md. 4): önceden doğmuş gider karşı talebinden vazgeçme.
   waivedReimbursement Boolean @default(false)

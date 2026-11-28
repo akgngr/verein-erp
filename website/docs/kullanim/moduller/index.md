@@ -27,7 +27,7 @@ Verein ERP 45 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 
 | Modül | Açıklama | Sürüm |
 |---|---|---|
-| [Bağışlar](./moduller/donations) | Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi. | 1.1.15 |
+| [Bağışlar](./moduller/donations) | Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi. | 1.2.0 |
 | [Banka bağlantısı](./moduller/banking) | Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketleri muhasebeye aktarır. | 1.1.10 |
 | [CRM](./moduller/crm) | Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı ve takipler. | 1.0.12 |
 | [Demo veri](./moduller/demo) | Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler. | 1.0.5 |
@@ -38,7 +38,7 @@ Verein ERP 45 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Geri bildirim](./moduller/feedback) | Test kullanıcılarının hata ve önerilerini toplar. | 1.2.0 |
 | [Hibeler](./moduller/grants) | Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kullanım raporu). | 1.0.13 |
 | [Kurslar](./moduller/courses) | Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı. | 1.4.18 |
-| [Muhasebe](./moduller/accounting) | Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura ve bütçe yönetimi. | 1.28.0 |
+| [Muhasebe](./moduller/accounting) | Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura ve bütçe yönetimi. | 1.29.2 |
 | [Öğrenci takibi](./moduller/progress) | Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli raporu. | 1.1.9 |
 | [Öğrenciler](./moduller/students) | Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayıtları. | 1.4.14 |
 | [Security Monitor](./moduller/security-monitor) | Regularly runs system security tests and monitors results | 1.4.1 |

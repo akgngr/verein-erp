@@ -4854,6 +4854,7 @@
       "donorFromMember": "Üyeden oluştur",
       "date": "Bağış tarihi (Tag der Zuwendung)",
       "amount": "Tutar (€)",
+      "inKindValue": "Değerleme tutarı (€)",
       "amountHint": "300 € ve altındaki bağışlar için resmi bildirim zorunlu değildir (banka dekontu yeterlidir).",
       "methodLabel": "Yöntem",
       "method": {
@@ -4861,9 +4862,19 @@
         "BANK_TRANSFER": "Banka havalesi (Überweisung)",
         "CARD": "Kart (Kartenzahlung)",
         "PAYPAL": "PayPal",
+        "IN_KIND": "Ayni bağış (Sachzuwendung)",
         "REIMBURSEMENT_WAIVER": "Aufwandsspende",
         "OTHER": "Diğer (Sonstige)"
       },
+      "inKindNotice": "Ayni bağışlar (Sachzuwendung) nakit/banka akışı oluşturmadığı için muhasebe gelir fişi açılmaz. BMF Anlage 4 uyumlu tekil bağış bildirimi düzenlenebilir.",
+      "itemDescription": "Eşyanın ayrıntılı tanımı (yaş, durum, alış fiyatı vb.)",
+      "inKindOrigin": "Malvarlığı kaynağı (BMF)",
+      "origin": {
+        "BUSINESS_ASSETS": "Ticari malvarlığı (Betriebsvermögen)",
+        "PRIVATE_ASSETS": "Özel malvarlığı (Privatvermögen)",
+        "UNKNOWN": "Kaynak belirtilmedi (Keine Angabe)"
+      },
+      "valuationRecordsAvailable": "Değerleme belgeleri (fatura, ekspertiz vb.) mevcut",
       "paypalHint": "Yalnızca derneğe net ulaşan tutarı girin (PayPal komisyonu bağış değildir).",
       "reference": "Referans",
       "purposeNote": "Amaç notu",
@@ -4887,6 +4898,9 @@
         "method": "Yöntem",
         "reference": "Referans",
         "purposeNote": "Amaç notu",
+        "itemDescription": "Ayni bağış tanımı",
+        "inKindOrigin": "Malvarlığı kaynağı",
+        "valuationRecordsAvailable": "Değerleme belgesi mevcut",
         "waived": "Aufwandsspende",
         "claimBasis": "Talep dayanağı",
         "waiverDeclaredAt": "Beyan tarihi",
@@ -4903,7 +4917,8 @@
       "cancelReason": "İptal nedeni (5-300 karakter)",
       "cancelHint": "Muhasebe fişleri ters kayıt edilir; iptal edilmiş bağış üstü çizili görünür ve istatistiklerden hariç tutulur.",
       "toastCancelled": "Bağış iptal edildi.",
-      "issue": "Bildirim oluştur"
+      "issue": "Bildirim oluştur",
+      "simplifiedProofPdf": "≤ 300 € Basitleştirilmiş Kanıt (PDF)"
     },
     "donors": {
       "title": "Bağışçılar (Spender)",
@@ -4970,6 +4985,7 @@
       },
       "content": {
         "DONATION": "Bağış",
+        "IN_KIND_DONATION": "Ayni bağış (Sachzuwendung)",
         "MEMBERSHIP_FEE": "Aidat"
       },
       "status": {
@@ -5081,9 +5097,11 @@
       "readiness": "Hazır olma kontrolü",
       "preview": "Şablon önizlemeleri (MUSTER)",
       "previewSingleDonation": "Tek bağış",
+      "previewSingleInKind": "Tek ayni bağış (Sachzuwendung — BMF Anlage 4)",
       "previewCollectiveDonation": "Toplu bağış (Sammelbestätigung + Anlage)",
       "previewSingleFee": "Tek aidat",
       "previewCollectiveFee": "Toplu aidat",
+      "simplifiedProofDownload": "≤ 300 € Basitleştirilmiş Bağış Kanıtı (§ 50 Abs. 4 Nr. 2 EStDV + GiroCode)",
       "bmflink": "BMF amtliche Muster (Formularcenter)",
       "bmflinkHref": "https://www.bundesfinanzministerium.de/Formularcenter",
       "confirmLabel": "Preview'deki metni BMF'nin resmi örneğiyle karşılaştırdım; derneğimizin durumuna uygun",
@@ -5172,7 +5190,12 @@
       "feePaymentsCovered": "Tüm ödemeler zaten aktif bir bildirimde.",
       "noDonationsInYear": "Bu bağışçının o yıl için bildirilebilir bağışı yok.",
       "replaceNotCancelled": "Yalnızca iptal edilmiş bir bildirimin yerine yenisi oluşturulabilir.",
-      "alreadyReplaced": "Bu bildirimin yerine zaten yenisi oluşturulmuş."
+      "alreadyReplaced": "Bu bildirimin yerine zaten yenisi oluşturulmuş.",
+      "inKindDetailsMissing": "Ayni bağış bildirimi için eşya tanımı ve malvarlığı kaynağı zorunludur.",
+      "inKindNoCollective": "Ayni bağışlar ({number}) Sammelbestätigung (toplu bildirim) içine alınamaz; tekil bildirim oluşturun.",
+      "simplifiedProofNotInKind": "Basitleştirilmiş bağış kanıtı (§ 50 Abs. 4 Nr. 2 EStDV) yalnızca nakdi bağışlar içindir; ayni bağışta geçerli değildir.",
+      "simplifiedProofLimit": "Basitleştirilmiş bağış kanıtı yalnızca 300,00 € ve altındaki bağışlar için geçerlidir.",
+      "simplifiedProofIncompleteExemption": "Basitleştirilmiş bağış kanıtı üretilemedi: Dernek Bilgileri (/ayarlar/dernek) sayfasında muafiyet belgesi (Freistellungsbescheid), vergi numarası ve geçerlilik bilgilerini tamamlayın."
     },
     "validation": {
       "periodStartInvalid": "Geçerli bir dönem başlangıcı girin.",
@@ -5187,6 +5210,11 @@
       "amountTooLarge": "Tutar çok büyük.",
       "referenceMax": "Referans en fazla 100 karakter olabilir.",
       "purposeMax": "Amaç notu en fazla 300 karakter olabilir.",
+      "itemDescriptionRequired": "Ayni bağış tanımı zorunludur (en az 5 karakter).",
+      "itemDescriptionMax": "Ayni bağış tanımı en fazla 500 karakter olabilir.",
+      "inKindOriginRequired": "Ayni bağış için malvarlığı kaynağı seçin.",
+      "inKindNoWaiver": "Ayni bağışlarda Aufwandsspende (gider vazgeçimi) seçilemez.",
+      "waiverMethodRequired": "Aufwandsspende için yöntem 'Aufwandsspende' olmalıdır.",
       "basisMax": "Dayanak en fazla 300 karakter olabilir.",
       "basisRequired": "Önceden doğmuş talebin dayanağı zorunludur (en az 5 karakter).",
       "waiverDateRequired": "Vazgeçimin beyan tarihi zorunludur.",
@@ -5230,6 +5258,7 @@
         },
         "contents": {
           "DONATION": "Geldspende (Bağış)",
+          "IN_KIND_DONATION": "Sachzuwendung (Ayni bağış)",
           "MEMBERSHIP_FEE": "Mitgliedsbeitrag (Aidat)"
         }
       },
@@ -5253,6 +5282,7 @@
           "BANK_TRANSFER": "Banka havalesi (Überweisung)",
           "CARD": "Kart (Kartenzahlung)",
           "PAYPAL": "PayPal",
+          "IN_KIND": "Ayni bağış (Sachzuwendung)",
           "REIMBURSEMENT_WAIVER": "Aufwandsspende (gider vazgeçimi)",
           "OTHER": "Diğer (Sonstige)"
         }
@@ -5305,6 +5335,7 @@
               "BANK_TRANSFER": "Havale",
               "CARD": "Kart",
               "PAYPAL": "PayPal",
+              "IN_KIND": "Ayni bağış",
               "REIMBURSEMENT_WAIVER": "Gider vazgeçimi",
               "OTHER": "Diğer"
             }
