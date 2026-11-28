@@ -11,6 +11,7 @@ import type { Role } from "@/shared/roles";
 import { berlinToday, formatDateOnly } from "../utils";
 import {
   sortUnifiedLinkedItems,
+  toCrmHubItem,
   type UnifiedLinkedTaskItem,
   type UnifiedTaskSource,
 } from "../services/unified-hub-sort";
@@ -79,19 +80,7 @@ export async function listUnifiedLinkedItems(
                 row.note.toLocaleLowerCase("tr").includes(needle) ||
                 row.partyName.toLocaleLowerCase("tr").includes(needle),
             )
-            .map((row) => {
-              const dueIso = row.dueAt.slice(0, 10);
-              return {
-                id: `crm:${row.id}`,
-                source: "crm" as const,
-                title: row.note,
-                contextLabel: row.partyName,
-                assigneeLabel: null,
-                dueDate: dueIso,
-                isOverdue: dueIso < todayIso,
-                href: `/crm/${row.partyId}`,
-              };
-            }),
+            .map((row) => toCrmHubItem(row)),
         )
         .catch(() => []),
     );

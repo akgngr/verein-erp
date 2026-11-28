@@ -13,6 +13,11 @@
           "type": "improvement",
           "tr": "Görevler modülünün Birleşik Görev Merkezi'nde açık CRM takiplerini gösterebilmesi için listOpenFollowUpsForHub sunucu yardımcısı dışa aktarıldı.",
           "de": "Server-Hilfsfunktion listOpenFollowUpsForHub exportiert, damit offene CRM-Wiedervorlagen im Aufgaben-Hub erscheinen."
+        },
+        {
+          "type": "improvement",
+          "tr": "/crm?kayit=<id> bağlantısı ilgili kişinin panelini açar (ör. Görev Merkezi'nden); yalnız listede görünen kişi açılır.",
+          "de": "Der Link /crm?kayit=<id> öffnet das Kontaktpanel direkt (z. B. aus dem Aufgaben-Hub); geöffnet wird nur ein Kontakt, der in der Liste sichtbar ist."
         }
       ]
     },

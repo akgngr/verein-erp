@@ -13,6 +13,11 @@
           "type": "feature",
           "tr": "Görevler ve Bana atananlar ekranlarında etkin ve yetkili modüllerden gelen açık toplantı aksiyonları ile CRM takipleri kaynak bağlantılarıyla birlikte tek panelde listeleniyor.",
           "de": "Offene Sitzungsaufgaben und CRM-Wiedervorlagen aus aktiven, berechtigten Modulen werden nun samt direktem Quellverweis im Aufgaben-Hub gebündelt."
+        },
+        {
+          "type": "fix",
+          "tr": "Görev Merkezi'ndeki CRM takiplerinin tarihi Berlin saatine göre gösterilir, süresi geçtiği anda gecikmiş sayılır ve bağlantı kişiyi CRM'de açar.",
+          "de": "CRM-Nachfassaufgaben im Aufgaben-Hub zeigen das Datum nach Berliner Zeit, gelten ab dem Fälligkeitszeitpunkt als überfällig und öffnen den Kontakt im CRM."
         }
       ]
     },

@@ -99,12 +99,15 @@ export function CrmApp({
   followUps,
   stats,
   can,
+  initialOpenId = null,
 }: {
   parties: PartyRow[];
   deals: DealRow[];
   followUps: FollowUpRow[];
   stats: Stats;
   can: { create: boolean; update: boolean; delete: boolean };
+  /** Party to open on load (deep link `?kayit=<id>`). */
+  initialOpenId?: string | null;
 }) {
   const t = useTranslations("crm");
   const format = useFormatter();
@@ -113,7 +116,7 @@ export function CrmApp({
   const [tab, setTab] = useState("parties");
   const [query, setQuery] = useState("");
   const [stage, setStage] = useState<string>("");
-  const [openId, setOpenId] = useState<string | null>(null);
+  const [openId, setOpenId] = useState<string | null>(initialOpenId);
   const [adding, setAdding] = useState(false);
   const money = (cents: number | null) =>
     cents === null

@@ -1,3 +1,5 @@
+import { berlinToday, formatDateOnly } from "../utils";
+
 export type UnifiedTaskSource = "meetings" | "crm";
 
 export interface UnifiedLinkedTaskItem {
@@ -21,4 +23,26 @@ export function sortUnifiedLinkedItems(
     if (b.dueDate) return 1;
     return a.title.localeCompare(b.title);
   });
+}
+
+/**
+ * CRM follow-ups carry a real deadline instant (unlike date-only meeting action items).
+ * The hub shows its Europe/Berlin calendar day and, like the CRM list, treats it as overdue
+ * once the instant has passed. The link opens the party in the CRM view (`?kayit=`).
+ */
+export function toCrmHubItem(
+  row: { id: string; dueAt: string; note: string; partyId: string; partyName: string },
+  now: Date = new Date(),
+): UnifiedLinkedTaskItem {
+  const due = new Date(row.dueAt);
+  return {
+    id: `crm:${row.id}`,
+    source: "crm",
+    title: row.note,
+    contextLabel: row.partyName,
+    assigneeLabel: null,
+    dueDate: formatDateOnly(berlinToday(due)),
+    isOverdue: due.getTime() < now.getTime(),
+    href: `/crm?kayit=${encodeURIComponent(row.partyId)}`,
+  };
 }

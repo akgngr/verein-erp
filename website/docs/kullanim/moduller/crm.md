@@ -48,6 +48,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-27_
 
 - **İyileştirme:** Görevler modülünün Birleşik Görev Merkezi'nde açık CRM takiplerini gösterebilmesi için listOpenFollowUpsForHub sunucu yardımcısı dışa aktarıldı.
+- **İyileştirme:** /crm?kayit=&lt;id> bağlantısı ilgili kişinin panelini açar (ör. Görev Merkezi'nden); yalnız listede görünen kişi açılır.
 
 ### 1.0.12 — Yerel tarih alanları
 

@@ -135,4 +135,22 @@ describe("Roadmap E2.6 Unified Task Hub & Meetings Governance (#636)", () => {
     );
     assert.doesNotMatch(docSrc, /satzungskonform|tüzüğe uygun|noticeEvaluation|Noch nicht versandt/);
   });
+
+  it("maps CRM follow-ups by their deadline instant: Berlin display day, overdue once passed, CRM deep link", async () => {
+    const { toCrmHubItem } = await import("../../src/modules/tasks/services/unified-hub-sort");
+    const row = { id: "f1", note: "Call back", partyId: "party-1", partyName: "Synthetic GmbH" };
+    // 00:30 CET on 7 December is still 6 December in UTC.
+    const early = toCrmHubItem({ ...row, dueAt: "2026-12-06T23:30:00.000Z" }, new Date("2026-12-06T22:00:00.000Z"));
+    assert.equal(early.dueDate, "2026-12-07");
+    assert.equal(early.isOverdue, false);
+    // Same day, deadline already passed: overdue, like the CRM list.
+    const passed = toCrmHubItem({ ...row, dueAt: "2026-12-07T09:00:00.000Z" }, new Date("2026-12-07T10:00:00.000Z"));
+    assert.equal(passed.dueDate, "2026-12-07");
+    assert.equal(passed.isOverdue, true);
+    assert.equal(passed.href, "/crm?kayit=party-1");
+
+    const view = readFileSync(path.join(process.cwd(), "src/modules/crm/views/crm-view.tsx"), "utf8");
+    assert.ok(view.includes("(await searchParams)?.kayit"), "CRM view reads the deep link");
+    assert.ok(view.includes("parties.some((party) => party.id === openParam)"), "only a listed party can be opened");
+  });
 });

@@ -50,6 +50,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-27_
 
 - **Yeni:** Görevler ve Bana atananlar ekranlarında etkin ve yetkili modüllerden gelen açık toplantı aksiyonları ile CRM takipleri kaynak bağlantılarıyla birlikte tek panelde listeleniyor.
+- **Düzeltme:** Görev Merkezi'ndeki CRM takiplerinin tarihi Berlin saatine göre gösterilir, süresi geçtiği anda gecikmiş sayılır ve bağlantı kişiyi CRM'de açar.
 
 ### 1.3.14 — Bana atananlar ve toplantı bağlantısı
 
