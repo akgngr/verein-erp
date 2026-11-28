@@ -13,7 +13,7 @@ Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gön
 |---|---|
 | Anahtar | `mail` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.5.6 |
+| Sürüm | 1.6.0 |
 | Sayfalar | `/mail`, `/mail/gelen-kutusu`, `/mail/kayitlar` |
 
 ## Diğer modüllere erişim
@@ -24,7 +24,8 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 |---|---|---|
 | [Bildirimler](./notifications) | yazma | Sınıflamaya rıza veren kullanıcılara yeni e-posta bildirimi gönderir (gönderen ve konu olmadan). |
 | [Muhasebe](./accounting) | yazma | Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır. |
-| [Modül Yönetimi](./system) | okuma | Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir). |
+| [Evrak Kayıt](./documents) | yazma | Gelen e-postaları ve eklerini Evrak Kayıt modülüne gelen evrak olarak aktarır. |
+| [Modül Yönetimi](./system) | okuma | Muhasebe ve Evrak Kayıt modüllerinin etkin olup olmadığını okur (aktarma düğmeleri yalnızca etkinken gösterilir). |
 | [Görevler](./tasks) | yazma | Sekreterin onaylı "görev taslağı" önerisinden görev oluşturur (yalnız kullanıcı onayıyla). |
 | [Kullanıcılar](./users) | okuma | Görevdeki "oluşturan" etiketi için kullanıcının adını okur. |
 
@@ -38,6 +39,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | E-posta altyapısı | görüntüleme, oluşturma, düzenleme | — | — | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.6.0 — Evrak Kayıta aktarım ve zamanlanmış IMAP kontrolü (#631)
+
+_2026-11-27_
+
+- **Yeni:** Gelen kutusundan e-posta ve eklerini tek tıkla Evrak Kayıt modülüne aktarma ve her 15 dakikada bir çalışan zamanlanmış mail.fetch_inbox IMAP görevi eklendi.
+- **Düzeltme:** Evrak Kayıt aktarımında yalnız belgeye gerçekten eklenen ekler "aktarıldı" işaretlenir; sınırı aşan, doğrulamadan geçmeyen veya diskte bulunamayan ekler gelen kutusunda açık kalır ve sonuç "12 ekten 10 tanesi arşivlendi" biçiminde gösterilir.
+- **Düzeltme:** Belge bağlantısı e-posta düzeyinde saklanır: eki olmayan veya ekleri muhasebeye aktarılmış e-posta da ikinci kez evrak kaydı açmaz; eşzamanlı iki aktarımdan yalnız biri kayıt oluşturur. Bağlantı kayıt açılır açılmaz yazılır; ek saklama sonradan başarısız olsa da yeniden deneme aynı kayda gider.
 
 ### 1.5.6 — Ayar merkezi grubu
 
@@ -84,10 +93,4 @@ _2026-11-19_
 
 - **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
 
-### 1.4.4 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 13 herkese açık sürüm notu.
+Daha eski 14 herkese açık sürüm notu.

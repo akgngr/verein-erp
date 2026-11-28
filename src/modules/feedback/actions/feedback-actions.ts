@@ -7,6 +7,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { notify } from "@/modules/notifications/automation";
 
 import { feedbackPermissions } from "../permissions";
 import { feedbackUpdateSchema } from "../schemas/feedback";
@@ -21,6 +22,7 @@ export async function updateFeedbackAction(input: unknown): Promise<ActionResult
       const existing = await db.feedbackItem.findUnique({ where: { id: input.id } });
       if (!existing) throw new ActionError("feedback.errors.notFound");
       const replyChanged = (existing.adminReply ?? "") !== input.reply;
+      const statusChanged = existing.status !== input.status;
       await db.feedbackItem.update({
         where: { id: input.id },
         data: {
@@ -31,6 +33,18 @@ export async function updateFeedbackAction(input: unknown): Promise<ActionResult
         },
       });
       await audit({ action: "UPDATE", entity: "FeedbackItem", entityId: input.id, before: { status: existing.status, priority: existing.priority }, after: { status: input.status, priority: input.priority, replied: replyChanged } });
+      if (
+        existing.reporterId &&
+        existing.reporterId !== user.id &&
+        ((replyChanged && Boolean(input.reply)) || statusChanged)
+      ) {
+        await notify({
+          type: "feedback.replied",
+          recipients: [existing.reporterId],
+          ref: `feedback:${existing.id}:u:${Date.now()}`,
+          params: { id: existing.id, number: existing.number },
+        }).catch(() => 0);
+      }
       revalidatePath("/geri-bildirim");
       revalidatePath(`/geri-bildirim/${input.id}`);
       return undefined;

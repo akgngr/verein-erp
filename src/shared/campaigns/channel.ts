@@ -77,12 +77,29 @@ export function defineChannels(module: string, channels: CampaignChannel[]): Mod
   return { module, channels };
 }
 
-/** Alıcı listesini kanal için ayırır: gönderilecekler ve atlanma nedenleri. */
+/**
+ * Alıcı listesini kanal için ayırır: gönderilecekler ve atlanma nedenleri.
+ * Aynı kanal adresi (ör. ebeveynlerin ortak e-postası) yalnız bir kez gönderilir: uygun ilk alıcı kalır,
+ * sonrakiler `duplicates` sayılır. Tekilleştirme uygunluktan sonra yapılır; böylece izni olmayan ilk
+ * kayıt, izni olan ikincisini engellemez.
+ */
 export function splitForChannel(channel: Pick<CampaignChannel, "address" | "allowed">, list: Recipient[]) {
   const noAddress = list.filter((row) => !channel.address(row)).length;
   const optOut = list.filter((row) => channel.address(row) && !channel.allowed(row)).length;
-  const eligible = list.filter((row) => channel.address(row) && channel.allowed(row));
-  return { eligible, noAddress, optOut };
+  const seen = new Set<string>();
+  let duplicates = 0;
+  const eligible = list.filter((row) => {
+    const address = channel.address(row);
+    if (!address || !channel.allowed(row)) return false;
+    const key = address.trim().toLowerCase();
+    if (seen.has(key)) {
+      duplicates += 1;
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+  return { eligible, noAddress, optOut, duplicates };
 }
 
 /** Telefonu E.164 biçimine getirir ("0151 …" → "+49151…"); geçersizse null. */
