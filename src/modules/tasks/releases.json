@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.0",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "Birleşik Görev Merkezi: Toplantı aksiyonları ve CRM takipleri (#636)",
+        "de": "Einheitliche Aufgabenübersicht: Sitzungsaufgaben & CRM-Wiedervorlagen (#636)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Görevler ve Bana atananlar ekranlarında etkin ve yetkili modüllerden gelen açık toplantı aksiyonları ile CRM takipleri kaynak bağlantılarıyla birlikte tek panelde listeleniyor.",
+          "de": "Offene Sitzungsaufgaben und CRM-Wiedervorlagen aus aktiven, berechtigten Modulen werden nun samt direktem Quellverweis im Aufgaben-Hub gebündelt."
+        },
+        {
+          "type": "fix",
+          "tr": "Görev Merkezi'ndeki CRM takiplerinin tarihi Berlin saatine göre gösterilir, süresi geçtiği anda gecikmiş sayılır ve bağlantı kişiyi CRM'de açar.",
+          "de": "CRM-Nachfassaufgaben im Aufgaben-Hub zeigen das Datum nach Berliner Zeit, gelten ab dem Fälligkeitszeitpunkt als überfällig und öffnen den Kontakt im CRM."
+        }
+      ]
+    },
+    {
       "version": "1.3.14",
       "date": "2026-11-25",
       "title": {

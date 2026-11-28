@@ -91,7 +91,9 @@
   },
   "access": {
     "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
-    "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen.",
+    "meetings": "Liest Sitzungen und offene Sitzungsaufgaben für die einheitliche Aufgabenübersicht.",
+    "crm": "Liest offene CRM-Wiedervorlagen für die einheitliche Aufgabenübersicht.",
+    "system": "Prüft aktive Module, um nur freigegebene Quellen in der Aufgabenübersicht einzublenden.",
     "users": "Liest die Kontoe-Mail-Adresse des aktiven Benutzers für die Zuordnung eigener Aufgaben in der Sekretariatsübersicht.",
     "notifications": "Benachrichtigt die zugewiesene Person, wenn eine Aufgabe zugewiesen wird."
   },
@@ -156,6 +158,17 @@
     "assigned": {
       "title": "Ihnen wurde eine Aufgabe zugewiesen: {title}",
       "body": "Unter „Meine Aufgaben“ öffnen."
+    }
+  },
+  "unifiedHub": {
+    "title": "Verknüpfte Aufgaben & Wiedervorlagen",
+    "description": "Offene Sitzungsaufgaben und CRM-Wiedervorlagen mit direktem Quellverweis.",
+    "count": "{count} offen",
+    "overdue": "Überfällig",
+    "openSource": "Quelle öffnen",
+    "sources": {
+      "meetings": "Sitzung",
+      "crm": "CRM"
     }
   }
 }
