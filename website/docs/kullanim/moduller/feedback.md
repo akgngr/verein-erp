@@ -13,7 +13,7 @@ Test kullanıcılarının hata ve önerilerini toplar.
 |---|---|
 | Anahtar | `feedback` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.9 |
+| Sürüm | 1.2.0 |
 | Sayfalar | `/geri-bildirim` |
 
 ## Diğer modüllere erişim
@@ -23,6 +23,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | Modül | İşlem | Gerekçe |
 |---|---|---|
 | [Modül Yönetimi](./system) | okuma | Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur. |
+| [Bildirimler](./notifications) | yazma | Yönetici geri bildirimi yanıtladığında bildirimi gönderene bildirim iletir. |
 
 ## Varsayılan yetkiler
 
@@ -33,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Geri bildirim | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | — | görüntüleme, oluşturma | görüntüleme, oluşturma |
 
 ## Sürüm notları
+
+### 1.2.0 — Modül bağlamı ve yanıt bildirimi (#633)
+
+_2026-11-28_
+
+- **Yeni:** Geri bildirimlerde sayfa adresinden etkin modül ve sürüm otomatik kaydedilir; yönetici yanıtında bildirimi gönderene feedback.replied bildirimi iletilir.
 
 ### 1.1.9 — Geri bildirim bağlantılarında protokol doğrulaması
 
@@ -77,10 +84,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.1.1 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.

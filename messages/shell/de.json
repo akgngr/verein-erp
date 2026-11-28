@@ -187,6 +187,23 @@
     },
     "asideLabel": "Heute und Hinweise"
   },
+  "search": {
+    "triggerLabel": "Schnellsuche (Strg+K)",
+    "triggerShort": "Suchen",
+    "dialogLabel": "Globale Schnellsuche",
+    "placeholder": "Seite, Mitglied, Dokument, Sitzung oder Aufgabe suchen...",
+    "searching": "Suche läuft...",
+    "empty": "Keine Ergebnisse gefunden.",
+    "close": "Schließen",
+    "modules": {
+      "members": "Mitglieder",
+      "documents": "Dokumente",
+      "meetings": "Sitzungen",
+      "tasks": "Aufgaben",
+      "events": "Veranstaltungen",
+      "inventory": "Inventar"
+    }
+  },
   "meta": {
     "panel": "Dashboard",
     "evrak": "Dokumente",

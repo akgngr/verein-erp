@@ -16,6 +16,7 @@ import {
   loadPermissionPolicy,
 } from "@/modules/users/server";
 import { RolesProvider } from "@/shared/components/roles/roles-provider";
+import { QuickSearchPalette } from "@/shared/components/search/quick-search-palette";
 
 import {
   DesktopSidebar,
@@ -105,6 +106,7 @@ export default async function DashboardLayout({
           </AiAssistantSlot>
           {/* Test aşaması: sağ altta yüzen hata/öneri butonu (modül kapalıysa çizilmez). */}
           <FeedbackSlot user={user} />
+          <QuickSearchPalette role={user.role} activeModuleKeys={activeModuleKeys} />
           <MobileSidebar
             role={user.role}
             activeModuleKeys={activeModuleKeys}

@@ -235,6 +235,23 @@
     },
     "asideLabel": "Heute und Hinweise"
   },
+  "search": {
+    "triggerLabel": "Schnellsuche (Strg+K)",
+    "triggerShort": "Suchen",
+    "dialogLabel": "Globale Schnellsuche",
+    "placeholder": "Seite, Mitglied, Dokument, Sitzung oder Aufgabe suchen...",
+    "searching": "Suche läuft...",
+    "empty": "Keine Ergebnisse gefunden.",
+    "close": "Schließen",
+    "modules": {
+      "members": "Mitglieder",
+      "documents": "Dokumente",
+      "meetings": "Sitzungen",
+      "tasks": "Aufgaben",
+      "events": "Veranstaltungen",
+      "inventory": "Inventar"
+    }
+  },
   "meta": {
     "panel": "Dashboard",
     "evrak": "Dokumente",
@@ -5737,7 +5754,8 @@
       }
     },
     "access": {
-      "system": "Liest den Modulstatus, damit der schwebende Button nur bei aktivem Modul erscheint."
+      "system": "Liest den Modulstatus, damit der schwebende Button nur bei aktivem Modul erscheint.",
+      "notifications": "Benachrichtigt den Meldenden, wenn ein Administrator auf das Feedback antwortet."
     },
     "automation": {
       "events": {
@@ -5768,6 +5786,12 @@
             "feedbackId": "Eintrags-ID; meist nicht für Bedingungen"
           }
         }
+      }
+    },
+    "notifications": {
+      "replied": {
+        "title": "Antwort auf Ihr Feedback ({number})",
+        "body": "Antwort und aktuellen Status anzeigen."
       }
     }
   },

@@ -11,6 +11,7 @@ import { WidgetSlot } from "@/shared/widgets/components/widget-slot";
 import type { WidgetPreference } from "@/shared/widgets/contract";
 import { registry } from "@/registry";
 import { useTheme, type Theme } from "@/shared/components/theme-provider";
+import { QuickSearchTrigger } from "@/shared/components/search/quick-search-palette";
 import { findActiveModule, moduleHome } from "@/shared/navigation/module-nav";
 
 /** Server-resolved visibility and preferences. Never derive authorization from client state. */
@@ -83,6 +84,7 @@ export function WorkspaceHeader({ dateLabel, widgetAccess }: { dateLabel: string
         ) : null}
       </nav>
       <div className="flex shrink-0 items-center gap-4">
+        <QuickSearchTrigger />
         <span className="text-[12px] text-ink-500">{dateLabel}</span>
         <span className="h-4 w-px bg-ink-200" aria-hidden />
         {/* No server-derived access means no widgets: never grant access on the client. */}

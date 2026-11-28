@@ -21,6 +21,7 @@ export async function updateFeedbackAction(input: unknown): Promise<ActionResult
       const existing = await db.feedbackItem.findUnique({ where: { id: input.id } });
       if (!existing) throw new ActionError("feedback.errors.notFound");
       const replyChanged = (existing.adminReply ?? "") !== input.reply;
+      const statusChanged = existing.status !== input.status;
       await db.feedbackItem.update({
         where: { id: input.id },
         data: {
@@ -30,6 +31,19 @@ export async function updateFeedbackAction(input: unknown): Promise<ActionResult
           ...(replyChanged ? { repliedAt: input.reply ? new Date() : null, repliedByLabel: input.reply ? buildUserLabel(user.name, user.email) : null } : {}),
         },
       });
+      if ((replyChanged && Boolean(input.reply.trim())) || statusChanged) {
+        const { notify } = await import("@/modules/notifications/automation");
+        await notify({
+          type: "feedback.replied",
+          recipients: [existing.reporterId],
+          ref: `feedback:${existing.id}:${Date.now()}`,
+          params: {
+            feedbackId: existing.id,
+            number: existing.number,
+            status: input.status,
+          },
+        }).catch(() => 0);
+      }
       await audit({ action: "UPDATE", entity: "FeedbackItem", entityId: input.id, before: { status: existing.status, priority: existing.priority }, after: { status: input.status, priority: input.priority, replied: replyChanged } });
       revalidatePath("/geri-bildirim");
       revalidatePath(`/geri-bildirim/${input.id}`);

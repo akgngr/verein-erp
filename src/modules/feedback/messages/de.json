@@ -82,7 +82,8 @@
     }
   },
   "access": {
-    "system": "Liest den Modulstatus, damit der schwebende Button nur bei aktivem Modul erscheint."
+    "system": "Liest den Modulstatus, damit der schwebende Button nur bei aktivem Modul erscheint.",
+    "notifications": "Benachrichtigt den Meldenden, wenn ein Administrator auf das Feedback antwortet."
   },
   "automation": {
     "events": {
@@ -113,6 +114,12 @@
           "feedbackId": "Eintrags-ID; meist nicht für Bedingungen"
         }
       }
+    }
+  },
+  "notifications": {
+    "replied": {
+      "title": "Antwort auf Ihr Feedback ({number})",
+      "body": "Antwort und aktuellen Status anzeigen."
     }
   }
 }

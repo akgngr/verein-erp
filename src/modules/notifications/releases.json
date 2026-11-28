@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.16.2",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Çoklu süreç gerçek zamanlı SSE bildirimleri (#633)",
+        "de": "Prozessübergreifende Echtzeit-SSE-Benachrichtigungen (#633)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "PostgreSQL LISTEN/NOTIFY desteğiyle süreçler arası SSE güncellemesi ve okundu/ertele/kapat işlemlerinde anlık rozet senkronizasyonu eklendi.",
+          "de": "Prozessübergreifende SSE-Verteilung über PostgreSQL LISTEN/NOTIFY sowie sofortige Zähler-Synchronisation bei Gelesen/Schlummern/Verwerfen ergänzt."
+        }
+      ]
+    },
+    {
       "version": "0.16.1",
       "date": "2026-11-26",
       "title": {

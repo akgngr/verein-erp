@@ -16,6 +16,7 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { feedbackPermissions } from "../permissions";
 import { feedbackCreateSchema } from "../schemas/feedback";
+import { resolveFeedbackAppVersion } from "../services/module-context";
 
 const IMAGE_EXTENSIONS = ["png", "jpg", "jpeg"] as const;
 
@@ -77,7 +78,10 @@ export async function createFeedbackHandler(request: Request): Promise<Response>
         pageUrl: parsed.data.pageUrl || null,
         userAgent: parsed.data.userAgent || null,
         viewport: parsed.data.viewport || null,
-        appVersion: process.env.npm_package_version ?? null,
+        appVersion: resolveFeedbackAppVersion(
+          parsed.data.pageUrl,
+          process.env.npm_package_version ?? null,
+        ),
         screenshotPath: screenshot?.path ?? null,
         screenshotName: screenshot?.name ?? null,
         screenshotMime: screenshot?.mime ?? null,

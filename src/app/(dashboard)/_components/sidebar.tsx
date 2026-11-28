@@ -16,6 +16,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { QuickSearchTrigger } from "@/shared/components/search/quick-search-palette";
 import { usePathname, useSearchParams } from "next/navigation";
 import {
   createContext,
@@ -1012,6 +1013,7 @@ function MobileHeader({ widgetAccess }: { widgetAccess?: HeaderWidgetAccess }) {
         {` · ${tSidebar("brand")}`}
       </span>
       <div className="ml-auto flex min-w-0 shrink-0 items-center gap-2">
+        <QuickSearchTrigger compact />
         {widgetAccess ? <HeaderWidgetSlot access={widgetAccess} mobile /> : null}
         <ThemeMenu />
       </div>

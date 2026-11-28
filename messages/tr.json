@@ -235,6 +235,23 @@
     },
     "asideLabel": "Bugün ve hatırlatmalar"
   },
+  "search": {
+    "triggerLabel": "Hızlı arama (Ctrl+K)",
+    "triggerShort": "Ara",
+    "dialogLabel": "Genel hızlı arama",
+    "placeholder": "Sayfa, üye, evrak, toplantı veya görev ara...",
+    "searching": "Aranıyor...",
+    "empty": "Sonuç bulunamadı.",
+    "close": "Kapat",
+    "modules": {
+      "members": "Üyeler",
+      "documents": "Evrak Kayıt",
+      "meetings": "Toplantılar",
+      "tasks": "Görevler",
+      "events": "Etkinlikler",
+      "inventory": "Envanter"
+    }
+  },
   "meta": {
     "panel": "Panel",
     "evrak": "Evrak Kayıt",
@@ -5737,7 +5754,8 @@
       }
     },
     "access": {
-      "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur."
+      "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur.",
+      "notifications": "Yönetici geri bildirimi yanıtladığında bildirimi gönderene bildirim iletir."
     },
     "automation": {
       "events": {
@@ -5768,6 +5786,12 @@
             "feedbackId": "Kayıt kimliği; genellikle koşulda kullanılmaz"
           }
         }
+      }
+    },
+    "notifications": {
+      "replied": {
+        "title": "Geri bildiriminiz yanıtlandı ({number})",
+        "body": "Yönetici yanıtını ve güncel durumu görüntüleyin."
       }
     }
   },
