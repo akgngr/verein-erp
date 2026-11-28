@@ -486,5 +486,30 @@
   },
   "calendar": {
     "sessions": "Kurstermine"
+  },
+  "recipients": {
+    "guardians": {
+      "label": "Kurs-Erziehungsberechtigte",
+      "filters": {
+        "course": {
+          "label": "Kurs"
+        },
+        "status": {
+          "label": "Anmeldestatus",
+          "options": {
+            "ACTIVE": "Aktiv",
+            "COMPLETED": "Abgeschlossen",
+            "WITHDRAWN": "Abgemeldet"
+          }
+        },
+        "role": {
+          "label": "Empfängerkreis",
+          "options": {
+            "ALL_GUARDIANS": "Alle Erziehungsberechtigten",
+            "PAYER_ONLY": "Nur Zahlungspflichtige"
+          }
+        }
+      }
+    }
   }
 }

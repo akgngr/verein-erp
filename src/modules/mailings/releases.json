@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.7.3",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Ortak adrese tek gönderim",
+        "de": "Eine Nachricht pro gemeinsamer Adresse"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Kampanyada aynı kanal adresini (ör. ailenin ortak e-postası) paylaşan uygun alıcılar artık mesajı tek kez alır; tekilleştirme izin denetiminden sonra yapılır, böylece izni olmayan ilk kayıt izni olan ikinciyi engellemez.",
+          "de": "Empfänger einer Kampagne, die dieselbe Kanaladresse teilen (z. B. eine gemeinsame Familien-E-Mail), erhalten die Nachricht nur einmal; dedupliziert wird nach der Einwilligungsprüfung, sodass ein nicht einwilligender erster Eintrag einen einwilligenden zweiten nicht verdrängt."
+        }
+      ]
+    },
+    {
       "version": "2.7.2",
       "date": "2026-11-26",
       "title": {

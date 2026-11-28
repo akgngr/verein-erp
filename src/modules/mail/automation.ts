@@ -76,3 +76,26 @@ export const sendNotificationTask = defineTask({
     return { sent: true };
   },
 });
+
+/**
+ * Scheduled IMAP inbox polling task (`mail.fetch_inbox`).
+ * Safely no-ops when IMAP settings are not configured; otherwise fetches new messages
+ * read-only via `fetchImap()` and emits `mail.message_received` per newly stored email.
+ */
+export const fetchInboxTask = defineTask({
+  key: "mail.fetch_inbox",
+  version: 1,
+  description: "mail.fetch_inbox",
+  inputSchema: z.object({}).strict(),
+  timeoutSeconds: 180,
+  retry: { maxAttempts: 2 },
+  schedule: {
+    input: () => ({}),
+    minIntervalMinutes: 15,
+    automaticIntervalMinutes: 15,
+  },
+  handler: async () => {
+    const { runScheduledImapFetch } = await import("./services/inbox");
+    return runScheduledImapFetch();
+  },
+});
