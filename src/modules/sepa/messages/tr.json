@@ -23,6 +23,7 @@
   "collectionDate": "Tahsilat tarihi",
   "collectionHelp": "En az 2 iş günü sonrası önerilir.",
   "preview": "Önizle",
+  "ibanAmended": "IBAN değişti (AmdmntInd)",
   "previewSummary": "{count} kalem, toplam {total} tahsil edilebilir; {skipped} kalem atlandı.",
   "skippedTitle": "Atlanan {count} kalem",
   "skip": {

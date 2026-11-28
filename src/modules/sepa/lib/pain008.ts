@@ -2,7 +2,33 @@
  * SEPA-Lastschrift dosyası: pain.008.001.08 (DK-Spezifikation, CORE, RCUR). Bankaya yüklenir. Bağımlılıksız ve saf.
  * KARAR: 2016'dan beri ilk tahsilatta FRST zorunlu değil; tüm kalemler RCUR gönderilir.
  */
-export type DebitTransaction = { endToEndId: string; amountCents: number; mandateId: string; mandateDate: string; debtorName: string; debtorIban: string; debtorBic: string | null; remittance: string };
+export type DebitTransaction = {
+  endToEndId: string;
+  amountCents: number;
+  mandateId: string;
+  mandateDate: string;
+  debtorName: string;
+  debtorIban: string;
+  debtorBic: string | null;
+  remittance: string;
+  amendment?: {
+    /** Previous IBAN if known; otherwise SMNDA (Same Mandate New Debtor Account) is emitted. */
+    originalIban?: string | null;
+  };
+};
+
+/**
+ * Checks whether the current masked IBAN differs from the most recent non-cancelled run's
+ * masked IBAN for the same mandate reference.
+ */
+export function detectMandateIbanChange(
+  currentMaskedIban: string,
+  previousByMandate: ReadonlyMap<string, string>,
+  mandateReference: string,
+): boolean {
+  const prevMasked = previousByMandate.get(mandateReference);
+  return Boolean(prevMasked && prevMasked !== currentMaskedIban);
+}
 export type DebitBatch = { messageId: string; createdAt: Date; collectionDate: string; creditor: { name: string; iban: string; bic: string | null; creditorId: string }; transactions: DebitTransaction[] };
 
 /** SEPA karakter kümesi: ä/ö/ü/ß ve Türkçe ı/İ/ğ/ş/ç dönüştürülür, izin verilmeyenler boşluk olur. */
@@ -68,9 +94,16 @@ export function buildPain008(batch: DebitBatch): string {
       const debtorName = sepaText(tx.debtorName, 70);
       if (!debtorName) throw new Error("sepa.errors.invalidName");
       const remittance = sepaText(tx.remittance, 140) || "SEPA Lastschrift"; // i18n-ignore: Verwendungszweck
+      const amendmentXml = tx.amendment
+        ? `<AmdmntInd>true</AmdmntInd><AmdmntInfDtls>${
+            tx.amendment.originalIban
+              ? `<OrgnlDbtrAcct><Id><IBAN>${iban(tx.amendment.originalIban)}</IBAN></Id></OrgnlDbtrAcct>`
+              : "<OrgnlDbtrAgt><FinInstnId><Othr><Id>SMNDA</Id></Othr></FinInstnId></OrgnlDbtrAgt>"
+          }</AmdmntInfDtls>`
+        : "";
       return (
         `<DrctDbtTxInf><PmtId><EndToEndId>${esc(sepaRef(tx.endToEndId))}</EndToEndId></PmtId><InstdAmt Ccy="EUR">${amount(tx.amountCents)}</InstdAmt>` +
-        `<DrctDbtTx><MndtRltdInf><MndtId>${esc(sepaRef(tx.mandateId))}</MndtId><DtOfSgntr>${tx.mandateDate}</DtOfSgntr></MndtRltdInf></DrctDbtTx>` +
+        `<DrctDbtTx><MndtRltdInf><MndtId>${esc(sepaRef(tx.mandateId))}</MndtId><DtOfSgntr>${tx.mandateDate}</DtOfSgntr>${amendmentXml}</MndtRltdInf></DrctDbtTx>` +
         `<DbtrAgt>${agent(tx.debtorBic)}</DbtrAgt><Dbtr><Nm>${esc(debtorName)}</Nm></Dbtr><DbtrAcct><Id><IBAN>${iban(tx.debtorIban)}</IBAN></Id></DbtrAcct>` +
         `<RmtInf><Ustrd>${esc(remittance)}</Ustrd></RmtInf></DrctDbtTxInf>`
       );
