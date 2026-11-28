@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.16.2",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Üyelik belgesi ve üye kartı PDF çıktısı",
+        "de": "Mitgliedsbescheinigung & Mitgliedsausweis als PDF"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üye detay sayfasından iki dilli (TR/DE) Üyelik Belgesi ve Üye Kartı PDF'i indirme özelliği eklendi.",
+          "de": "Zweisprachige Mitgliedsbescheinigung inkl. Mitgliedsausweis als PDF auf der Mitgliedsdetailseite ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.16.1",
       "date": "2026-11-26",
       "title": {
