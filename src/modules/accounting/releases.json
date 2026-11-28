@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.29.4",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Ters kayıt sonrası banka hareketini yeniden açma",
+        "de": "Bankumsatz nach Storno wieder öffnen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Banka ile eşleştirilen kurs ödemeleri, bağışlar ve üyelik aktarımında iptal edilen ödemeler ters kaydedildiğinde ilgili banka hareketi aynı transaction içinde yeniden açılır (#630).",
+          "de": "Bei Storno bankzugeordneter Kurszahlungen, Spenden und stornierter Mitgliedszahlungen im Mitgliedsabgleich wird der zugehörige Bankumsatz in derselben Transaktion wieder geöffnet (#630)."
+        }
+      ]
+    },
+    {
       "version": "1.29.3",
       "date": "2026-11-28",
       "title": {

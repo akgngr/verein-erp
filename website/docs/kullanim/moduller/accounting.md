@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.29.3 |
+| Sürüm | 1.29.4 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/denetim`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -45,6 +45,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.29.4 — Ters kayıt sonrası banka hareketini yeniden açma
+
+_2026-11-28_
+
+- **Düzeltme:** Banka ile eşleştirilen kurs ödemeleri, bağışlar ve üyelik aktarımında iptal edilen ödemeler ters kaydedildiğinde ilgili banka hareketi aynı transaction içinde yeniden açılır (#630).
 
 ### 1.29.3 — Banka eşleştirmesinde alacak dekontu iadeleri
 
@@ -93,10 +99,4 @@ _2026-11-25_
 - **Düzeltme:** Kesilmiş faturanın tahsilatında faturadaki KDV oranları esas alınır; § 19 UStG ayarı sonradan açılsa da KDV'li fatura KDV'siz kaydedilmez.
 - **Düzeltme:** İçe aktarılan tedarikçi alacak dekontları (negatif tutarlar) iade olarak kapatılabilir: elle veya gelen banka hareketiyle eşleştirilir, gider ve ön KDV azaltılır.
 
-### 1.27.4 — Arayüz düzeltmeleri (#586)
-
-_2026-11-25_
-
-- **Düzeltme:** Varlık, götürü gider ve kasa kapanışı formlarında tarih alanları yerel biçimde (GG.AA.YYYY) ve takvimle seçilir.
-
-Daha eski 58 herkese açık sürüm notu.
+Daha eski 59 herkese açık sürüm notu.

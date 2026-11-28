@@ -13,6 +13,7 @@ import { assertBookingDateAllowed, assertCashNotClosed, isYearLocked } from "./b
 import { assertNoNegativeCash } from "./balances";
 import { effectiveTaxRate, getTaxSettings, taxColumnsFromGross } from "./tax";
 import { recordJournal } from "./journal";
+import { reopenBankTransactionForBooking } from "./bank-reopen";
 
 import { ActionError } from "@/modules/auth/server";
 
@@ -160,6 +161,9 @@ export async function reverseSourcedBooking(input: {
       },
     });
     await recordJournal(tx, bookings.map((booking) => booking.id), "REVERSE", input.actor);
+    if (input.sourceType === "COURSE_FEE" || input.sourceType === "DONATION") {
+      for (const booking of bookings) await reopenBankTransactionForBooking(tx, booking.id);
+    }
   };
 
   if (input.tx) return run(input.tx);

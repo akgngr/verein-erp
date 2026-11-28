@@ -104,3 +104,5 @@ export { getContactSummaries, searchContacts, type ContactSummary } from "./quer
 export { listProjectBookings, type ProjectBookingRow } from "./queries/project-bookings";
 export { getSepaCreditorSettings } from "./queries/sepa-creditor";
 export { AuditRoomView } from "./views/audit-room-view";
+
+export { reopenBankTransactionForBooking } from "./services/bank-reopen";
