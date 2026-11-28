@@ -15,8 +15,8 @@ import {
 
 import { registry } from "@/registry";
 import { Button, Spinner } from "@/shared/components/kit";
-import { can } from "@/shared/permissions/define";
 import type { Role } from "@/shared/roles";
+import { collectQuickSearchNavItems } from "@/shared/search/nav-items";
 import {
   filterQuickSearchItems,
   type QuickSearchApiResponse,
@@ -149,78 +149,25 @@ function QuickSearchDialog({
   }>({ forQuery: "", items: [] });
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Build permitted navigation items from active modules.
-  const navItems = useMemo<QuickSearchItem[]>(() => {
-    const activeSet = new Set(activeModuleKeys);
-    const seenHref = new Set<string>();
-    const items: QuickSearchItem[] = [
-      {
-        id: "nav:dashboard",
-        kind: "page",
-        moduleKey: "panel",
-        title: t("nav.panel"),
-        href: "/",
-        keywords: "dashboard panel ana sayfa startseite",
-      },
-    ];
-    seenHref.add("/");
-
-    for (const mod of registry) {
-      if (!activeSet.has(mod.key)) continue;
-      for (const nav of mod.nav ?? []) {
-        if (
-          nav.permission &&
-          !can(role, nav.permission.definition, nav.permission.action)
-        ) {
-          continue;
-        }
-        if (seenHref.has(nav.href)) continue;
-        seenHref.add(nav.href);
-        const label =
-          nav.labelKey && t.has(`nav.${nav.labelKey}`)
-            ? t(`nav.${nav.labelKey}`)
-            : nav.label;
-        items.push({
-          id: `nav:${mod.key}:${nav.href}`,
-          kind: "page",
-          moduleKey: mod.key,
-          title: label,
-          subtitle: mod.key,
-          href: nav.href,
-          keywords: `${mod.label} ${mod.key} ${nav.href}`,
-        });
-      }
-      for (const sub of mod.menu ?? []) {
-        if (sub.href.startsWith("/api/")) continue;
-        if (sub.module && !activeSet.has(sub.module)) continue;
-        if (
-          sub.permission &&
-          !can(role, sub.permission.definition, sub.permission.action)
-        ) {
-          continue;
-        }
-        if (seenHref.has(sub.href)) continue;
-        seenHref.add(sub.href);
-        const label = t.has(`${mod.key}.menu.${sub.key}`)
-          ? t(`${mod.key}.menu.${sub.key}`)
-          : sub.label;
-        const parentLabel = t.has(`${mod.key}.module.label`)
-          ? t(`${mod.key}.module.label`)
-          : mod.label;
-        items.push({
-          id: `menu:${mod.key}:${sub.key}`,
-          kind: "page",
-          moduleKey: mod.key,
-          title: label,
-          subtitle: parentLabel,
-          href: sub.href,
-          keywords: `${parentLabel} ${mod.key} ${sub.href}`,
-        });
-      }
-    }
-
-    return items;
-  }, [activeModuleKeys, role, t]);
+  // Build permitted navigation items from active modules (same visibility rules as the sidebar).
+  const navItems = useMemo<QuickSearchItem[]>(
+    () =>
+      collectQuickSearchNavItems({
+        modules: registry,
+        activeModuleKeys,
+        role,
+        labels: {
+          panel: t("nav.panel"),
+          nav: (_mod, nav) =>
+            nav.labelKey && t.has(`nav.${nav.labelKey}`) ? t(`nav.${nav.labelKey}`) : nav.label,
+          menu: (mod, sub) =>
+            t.has(`${mod.key}.menu.${sub.key}`) ? t(`${mod.key}.menu.${sub.key}`) : sub.label,
+          module: (mod) =>
+            t.has(`${mod.key}.module.label`) ? t(`${mod.key}.module.label`) : mod.label,
+        },
+      }),
+    [activeModuleKeys, role, t],
+  );
 
   const matchedPages = useMemo(
     () => filterQuickSearchItems(navItems, query, 8),

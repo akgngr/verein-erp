@@ -41,6 +41,7 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 _2026-11-27_
 
 - **Yeni:** Bildirim SSE veriyolu PostgreSQL LISTEN/NOTIFY kanalıyla güçlendirildi; otomasyon worker'ının oluşturduğu bildirimler ve okundu/erteleme işlemleri tüm sekmelere anında ulaşır.
+- **Düzeltme:** Canlı bildirim dinleyicisi (LISTEN) varsa havuzsuz DIRECT_URL bağlantısını kullanır; Neon/PgBouncer işlem havuzunda oturum kopmaz.
 
 ### 0.16.1 — Ayar merkezi grubu
 

@@ -105,4 +105,24 @@ describe("Roadmap E2.7 Realtime SSE, Feedback Context & Global Quick Search (#63
     assert.doesNotMatch(src, /if \(usable\.has\("[a-z]+"\) && can\(user\.role/, "no module may bypass mayView");
     assert.match(src, /error instanceof ForbiddenError\) \{\s*return NextResponse\.json\(\{ ok: false, items: \[\] \}, \{ status: 403 \}\)/);
   });
+
+  it("offers submenu pages only to roles the sidebar would show them to (home permission fallback)", async () => {
+    const { registry } = await import("../../src/registry");
+    const { collectQuickSearchNavItems } = await import("../../src/shared/search/nav-items");
+    const labels = { panel: "Panel", nav: () => "nav", menu: () => "menu", module: () => "module" };
+    const hrefs = (role: "TEACHER" | "ADMIN") =>
+      collectQuickSearchNavItems({ modules: registry, activeModuleKeys: ["students"], role, labels }).map((item) => item.href);
+    assert.ok(hrefs("ADMIN").includes("/ogrenciler/veliler"));
+    assert.ok(!hrefs("TEACHER").includes("/ogrenciler/veliler"), "students.view is denied to TEACHER, so is its guardians submenu");
+    assert.ok(!hrefs("TEACHER").includes("/ogrenciler"));
+  });
+
+  it("links inventory results with the list page's q parameter and listens on the direct database URL", () => {
+    const route = readFileSync(path.join(process.cwd(), "src/app/api/search/route.ts"), "utf8");
+    assert.ok(route.includes("`/inventory?q=${encodeURIComponent(item.name)}`"));
+    const helpers = readFileSync(path.join(process.cwd(), "src/modules/inventory/helpers/inventory-helpers.ts"), "utf8");
+    assert.ok(helpers.includes("getSingleParam(params.q)"), "inventory list reads ?q=");
+    const bus = readFileSync(path.join(process.cwd(), "src/modules/notifications/services/stream-bus.ts"), "utf8");
+    assert.ok(bus.includes("process.env.DIRECT_URL || process.env.DATABASE_URL"), "LISTEN must avoid the transaction pooler");
+  });
 });

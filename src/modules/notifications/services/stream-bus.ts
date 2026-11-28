@@ -81,7 +81,7 @@ async function closePgListener(): Promise<void> {
 }
 
 function scheduleReconnect(): void {
-  if (activeSubscribers <= 0 || reconnectTimer || !process.env.DATABASE_URL) return;
+  if (activeSubscribers <= 0 || reconnectTimer || !(process.env.DIRECT_URL || process.env.DATABASE_URL)) return;
   const delay = reconnectDelayMs;
   reconnectDelayMs = Math.min(reconnectDelayMs * 2, MAX_RECONNECT_MS);
   reconnectTimer = setTimeout(() => {
@@ -93,7 +93,9 @@ function scheduleReconnect(): void {
 
 async function ensurePgListener(): Promise<void> {
   if (pgClient || connecting || activeSubscribers <= 0) return;
-  const rawUrl = process.env.DATABASE_URL;
+  // LISTEN needs a persistent session: a transaction pooler (Neon/PgBouncer DATABASE_URL) drops it,
+  // so prefer the direct connection, as prisma.config.ts does for migrations.
+  const rawUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
   if (!rawUrl) return;
 
   connecting = true;

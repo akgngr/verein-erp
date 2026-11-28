@@ -189,7 +189,7 @@ export async function GET(request: Request): Promise<Response> {
             moduleKey: "inventory",
             title: item.name,
             subtitle: [item.serialNumber, item.location].filter(Boolean).join(" · ") || null,
-            href: `/inventory?search=${encodeURIComponent(item.name)}`,
+            href: `/inventory?q=${encodeURIComponent(item.name)}`,
           })),
         )
         .catch(() => []),

@@ -13,6 +13,11 @@
           "type": "feature",
           "tr": "Bildirim SSE veriyolu PostgreSQL LISTEN/NOTIFY kanalıyla güçlendirildi; otomasyon worker'ının oluşturduğu bildirimler ve okundu/erteleme işlemleri tüm sekmelere anında ulaşır.",
           "de": "Der Benachrichtigungs-SSE-Bus nutzt nun PostgreSQL LISTEN/NOTIFY; vom Worker erzeugte Benachrichtigungen sowie Gelesen-/Schlummer-Aktionen erscheinen sofort in allen Tabs."
+        },
+        {
+          "type": "fix",
+          "tr": "Canlı bildirim dinleyicisi (LISTEN) varsa havuzsuz DIRECT_URL bağlantısını kullanır; Neon/PgBouncer işlem havuzunda oturum kopmaz.",
+          "de": "Der Live-Listener (LISTEN) nutzt, falls vorhanden, die ungepoolte DIRECT_URL-Verbindung, damit die Sitzung beim Neon/PgBouncer-Transaktionspooling erhalten bleibt."
         }
       ]
     },
