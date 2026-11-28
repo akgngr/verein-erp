@@ -5931,6 +5931,8 @@
       "funder": "Veren kurum (Zuwendungsgeber)",
       "fileNumber": "Dosya no (Aktenzeichen)",
       "status": "Durum",
+      "financingType": "Finansman türü",
+      "sharePercent": "Katkı oranı",
       "periodStart": "Dönem başı",
       "periodEnd": "Dönem sonu",
       "reportDueAt": "Rapor teslim tarihi",
@@ -5948,6 +5950,11 @@
       "receivedAt": "Alındı",
       "note": "Not"
     },
+    "financingTypes": {
+      "FEHLBEDARF": "Fehlbedarfsfinanzierung (Açık finansmanı)",
+      "ANTEIL": "Anteilfinanzierung (Oransal finansman)",
+      "FESTBETRAG": "Festbetragsfinanzierung (Sabit tutar)"
+    },
     "tabs": {
       "general": "Genel",
       "plan": "Finansman planı",
@@ -5962,6 +5969,7 @@
     "pending": "Bekliyor",
     "notLinked": "Hibe bir muhasebe projesine bağlı değil; gerçekleşen tutarlar boş. Genel sekmesinden proje seçin.",
     "reportPdf": "Verwendungsnachweis (PDF)",
+    "receiptsZip": "Belge paketi (ZIP)",
     "submittedAt": "Teslim: {date}",
     "missingReceipts": "{count} fişte belge yok",
     "deviationHint": "%20'yi aşan kalem sapmaları işaretlenir; birçok hibe koşulunda (ANBest-P) veren kurumun onayı gerekir.",
@@ -6016,7 +6024,10 @@
       "reportEmpty": "Teslimden önce faaliyet raporunu yazın.",
       "deleteOnlyPlanned": "Yalnızca planlanan (PLANNED) hibeler silinebilir.",
       "hasReceivedPayouts": "Tahsil edilmiş ödemesi bulunan hibe silinemez.",
-      "payoutAlreadyReceived": "Tahsil edilmiş ödeme kaydı silinemez."
+      "payoutAlreadyReceived": "Tahsil edilmiş ödeme kaydı silinemez.",
+      "sharePercent": "Oransal finansmanda destek oranını (%1–100) girin.",
+      "zipTooLarge": "Belge paketi çok büyük ({sizeMb} MB, en fazla {limitMb} MB). Dönemi daraltın veya belgeleri tek tek indirin.",
+      "zipTooManyFiles": "Dönemde {limit} adetten fazla belge dosyası var; paket eksik kalırdı. Lütfen dönemi daraltın."
     },
     "calendar": {
       "reports": "Hibe raporları"
@@ -6887,6 +6898,11 @@
     "detail": {
       "approvedLine": "Onaylandı: {date} – {by}",
       "draftNote": "Tutanak taslak durumundadır.",
+      "noticePeriod": {
+        "compliant": "Davet {actual} gün önce · {required} günlük öneri karşılandı",
+        "shortNotice": "Yalnız {actual} gün önce · öneri {required} gün, tüzüğü kontrol edin",
+        "notSent": "Davet henüz gönderilmedi (öneri: en az {required} gün)"
+      },
       "tabsAria": "Toplantı sekmeleri",
       "tabGeneral": "Genel",
       "tabAgenda": "Gündem ({count})",
@@ -6928,8 +6944,10 @@
     },
     "actions": {
       "minutesPdf": "Tutanak (PDF)",
+      "invitationPdf": "Davetiye & Gündem (PDF)",
       "statusButton": "Durum",
-      "minutesPdfAria": "Tutanak PDF dili seçimi"
+      "minutesPdfAria": "Tutanak PDF dili seçimi",
+      "invitationPdfAria": "Davetiye PDF dili seçimi"
     },
     "statusMenu": {
       "button": "Durum",
@@ -10733,7 +10751,9 @@
     },
     "access": {
       "members": "Görev sorumlusu seçmek için üye listesini okur.",
-      "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur.",
+      "meetings": "Görevi bir toplantıya bağlamak ve toplantı aksiyonlarını Birleşik Görev Merkezi'nde göstermek için toplantı verilerini okur.",
+      "crm": "Açık CRM takiplerini Birleşik Görev Merkezi'nde listelemek için okur.",
+      "system": "Birleşik Görev Merkezi'nde yalnızca etkin modülleri göstermek için modül durumunu okur.",
       "users": "Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur.",
       "notifications": "Görev atandığında atanan kişiye bildirim gönderir."
     },
@@ -10798,6 +10818,17 @@
       "assigned": {
         "title": "Size görev atandı: {title}",
         "body": "Görevlerim sayfasında açın."
+      }
+    },
+    "unifiedHub": {
+      "title": "Bağlı görevler ve takipler",
+      "description": "Toplantı aksiyon maddeleri ve açık CRM takipleri kaynak bağlantılarıyla birlikte.",
+      "count": "{count} açık kayıt",
+      "overdue": "Gecikmiş",
+      "openSource": "Kaynağı aç",
+      "sources": {
+        "meetings": "Toplantı",
+        "crm": "CRM"
       }
     }
   },

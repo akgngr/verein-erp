@@ -21,9 +21,13 @@ const isEnrollmentStatus = (value: string): value is CourseEnrollmentStatus =>
   (ENROLLMENT_STATUSES as readonly string[]).includes(value);
 const GUARDIAN_ROLES = ["ALL_GUARDIANS", "PAYER_ONLY"];
 
-/** Seçim listesi etiketi = değer: "K-2026-01 · Matematik 5" (kişi verisi yok). */
+/**
+ * Seçim listesi etiketi = değer: "K-2026-01 · Matematik 5" (kişi verisi yok). Toplu e-posta filtre
+ * değerleri en fazla 40 karakterdir (mailings eylem ve worker şeması), etiket de bu sınırda kesilir.
+ */
+export const COURSE_FILTER_VALUE_MAX = 40;
 export const courseLabel = (row: { code: string; title: string }) =>
-  `${row.code} · ${row.title}`.slice(0, 48);
+  `${row.code} · ${row.title}`.slice(0, COURSE_FILTER_VALUE_MAX);
 
 export interface CourseEnrollmentForRecipients {
   courseId: string;

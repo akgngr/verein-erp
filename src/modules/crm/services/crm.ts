@@ -12,6 +12,7 @@ import type { Role } from "@/shared/roles";
 
 import { crmDealStageChangedEvent } from "../automation";
 import { summarizeParty, type PartySummary } from "../lib/party-summary";
+import { HUB_SEARCH_SCAN, matchHubFollowUps } from "../lib/hub-search";
 
 /**
  * CRM: kişi kaydı kaynak modüllerde (üyeler, muhasebe carisi) kalır; burada yalnız ilişki
@@ -253,6 +254,35 @@ export async function listOpenFollowUps(viewer: PartyViewer) {
   const rows = await getDb().crmFollowUp.findMany({ where: { doneAt: null }, include: { party: { select: { id: true, sourceModule: true, sourceId: true } } }, orderBy: { dueAt: "asc" }, take: 200 });
   const summaries = await resolveParties(rows.map((row) => row.party), viewer);
   return rows.map((row) => ({ id: row.id, dueAt: row.dueAt.toISOString(), note: row.note, partyId: row.party.id, partyName: summaries.get(`${row.party.sourceModule}:${row.party.sourceId}`)?.name ?? "—" }));
+}
+
+/** Birleşik Görev Merkezi (#636) için açık CRM takipleri (isteğe bağlı sorumlu filtresiyle). */
+export async function listOpenFollowUpsForHub(
+  viewer: PartyViewer,
+  options: { assigneeId?: string; limit?: number; q?: string } = {},
+) {
+  const limit = Math.min(Math.max(options.limit ?? 25, 1), 100);
+  const searching = Boolean(options.q?.trim());
+  const rows = await getDb().crmFollowUp.findMany({
+    where: {
+      doneAt: null,
+      ...(options.assigneeId ? { assigneeId: options.assigneeId } : {}),
+    },
+    include: { party: { select: { id: true, sourceModule: true, sourceId: true } } },
+    orderBy: { dueAt: "asc" },
+    // A search matches the note or the (permission-resolved) party name, so it filters before the limit.
+    take: searching ? HUB_SEARCH_SCAN : limit,
+  });
+  const summaries = await resolveParties(rows.map((row) => row.party), viewer);
+  const mapped = rows.map((row) => ({
+    id: row.id,
+    dueAt: row.dueAt.toISOString(),
+    note: row.note,
+    assigneeId: row.assigneeId,
+    partyId: row.party.id,
+    partyName: summaries.get(`${row.party.sourceModule}:${row.party.sourceId}`)?.name ?? "—",
+  }));
+  return matchHubFollowUps(mapped, options.q, limit);
 }
 
 /** Panel ve AI için toplu sayılar (kişi bilgisi yok). */

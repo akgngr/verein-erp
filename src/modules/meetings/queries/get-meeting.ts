@@ -88,6 +88,7 @@ export async function getMeeting(id: string): Promise<MeetingDetail | null> {
     location: meeting.location,
     description: meeting.description,
     quorumRequired: meeting.quorumRequired,
+    invitationSentAt: meeting.invitationSentAt,
     status: meeting.status,
     approvedAt: meeting.approvedAt,
     approvedByLabel: meeting.approvedByLabel,

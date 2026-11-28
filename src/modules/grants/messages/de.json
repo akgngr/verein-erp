@@ -45,6 +45,8 @@
     "funder": "Zuwendungsgeber",
     "fileNumber": "Aktenzeichen",
     "status": "Status",
+    "financingType": "Finanzierungsart",
+    "sharePercent": "Förderquote",
     "periodStart": "Beginn",
     "periodEnd": "Ende",
     "reportDueAt": "Nachweis fällig am",
@@ -62,6 +64,11 @@
     "receivedAt": "Eingegangen",
     "note": "Notiz"
   },
+  "financingTypes": {
+    "FEHLBEDARF": "Fehlbedarfsfinanzierung",
+    "ANTEIL": "Anteilfinanzierung",
+    "FESTBETRAG": "Festbetragsfinanzierung"
+  },
   "tabs": {
     "general": "Allgemein",
     "plan": "Finanzierungsplan",
@@ -76,6 +83,7 @@
   "pending": "Ausstehend",
   "notLinked": "Die Zuwendung ist mit keinem Buchhaltungsprojekt verknüpft; Ist-Werte sind leer. Projekt unter 'Allgemein' wählen.",
   "reportPdf": "Verwendungsnachweis (PDF)",
+  "receiptsZip": "Belegpaket (ZIP)",
   "submittedAt": "Eingereicht: {date}",
   "missingReceipts": "{count} Buchungen ohne Beleg",
   "deviationHint": "Abweichungen über 20 % je Position werden markiert; nach vielen Nebenbestimmungen (ANBest-P) ist dafür die Zustimmung des Zuwendungsgebers nötig.",
@@ -130,7 +138,10 @@
     "reportEmpty": "Bitte vor dem Einreichen den Sachbericht schreiben.",
     "deleteOnlyPlanned": "Es können nur geplante Zuwendungen (PLANNED) gelöscht werden.",
     "hasReceivedPayouts": "Eine Zuwendung mit bereits eingegangenen Auszahlungen kann nicht gelöscht werden.",
-    "payoutAlreadyReceived": "Eine bereits eingegangene Auszahlung kann nicht gelöscht werden."
+    "payoutAlreadyReceived": "Eine bereits eingegangene Auszahlung kann nicht gelöscht werden.",
+    "sharePercent": "Bei Anteilfinanzierung bitte den Fördersatz (1–100 %) angeben.",
+    "zipTooLarge": "Das Belegpaket ist zu groß ({sizeMb} MB, höchstens {limitMb} MB). Bitte den Zeitraum verkleinern oder Belege einzeln herunterladen.",
+    "zipTooManyFiles": "Der Zeitraum hat mehr als {limit} Belegdateien; das Paket wäre unvollständig. Bitte den Zeitraum verkleinern."
   },
   "calendar": {
     "reports": "Verwendungsnachweise"
