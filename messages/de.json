@@ -1560,7 +1560,9 @@
         "cancel": "Abbrechen",
         "submit": "Buchung anlegen",
         "payable": "Eingangsrechnung",
-        "payableSelect": "Eingangsrechnung"
+        "payableSelect": "Eingangsrechnung",
+        "creditNote": "Gutschrift (Erstattung)",
+        "creditNoteSelect": "Offene Gutschrift"
       },
       "rules": {
         "title": "Gelernte Regeln",
