@@ -140,7 +140,8 @@
     "hasReceivedPayouts": "Eine Zuwendung mit bereits eingegangenen Auszahlungen kann nicht gelöscht werden.",
     "payoutAlreadyReceived": "Eine bereits eingegangene Auszahlung kann nicht gelöscht werden.",
     "sharePercent": "Bei Anteilfinanzierung bitte den Fördersatz (1–100 %) angeben.",
-    "zipTooLarge": "Das Belegpaket ist zu groß ({sizeMb} MB, höchstens {limitMb} MB). Bitte den Zeitraum verkleinern oder Belege einzeln herunterladen."
+    "zipTooLarge": "Das Belegpaket ist zu groß ({sizeMb} MB, höchstens {limitMb} MB). Bitte den Zeitraum verkleinern oder Belege einzeln herunterladen.",
+    "zipTooManyFiles": "Der Zeitraum hat mehr als {limit} Belegdateien; das Paket wäre unvollständig. Bitte den Zeitraum verkleinern."
   },
   "calendar": {
     "reports": "Verwendungsnachweise"

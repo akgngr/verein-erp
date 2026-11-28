@@ -2,7 +2,7 @@ import "server-only";
 
 import { NextResponse } from "next/server";
 
-import { accountingPermissions, listProjectBookingFiles } from "@/modules/accounting/server";
+import { accountingPermissions, listProjectBookingFiles, PROJECT_BOOKING_FILES_LIMIT } from "@/modules/accounting/server";
 import { requireUser, UnauthorizedError } from "@/modules/auth/server";
 import { readFile } from "@/shared/files";
 import { buildZipArchive, type ZipEntry } from "@/shared/files/zip";
@@ -91,6 +91,13 @@ export async function exportReceiptsZipHandler(
       new Date(`${grant.periodStart}T00:00:00Z`),
       new Date(`${grant.periodEnd}T00:00:00Z`),
     );
+    // Never hand out an incomplete bundle as if it were complete.
+    if (files.length > PROJECT_BOOKING_FILES_LIMIT) {
+      return NextResponse.json(
+        { ok: false, error: await translateMessage("grants.errors.zipTooManyFiles", { limit: PROJECT_BOOKING_FILES_LIMIT }) },
+        { status: 413 },
+      );
+    }
     const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
     if (totalBytes > RECEIPTS_ZIP_MAX_BYTES) {
       const mb = (bytes: number) => Math.ceil(bytes / (1024 * 1024));

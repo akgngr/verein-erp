@@ -51,7 +51,13 @@ export type ProjectBookingFileRow = {
   size: number;
 };
 
-/** Hibe Verwendungsnachweis belge paketi (ZIP) için proje gider fişlerinin silinmemiş ekleri. */
+/** Most files one receipt bundle may contain; the query returns one more row so callers can detect overflow. */
+export const PROJECT_BOOKING_FILES_LIMIT = 5000;
+
+/**
+ * Hibe Verwendungsnachweis belge paketi (ZIP) için proje gider fişlerinin silinmemiş ekleri.
+ * En fazla PROJECT_BOOKING_FILES_LIMIT + 1 satır döner: fazlası, paketin eksik kalacağını gösterir.
+ */
 export async function listProjectBookingFiles(
   projectId: string,
   from: Date,
@@ -75,7 +81,7 @@ export async function listProjectBookingFiles(
       booking: { select: { bookingNumber: true, bookingDate: true } },
     },
     orderBy: [{ booking: { bookingDate: "asc" } }, { createdAt: "asc" }],
-    take: 5000,
+    take: PROJECT_BOOKING_FILES_LIMIT + 1,
   });
   return files.map((f) => ({
     bookingId: f.bookingId,

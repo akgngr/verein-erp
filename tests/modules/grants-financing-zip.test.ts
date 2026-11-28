@@ -138,6 +138,11 @@ describe("#653 review fixes", () => {
     assert.ok(src.includes("{ status: 413 }"));
     const query = fs.readFileSync(path.join(process.cwd(), "src/modules/accounting/queries/project-bookings.ts"), "utf8");
     assert.ok(query.includes("size: f.size"), "stored sizes come from the file rows, not from reading files");
+    // More files than the limit must not yield a silently truncated bundle.
+    assert.ok(query.includes("take: PROJECT_BOOKING_FILES_LIMIT + 1"), "one extra row reveals overflow");
+    const overflow = src.indexOf("files.length > PROJECT_BOOKING_FILES_LIMIT");
+    assert.ok(overflow > 0 && overflow < src.indexOf("await readFile("), "overflow is refused before reading files");
+    assert.ok(src.includes('"grants.errors.zipTooManyFiles"'));
   });
 });
 

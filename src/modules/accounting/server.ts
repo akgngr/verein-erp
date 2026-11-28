@@ -104,6 +104,7 @@ export { getContactSummaries, searchContacts, type ContactSummary } from "./quer
 export {
   listProjectBookings,
   listProjectBookingFiles,
+  PROJECT_BOOKING_FILES_LIMIT,
   type ProjectBookingRow,
   type ProjectBookingFileRow,
 } from "./queries/project-bookings";

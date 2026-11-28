@@ -6026,7 +6026,8 @@
       "hasReceivedPayouts": "Tahsil edilmiş ödemesi bulunan hibe silinemez.",
       "payoutAlreadyReceived": "Tahsil edilmiş ödeme kaydı silinemez.",
       "sharePercent": "Oransal finansmanda destek oranını (%1–100) girin.",
-      "zipTooLarge": "Belge paketi çok büyük ({sizeMb} MB, en fazla {limitMb} MB). Dönemi daraltın veya belgeleri tek tek indirin."
+      "zipTooLarge": "Belge paketi çok büyük ({sizeMb} MB, en fazla {limitMb} MB). Dönemi daraltın veya belgeleri tek tek indirin.",
+      "zipTooManyFiles": "Dönemde {limit} adetten fazla belge dosyası var; paket eksik kalırdı. Lütfen dönemi daraltın."
     },
     "calendar": {
       "reports": "Hibe raporları"

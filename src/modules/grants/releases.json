@@ -23,6 +23,11 @@
           "type": "fix",
           "tr": "Oransal finansmanda (ANTEIL) destek oranı zorunludur; eksik oran artık sessizce %100 sayılmaz. Belge paketi 200 MB'ı aşarsa dosyalar okunmadan anlaşılır bir hata verilir.",
           "de": "Bei Anteilfinanzierung ist der Fördersatz Pflicht; ein fehlender Satz zählt nicht mehr stillschweigend als 100 %. Überschreitet das Belegpaket 200 MB, erscheint vor dem Lesen der Dateien eine verständliche Meldung."
+        },
+        {
+          "type": "fix",
+          "tr": "Dönemde 5.000'den fazla belge dosyası varsa paket eksik oluşturulmaz; anlaşılır bir hata gösterilir.",
+          "de": "Hat der Zeitraum mehr als 5.000 Belegdateien, wird kein unvollständiges Paket erzeugt, sondern eine verständliche Meldung angezeigt."
         }
       ]
     },
