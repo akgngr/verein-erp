@@ -33,6 +33,11 @@ export interface CreateDocumentWithFilesInput {
   status?: DocumentStatus;
   files?: ProgrammaticDocumentFileInput[];
   actor: { id: string; label: string };
+  /**
+   * Called right after the register entry is committed and before any fallible follow-up
+   * (audit, file storage), so a caller can persist its link to the new document first.
+   */
+  onDocumentCreated?: (document: { id: string; registryNumber: string }) => Promise<void>;
 }
 
 export interface CreateDocumentWithFilesResult {
@@ -119,6 +124,8 @@ export async function createDocumentWithFiles(
     }),
   );
 
+  await input.onDocumentCreated?.({ id: created.id, registryNumber: created.registryNumber });
+
   await writeAudit({
     userId: input.actor.id,
     userLabel: input.actor.label,
@@ -161,9 +168,10 @@ export async function createDocumentWithFiles(
 
     const storedName = makeStoredName(validation.file.extension);
     const storagePath = path.posix.join(String(created.year), created.id, storedName);
-    await saveFile(storagePath, buf);
+    let saved;
     try {
-      const saved = await db.documentFile.create({
+      await saveFile(storagePath, buf);
+      saved = await db.documentFile.create({
         data: {
           documentId: created.id,
           originalName: validation.file.originalName,
@@ -175,23 +183,26 @@ export async function createDocumentWithFiles(
           uploadedByLabel: input.actor.label,
         },
       });
-      attachedCount += 1;
-      if (file.key) attachedKeys.push(file.key);
-      await writeAudit({
-        userId: input.actor.id,
-        userLabel: input.actor.label,
-        action: "FILE_UPLOAD",
-        entity: "DocumentFile",
-        entityId: saved.id,
-        after: {
-          registryNumber: created.registryNumber,
-          size: saved.size,
-        },
-      });
     } catch (error) {
-      await removeFile(storagePath);
-      throw error;
+      // A file that cannot be stored is reported as skipped; the register entry already exists.
+      await removeFile(storagePath).catch(() => undefined);
+      console.error("[documents] attaching a programmatic file failed:", error instanceof Error ? error.message : error);
+      skippedFiles.push(file.originalName);
+      continue;
     }
+    attachedCount += 1;
+    if (file.key) attachedKeys.push(file.key);
+    await writeAudit({
+      userId: input.actor.id,
+      userLabel: input.actor.label,
+      action: "FILE_UPLOAD",
+      entity: "DocumentFile",
+      entityId: saved.id,
+      after: {
+        registryNumber: created.registryNumber,
+        size: saved.size,
+      },
+    });
   }
 
   return {

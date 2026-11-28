@@ -51,6 +51,7 @@ _2026-11-27_
 
 - **Yeni:** Diğer modüllerin (ör. E-posta gelen kutusu) otomatik kayıt numarasıyla evrak oluşturup doğrulanmış ek dosyaları saklayabilmesi için createDocumentWithFiles sunucu sözleşmesi eklendi.
 - **İyileştirme:** createDocumentWithFiles hangi dosyaların gerçekten saklandığını (attachedKeys) bildirir; çağıran modül atlanan dosyaları ayırt edebilir.
+- **İyileştirme:** createDocumentWithFiles kayıt işlendikten hemen sonra onDocumentCreated ile çağırana haber verir; saklanamayan tek bir dosya tüm aktarımı durdurmaz, atlanan olarak bildirilir.
 
 ### 1.10.3 — Sunucu paketine yerel dosyalar girmiyor
 

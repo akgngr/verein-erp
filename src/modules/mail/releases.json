@@ -21,8 +21,8 @@
         },
         {
           "type": "fix",
-          "tr": "Belge bağlantısı e-posta düzeyinde saklanır: eki olmayan veya ekleri muhasebeye aktarılmış e-posta da ikinci kez evrak kaydı açmaz; eşzamanlı iki aktarımdan yalnız biri kayıt oluşturur.",
-          "de": "Die Dokumentverknüpfung wird pro E-Mail gespeichert: Auch E-Mails ohne Anhänge oder mit bereits an die Buchhaltung übergebenen Anhängen erzeugen keinen zweiten Registereintrag; von zwei gleichzeitigen Übernahmen legt nur eine einen Eintrag an."
+          "tr": "Belge bağlantısı e-posta düzeyinde saklanır: eki olmayan veya ekleri muhasebeye aktarılmış e-posta da ikinci kez evrak kaydı açmaz; eşzamanlı iki aktarımdan yalnız biri kayıt oluşturur. Bağlantı kayıt açılır açılmaz yazılır; ek saklama sonradan başarısız olsa da yeniden deneme aynı kayda gider.",
+          "de": "Die Dokumentverknüpfung wird pro E-Mail gespeichert: Auch E-Mails ohne Anhänge oder mit bereits an die Buchhaltung übergebenen Anhängen erzeugen keinen zweiten Registereintrag; von zwei gleichzeitigen Übernahmen legt nur eine einen Eintrag an. Die Verknüpfung wird sofort nach dem Anlegen gespeichert; scheitert danach das Speichern eines Anhangs, führt ein neuer Versuch zum selben Eintrag."
         }
       ]
     },

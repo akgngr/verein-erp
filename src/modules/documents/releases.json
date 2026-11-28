@@ -18,6 +18,11 @@
           "type": "improvement",
           "tr": "createDocumentWithFiles hangi dosyaların gerçekten saklandığını (attachedKeys) bildirir; çağıran modül atlanan dosyaları ayırt edebilir.",
           "de": "createDocumentWithFiles meldet, welche Dateien tatsächlich gespeichert wurden (attachedKeys), damit aufrufende Module übersprungene Dateien erkennen."
+        },
+        {
+          "type": "improvement",
+          "tr": "createDocumentWithFiles kayıt işlendikten hemen sonra onDocumentCreated ile çağırana haber verir; saklanamayan tek bir dosya tüm aktarımı durdurmaz, atlanan olarak bildirilir.",
+          "de": "createDocumentWithFiles meldet den angelegten Registereintrag sofort über onDocumentCreated; eine einzelne nicht speicherbare Datei bricht die Übernahme nicht mehr ab, sondern wird als übersprungen gemeldet."
         }
       ]
     },

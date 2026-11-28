@@ -115,6 +115,25 @@ test("two concurrent transfers of one message create exactly one registry entry"
   }
 });
 
+test("a transfer that fails after the register entry was committed stays linked, so a retry is a duplicate", { skip: !enabled }, async () => {
+  const dir = randomUUID().slice(0, 8);
+  const tag = `imp-${randomUUID().slice(0, 8)}`;
+  const messageId = await createMessage(tag, dir, [{ name: "letter.pdf" }]);
+  try {
+    const committedThenFailed: typeof createDocumentWithFiles = async (input) => {
+      await input.onDocumentCreated?.({ id: `${tag}-committed`, registryNumber: "GLN-2099-0001" });
+      throw new Error("disk full");
+    };
+    await assert.rejects(importMessageToDocumentsWith({ createDocumentWithFiles: committedThenFailed }, messageId, actor), /disk full/);
+    const message = await getDb().mailInboxMessage.findUniqueOrThrow({ where: { id: messageId } });
+    assert.equal(message.importedDocumentId, `${tag}-committed`);
+    assert.equal(message.documentImportStartedAt, null, "claim released");
+    assert.deepEqual(await importMessageToDocuments(messageId, actor), { ok: false, reason: "duplicate", documentId: `${tag}-committed` });
+  } finally {
+    await cleanup([messageId]);
+  }
+});
+
 test.after(async () => {
   if (!enabled) return;
   await rm(resolveSafePath("mail/inbox/test"), { recursive: true, force: true });

@@ -78,10 +78,15 @@ export async function importMessageToDocumentsWith(
       deliveryMethod: "EMAIL",
       files,
       actor,
+      // Link first: if storing an attachment or the audit fails afterwards, a retry finds this
+      // document instead of opening a second register entry.
+      onDocumentCreated: async (document) => {
+        await db.mailInboxMessage.update({ where: { id: messageId }, data: { importedDocumentId: document.id } });
+      },
     });
   } catch (error) {
     await db.mailInboxMessage.updateMany({
-      where: { id: messageId, documentImportStartedAt: claimedAt, importedDocumentId: null },
+      where: { id: messageId, documentImportStartedAt: claimedAt },
       data: { documentImportStartedAt: null },
     });
     throw error;

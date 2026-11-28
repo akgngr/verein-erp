@@ -35,7 +35,7 @@ export interface CourseEnrollmentForRecipients {
 /**
  * Pure recipient builder shared with unit tests:
  * resolves guardians for enrolled students, honors `PAYER_ONLY` vs `ALL_GUARDIANS`,
- * deduplicates multi-child families (by guardian ID / normalized email), and preserves
+ * deduplicates multi-child families (by guardian ID), and preserves
  * `bulkMailOptOut` + `messagingConsents`. Enrollments of students outside
  * `activeStudentIds` (soft-deleted) are skipped, including their stored payer.
  */
@@ -74,13 +74,11 @@ export function buildCourseGuardianRecipients(input: {
 
     for (const guardianId of targetGuardianIds) {
       const guardian = input.guardiansById.get(guardianId);
-      if (!guardian) continue;
+      if (!guardian || seen.has(guardian.id)) continue;
+      // Only the guardian is deduplicated here: two guardians sharing an email can still have
+      // their own phone and consents. The campaign pipeline deduplicates per channel address.
+      seen.add(guardian.id);
       const email = guardian.email?.trim().toLowerCase() || null;
-      const dedupeKey = guardian.id || email;
-      if (!dedupeKey || seen.has(dedupeKey)) continue;
-      if (email && seen.has(`email:${email}`)) continue;
-      seen.add(dedupeKey);
-      if (email) seen.add(`email:${email}`);
 
       const fullName = `${guardian.firstName} ${guardian.lastName}`.trim();
       result.push({

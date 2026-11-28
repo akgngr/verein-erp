@@ -18,6 +18,11 @@
           "type": "security",
           "tr": "Silinmiş (soft-delete) öğrencinin kaydında kalan ödeme sorumlusu veli, kurs bazlı kampanyalarda artık alıcı olmaz; her iki veli modunda da yalnız aktif öğrencilerin aileleri hedeflenir.",
           "de": "Der im Kurseintrag gespeicherte Zahlungspflichtige eines gelöschten Schülers erhält keine kursbasierten Kampagnen mehr; in beiden Elternmodi werden nur Familien aktiver Schüler angeschrieben."
+        },
+        {
+          "type": "fix",
+          "tr": "Aynı e-posta adresini paylaşan iki veli artık ayrı alıcıdır; SMS/WhatsApp gibi kanallarda her birinin kendi telefonu ve izni geçerlidir (adres tekilleştirmesi kampanya kanalında yapılır).",
+          "de": "Zwei Eltern mit derselben E-Mail-Adresse bleiben getrennte Empfänger; für SMS/WhatsApp gelten jeweils eigene Telefonnummer und Einwilligung (die Adress-Deduplizierung erfolgt im Kampagnenkanal)."
         }
       ]
     },

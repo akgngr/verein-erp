@@ -59,6 +59,7 @@ _2026-11-27_
 
 - **Yeni:** Toplu e-posta/kampanya modülünde kursa, kayıt durumuna ve ödeme sorumlusu filtresine göre veli seçimi sağlayan alıcı kaynağı (courses/recipients.ts) eklendi.
 - **Güvenlik:** Silinmiş (soft-delete) öğrencinin kaydında kalan ödeme sorumlusu veli, kurs bazlı kampanyalarda artık alıcı olmaz; her iki veli modunda da yalnız aktif öğrencilerin aileleri hedeflenir.
+- **Düzeltme:** Aynı e-posta adresini paylaşan iki veli artık ayrı alıcıdır; SMS/WhatsApp gibi kanallarda her birinin kendi telefonu ve izni geçerlidir (adres tekilleştirmesi kampanya kanalında yapılır).
 
 ### 1.4.18 — Banka eşleştirme kurs ücreti sözleşmesi (#616)
 

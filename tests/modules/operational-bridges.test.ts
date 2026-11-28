@@ -182,4 +182,25 @@ describe("Roadmap E1.3 Operational Bridges (#631)", () => {
       assert.deepEqual(ids, ["g-active"], `payerOnly=${payerOnly}`);
     }
   });
+
+  it("keeps two guardians who share an email address, since each has its own phone and consents", () => {
+    const courses = [{ id: "c1", code: "K-2026-01", title: "Mathematik 5. Klasse" }];
+    const enrollments = [{ courseId: "c1", studentId: "s1", studentLabel: "Child", payerGuardianId: null }];
+    const shared = { salutation: null, firstName: "Synthetic", email: "family@example.org", bulkMailOptOut: false };
+    const guardiansById = new Map([
+      ["g1", { ...shared, id: "g1", lastName: "One", phone: null, messagingConsents: [] }],
+      ["g2", { ...shared, id: "g2", lastName: "Two", phone: "+4915100000002", messagingConsents: ["sms"] }],
+    ]);
+    const linksByStudentId = new Map([["s1", [{ guardianId: "g1", isPayer: true }, { guardianId: "g2", isPayer: false }]]]);
+    const result = buildCourseGuardianRecipients({
+      courses,
+      enrollments,
+      activeStudentIds: new Set(["s1"]),
+      guardiansById,
+      linksByStudentId,
+      payerOnly: false,
+    });
+    assert.deepEqual(result.map((r) => r.id), ["g1", "g2"]);
+    assert.deepEqual(result.find((r) => r.id === "g2")?.consents, { sms: true });
+  });
 });
