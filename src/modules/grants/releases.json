@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.1",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "İade fazlasında negatif destek ihtiyacı",
+        "de": "Negativer Förderbedarf bei Erstattungsüberhang"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Dönemde tedarikçi iadeleri giderleri aşarsa oransal ve sabit tutarlı finansmanda destek ihtiyacı sıfırın altına düşmez; raporda hayali fazla ödeme görünmez.",
+          "de": "Übersteigen Lieferantenerstattungen im Zeitraum die Ausgaben, fällt der Förderbedarf bei Anteil- und Festbetragsfinanzierung nicht unter null; der Bericht zeigt keine scheinbare Überzahlung."
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-28",
       "title": {

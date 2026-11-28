@@ -144,5 +144,14 @@ describe("#653 review fixes", () => {
     assert.ok(overflow > 0 && overflow < src.indexOf("await readFile("), "overflow is refused before reading files");
     assert.ok(src.includes('"grants.errors.zipTooManyFiles"'));
   });
+
+  test("never yields a negative requirement when refunds exceed expenses (any financing type)", async () => {
+    const { computeNeededGrantCents } = await import("../../src/modules/grants/lib/financing");
+    const base = { approvedCents: 50_000, actualTotalCents: -20_000, ownShareCents: 0, thirdPartyCents: 0, otherIncomeCents: 0 };
+    assert.equal(computeNeededGrantCents({ ...base, financingType: "ANTEIL", sharePercent: 50 }), 0);
+    assert.equal(computeNeededGrantCents({ ...base, financingType: "FESTBETRAG", sharePercent: null }), 0);
+    assert.equal(computeNeededGrantCents({ ...base, approvedCents: null, financingType: "FESTBETRAG", sharePercent: null }), 0);
+    assert.equal(computeNeededGrantCents({ ...base, financingType: "FEHLBEDARF", sharePercent: null }), 0);
+  });
 });
 
