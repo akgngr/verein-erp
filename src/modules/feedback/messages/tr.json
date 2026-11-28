@@ -82,7 +82,14 @@
     }
   },
   "access": {
-    "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur."
+    "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur.",
+    "notifications": "Yönetici geri bildirimi yanıtladığında veya durumunu güncellediğinde bildiren kullanıcıya uygulama içi bildirim gönderir."
+  },
+  "notifications": {
+    "replied": {
+      "title": "Geri bildiriminiz güncellendi (#{number})",
+      "body": "Yönetici geri bildiriminize yanıt verdi veya durumunu güncelledi."
+    }
   },
   "automation": {
     "events": {

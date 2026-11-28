@@ -391,6 +391,28 @@
     "uploadFailed": "Dosya yüklenemedi.",
     "maxPerRecord": "Kayıt başına en fazla {max} dosya eklenebilir."
   },
+  "quickSearch": {
+    "trigger": "Hızlı arama",
+    "triggerAria": "Hızlı arama paletini aç (Ctrl+K)",
+    "shortcut": "Ctrl K",
+    "placeholder": "Sayfa, üye, evrak, toplantı, görev, etkinlik veya envanter ara…",
+    "close": "Kapat",
+    "pagesSection": "Sayfalar ve modüller",
+    "recordsSection": "Kayıtlar",
+    "searching": "Aranıyor…",
+    "noResults": "Eşleşen kayıt bulunamadı.",
+    "minCharsHint": "Kayıt aramak için en az 2 karakter yazın.",
+    "navigateHint": "↑↓ ile seç · Enter ile aç",
+    "closeHint": "Esc ile kapat",
+    "modules": {
+      "members": "Üyeler",
+      "documents": "Evrak Kayıt",
+      "meetings": "Toplantılar",
+      "tasks": "Görevler",
+      "events": "Etkinlikler",
+      "inventory": "Envanter"
+    }
+  },
   "accounting": {
     "list": {
       "title": "Fiş kayıtları (Buchungen)",
@@ -5765,7 +5787,14 @@
       }
     },
     "access": {
-      "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur."
+      "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur.",
+      "notifications": "Yönetici geri bildirimi yanıtladığında veya durumunu güncellediğinde bildiren kullanıcıya uygulama içi bildirim gönderir."
+    },
+    "notifications": {
+      "replied": {
+        "title": "Geri bildiriminiz güncellendi (#{number})",
+        "body": "Yönetici geri bildiriminize yanıt verdi veya durumunu güncelledi."
+      }
     },
     "automation": {
       "events": {
