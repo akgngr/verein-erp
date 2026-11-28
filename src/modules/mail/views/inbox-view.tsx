@@ -1,6 +1,7 @@
 import { getFormatter, getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
+import { documentsPermissions } from "@/modules/documents";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
@@ -11,6 +12,7 @@ import { mailInboxPermissions } from "../permissions";
 import {
   getInboxSettings,
   isAccountingUsable,
+  isDocumentsUsable,
   listInboxMessages,
 } from "../services/inbox";
 
@@ -28,15 +30,17 @@ export async function InboxView({ status }: { status?: string | null }) {
     getFormatter(),
   ]);
   const filter = status === "DONE" || status === "ALL" ? status : "NEW";
-  const [settings, rows, accountingUsable] = await Promise.all([
+  const [settings, rows, accountingUsable, docsUsable] = await Promise.all([
     getInboxSettings(),
     listInboxMessages(filter === "ALL" ? null : filter),
     isAccountingUsable(),
+    isDocumentsUsable(),
   ]);
   const imapConfigured = Boolean(
     settings.host && settings.username && settings.hasPassword,
   );
   const canSettings = can(user.role, mailInboxPermissions, "update");
+  const documentsUsable = docsUsable && can(user.role, documentsPermissions, "create");
 
   return (
     <div className="flex flex-col gap-6">
@@ -61,6 +65,7 @@ export async function InboxView({ status }: { status?: string | null }) {
         filter={filter}
         imapConfigured={imapConfigured}
         accountingUsable={accountingUsable}
+        documentsUsable={documentsUsable}
         canManage={can(user.role, mailInboxPermissions, "create")}
         canDelete={can(user.role, mailInboxPermissions, "delete")}
         rows={rows.map((row) => ({
@@ -72,6 +77,7 @@ export async function InboxView({ status }: { status?: string | null }) {
           receivedAt: row.receivedAt.toISOString(),
           snippet: row.snippet,
           status: row.status === "DONE" ? "DONE" : "NEW",
+          importedDocumentId: row.importedDocumentId,
           attachments: row.attachments.map((attachment) => ({
             id: attachment.id,
             fileName: attachment.fileName,

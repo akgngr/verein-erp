@@ -22,6 +22,7 @@ import { listVotes } from "../services/secret-ballot";
 import { VotesTab } from "../components/votes-tab";
 import { meetingLabel } from "../recipients";
 import { meetingsPermissions } from "../permissions";
+import { evaluateInvitationNoticePeriod } from "../services/notice-period";
 import { MEETING_ALLOWED_EXTENSIONS } from "../constants";
 import { getEnv } from "@/shared/env";
 import { StatusBadge, TypeBadge } from "../components/badges";
@@ -72,6 +73,7 @@ export async function MeetingDetailView({
   const tType = await getTranslations("meetings.type");
   const tCommon = await getTranslations("common");
   const tCampaign = await getTranslations("meetings.campaign");
+  const tActions = await getTranslations("meetings.actions");
   const t = await getTranslations("meetings.detail");
   let user;
   try {
@@ -185,13 +187,22 @@ export async function MeetingDetailView({
             {/* KARAR: PDF yeni sekmede açılır; LinkButton target desteklemediği
                 için (paylaşılan bileşen değişikliği yasak) düz <a> kullanılır. */}
             <a
+              href={`/api/meetings/${meeting.id}/invitation-pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-md border border-ink-300 bg-ink-50 px-4 py-1.5 text-sm font-medium transition-colors hover:bg-ink-100"
+            >
+              <FileText className="h-4 w-4" aria-hidden />
+              {tActions("invitationPdf")}
+            </a>
+            <a
               href={`/api/meetings/${meeting.id}/minutes-pdf`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-md border border-ink-300 bg-ink-50 px-4 py-1.5 text-sm font-medium transition-colors hover:bg-ink-100"
             >
               <FileText className="h-4 w-4" aria-hidden />
-              Tutanak (PDF)
+              {tActions("minutesPdf")}
             </a>
             {canDelete && meeting.status !== "APPROVED" ? (
               <DeleteMeetingButton
@@ -206,6 +217,38 @@ export async function MeetingDetailView({
       <div className="mb-4 flex flex-wrap items-center gap-3">
         <StatusBadge status={meeting.status} />
         <TypeBadge type={meeting.type} />
+        {(() => {
+          const notice = evaluateInvitationNoticePeriod({
+            meetingType: meeting.type,
+            meetingDate: meeting.meetingDate,
+            invitationSentAt: meeting.invitationSentAt,
+          });
+          if (notice.status === "compliant" && notice.actualDays !== null) {
+            return (
+              <span className="rounded-md bg-success/10 px-2 py-0.5 text-xs font-medium text-success-700">
+                {t("noticePeriod.compliant", {
+                  actual: notice.actualDays,
+                  required: notice.requiredDays,
+                })}
+              </span>
+            );
+          }
+          if (notice.status === "short_notice" && notice.actualDays !== null) {
+            return (
+              <span className="rounded-md bg-warning/15 px-2 py-0.5 text-xs font-medium text-warning-700">
+                {t("noticePeriod.shortNotice", {
+                  actual: notice.actualDays,
+                  required: notice.requiredDays,
+                })}
+              </span>
+            );
+          }
+          return (
+            <span className="rounded-md bg-ink-100 px-2 py-0.5 text-xs text-ink-600">
+              {t("noticePeriod.notSent", { required: notice.requiredDays })}
+            </span>
+          );
+        })()}
         {meeting.status !== "APPROVED" ? (
           <span className="text-xs text-ink-400">{t("draftNote")}</span>
         ) : (

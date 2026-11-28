@@ -22,6 +22,11 @@ export const GRANT_STATUSES = [
   "CLOSED",
   "REJECTED",
 ] as const;
+export const GRANT_FINANCING_TYPES = [
+  "FEHLBEDARF",
+  "ANTEIL",
+  "FESTBETRAG",
+] as const;
 export type GrantFormValue = {
   id: string | null;
   name: string;
@@ -29,6 +34,8 @@ export type GrantFormValue = {
   fileNumber: string | null;
   purpose: string | null;
   status: (typeof GRANT_STATUSES)[number];
+  financingType: (typeof GRANT_FINANCING_TYPES)[number];
+  sharePercent: number | null;
   approvedCents: number | null;
   ownShareCents: number;
   thirdPartyCents: number;
@@ -63,6 +70,7 @@ export function GrantForm({
   const router = useRouter();
   const [value, setValue] = useState({
     ...initial,
+    sharePct: initial.sharePercent === null ? "" : String(initial.sharePercent),
     approved: euros(initial.approvedCents),
     own: euros(initial.ownShareCents),
     third: euros(initial.thirdPartyCents),
@@ -166,6 +174,48 @@ export function GrantForm({
           {/* HeroUI: outside etiket + description birlikte etiketi kaydırıyor; açıklama dışarıda. */}
           <p className="px-1 text-xs text-ink-500">{t("projectHelp")}</p>
         </div>
+        <Select
+          id="grant-financing-type"
+          isDisabled={!canEdit}
+          value={value.financingType}
+          onChange={(selectedValue) => {
+            const keys =
+              selectedValue === null ? undefined : String(selectedValue);
+            return set({
+              financingType: String(
+                keys ?? value.financingType,
+              ) as GrantFormValue["financingType"],
+            });
+          }}
+        >
+          <Label>{t("fields.financingType")}</Label>
+          {GRANT_FINANCING_TYPES.map((ft) => (
+            <Select.Item
+              key={ft}
+              id={ft}
+              textValue={String(t(`financingTypes.${ft}`))}
+            >
+              <Label>{t(`financingTypes.${ft}`)}</Label>
+            </Select.Item>
+          ))}
+        </Select>
+        {value.financingType === "ANTEIL" ? (
+          <TextField
+            value={value.sharePct}
+            isDisabled={!canEdit}
+            isRequired
+            onChange={(next) => set({ sharePct: next })}
+            className="w-full"
+          >
+            <Label>{t("fields.sharePercent")}</Label>
+            <InputGroup>
+              <InputGroup.Input placeholder="80" inputMode="numeric" />
+              <InputGroup.Suffix>
+                <span className="text-sm text-ink-400">%</span>
+              </InputGroup.Suffix>
+            </InputGroup>
+          </TextField>
+        ) : null}
         {money("approved", t("fields.approved"))}
         {money("own", t("fields.ownShare"))}
         {money("third", t("fields.thirdParty"))}
@@ -197,6 +247,9 @@ export function GrantForm({
           className="self-start"
           onPress={() =>
             start(async () => {
+              const pctParsed = value.sharePct.trim()
+                ? Math.round(Number(value.sharePct.replace(",", ".")))
+                : null;
               const response = await saveGrantAction({
                 id: value.id,
                 name: value.name,
@@ -204,6 +257,13 @@ export function GrantForm({
                 fileNumber: value.fileNumber ?? "",
                 purpose: value.purpose ?? "",
                 status: value.status,
+                financingType: value.financingType,
+                sharePercent:
+                  value.financingType === "ANTEIL" &&
+                  pctParsed !== null &&
+                  Number.isFinite(pctParsed)
+                    ? pctParsed
+                    : null,
                 approvedCents: toCents(value.approved),
                 ownShareCents: toCents(value.own) ?? 0,
                 thirdPartyCents: toCents(value.third) ?? 0,

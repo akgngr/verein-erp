@@ -341,5 +341,27 @@
     "tooLarge": "Die Datei darf höchstens {maxMb} MB groß sein.",
     "uploadFailed": "Die Datei konnte nicht hochgeladen werden.",
     "maxPerRecord": "Pro Datensatz sind höchstens {max} Dateien erlaubt."
+  },
+  "quickSearch": {
+    "trigger": "Schnellsuche",
+    "triggerAria": "Schnellsuche öffnen (Strg+K)",
+    "shortcut": "Strg K",
+    "placeholder": "Seiten, Mitglieder, Dokumente, Sitzungen, Aufgaben, Termine oder Inventar suchen…",
+    "close": "Schließen",
+    "pagesSection": "Seiten & Module",
+    "recordsSection": "Einträge",
+    "searching": "Suche läuft…",
+    "noResults": "Keine passenden Einträge gefunden.",
+    "minCharsHint": "Mindestens 2 Zeichen für die Datensatzsuche eingeben.",
+    "navigateHint": "↑↓ auswählen · Enter öffnen",
+    "closeHint": "Esc schließen",
+    "modules": {
+      "members": "Mitglieder",
+      "documents": "Dokumente",
+      "meetings": "Sitzungen",
+      "tasks": "Aufgaben",
+      "events": "Veranstaltungen",
+      "inventory": "Inventar"
+    }
   }
 }

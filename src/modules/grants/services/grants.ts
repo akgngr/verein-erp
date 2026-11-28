@@ -1,15 +1,18 @@
 import "server-only";
 
-import type { GrantStatus } from "@prisma/client";
+import type { GrantFinancingType, GrantStatus } from "@prisma/client";
 
 import { ActionError } from "@/modules/auth/server";
 import { listProjectBookings, type ProjectBookingRow } from "@/modules/accounting/server";
 import { getDb } from "@/shared/db";
 
+import { computeNeededGrantCents, FINANCING_TYPES } from "../lib/financing";
 import { payoutReceivedChangeError } from "../lib/payout-guard";
 
+export { computeNeededGrantCents, FINANCING_TYPES };
 export type Actor = { id: string; label: string };
-export const STATUSES = ["PLANNED", "APPLIED", "APPROVED", "ACTIVE", "REPORTED", "CLOSED", "REJECTED"] as const;
+import { STATUSES } from "../lib/statuses";
+export { STATUSES };
 /** Bu oranı aşan kalem sapmaları raporda işaretlenir (çoğu ANBest-P: %20). */
 export const DEVIATION_LIMIT = 0.2;
 
@@ -18,6 +21,7 @@ const toDate = (value: string) => new Date(`${value}T00:00:00Z`);
 
 export type GrantInput = {
   name: string; funder: string; fileNumber: string | null; purpose: string | null; status: GrantStatus;
+  financingType: GrantFinancingType; sharePercent: number | null;
   approvedCents: number | null; ownShareCents: number; thirdPartyCents: number;
   periodStart: string; periodEnd: string; reportDueAt: string | null; projectId: string | null; useNetAmounts: boolean;
 };
@@ -26,6 +30,7 @@ export async function listGrants() {
   const rows = await getDb().grant.findMany({ orderBy: [{ periodEnd: "desc" }], include: { payouts: { select: { amountCents: true, receivedAt: true } } }, take: 500 });
   return rows.map((row) => ({
     id: row.id, name: row.name, funder: row.funder, fileNumber: row.fileNumber, status: row.status,
+    financingType: row.financingType, sharePercent: row.sharePercent,
     approvedCents: row.approvedCents, periodStart: day(row.periodStart)!, periodEnd: day(row.periodEnd)!, reportDueAt: day(row.reportDueAt),
     receivedCents: row.payouts.filter((item) => item.receivedAt).reduce((sum, item) => sum + item.amountCents, 0),
     reportSubmittedAt: row.reportSubmittedAt?.toISOString() ?? null,
@@ -37,6 +42,7 @@ export async function getGrant(id: string) {
   if (!row) return null;
   return {
     id: row.id, name: row.name, funder: row.funder, fileNumber: row.fileNumber, purpose: row.purpose, status: row.status,
+    financingType: row.financingType, sharePercent: row.sharePercent,
     approvedCents: row.approvedCents, ownShareCents: row.ownShareCents, thirdPartyCents: row.thirdPartyCents,
     periodStart: day(row.periodStart)!, periodEnd: day(row.periodEnd)!, reportDueAt: day(row.reportDueAt), projectId: row.projectId,
     useNetAmounts: row.useNetAmounts, reportText: row.reportText ?? "", reportSubmittedAt: row.reportSubmittedAt?.toISOString() ?? null,
@@ -131,7 +137,7 @@ export function redactBookingDetails(report: GrantReport): GrantReport {
 
 /**
  * Zahlenmäßiger Nachweis: projenin dönem fişleri kalemlere kategoriyle dağıtılır (eşlenmeyen → "Diğer"),
- * plan/gerçekleşen ve sapma hesaplanır. Gereken hibe = harcama − öz katkı − üçüncü taraf − diğer gelir.
+ * plan/gerçekleşen ve sapma hesaplanır. Finansman türüne göre (Fehlbedarf / Anteil / Festbetrag) gereken hibe bulunur.
  */
 export async function buildReport(grant: GrantDetail, otherLabel: string): Promise<GrantReport> {
   const bookings = grant.projectId ? await listProjectBookings(grant.projectId, toDate(grant.periodStart), toDate(grant.periodEnd)) : [];
@@ -157,7 +163,15 @@ export async function buildReport(grant: GrantDetail, otherLabel: string): Promi
   const actualTotal = lines.reduce((sum, line) => sum + line.actualCents, 0);
   // Projeye bağlı gelirler içinde hibe ödemeleri de olabilir; "diğer gelir" = toplam gelir − alınan hibe (negatif olamaz).
   const otherIncomeCents = Math.max(0, incomes.reduce((sum, row) => sum + row.counted, 0) - receivedCents);
-  const neededGrantCents = Math.max(0, actualTotal - grant.ownShareCents - grant.thirdPartyCents - otherIncomeCents);
+  const neededGrantCents = computeNeededGrantCents({
+    financingType: grant.financingType,
+    sharePercent: grant.sharePercent,
+    approvedCents: grant.approvedCents,
+    actualTotalCents: actualTotal,
+    ownShareCents: grant.ownShareCents,
+    thirdPartyCents: grant.thirdPartyCents,
+    otherIncomeCents,
+  });
   return {
     lines,
     totals: { plannedCents: grant.lines.reduce((sum, line) => sum + line.plannedCents, 0), actualCents: actualTotal },

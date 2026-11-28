@@ -8,6 +8,7 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
 
+import { LinkedTasksPanel } from "../components/linked-tasks-panel";
 import { TasksItemTable } from "../components/item-table";
 import { tasksPermissions } from "../permissions";
 import {
@@ -16,6 +17,7 @@ import {
   TASK_DEFAULT_SORT,
   TASK_SORTABLE_FIELDS,
 } from "../queries/list-items";
+import { listUnifiedLinkedItems } from "../queries/unified-hub";
 import type { TaskFilterKeys } from "../types";
 import { TasksItemCreateView, taskPrefillFromParams } from "./item-create-view";
 import { TasksItemEditView } from "./item-edit-view";
@@ -54,9 +56,10 @@ export async function TasksListView({
     params.filters.mine = "1";
   }
 
-  const [list, options] = await Promise.all([
+  const [list, options, linkedItems] = await Promise.all([
     listTasks(params, user),
     getTaskFormOptions(),
+    listUnifiedLinkedItems(user, { assignedToMe, q: params.q }),
   ]);
 
   const canCreate = can(user.role, tasksPermissions, "create");
@@ -88,6 +91,7 @@ export async function TasksListView({
         canUpdate={canUpdate}
         canDelete={canDelete}
       />
+      <LinkedTasksPanel items={linkedItems} />
       {canCreate && raw.yeni !== undefined ? <TasksItemCreateView prefill={taskPrefillFromParams(raw)} /> : null}
       {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? (
         <TasksItemEditView id={raw.duzenle} />
