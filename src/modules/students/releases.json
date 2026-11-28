@@ -13,6 +13,11 @@
           "type": "improvement",
           "tr": "Kurslar modülünün alıcı kaynağı için opt-out ve kanal izinlerini koruyan listGuardianContactsForStudents sunucu yardımcısı eklendi.",
           "de": "Server-Hilfsfunktion listGuardianContactsForStudents ergänzt, die Opt-out-Status und Kanaleinwilligungen für Kurs-Kampagnen bereitstellt."
+        },
+        {
+          "type": "improvement",
+          "tr": "Diğer modüllerin sakladığı öğrenci kimliklerini silinmemiş öğrencilere süzmek için listActiveStudentIds sunucu yardımcısı eklendi.",
+          "de": "Server-Hilfsfunktion listActiveStudentIds ergänzt, mit der andere Module gespeicherte Schüler-IDs auf nicht gelöschte Schüler filtern."
         }
       ]
     },

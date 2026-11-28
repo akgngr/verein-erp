@@ -3,6 +3,7 @@ import "server-only";
 import type { CourseEnrollmentStatus } from "@prisma/client";
 
 import {
+  listActiveStudentIds,
   listGuardianContactsForStudents,
   type GuardianContactRecord,
 } from "@/modules/students/server";
@@ -35,11 +36,13 @@ export interface CourseEnrollmentForRecipients {
  * Pure recipient builder shared with unit tests:
  * resolves guardians for enrolled students, honors `PAYER_ONLY` vs `ALL_GUARDIANS`,
  * deduplicates multi-child families (by guardian ID / normalized email), and preserves
- * `bulkMailOptOut` + `messagingConsents`.
+ * `bulkMailOptOut` + `messagingConsents`. Enrollments of students outside
+ * `activeStudentIds` (soft-deleted) are skipped, including their stored payer.
  */
 export function buildCourseGuardianRecipients(input: {
   courses: ReadonlyArray<{ id: string; code: string; title: string }>;
   enrollments: ReadonlyArray<CourseEnrollmentForRecipients>;
+  activeStudentIds: ReadonlySet<string>;
   guardiansById: ReadonlyMap<string, GuardianContactRecord>;
   linksByStudentId: ReadonlyMap<string, ReadonlyArray<{ guardianId: string; isPayer: boolean }>>;
   payerOnly: boolean;
@@ -49,6 +52,7 @@ export function buildCourseGuardianRecipients(input: {
   const result: Recipient[] = [];
 
   for (const enrollment of input.enrollments) {
+    if (!input.activeStudentIds.has(enrollment.studentId)) continue;
     const course = courseMap.get(enrollment.courseId);
     if (!course) continue;
 
@@ -192,15 +196,22 @@ export const recipients = defineRecipients("courses", [
 
       if (enrollments.length === 0) return [];
 
+      // Enrollments keep the student ID and payer without a foreign key, so a
+      // soft-deleted student's family must be dropped before payer IDs are collected.
+      const activeStudentIds = await listActiveStudentIds(enrollments.map((e) => e.studentId));
+      const activeEnrollments = enrollments.filter((e) => activeStudentIds.has(e.studentId));
+      if (activeEnrollments.length === 0) return [];
+
       const { guardiansById, linksByStudentId } =
         await listGuardianContactsForStudents(
-          enrollments.map((e) => e.studentId),
-          enrollments.flatMap((e) => (e.payerGuardianId ? [e.payerGuardianId] : [])),
+          activeEnrollments.map((e) => e.studentId),
+          activeEnrollments.flatMap((e) => (e.payerGuardianId ? [e.payerGuardianId] : [])),
         );
 
       return buildCourseGuardianRecipients({
         courses,
-        enrollments,
+        enrollments: activeEnrollments,
+        activeStudentIds,
         guardiansById,
         linksByStudentId,
         payerOnly,

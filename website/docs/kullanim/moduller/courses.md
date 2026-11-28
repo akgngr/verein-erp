@@ -58,6 +58,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-27_
 
 - **Yeni:** Toplu e-posta/kampanya modülünde kursa, kayıt durumuna ve ödeme sorumlusu filtresine göre veli seçimi sağlayan alıcı kaynağı (courses/recipients.ts) eklendi.
+- **Güvenlik:** Silinmiş (soft-delete) öğrencinin kaydında kalan ödeme sorumlusu veli, kurs bazlı kampanyalarda artık alıcı olmaz; her iki veli modunda da yalnız aktif öğrencilerin aileleri hedeflenir.
 
 ### 1.4.18 — Banka eşleştirme kurs ücreti sözleşmesi (#616)
 

@@ -95,6 +95,8 @@ export async function importMessageToDocumentsAction(
     documentId: string;
     registryNumber: string | null;
     attachedCount: number;
+    skippedCount: number;
+    totalCount: number;
   }>
 > {
   const run = createAction({
@@ -111,6 +113,9 @@ export async function importMessageToDocumentsAction(
         id: user.id,
         label: buildUserLabel(user.name, user.email),
       });
+      if (!result.ok && result.reason === "inProgress") {
+        throw new ActionError("mail.inbox.errors.importInProgress");
+      }
       await audit({
         action: "IMPORT",
         entity: "MailInboxMessage",
@@ -118,19 +123,23 @@ export async function importMessageToDocumentsAction(
         after: {
           documentId: result.documentId,
           duplicate: !result.ok,
-          ...(result.ok ? { registryNumber: result.registryNumber, attachedCount: result.attachedCount } : {}),
+          ...(result.ok
+            ? { registryNumber: result.registryNumber, attachedCount: result.attachedCount, skippedCount: result.skippedCount }
+            : {}),
         },
       });
       refresh();
       revalidatePath("/evrak");
       if (!result.ok) {
-        return { duplicate: true, documentId: result.documentId, registryNumber: null, attachedCount: 0 };
+        return { duplicate: true, documentId: result.documentId, registryNumber: null, attachedCount: 0, skippedCount: 0, totalCount: 0 };
       }
       return {
         duplicate: false,
         documentId: result.documentId,
         registryNumber: result.registryNumber,
         attachedCount: result.attachedCount,
+        skippedCount: result.skippedCount,
+        totalCount: result.totalCount,
       };
     },
   });

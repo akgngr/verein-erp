@@ -13,6 +13,11 @@
           "type": "feature",
           "tr": "Diğer modüllerin (ör. E-posta gelen kutusu) otomatik kayıt numarasıyla evrak oluşturup doğrulanmış ek dosyaları saklayabilmesi için createDocumentWithFiles sunucu sözleşmesi eklendi.",
           "de": "Server-Vertrag createDocumentWithFiles ergänzt, damit berechtigte Module (z. B. Posteingang) Dokumente mit fortlaufender Registernummer und geprüften Anhängen anlegen können."
+        },
+        {
+          "type": "improvement",
+          "tr": "createDocumentWithFiles hangi dosyaların gerçekten saklandığını (attachedKeys) bildirir; çağıran modül atlanan dosyaları ayırt edebilir.",
+          "de": "createDocumentWithFiles meldet, welche Dateien tatsächlich gespeichert wurden (attachedKeys), damit aufrufende Module übersprungene Dateien erkennen."
         }
       ]
     },

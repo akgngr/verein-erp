@@ -154,6 +154,7 @@
     "importToAccounting": "In Buchhaltung übernehmen",
     "importToDocuments": "In Dokumente übernehmen",
     "importedToDocuments": "Ins Dokumentenregister übernommen ({registryNumber}, {attachments} Anhänge).",
+    "importedToDocumentsPartial": "Ins Dokumentenregister übernommen ({registryNumber}): {attached} von {total} Anhängen archiviert. Die übrigen bleiben im Posteingang.",
     "importToDocumentsDuplicate": "Diese E-Mail wurde bereits ins Dokumentenregister übernommen.",
     "importedToDocumentsChip": "Dokumentenregister",
     "importedChip": "Übernommen",
@@ -203,7 +204,8 @@
       "emlInvalid": "Keine gültige .eml-Datei.",
       "accountingOff": "Das Buchhaltungsmodul ist deaktiviert.",
       "documentsOff": "Das Dokumentenmodul ist deaktiviert.",
-      "notFound": "Nicht gefunden."
+      "notFound": "Nicht gefunden.",
+      "importInProgress": "Diese E-Mail wird gerade ins Dokumentenregister übernommen. Bitte kurz warten."
     },
     "drafts": {
       "errors": {

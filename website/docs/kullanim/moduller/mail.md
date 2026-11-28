@@ -45,6 +45,8 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 _2026-11-27_
 
 - **Yeni:** Gelen kutusundan e-posta ve eklerini tek tıkla Evrak Kayıt modülüne aktarma ve her 15 dakikada bir çalışan zamanlanmış mail.fetch_inbox IMAP görevi eklendi.
+- **Düzeltme:** Evrak Kayıt aktarımında yalnız belgeye gerçekten eklenen ekler "aktarıldı" işaretlenir; sınırı aşan, doğrulamadan geçmeyen veya diskte bulunamayan ekler gelen kutusunda açık kalır ve sonuç "12 ekten 10 tanesi arşivlendi" biçiminde gösterilir.
+- **Düzeltme:** Belge bağlantısı e-posta düzeyinde saklanır: eki olmayan veya ekleri muhasebeye aktarılmış e-posta da ikinci kez evrak kaydı açmaz; eşzamanlı iki aktarımdan yalnız biri kayıt oluşturur.
 
 ### 1.5.6 — Ayar merkezi grubu
 

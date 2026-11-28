@@ -13,6 +13,16 @@
           "type": "feature",
           "tr": "Gelen kutusundan e-posta ve eklerini tek tıkla Evrak Kayıt modülüne aktarma ve her 15 dakikada bir çalışan zamanlanmış mail.fetch_inbox IMAP görevi eklendi.",
           "de": "Ein-Klick-Übernahme von E-Mails samt Anhängen ins Dokumentenregister sowie geplanter 15-Minuten-IMAP-Abruf (mail.fetch_inbox) ergänzt."
+        },
+        {
+          "type": "fix",
+          "tr": "Evrak Kayıt aktarımında yalnız belgeye gerçekten eklenen ekler \"aktarıldı\" işaretlenir; sınırı aşan, doğrulamadan geçmeyen veya diskte bulunamayan ekler gelen kutusunda açık kalır ve sonuç \"12 ekten 10 tanesi arşivlendi\" biçiminde gösterilir.",
+          "de": "Bei der Übernahme ins Dokumentenregister werden nur tatsächlich archivierte Anhänge als übernommen markiert; Anhänge über dem Limit, abgelehnte oder auf der Festplatte fehlende Dateien bleiben im Posteingang offen, und das Ergebnis wird als „10 von 12 Anhängen archiviert“ angezeigt."
+        },
+        {
+          "type": "fix",
+          "tr": "Belge bağlantısı e-posta düzeyinde saklanır: eki olmayan veya ekleri muhasebeye aktarılmış e-posta da ikinci kez evrak kaydı açmaz; eşzamanlı iki aktarımdan yalnız biri kayıt oluşturur.",
+          "de": "Die Dokumentverknüpfung wird pro E-Mail gespeichert: Auch E-Mails ohne Anhänge oder mit bereits an die Buchhaltung übergebenen Anhängen erzeugen keinen zweiten Registereintrag; von zwei gleichzeitigen Übernahmen legt nur eine einen Eintrag an."
         }
       ]
     },

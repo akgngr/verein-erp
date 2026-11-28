@@ -50,6 +50,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-27_
 
 - **Yeni:** Diğer modüllerin (ör. E-posta gelen kutusu) otomatik kayıt numarasıyla evrak oluşturup doğrulanmış ek dosyaları saklayabilmesi için createDocumentWithFiles sunucu sözleşmesi eklendi.
+- **İyileştirme:** createDocumentWithFiles hangi dosyaların gerçekten saklandığını (attachedKeys) bildirir; çağıran modül atlanan dosyaları ayırt edebilir.
 
 ### 1.10.3 — Sunucu paketine yerel dosyalar girmiyor
 

@@ -15,6 +15,8 @@ import { allocateRegistryNumber, runWithRegistryRetry } from "./registry-number"
 import { berlinYear } from "../utils";
 
 export interface ProgrammaticDocumentFileInput {
+  /** Caller's identity for the file (e.g. mail attachment ID), echoed in `attachedKeys` when stored. */
+  key?: string;
   originalName: string;
   mimeType: string;
   buffer: Buffer | Uint8Array;
@@ -38,6 +40,8 @@ export interface CreateDocumentWithFilesResult {
   registryNumber: string;
   attachedCount: number;
   skippedFiles: string[];
+  /** `key` of every input file that was stored (files without a key are not listed). */
+  attachedKeys: string[];
 }
 
 /** Pure input sanitizer shared with unit tests (enforces DB column bounds and safe fallbacks). */
@@ -131,6 +135,7 @@ export async function createDocumentWithFiles(
 
   const maxBytes = getEnv().MAX_UPLOAD_MB * 1024 * 1024;
   const skippedFiles: string[] = [];
+  const attachedKeys: string[] = [];
   let attachedCount = 0;
 
   for (const file of input.files ?? []) {
@@ -171,6 +176,7 @@ export async function createDocumentWithFiles(
         },
       });
       attachedCount += 1;
+      if (file.key) attachedKeys.push(file.key);
       await writeAudit({
         userId: input.actor.id,
         userLabel: input.actor.label,
@@ -193,5 +199,6 @@ export async function createDocumentWithFiles(
     registryNumber: created.registryNumber,
     attachedCount,
     skippedFiles,
+    attachedKeys,
   };
 }

@@ -6292,6 +6292,7 @@
       "importToAccounting": "Muhasebeye aktar",
       "importToDocuments": "Evrak Kayıta aktar",
       "importedToDocuments": "Evrak Kayıta aktarıldı ({registryNumber}, {attachments} ek).",
+      "importedToDocumentsPartial": "Evrak Kayıt'a aktarıldı ({registryNumber}): {total} ekten {attached} tanesi arşivlendi. Kalanlar gelen kutusunda kalır.",
       "importToDocumentsDuplicate": "Bu e-posta zaten Evrak Kayıta aktarılmış.",
       "importedToDocumentsChip": "Evrak Kayıt",
       "importedChip": "Aktarıldı",
@@ -6341,7 +6342,8 @@
         "emlInvalid": "Geçerli bir .eml dosyası değil.",
         "accountingOff": "Muhasebe modülü kapalı.",
         "documentsOff": "Evrak Kayıt modülü kapalı.",
-        "notFound": "Bulunamadı."
+        "notFound": "Bulunamadı.",
+        "importInProgress": "Bu e-posta şu anda Evrak Kayıt'a aktarılıyor. Lütfen biraz bekleyin."
       },
       "drafts": {
         "errors": {

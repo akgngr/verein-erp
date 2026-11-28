@@ -37,6 +37,8 @@ export type InboxRow = {
   receivedAt: string;
   snippet: string | null;
   status: "NEW" | "DONE";
+  /** Evrak Kayıt'a aktarılan belge (e-posta düzeyinde). */
+  importedDocumentId: string | null;
   attachments: {
     id: string;
     fileName: string;
@@ -119,6 +121,14 @@ export function InboxPanel({
     if (!response.ok) return void notify.error(response.error);
     if (response.data.duplicate) {
       notify.warning(t("importToDocumentsDuplicate"));
+    } else if (response.data.skippedCount > 0) {
+      notify.warning(
+        t("importedToDocumentsPartial", {
+          registryNumber: response.data.registryNumber ?? "",
+          attached: response.data.attachedCount,
+          total: response.data.totalCount,
+        }),
+      );
     } else {
       notify.success(
         t("importedToDocuments", {
@@ -228,11 +238,8 @@ export function InboxPanel({
                   {t(`status.${row.status}`)}
                 </StatusChip>
                 {(() => {
-                  const docTag = row.attachments.find((a) =>
-                    a.importedTo?.startsWith("documents.document:"),
-                  )?.importedTo;
-                  if (docTag) {
-                    const docId = docTag.slice("documents.document:".length);
+                  const docId = row.importedDocumentId;
+                  if (docId) {
                     return (
                       <Link
                         href={`/evrak/${docId}`}

@@ -113,9 +113,11 @@ describe("Roadmap E1.3 Operational Bridges (#631)", () => {
       ["s3", [{ guardianId: "g3", isPayer: true }]],
     ]);
 
+    const activeStudentIds = new Set(["s1", "s2", "s3"]);
     const allGuardians = buildCourseGuardianRecipients({
       courses,
       enrollments,
+      activeStudentIds,
       guardiansById,
       linksByStudentId,
       payerOnly: false,
@@ -136,6 +138,7 @@ describe("Roadmap E1.3 Operational Bridges (#631)", () => {
     const payersOnly = buildCourseGuardianRecipients({
       courses,
       enrollments,
+      activeStudentIds,
       guardiansById,
       linksByStudentId,
       payerOnly: true,
@@ -144,5 +147,39 @@ describe("Roadmap E1.3 Operational Bridges (#631)", () => {
       payersOnly.map((r) => r.id),
       ["g1", "g3"],
     );
+  });
+
+  it("never targets a soft-deleted student's stored payer guardian, in either guardian mode", () => {
+    const courses = [{ id: "c1", code: "K-2026-01", title: "Mathematik 5. Klasse" }];
+    const enrollments = [
+      { courseId: "c1", studentId: "active", studentLabel: "Active Child", payerGuardianId: "g-active" },
+      { courseId: "c1", studentId: "deleted", studentLabel: "Deleted Child", payerGuardianId: "g-deleted" },
+    ];
+    const contact = (id: string) => ({
+      id,
+      salutation: null,
+      firstName: "Synthetic",
+      lastName: id,
+      email: `${id}@example.org`,
+      phone: null,
+      bulkMailOptOut: false,
+      messagingConsents: [],
+    });
+    const guardiansById = new Map([
+      ["g-active", contact("g-active")],
+      ["g-deleted", contact("g-deleted")],
+    ]);
+    const linksByStudentId = new Map([["active", [{ guardianId: "g-active", isPayer: true }]]]);
+    for (const payerOnly of [false, true]) {
+      const ids = buildCourseGuardianRecipients({
+        courses,
+        enrollments,
+        activeStudentIds: new Set(["active"]),
+        guardiansById,
+        linksByStudentId,
+        payerOnly,
+      }).map((r) => r.id);
+      assert.deepEqual(ids, ["g-active"], `payerOnly=${payerOnly}`);
+    }
   });
 });

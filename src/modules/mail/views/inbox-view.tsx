@@ -77,6 +77,7 @@ export async function InboxView({ status }: { status?: string | null }) {
           receivedAt: row.receivedAt.toISOString(),
           snippet: row.snippet,
           status: row.status === "DONE" ? "DONE" : "NEW",
+          importedDocumentId: row.importedDocumentId,
           attachments: row.attachments.map((attachment) => ({
             id: attachment.id,
             fileName: attachment.fileName,

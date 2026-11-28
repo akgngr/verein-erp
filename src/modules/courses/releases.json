@@ -13,6 +13,11 @@
           "type": "feature",
           "tr": "Toplu e-posta/kampanya modülünde kursa, kayıt durumuna ve ödeme sorumlusu filtresine göre veli seçimi sağlayan alıcı kaynağı (courses/recipients.ts) eklendi.",
           "de": "Empfängerquelle für Kampagnen/Rundmails ergänzt, um Erziehungsberechtigte nach Kurs, Anmeldestatus und Zahlungspflichtigen gezielt anzuschreiben."
+        },
+        {
+          "type": "security",
+          "tr": "Silinmiş (soft-delete) öğrencinin kaydında kalan ödeme sorumlusu veli, kurs bazlı kampanyalarda artık alıcı olmaz; her iki veli modunda da yalnız aktif öğrencilerin aileleri hedeflenir.",
+          "de": "Der im Kurseintrag gespeicherte Zahlungspflichtige eines gelöschten Schülers erhält keine kursbasierten Kampagnen mehr; in beiden Elternmodi werden nur Familien aktiver Schüler angeschrieben."
         }
       ]
     },

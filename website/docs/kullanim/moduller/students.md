@@ -47,6 +47,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-27_
 
 - **İyileştirme:** Kurslar modülünün alıcı kaynağı için opt-out ve kanal izinlerini koruyan listGuardianContactsForStudents sunucu yardımcısı eklendi.
+- **İyileştirme:** Diğer modüllerin sakladığı öğrenci kimliklerini silinmemiş öğrencilere süzmek için listActiveStudentIds sunucu yardımcısı eklendi.
 
 ### 1.4.14 — Veli self-servis silinmiş kayıt filtresi ve denetim kaydı gizliliği
 
