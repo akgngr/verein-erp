@@ -13,6 +13,16 @@
           "type": "feature",
           "tr": "Demirbaş ödünç/iade geçmişi ve DGUV V3 / TÜV periyodik muayene takibi için /inventory/bakim-ve-zimmet ekranı eklendi.",
           "de": "Neue Seite /inventory/bakim-ve-zimmet für Ausleihhistorie und DGUV V3 / TÜV-Prüftermine ergänzt."
+        },
+        {
+          "type": "security",
+          "tr": "Ödünç ve bakım kayıtları kişisel veri olarak sınıflandırıldı (ödünç alanın adı, denetçi adı). Üye silindiğinde iade edilmiş ödünçlerde ad anonimleşir ve üye bağlantısı kaldırılır; açık ödünç, eşya geri alınana kadar adı korur.",
+          "de": "Ausleih- und Wartungseinträge sind als personenbezogene Daten eingestuft (Name des Ausleihers, Name des Prüfers). Wird ein Mitglied gelöscht, werden zurückgegebene Ausleihen anonymisiert und die Mitgliedsverknüpfung entfernt; eine offene Ausleihe behält den Namen, bis der Gegenstand zurück ist."
+        },
+        {
+          "type": "fix",
+          "tr": "Açık ödünçler sınırsız ve önce listelenir (iade düğmesi kaybolmaz); muayene takvimi vadesi gelen ve geçen muayeneleri doğrudan tarihe göre bulur; eşya seçimlerinde tüm aktif eşyalar yer alır.",
+          "de": "Offene Ausleihen werden vollständig und zuerst gelistet (die Rückgabe-Schaltfläche geht nicht verloren); der Prüfplan findet fällige und überfällige Prüfungen direkt nach Datum; die Gegenstandsauswahl enthält alle aktiven Gegenstände."
         }
       ]
     },

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.21.1",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Üye silme kancaları",
+        "de": "Hooks beim Löschen von Mitgliedern"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Modüller onMemberDeleted yaşam döngüsü kancasıyla, silinen üyeye ait kişisel verilerini temizleyebilir; runMemberDeletionHooks tüm kancaları çalıştırır, hata diğerlerini durdurmaz.",
+          "de": "Module können über den Lifecycle-Hook onMemberDeleted personenbezogene Daten eines gelöschten Mitglieds bereinigen; runMemberDeletionHooks führt alle Hooks aus, ein Fehler stoppt die anderen nicht."
+        }
+      ]
+    },
+    {
       "version": "1.21.0",
       "date": "2026-11-26",
       "title": {

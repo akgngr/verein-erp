@@ -12,6 +12,12 @@ export type ModuleLifecycle = {
    * üye…) yasal saklama gereği kalır; içlerindeki ad etiketleri korunur. Modül kapalı olsa da çağrılır.
    */
   onUserDeleted?: (userId: string) => Promise<void>;
+  /**
+   * Bir üye silindikten sonra çağrılır (DSGVO Art. 17). Başka modüllerde o üyeye bağlı kişisel verileri
+   * temizler veya anonimleştirir (ör. ödünç kayıtlarındaki ad); kayıtların kendisi tarihçe için kalabilir.
+   * Modül kapalı olsa da çağrılır; hata diğer modülleri durdurmaz.
+   */
+  onMemberDeleted?: (memberId: string) => Promise<void>;
 };
 
 export function defineLifecycle(lifecycle: ModuleLifecycle): ModuleLifecycle {

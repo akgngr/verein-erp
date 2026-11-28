@@ -7,6 +7,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { ActionError, createAction } from "@/modules/auth/server";
 import { revokePortalSessionsForMember } from "@/modules/member-portal/server";
 import { cancelPendingMemberForms } from "@/modules/online-forms/server";
+import { runMemberDeletionHooks } from "@/modules/system/server";
 
 import { membersPermissions } from "../permissions";
 import { deleteMemberSchema } from "../schemas/member";
@@ -47,6 +48,8 @@ export async function deleteMemberAction(input: unknown): Promise<ActionResult> 
         await cancelPendingMemberForms(tx, member.id);
       });
 
+      // Other modules clear or anonymise their personal data about this member (e.g. inventory loans).
+      const cleanup = await runMemberDeletionHooks(member.id);
       await audit({
         action: "DELETE",
         entity: "Member",
@@ -59,6 +62,7 @@ export async function deleteMemberAction(input: unknown): Promise<ActionResult> 
         after: {
           membershipNumber: member.membershipNumber,
           deletedAt: deletedAt.toISOString(),
+          ...(cleanup.failed.length ? { cleanupFailed: cleanup.failed } : {}),
         },
       });
 
