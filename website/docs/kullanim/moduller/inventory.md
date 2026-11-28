@@ -23,6 +23,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | Modül | İşlem | Gerekçe |
 |---|---|---|
 | [Muhasebe](./accounting) | yazma | İşaretli eşyaları muhasebede demirbaş (AfA) olarak açar ve senkron tutar. |
+| [Üyeler](./members) | okuma | Zimmet kaydında dernek üyesi seçebilmek için üye listesini okur. |
 | [Modül Yönetimi](./system) | okuma | Muhasebe modülünün etkin olup olmadığını okur. |
 
 ## Varsayılan yetkiler

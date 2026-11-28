@@ -14,6 +14,7 @@ export const moduleConfig: ModuleConfig = {
   // Demirbaş senkronu (muhasebe ↔ envanter); karşı modül etkin mi diye modül durumunu okur.
   access: [
     { module: "accounting", operations: ["write"] },
+    { module: "members", operations: ["read"] },
     { module: "system", operations: ["read"] },
   ],
   nav: [

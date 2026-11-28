@@ -36,3 +36,24 @@ export function computeNextDueDate(
   );
   return d;
 }
+
+export function pickEarliestInspectionDate(
+  records: readonly { kind: string; performedAt: Date; createdAt?: Date; nextDueAt: Date | null }[],
+): Date | null {
+  const latestByKind = new Map<string, { performedAt: number; createdAt: number; nextDueAt: Date | null }>();
+  for (const r of records) {
+    const perf = r.performedAt.getTime();
+    const created = r.createdAt ? r.createdAt.getTime() : 0;
+    const prev = latestByKind.get(r.kind);
+    if (!prev || perf > prev.performedAt || (perf === prev.performedAt && created > prev.createdAt)) {
+      latestByKind.set(r.kind, { performedAt: perf, createdAt: created, nextDueAt: r.nextDueAt });
+    }
+  }
+  let earliest: Date | null = null;
+  for (const entry of latestByKind.values()) {
+    if (entry.nextDueAt && (!earliest || entry.nextDueAt.getTime() < earliest.getTime())) {
+      earliest = entry.nextDueAt;
+    }
+  }
+  return earliest;
+}

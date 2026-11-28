@@ -132,6 +132,8 @@
     "lendingTitle": "Ödünç / Zimmet Geçmişi",
     "item": "Demirbaş",
     "borrower": "Teslim alan",
+    "borrowerMember": "Üye seçimi (isteğe bağlı)",
+    "borrowerExternal": "Üye dışı / serbest giriş",
     "lentAt": "Veriliş tarihi",
     "dueAt": "İade hedefi",
     "lendSubmit": "Ödünç ver",
@@ -189,6 +191,7 @@
   },
   "access": {
     "accounting": "İşaretli eşyaları muhasebede demirbaş (AfA) olarak açar ve senkron tutar.",
+    "members": "Zimmet kaydında dernek üyesi seçebilmek için üye listesini okur.",
     "system": "Muhasebe modülünün etkin olup olmadığını okur."
   }
 }

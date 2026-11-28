@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
+import { listMemberOptions } from "@/modules/members/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
@@ -24,7 +25,11 @@ export async function InventoryOperationsView() {
   }
 
   const t = await getTranslations("inventory");
-  const data = await getInventoryOperationsData();
+  const canUpdate = can(user.role, inventoryPermissions, "update");
+  const [data, memberOptions] = await Promise.all([
+    getInventoryOperationsData(),
+    canUpdate ? listMemberOptions().catch(() => []) : Promise.resolve([]),
+  ]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -39,7 +44,8 @@ export async function InventoryOperationsView() {
       />
       <InventoryOperationsPanel
         data={data}
-        canUpdate={can(user.role, inventoryPermissions, "update")}
+        memberOptions={memberOptions}
+        canUpdate={canUpdate}
         today={berlinToday()}
       />
     </div>

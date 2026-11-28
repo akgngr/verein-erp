@@ -6168,6 +6168,8 @@
       "lendingTitle": "Ausleihhistorie",
       "item": "Gegenstand",
       "borrower": "Entleiher",
+      "borrowerMember": "Mitglied auswählen (optional)",
+      "borrowerExternal": "Extern / Freitext",
       "lentAt": "Ausgeliehen am",
       "dueAt": "Rückgabe bis",
       "lendSubmit": "Ausleihe erfassen",
@@ -6225,6 +6227,7 @@
     },
     "access": {
       "accounting": "Führt markierte Gegenstände als Anlagen (AfA) in der Buchhaltung und hält sie synchron.",
+      "members": "Liest die Mitgliederliste zur Auswahl von Entleihern bei der Ausleihe.",
       "system": "Liest, ob das Buchhaltungsmodul aktiv ist."
     }
   },

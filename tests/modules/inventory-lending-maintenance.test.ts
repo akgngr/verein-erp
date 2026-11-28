@@ -20,6 +20,25 @@ describe("Inventory — Lending History & DGUV V3 / TÜV Maintenance (#589)", ()
     assert.equal(computeNextDueDate(new Date("2026-11-28T00:00:00Z"), null), null);
   });
 
+  test("pickEarliestInspectionDate preserves earlier deadlines across maintenance kinds", async () => {
+    const { pickEarliestInspectionDate } = await import(
+      "@/modules/inventory/helpers/maintenance"
+    );
+    const earliest = pickEarliestInspectionDate([
+      {
+        kind: "DGUV_V3",
+        performedAt: new Date("2025-12-01T00:00:00Z"),
+        nextDueAt: new Date("2026-12-01T00:00:00Z"),
+      },
+      {
+        kind: "SERVICE",
+        performedAt: new Date("2026-11-28T00:00:00Z"),
+        nextDueAt: new Date("2027-06-01T00:00:00Z"),
+      },
+    ]);
+    assert.equal(earliest?.toISOString().slice(0, 10), "2026-12-01");
+  });
+
   test("bakim-ve-zimmet route bridge exists after module:sync", () => {
     const root = process.cwd();
     assert.ok(

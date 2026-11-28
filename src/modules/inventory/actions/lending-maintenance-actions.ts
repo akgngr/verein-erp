@@ -4,10 +4,12 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { listMemberOptions } from "@/modules/members/server";
 import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
 
 import { INVENTORY_BASE_PATH } from "../constants";
+import { pickEarliestInspectionDate } from "../helpers/maintenance";
 import { inventoryPermissions } from "../permissions";
 
 const isoDate = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "inventory.validation.dateInvalid");
@@ -15,6 +17,7 @@ const toDate = (v: string) => new Date(`${v}T00:00:00Z`);
 
 const lendSchema = z.object({
   itemId: z.string().min(1).max(64),
+  borrowerMemberId: z.string().min(1).max(64).nullable().optional(),
   borrowerName: z.string().trim().min(2).max(160),
   lentAt: isoDate,
   dueAt: isoDate.nullable(),
@@ -48,10 +51,22 @@ export async function lendInventoryItemAction(input: unknown): Promise<ActionRes
       });
       if (!item) throw new ActionError("inventory.errors.notFound");
 
+      let borrowerMemberId: string | null = null;
+      let borrowerName = input.borrowerName;
+      if (input.borrowerMemberId) {
+        const members = await listMemberOptions();
+        const match = members.find((m) => m.id === input.borrowerMemberId);
+        if (match) {
+          borrowerMemberId = match.id;
+          borrowerName = match.label;
+        }
+      }
+
       const created = await db.inventoryLoan.create({
         data: {
           itemId: input.itemId,
-          borrowerName: input.borrowerName,
+          borrowerMemberId,
+          borrowerName,
           lentAt: toDate(input.lentAt),
           dueAt: input.dueAt ? toDate(input.dueAt) : null,
           note: input.note || null,
@@ -71,7 +86,7 @@ export async function lendInventoryItemAction(input: unknown): Promise<ActionRes
         action: "CREATE",
         entity: "InventoryLoan",
         entityId: created.id,
-        after: { itemId: input.itemId, lentAt: input.lentAt },
+        after: { itemId: input.itemId, borrowerMemberId, lentAt: input.lentAt },
       });
       revalidatePath(INVENTORY_BASE_PATH);
       revalidatePath(`${INVENTORY_BASE_PATH}/bakim-ve-zimmet`);
@@ -147,9 +162,14 @@ export async function recordMaintenanceAction(input: unknown): Promise<ActionRes
       });
 
       if (input.nextDueAt) {
+        const allMaintenance = await db.inventoryMaintenance.findMany({
+          where: { itemId: input.itemId },
+          select: { kind: true, performedAt: true, createdAt: true, nextDueAt: true },
+        });
+        const earliest = pickEarliestInspectionDate(allMaintenance);
         await db.inventoryItem.update({
           where: { id: input.itemId },
-          data: { nextInspectionAt: toDate(input.nextDueAt) },
+          data: { nextInspectionAt: earliest ?? toDate(input.nextDueAt) },
         });
       }
 

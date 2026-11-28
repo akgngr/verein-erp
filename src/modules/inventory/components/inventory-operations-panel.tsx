@@ -30,10 +30,12 @@ const MAINTENANCE_KINDS = ["DGUV_V3", "TUV", "SERVICE", "OTHER"] as const;
 
 export function InventoryOperationsPanel({
   data,
+  memberOptions = [],
   canUpdate,
   today,
 }: {
   data: InventoryOperationsData;
+  memberOptions?: { id: string; label: string }[];
   canUpdate: boolean;
   today: string;
 }) {
@@ -45,6 +47,7 @@ export function InventoryOperationsPanel({
 
   const [loanForm, setLoanForm] = useState({
     itemId: data.items[0]?.id ?? "",
+    borrowerMemberId: "",
     borrowerName: "",
     lentAt: today,
     dueAt: "",
@@ -140,9 +143,40 @@ export function InventoryOperationsPanel({
                   </Select.Item>
                 ))}
               </Select>
+              {memberOptions.length > 0 ? (
+                <Select
+                  id="lend-member"
+                  value={loanForm.borrowerMemberId || "__external__"}
+                  onChange={(v) => {
+                    const key = String(v ?? "__external__");
+                    if (key === "__external__") {
+                      setLoanForm((f) => ({ ...f, borrowerMemberId: "" }));
+                    } else {
+                      const found = memberOptions.find((m) => m.id === key);
+                      setLoanForm((f) => ({
+                        ...f,
+                        borrowerMemberId: key,
+                        borrowerName: found ? found.label : f.borrowerName,
+                      }));
+                    }
+                  }}
+                >
+                  <Label>{t("borrowerMember")}</Label>
+                  <Select.Item id="__external__" textValue={t("borrowerExternal")}>
+                    <Label>{t("borrowerExternal")}</Label>
+                  </Select.Item>
+                  {memberOptions.map((member) => (
+                    <Select.Item key={member.id} id={member.id} textValue={member.label}>
+                      <Label>{member.label}</Label>
+                    </Select.Item>
+                  ))}
+                </Select>
+              ) : null}
               <TextField
                 value={loanForm.borrowerName}
-                onChange={(v) => setLoanForm((f) => ({ ...f, borrowerName: v }))}
+                onChange={(v) =>
+                  setLoanForm((f) => ({ ...f, borrowerMemberId: "", borrowerName: v }))
+                }
               >
                 <Label>{t("borrower")}</Label>
                 <Input placeholder=" " />
@@ -171,13 +205,21 @@ export function InventoryOperationsPanel({
                     () =>
                       lendInventoryItemAction({
                         itemId: loanForm.itemId,
+                        borrowerMemberId: loanForm.borrowerMemberId || null,
                         borrowerName: loanForm.borrowerName,
                         lentAt: loanForm.lentAt,
                         dueAt: loanForm.dueAt || null,
                         note: loanForm.note || null,
                       }),
                     t("lentToast"),
-                    () => setLoanForm((f) => ({ ...f, borrowerName: "", dueAt: "", note: "" })),
+                    () =>
+                      setLoanForm((f) => ({
+                        ...f,
+                        borrowerMemberId: "",
+                        borrowerName: "",
+                        dueAt: "",
+                        note: "",
+                      })),
                   )
                 }
               >
