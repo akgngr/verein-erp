@@ -13,7 +13,7 @@ Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.
 |---|---|
 | Anahtar | `sepa` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.3 |
+| Sürüm | 1.3.0 |
 | Gerektirir | [Muhasebe](./accounting) |
 | Önerir | [Üyeler](./members), [Kurslar](./courses), [e-Sign](./online-forms) |
 
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | SEPA otomatik ödeme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | — | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.3.0 — IBAN değişikliğinde SEPA yetki değişikliği (AmdmntInd) desteği (#588)
+
+_2026-11-28_
+
+- **Yeni:** Aynı yetki referansıyla önceki tahsilatlara göre IBAN değiştiğinde önizlemede uyarı rozeti gösterilir ve pain.008.001.08 XML dosyasına AmdmntInd/SMNDA (veya bilinen eski IBAN) eklenir.
 
 ### 1.2.3 — TARGET2 takvimi, pain.008 transliterasyonu ve atomik tahsilat/iade
 
@@ -85,10 +91,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 1.0.3 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-Daha eski 3 herkese açık sürüm notu.
+Daha eski 4 herkese açık sürüm notu.

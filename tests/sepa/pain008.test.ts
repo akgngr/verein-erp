@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { describe, test } from "node:test";
 
-import { buildPain008, earliestCollectionDate, isValidCreditorId, isValidIban, sepaText } from "@/modules/sepa/lib/pain008";
+import { buildPain008, detectMandateIbanChange, earliestCollectionDate, isValidCreditorId, isValidIban, sepaText } from "@/modules/sepa/lib/pain008";
 
 describe("SEPA pain.008", () => {
   test("IBAN and creditor id checks", () => {
@@ -34,6 +34,49 @@ describe("SEPA pain.008", () => {
     assert.match(xml, /<MndtId>M-UYE-2026-0001<\/MndtId><DtOfSgntr>2026-01-15<\/DtOfSgntr>/);
     assert.match(xml, /<Nm>Ayse Yilmaz<\/Nm>/);
     assert.match(xml, /<Othr><Id>NOTPROVIDED<\/Id><\/Othr>/);
+    assert.doesNotMatch(xml, /<AmdmntInd>/);
+  });
+
+  test("mandate amendment emits AmdmntInd with original IBAN or SMNDA", () => {
+    const xml = buildPain008({
+      messageId: "LS-2026-0002",
+      createdAt: new Date("2026-11-28T10:00:00Z"),
+      collectionDate: "2026-12-02",
+      creditor: { name: "Test Verein e.V.", iban: "DE89370400440532013000", bic: null, creditorId: "DE98ZZZ09999999999" },
+      transactions: [
+        {
+          endToEndId: "LS-2026-0002-1",
+          amountCents: 6000,
+          mandateId: "M-UYE-2026-0001",
+          mandateDate: "2026-01-15",
+          debtorName: "Max Mustermann",
+          debtorIban: "DE02120300000000202051",
+          debtorBic: null,
+          remittance: "Mitgliedsbeitrag 2026",
+          amendment: { originalIban: "DE89 3704 0044 0532 0130 00" },
+        },
+        {
+          endToEndId: "LS-2026-0002-2",
+          amountCents: 4500,
+          mandateId: "M-UYE-2026-0002",
+          mandateDate: "2026-02-01",
+          debtorName: "Erika Musterfrau",
+          debtorIban: "DE02500105170137075030",
+          debtorBic: null,
+          remittance: "Mitgliedsbeitrag 2026",
+          amendment: {},
+        },
+      ],
+    });
+    assert.match(xml, /<AmdmntInd>true<\/AmdmntInd><AmdmntInfDtls><OrgnlDbtrAcct><Id><IBAN>DE89370400440532013000<\/IBAN><\/Id><\/OrgnlDbtrAcct><\/AmdmntInfDtls>/);
+    assert.match(xml, /<AmdmntInd>true<\/AmdmntInd><AmdmntInfDtls><OrgnlDbtrAgt><FinInstnId><Othr><Id>SMNDA<\/Id><\/Othr><\/FinInstnId><\/OrgnlDbtrAgt><\/AmdmntInfDtls>/);
+  });
+
+  test("detectMandateIbanChange flags only changed IBANs for existing mandates", () => {
+    const prev = new Map([["M-1", "DE89 •••• 3000"]]);
+    assert.equal(detectMandateIbanChange("DE89 •••• 3000", prev, "M-1"), false);
+    assert.equal(detectMandateIbanChange("DE02 •••• 2051", prev, "M-1"), true);
+    assert.equal(detectMandateIbanChange("DE02 •••• 2051", prev, "M-NEW"), false);
   });
 
   test("earliest collection date skips weekends", () => {

@@ -207,7 +207,12 @@ export function SepaApp({
                       >
                         <td className="px-2 py-1">{item.label}</td>
                         <td className="px-2 py-1 font-mono text-xs">
-                          {item.ibanMasked}
+                          <span>{item.ibanMasked}</span>
+                          {item.ibanAmended ? (
+                            <StatusChip tone="warning" className="ms-2">
+                              {t("ibanAmended")}
+                            </StatusChip>
+                          ) : null}
                         </td>
                         <td className="px-2 py-1 font-mono text-xs">
                           {item.mandateReference}

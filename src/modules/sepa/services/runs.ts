@@ -12,7 +12,7 @@ import { getDb } from "@/shared/db";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
 import { checkMandate, DEFAULT_MAX_RETURNS, isReturnCode, type HealthIssue } from "../lib/mandate-health";
-import { buildPain008, isValidCreditorId, isValidIban, sepaText, type DebitTransaction } from "../lib/pain008";
+import { buildPain008, detectMandateIbanChange, isValidCreditorId, isValidIban, sepaText, type DebitTransaction } from "../lib/pain008";
 import { loadMandateHistory } from "./history";
 
 const XML_PURPOSE = "sepa-debit-xml";
@@ -77,8 +77,18 @@ export async function previewRun(source: Source, param: string, labels: Paramete
     const issues = checkMandate(item, { today, maxReturns, ...history.for(item) });
     return HEALTH_SKIPS.find((issue) => issues.includes(issue)) as SkipReason | undefined;
   };
+  const mandateRefs = [...new Set(list.map((item) => item.mandateReference).filter((ref): ref is string => Boolean(ref)))];
+  const previousMandateItems = mandateRefs.length
+    ? await getDb().sepaDebitItem.findMany({
+        where: { mandateReference: { in: mandateRefs }, run: { status: { not: "CANCELLED" } } },
+        orderBy: { run: { createdAt: "desc" } },
+        distinct: ["mandateReference"],
+        select: { mandateReference: true, ibanMasked: true },
+      })
+    : [];
+  const previousByMandate = new Map(previousMandateItems.map((row) => [row.mandateReference, row.ibanMasked]));
   const pending = new Set((await getDb().sepaDebitItem.findMany({ where: { sourceKey: { in: list.map((item) => item.sourceKey) }, status: "PENDING", run: { status: "CREATED" } }, select: { sourceKey: true } })).map((row) => row.sourceKey));
-  const ready: (Omit<Candidate, "iban" | "bic" | "subject"> & { ibanMasked: string })[] = [];
+  const ready: (Omit<Candidate, "iban" | "bic" | "subject"> & { ibanMasked: string; ibanAmended: boolean })[] = [];
   const skipped: { label: string; amountCents: number; reason: SkipReason }[] = [];
   for (const item of list) {
     const skipHealth = healthSkip(item);
@@ -89,7 +99,9 @@ export async function previewRun(source: Source, param: string, labels: Paramete
     else if (skipHealth) skipped.push({ label: item.label, amountCents: item.amountCents, reason: skipHealth });
     else {
       const { iban, bic: _bic, subject: _subject, ...rest } = item;
-      ready.push({ ...rest, ibanMasked: mask(iban) });
+      const ibanMasked = mask(iban);
+      const ibanAmended = detectMandateIbanChange(ibanMasked, previousByMandate, item.mandateReference);
+      ready.push({ ...rest, ibanMasked, ibanAmended });
     }
   }
   return { ready, skipped, totalCents: ready.reduce((sum, item) => sum + item.amountCents, 0) };
@@ -102,8 +114,8 @@ export async function createRun(source: Source, param: string, collectionDate: s
   const preview = await previewRun(source, param, labels, maxReturns);
   const wanted = sourceKeys ? new Set(sourceKeys) : null;
   const all = await candidates(source, param, labels);
-  const readyKeys = new Set(preview.ready.map((ready) => ready.sourceKey));
-  const initialChosen = all.filter((item) => readyKeys.has(item.sourceKey) && (!wanted || wanted.has(item.sourceKey)));
+  const readyByKey = new Map(preview.ready.map((ready) => [ready.sourceKey, ready]));
+  const initialChosen = all.filter((item) => readyByKey.has(item.sourceKey) && (!wanted || wanted.has(item.sourceKey)));
   if (!initialChosen.length) return null;
   const db = getDb();
   const year = Number(collectionDate.slice(0, 4));
@@ -135,6 +147,7 @@ export async function createRun(source: Source, param: string, collectionDate: s
           debtorIban: item.iban!,
           debtorBic: item.bic,
           remittance: item.remittance,
+          amendment: readyByKey.get(item.sourceKey)?.ibanAmended ? {} : undefined,
         }));
         const xml = buildPain008({
           messageId: number,

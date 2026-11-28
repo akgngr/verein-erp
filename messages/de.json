@@ -9516,6 +9516,7 @@
     "collectionDate": "Fälligkeitsdatum (Einzug)",
     "collectionHelp": "Mindestens 2 Bankarbeitstage Vorlauf empfohlen.",
     "preview": "Vorschau",
+    "ibanAmended": "IBAN geändert (AmdmntInd)",
     "previewSummary": "{count} Posten über {total} einziehbar; {skipped} Posten übersprungen.",
     "skippedTitle": "{count} übersprungene Posten",
     "skip": {

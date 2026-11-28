@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "IBAN değişikliğinde SEPA yetki değişikliği (AmdmntInd) desteği (#588)",
+        "de": "SEPA-Mandatsänderung (AmdmntInd) bei IBAN-Wechsel (#588)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Aynı yetki referansıyla önceki tahsilatlara göre IBAN değiştiğinde önizlemede uyarı rozeti gösterilir ve pain.008.001.08 XML dosyasına AmdmntInd/SMNDA (veya bilinen eski IBAN) eklenir.",
+          "de": "Bei abweichender IBAN gegenüber früheren Einzügen mit derselben Mandatsreferenz wird in der Vorschau ein Hinweis angezeigt und in pain.008.001.08 das AmdmntInd/SMNDA-Element (bzw. die vorherige IBAN) ausgegeben."
+        }
+      ]
+    },
+    {
       "version": "1.2.3",
       "date": "2026-11-25",
       "title": {
