@@ -7,6 +7,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { emitAutomationEvent } from "@/shared/automation/emit";
 import { donationReceivedEvent } from "../automation";
 
+import { transferBankSettlement } from "@/modules/accounting/server";
 import { ActionError, createAction } from "@/modules/auth/server";
 
 import { donationsPermissions } from "../permissions";
@@ -253,13 +254,16 @@ export async function updateDonationAction(input: unknown): Promise<ActionResult
 
           if (bookingsAffected) {
             // Eski fişler (varsa) ters kayıt + nakdi ise yeni fişler (yerinde düzenleme YOK; § 11 md. 6).
-            if (!wasInKind) {
-              await reverseDonationBookings(tx, {
-                actor,
-                donationId: existing.id,
-                reason: "Bağış düzeltildi",
-              });
-            }
+            // A corrected cash donation is the same bank receipt: its settlement moves to the
+            // replacement booking. Turning it into an in-kind donation frees the receipt again.
+            const replaced = !wasInKind
+              ? await reverseDonationBookings(tx, {
+                  actor,
+                  donationId: existing.id,
+                  reason: "Bağış düzeltildi",
+                  replacing: !isInKind,
+                })
+              : { reversedIncomeIds: [] };
             if (!isInKind) {
               const bookings = await createDonationBookings(tx, {
                 actor,
@@ -279,6 +283,9 @@ export async function updateDonationAction(input: unknown): Promise<ActionResult
                   waiverBookingNumber: bookings.waiverBookingNumber,
                 },
               });
+              for (const reversedId of replaced.reversedIncomeIds) {
+                await transferBankSettlement(tx, reversedId, bookings.bookingId);
+              }
             } else {
               await tx.donation.update({
                 where: { id: existing.id },

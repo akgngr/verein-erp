@@ -7801,7 +7801,9 @@
       "edit": "Düzenle",
       "delete": "Sil",
       "changeStatus": "Durum değiştir",
-      "currentStatus": "Mevcut durum"
+      "currentStatus": "Mevcut durum",
+      "certificatePdf": "Üyelik belgesi (PDF)",
+      "certificatePdfAria": "Üyelik belgesi PDF dili seçimi"
     },
     "statusChange": {
       "resignedTitle": "Ayrılan üye",

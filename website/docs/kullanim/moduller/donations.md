@@ -13,7 +13,7 @@ Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı 
 |---|---|
 | Anahtar | `donations` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.0 |
+| Sürüm | 1.2.1 |
 | Sayfalar | `/bagislar`, `/bagislar/bagiscilar`, `/bagislar/bildirimler`, `/bagislar/bildirimler/olustur`, `/bagislar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_donation_statistics`
 
 ## Sürüm notları
+
+### 1.2.1 — Bağış düzeltmesinde banka eşleşmesi korunur
+
+_2026-11-28_
+
+- **Düzeltme:** Nakdi bağış düzeltildiğinde (ör. tarih) banka hareketi açılmaz; eşleşme yeni gelir fişine taşınır, aynı tahsilat ikinci kez eşleştirilemez. Bağış ayni bağışa çevrilirse banka hareketi yeniden açılır.
 
 ### 1.2.0 — Ayni bağış (Sachzuwendung), 300 € basitleştirilmiş kanıt ve EPC-QR (GiroCode)
 
@@ -85,10 +91,4 @@ _2026-11-19_
 
 - **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
 
-### 1.1.8 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 8 herkese açık sürüm notu.
+Daha eski 9 herkese açık sürüm notu.
