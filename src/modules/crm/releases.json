@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.0.14",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Görev Merkezi araması CRM takiplerinde",
+        "de": "Suche im Aufgaben-Hub über CRM-Nachfassaufgaben"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Görev Merkezi araması, sonuç sınırından önce tüm açık takiplerde (not ve görünen kişi adı) uygulanır; geç tarihli eşleşmeler de bulunur.",
+          "de": "Die Suche im Aufgaben-Hub wird vor dem Ergebnislimit über alle offenen Nachfassaufgaben angewendet (Notiz und sichtbarer Kontaktname); auch spätere Fälligkeiten werden gefunden."
+        }
+      ]
+    },
+    {
       "version": "1.0.13",
       "date": "2026-11-27",
       "title": {

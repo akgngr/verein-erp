@@ -13,7 +13,7 @@ Görev ve iş takibi yönetimi.
 |---|---|
 | Anahtar | `tasks` |
 | Tür | Eklenti |
-| Sürüm | 1.4.0 |
+| Sürüm | 1.4.1 |
 | Sayfalar | `/tasks`, `/tasks/bana-atananlar` |
 
 ## Diğer modüllere erişim
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_open_tasks` · `propose_complete_task` · `propose_delete_task` · `propose_task`
 
 ## Sürüm notları
+
+### 1.4.1 — Görev Merkezi CRM araması
+
+_2026-11-28_
+
+- **Düzeltme:** Görev Merkezi araması CRM takiplerini sınırdan önce süzer.
 
 ### 1.4.0 — Birleşik Görev Merkezi: Toplantı aksiyonları ve CRM takipleri (#636)
 
@@ -89,10 +95,4 @@ _2026-11-19_
 
 - **Düzeltme:** Sabah özetindeki görev sayıları artık arka plan işinde (günlük özet) de doğru hesaplanır; kimlik eşleştirmesi değişmedi.
 
-### 1.3.8 — Görevler sekreter özeti
-
-_2026-11-18_
-
-- **Yeni:** Bana atanan veya oluşturduğum, bugün vadesi dolan ve geciken açık görev sayıları sekreterde gösterilir.
-
-Daha eski 13 herkese açık sürüm notu.
+Daha eski 14 herkese açık sürüm notu.
