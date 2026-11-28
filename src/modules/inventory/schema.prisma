@@ -15,12 +15,55 @@ model InventoryItem {
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
   /// #582: Yumuşak silme; kayıt denetim ve AfA izlenebilirliği için korunur, listelerden kalkar.
-  deletedAt        DateTime?
-  deletedById      String?
+  deletedAt                DateTime?
+  deletedById              String?
+  nextInspectionAt         DateTime?              @db.Date
+  inspectionIntervalMonths Int?
+  loans                    InventoryLoan[]
+  maintenances             InventoryMaintenance[]
 
   @@index([category])
   @@index([status])
   @@index([assignedMemberId])
   @@index([deletedAt])
+  @@index([nextInspectionAt])
   @@map("inventory_items")
+}
+
+/// Ödünç / zimmet geçmişi (Ausleihe).
+model InventoryLoan {
+  id               String        @id @default(uuid())
+  itemId           String
+  item             InventoryItem @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  borrowerName     String
+  borrowerMemberId String?
+  lentAt           DateTime      @db.Date
+  dueAt            DateTime?     @db.Date
+  returnedAt       DateTime?     @db.Date
+  note             String?
+  createdById      String
+  createdAt        DateTime      @default(now())
+
+  @@index([itemId])
+  @@index([returnedAt])
+  @@map("inventory_loans")
+}
+
+/// Bakım ve periyodik muayene kayıtları (DGUV V3 / TÜV / Wartung).
+model InventoryMaintenance {
+  id          String        @id @default(uuid())
+  itemId      String
+  item        InventoryItem @relation(fields: [itemId], references: [id], onDelete: Restrict)
+  kind        String        @default("DGUV_V3")
+  performedAt DateTime      @db.Date
+  nextDueAt   DateTime?     @db.Date
+  inspector   String?
+  passed      Boolean       @default(true)
+  note        String?
+  createdById String
+  createdAt   DateTime      @default(now())
+
+  @@index([itemId])
+  @@index([performedAt])
+  @@map("inventory_maintenances")
 }

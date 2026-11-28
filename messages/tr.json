@@ -6133,12 +6133,57 @@
       "total": "Toplam"
     },
     "menu": {
+      "operations": "Bakım ve Zimmet",
       "categories": "Kategoriler",
       "export": "Excel'e aktar"
     },
     "meta": {
       "list": "Envanter",
-      "categories": "Envanter kategorileri"
+      "categories": "Envanter kategorileri",
+      "operations": "Bakım ve Zimmet"
+    },
+    "operations": {
+      "pageTitle": "Bakım ve Zimmet Takibi",
+      "pageDescription": "Ödünç/iade geçmişi ve DGUV V3 / TÜV periyodik muayene takvimi.",
+      "inspectionsTitle": "Yaklaşan ve geciken muayeneler",
+      "inspectionsDescription": "Sonraki muayene tarihi girilmiş ekipmanlar.",
+      "noInspections": "Planlanmış muayene kaydı yok.",
+      "inspectionStatuses": {
+        "overdue": "Gecikmiş",
+        "due_soon": "Yaklaşıyor",
+        "ok": "Uygun",
+        "none": "—"
+      },
+      "lendingTitle": "Ödünç / Zimmet Geçmişi",
+      "item": "Demirbaş",
+      "borrower": "Teslim alan",
+      "lentAt": "Veriliş tarihi",
+      "dueAt": "İade hedefi",
+      "lendSubmit": "Ödünç ver",
+      "lentToast": "Ödünç kaydı oluşturuldu.",
+      "noLoans": "Henüz ödünç kaydı yok.",
+      "markReturned": "İade alındı",
+      "returnedToast": "İade kaydedildi.",
+      "returnedOn": "İade: {date}",
+      "openLoan": "Ödünçte",
+      "maintenanceTitle": "Bakım ve Muayene Kayıtları",
+      "kind": "Tür",
+      "kinds": {
+        "DGUV_V3": "DGUV V3",
+        "TUV": "TÜV",
+        "SERVICE": "Bakım / Servis",
+        "OTHER": "Diğer"
+      },
+      "performedAt": "Yapıldığı tarih",
+      "nextDueAt": "Sonraki muayene",
+      "inspector": "Kontrol eden / Firma",
+      "passed": "Muayeneden geçti",
+      "maintenanceSubmit": "Bakım kaydet",
+      "maintenanceToast": "Bakım kaydı eklendi.",
+      "noMaintenances": "Henüz bakım kaydı yok.",
+      "nextShort": "Sonraki",
+      "passedBadge": "Geçti",
+      "failedBadge": "Başarısız"
     },
     "module": {
       "label": "Envanter ve Demirbaş",

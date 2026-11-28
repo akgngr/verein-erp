@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Ödünç/zimmet geçmişi ve DGUV V3 / TÜV bakım takvimi (#589)",
+        "de": "Ausleihhistorie und DGUV V3 / TÜV-Wartungsplan (#589)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Demirbaş ödünç/iade geçmişi ve DGUV V3 / TÜV periyodik muayene takibi için /inventory/bakim-ve-zimmet ekranı eklendi.",
+          "de": "Neue Seite /inventory/bakim-ve-zimmet für Ausleihhistorie und DGUV V3 / TÜV-Prüftermine ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.2.1",
       "date": "2026-11-25",
       "title": {
