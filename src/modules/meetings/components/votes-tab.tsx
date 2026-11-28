@@ -34,13 +34,13 @@ export type VoteRow = {
  * Gizli oylama sekmesi (RFC-004 aşama 3, yüz yüze). Giriş masası: yoklamada "katıldı" olan üyeye tek kullanımlık
  * kod verilir (yazdır / kabinde göster). Oylar /oy kabininde kullanılır. Kapanışta sonuç, makbuz listesi ve özet.
  */
-export function VotesTab({ meetingId, votes, present, agendaItems, editable }: { meetingId: string; votes: VoteRow[]; present: { memberId: string; name: string }[]; agendaItems: { id: string; position: number; title: string }[]; editable: boolean }) {
+export function VotesTab({ meetingId, votes, present, agendaItems, editable }: { meetingId: string; votes: VoteRow[]; present: { memberId: string; name: string; weight?: number }[]; agendaItems: { id: string; position: number; title: string }[]; editable: boolean }) {
   const t = useTranslations("meetings.vote");
   const translate = useTranslateMessage();
   const router = useRouter();
   const [pending, start] = useTransition();
   const [form, setForm] = useState({ question: "", kind: "yesNoAbstain" as "yesNoAbstain" | "candidates", candidates: "", minBallots: String(DEFAULT_MIN_BALLOTS), reason: "", agendaItemId: "" });
-  const [code, setCode] = useState<{ name: string; code: string } | null>(null);
+  const [code, setCode] = useState<{ name: string; codes: string[] } | null>(null);
   const [closingVoteId, setClosingVoteId] = useState<string | null>(null);
   const label = (option: string) => ((YES_NO_ABSTAIN as readonly string[]).includes(option) ? t(`options.${option}` as never) : option);
   const min = Number(form.minBallots);
@@ -65,7 +65,11 @@ export function VotesTab({ meetingId, votes, present, agendaItems, editable }: {
       {code ? (
         <section className="print-area flex flex-col items-center gap-2 rounded-xl border-2 border-dashed border-primary-400 p-6 text-center" aria-live="assertive">
           <p className="text-sm text-ink-600">{t("codeFor", { name: code.name })}</p>
-          <p className="font-mono text-2xl tracking-widest">{code.code}</p>
+          <div className="flex flex-col gap-1">
+            {code.codes.map((singleCode) => (
+              <p key={singleCode} className="font-mono text-2xl tracking-widest">{singleCode}</p>
+            ))}
+          </div>
           <p className="text-sm">{t("codeHint")}</p>
           <div className="flex gap-2 print:hidden">
             <Button size="sm" variant={actionVariant("primary", "flat")} onPress={() => window.print()}>{t("print")}</Button>
@@ -89,16 +93,24 @@ export function VotesTab({ meetingId, votes, present, agendaItems, editable }: {
               <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {present.map((member) => {
                   const done = vote.issuedMemberIds.includes(member.memberId);
+                  const weight = member.weight ?? 1;
                   return (
                     <li key={member.memberId} className="flex items-center justify-between gap-2 rounded-lg border border-ink-100 px-3 py-2 text-sm">
-                      <span>{member.name}</span>
+                      <span>
+                        {member.name}
+                        {weight > 1 ? (
+                          <span className="ml-1.5 rounded bg-ink-100 px-1.5 py-0.5 text-xs font-medium text-ink-700">
+                            {t("proxyWeight", { weight })}
+                          </span>
+                        ) : null}
+                      </span>
                       {done ? (
                         <span className="text-xs text-ink-500">{t("issued")}</span>
                       ) : (
                         <Button size="sm" variant={actionVariant("primary", "light")} isDisabled={pending} onPress={() => start(async () => {
                           const result = await issueBallotAction({ meetingId, voteId: vote.id, memberId: member.memberId });
                           if (!result.ok) return void notify.error(translate(result.error));
-                          setCode({ name: member.name, code: result.data.code });
+                          setCode({ name: member.name, codes: result.data.codes });
                           router.refresh();
                         })}>
                           {t("issue")}

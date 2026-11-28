@@ -44,6 +44,7 @@ export const attendeeUpdateSchema = z.object({
   id: z.string().trim().min(1),
   role: attendeeRoleSchema,
   attendance: attendanceStatusSchema,
+  proxyToAttendeeId: emptyToNull(z.string().trim().nullable()).optional(),
   note: emptyToNull(z.string().trim().max(200, "meetings.validation.noteMax").nullable()),
 });
 

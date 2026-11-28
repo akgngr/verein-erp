@@ -1,4 +1,5 @@
 import { recordJournal } from "./journal";
+import { reopenBankTransactionForBooking } from "./bank-reopen";
 import "server-only";
 
 import { getMessageTranslator } from "@/shared/i18n/translate-message";
@@ -332,6 +333,7 @@ export async function runMemberSync(
           });
           await assertNoNegativeCash(existing.accountId, tx);
           await recordJournal(tx, [existing.id], "REVERSE", actor);
+          await reopenBankTransactionForBooking(tx, existing.id);
         });
         reversedCount += 1;
       } catch (error) {

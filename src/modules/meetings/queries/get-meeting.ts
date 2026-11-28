@@ -111,6 +111,7 @@ export async function getMeeting(id: string): Promise<MeetingDetail | null> {
       name: attendee.name,
       role: attendee.role,
       attendance: attendee.attendance,
+      proxyToAttendeeId: attendee.proxyToAttendeeId,
       note: attendee.note,
     })),
     decisions: meeting.decisions.map((decision) => ({

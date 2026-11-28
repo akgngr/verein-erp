@@ -7099,7 +7099,10 @@
       "markedToast": "{count} katılımcı 'Katıldı' olarak işaretlendi",
       "namePlaceholder": "Ad Soyad",
       "member": "Dernek üyesi",
-      "openMember": "Üye kaydını aç"
+      "openMember": "Üye kaydını aç",
+      "proxy": "Vekâlet",
+      "noProxy": "Vekâlet yok",
+      "proxyWeight": "Oy gücü: {weight}"
     },
     "attendeeAdd": {
       "title": "Katılımcı ekle",
@@ -7261,6 +7264,13 @@
       "forbidden": "Bu işlem için yetkiniz yok.",
       "approveNeedsAgenda": "Onaylamak için en az bir gündem maddesi gereklidir.",
       "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir.",
+      "proxySelf": "Katılımcı kendi kendine vekâlet veremez.",
+      "proxySourceNoMember": "Yalnızca dernek üyesi olan katılımcılar vekâlet verebilir.",
+      "proxySourcePresent": "Toplantıda hazır bulunan katılımcı vekâlet veremez.",
+      "proxyTargetNotPresent": "Vekâlet yalnızca toplantıda 'Katıldı' olarak işaretli üyeye verilebilir.",
+      "proxyTargetNoMember": "Vekâlet yalnızca dernek üyesi olan katılımcıya verilebilir.",
+      "proxyTargetHasProxy": "Vekâlet alan katılımcı aynı anda başkasına vekâlet vermiş olamaz.",
+      "proxyLockedByOpenVote": "Açık bir oylama için oy hakkı zaten ayrılmış katılımcının katılım veya vekâlet durumu değiştirilemez.",
       "meetingNotFound2": "Toplantı bulunamadı.",
       "notEditable": "Toplantı düzenlenemez.",
       "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş.",
@@ -7449,6 +7459,7 @@
         "CLOSED": "Kapandı"
       },
       "issuedCount": "{count} kod verildi",
+      "proxyWeight": "×{weight} oy",
       "minBallotsInfo": "en az {count} oy",
       "issued": "Kod verildi",
       "issue": "Kod ver",
@@ -9823,6 +9834,48 @@
       "dateInvalid": "Geçerli bir tarih seçin.",
       "endBeforeStart": "Bitiş tarihi başlangıç tarihinden önce olamaz.",
       "notesMax": "Notlar en fazla 2000 karakter olabilir."
+    },
+    "cards": {
+      "overview": {
+        "title": "Sponsorlar",
+        "description": "Aktif sponsor sayısı, yıllık taahhüt toplamı ve görüşme aşamasındaki adaylar.",
+        "active": "aktif sponsor",
+        "activeAmount": "Aktif yıllık taahhüt",
+        "leads": "Aday",
+        "total": "Toplam kayıt"
+      }
+    },
+    "automation": {
+      "events": {
+        "created": {
+          "label": "Yeni sponsor eklendiğinde",
+          "fields": {
+            "sponsorId": "Sponsor kimliği",
+            "tier": "Destek seviyesi",
+            "status": "Durum"
+          },
+          "options": {
+            "tier": {
+              "PLATINUM": "Platin",
+              "GOLD": "Altın",
+              "SILVER": "Gümüş",
+              "BRONZE": "Bronz",
+              "SUPPORTER": "Destekçi"
+            },
+            "status": {
+              "LEAD": "Aday",
+              "ACTIVE": "Aktif",
+              "PAUSED": "Duraklatıldı",
+              "ENDED": "Sona erdi"
+            }
+          },
+          "variables": {
+            "name": "Sponsor adı",
+            "tier": "Destek seviyesi",
+            "status": "Durum"
+          }
+        }
+      }
     }
   },
   "students": {

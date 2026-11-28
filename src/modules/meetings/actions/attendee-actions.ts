@@ -6,6 +6,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { ActionError, createAction, listActiveUserOptions } from "@/modules/auth/server";
 import { listMemberOptions } from "@/modules/members/server";
 
+import { canAssignProxy } from "../lib/proxy-voting";
 import { meetingsPermissions } from "../permissions";
 import {
   attendeeAddGuestSchema,
@@ -222,7 +223,10 @@ export async function updateAttendeeAction(
         where: { id: input.id },
         select: {
           id: true,
+          memberId: true,
           role: true,
+          attendance: true,
+          proxyToAttendeeId: true,
           meeting: { select: { id: true, meetingNumber: true, status: true, deletedAt: true } },
         },
       });
@@ -248,10 +252,77 @@ export async function updateAttendeeAction(
         }
       }
 
+      let nextProxyToAttendeeId =
+        input.proxyToAttendeeId !== undefined ? input.proxyToAttendeeId : attendee.proxyToAttendeeId;
+
+      if (input.attendance === "PRESENT" && attendee.attendance !== "PRESENT") {
+        nextProxyToAttendeeId = null;
+      } else if (input.attendance === "PRESENT" && input.proxyToAttendeeId === undefined) {
+        nextProxyToAttendeeId = null;
+      }
+
+      if (
+        attendee.memberId &&
+        (input.attendance !== attendee.attendance || nextProxyToAttendeeId !== attendee.proxyToAttendeeId)
+      ) {
+        const reserved = await db.meetingVoteEligibility.findFirst({
+          where: {
+            memberId: attendee.memberId,
+            vote: { meetingId: attendee.meeting.id, status: "OPEN" },
+          },
+          select: { voteId: true },
+        });
+        if (reserved) {
+          throw new ActionError("meetings.errors.proxyLockedByOpenVote");
+        }
+      }
+
+      if (nextProxyToAttendeeId) {
+        const target = await db.meetingAttendee.findFirst({
+          where: { id: nextProxyToAttendeeId, meetingId: attendee.meeting.id },
+          select: { id: true, memberId: true, attendance: true, proxyToAttendeeId: true },
+        });
+        if (!target) {
+          throw new ActionError("meetings.errors.attendeeNotFound");
+        }
+        const check = canAssignProxy(
+          {
+            id: attendee.id,
+            memberId: attendee.memberId,
+            attendance: input.attendance,
+            proxyToAttendeeId: nextProxyToAttendeeId,
+          },
+          target,
+        );
+        if (!check.ok) {
+          const errorKeyMap = {
+            self: "meetings.errors.proxySelf",
+            sourceNoMember: "meetings.errors.proxySourceNoMember",
+            sourcePresent: "meetings.errors.proxySourcePresent",
+            targetNotPresent: "meetings.errors.proxyTargetNotPresent",
+            targetNoMember: "meetings.errors.proxyTargetNoMember",
+            targetHasProxy: "meetings.errors.proxyTargetHasProxy",
+          } as const;
+          throw new ActionError(errorKeyMap[check.reason]);
+        }
+      }
+
       await db.meetingAttendee.update({
         where: { id: attendee.id },
-        data: { role: input.role, attendance: input.attendance, note: input.note },
+        data: {
+          role: input.role,
+          attendance: input.attendance,
+          proxyToAttendeeId: nextProxyToAttendeeId,
+          note: input.note,
+        },
       });
+
+      if (attendee.attendance === "PRESENT" && input.attendance !== "PRESENT") {
+        await db.meetingAttendee.updateMany({
+          where: { meetingId: attendee.meeting.id, proxyToAttendeeId: attendee.id },
+          data: { proxyToAttendeeId: null },
+        });
+      }
 
       await audit({
         action: "ATTENDEE_UPDATE",
@@ -261,6 +332,7 @@ export async function updateAttendeeAction(
           meetingNumber: attendee.meeting.meetingNumber,
           role: input.role,
           attendance: input.attendance,
+          proxyToAttendeeId: nextProxyToAttendeeId,
         },
       });
 
@@ -283,13 +355,31 @@ export async function removeAttendeeAction(
         where: { id: input.id },
         select: {
           id: true,
+          memberId: true,
           name: true,
-          meeting: { select: { meetingNumber: true, status: true, deletedAt: true } },
+          meeting: { select: { id: true, meetingNumber: true, status: true, deletedAt: true } },
         },
       });
       if (!attendee) throw new ActionError("meetings.errors.attendeeNotFound");
       assertMeetingEditable(attendee.meeting, "content", user.role, meetingsPermissions);
 
+      if (attendee.memberId) {
+        const reserved = await db.meetingVoteEligibility.findFirst({
+          where: {
+            memberId: attendee.memberId,
+            vote: { meetingId: attendee.meeting.id, status: "OPEN" },
+          },
+          select: { voteId: true },
+        });
+        if (reserved) {
+          throw new ActionError("meetings.errors.proxyLockedByOpenVote");
+        }
+      }
+
+      await db.meetingAttendee.updateMany({
+        where: { meetingId: attendee.meeting.id, proxyToAttendeeId: attendee.id },
+        data: { proxyToAttendeeId: null },
+      });
       await db.meetingAttendee.delete({ where: { id: attendee.id } });
 
       await audit({

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.6.0",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Vekâletle oy kullanma (Stimmrechtsübertragung) desteği (#589)",
+        "de": "Stimmrechtsübertragung (Vollmacht) bei Abstimmungen (#589)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Katılımcılar sekmesinde toplantıda bulunmayan üyelerin oy hakkını hazır bulunan başka bir üyeye devredebilmesi (vekâlet) eklendi. Vekâlet alan üyenin toplam oy ağırlığı otomatik hesaplanır ve gizli oylama pusulası ağırlığına yansıtılır.",
+          "de": "Im Reiter Teilnehmende kann das Stimmrecht abwesender Mitglieder auf ein anwesendes Mitglied übertragen werden. Das Gesamtstimmgewicht wird automatisch berechnet und bei der Ausgabe geheimer Stimmcodes berücksichtigt."
+        }
+      ]
+    },
+    {
       "version": "1.5.0",
       "date": "2026-11-27",
       "title": {

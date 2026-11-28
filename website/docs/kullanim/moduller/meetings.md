@@ -13,7 +13,7 @@ Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
 |---|---|
 | Anahtar | `meetings` |
 | Tür | Resmî modül |
-| Sürüm | 1.5.0 |
+| Sürüm | 1.6.0 |
 | Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
 
 ## Sürüm notları
+
+### 1.6.0 — Vekâletle oy kullanma (Stimmrechtsübertragung) desteği (#589)
+
+_2026-11-28_
+
+- **Yeni:** Katılımcılar sekmesinde toplantıda bulunmayan üyelerin oy hakkını hazır bulunan başka bir üyeye devredebilmesi (vekâlet) eklendi. Vekâlet alan üyenin toplam oy ağırlığı otomatik hesaplanır ve gizli oylama pusulası ağırlığına yansıtılır.
 
 ### 1.5.0 — Davet süresi hatırlatıcısı ve Davetiye & Gündem PDF'i (#636)
 
@@ -87,10 +93,4 @@ _2026-11-20_
 
 - **Yeni:** Toplantıya eklenen kullanıcılar bildirim alır.
 
-### 1.3.15 — Toplantılar sekreter özeti
-
-_2026-11-18_
-
-- **Yeni:** Yaklaşan toplantılar ve gündemi eksik toplantılar sekreter sabah özetinde görünür.
-
-Daha eski 17 herkese açık sürüm notu.
+Daha eski 18 herkese açık sürüm notu.

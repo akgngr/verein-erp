@@ -95,5 +95,47 @@
     "dateInvalid": "Geçerli bir tarih seçin.",
     "endBeforeStart": "Bitiş tarihi başlangıç tarihinden önce olamaz.",
     "notesMax": "Notlar en fazla 2000 karakter olabilir."
+  },
+  "cards": {
+    "overview": {
+      "title": "Sponsorlar",
+      "description": "Aktif sponsor sayısı, yıllık taahhüt toplamı ve görüşme aşamasındaki adaylar.",
+      "active": "aktif sponsor",
+      "activeAmount": "Aktif yıllık taahhüt",
+      "leads": "Aday",
+      "total": "Toplam kayıt"
+    }
+  },
+  "automation": {
+    "events": {
+      "created": {
+        "label": "Yeni sponsor eklendiğinde",
+        "fields": {
+          "sponsorId": "Sponsor kimliği",
+          "tier": "Destek seviyesi",
+          "status": "Durum"
+        },
+        "options": {
+          "tier": {
+            "PLATINUM": "Platin",
+            "GOLD": "Altın",
+            "SILVER": "Gümüş",
+            "BRONZE": "Bronz",
+            "SUPPORTER": "Destekçi"
+          },
+          "status": {
+            "LEAD": "Aday",
+            "ACTIVE": "Aktif",
+            "PAUSED": "Duraklatıldı",
+            "ENDED": "Sona erdi"
+          }
+        },
+        "variables": {
+          "name": "Sponsor adı",
+          "tier": "Destek seviyesi",
+          "status": "Durum"
+        }
+      }
+    }
   }
 }
