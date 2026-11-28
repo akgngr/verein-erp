@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.1",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Bağış düzeltmesinde banka eşleşmesi korunur",
+        "de": "Bankabgleich bleibt bei Spendenkorrektur erhalten"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Nakdi bağış düzeltildiğinde (ör. tarih) banka hareketi açılmaz; eşleşme yeni gelir fişine taşınır, aynı tahsilat ikinci kez eşleştirilemez. Bağış ayni bağışa çevrilirse banka hareketi yeniden açılır.",
+          "de": "Wird eine Geldspende korrigiert (z. B. das Datum), öffnet sich der Bankumsatz nicht wieder; der Abgleich wandert auf die neue Einnahmebuchung, derselbe Eingang kann nicht doppelt abgeglichen werden. Wird die Spende zur Sachspende, wird der Bankumsatz wieder geöffnet."
+        }
+      ]
+    },
+    {
       "version": "1.2.0",
       "date": "2026-11-26",
       "title": {
