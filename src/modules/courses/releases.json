@@ -2,6 +2,46 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.1",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Uzun kurs adlarıyla kampanya",
+        "de": "Kampagnen mit langen Kursnamen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Kurs seçim değeri toplu e-posta filtre sınırı olan 40 karakterde kesilir; uzun adlı kurslarla da kampanya önizlenebilir ve başlatılabilir.",
+          "de": "Der Kurs-Auswahlwert wird auf das Filterlimit der Rundmails (40 Zeichen) gekürzt; auch Kurse mit langen Namen lassen sich in Kampagnen verwenden."
+        }
+      ]
+    },
+    {
+      "version": "1.5.0",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "Toplu e-posta için kurs bazlı veli alıcı kaynağı (#631)",
+        "de": "Kursbasierte Eltern-Empfängerquelle für Rundmails (#631)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Toplu e-posta/kampanya modülünde kursa, kayıt durumuna ve ödeme sorumlusu filtresine göre veli seçimi sağlayan alıcı kaynağı (courses/recipients.ts) eklendi.",
+          "de": "Empfängerquelle für Kampagnen/Rundmails ergänzt, um Erziehungsberechtigte nach Kurs, Anmeldestatus und Zahlungspflichtigen gezielt anzuschreiben."
+        },
+        {
+          "type": "security",
+          "tr": "Silinmiş (soft-delete) öğrencinin kaydında kalan ödeme sorumlusu veli, kurs bazlı kampanyalarda artık alıcı olmaz; her iki veli modunda da yalnız aktif öğrencilerin aileleri hedeflenir.",
+          "de": "Der im Kurseintrag gespeicherte Zahlungspflichtige eines gelöschten Schülers erhält keine kursbasierten Kampagnen mehr; in beiden Elternmodi werden nur Familien aktiver Schüler angeschrieben."
+        },
+        {
+          "type": "fix",
+          "tr": "Aynı e-posta adresini paylaşan iki veli artık ayrı alıcıdır; SMS/WhatsApp gibi kanallarda her birinin kendi telefonu ve izni geçerlidir (adres tekilleştirmesi kampanya kanalında yapılır).",
+          "de": "Zwei Eltern mit derselben E-Mail-Adresse bleiben getrennte Empfänger; für SMS/WhatsApp gelten jeweils eigene Telefonnummer und Einwilligung (die Adress-Deduplizierung erfolgt im Kampagnenkanal)."
+        }
+      ]
+    },
+    {
       "version": "1.4.18",
       "date": "2026-11-26",
       "title": {

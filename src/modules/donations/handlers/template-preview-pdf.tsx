@@ -33,8 +33,13 @@ export async function templatePreviewPdfHandler(request: Request): Promise<Respo
   }
 
   const type = new URL(request.url).searchParams.get("type") ?? "single-donation";
-  const isCollective = type.startsWith("collective");
-  const content = type.endsWith("fee") ? "MEMBERSHIP_FEE" : "DONATION";
+  const isInKind = type === "single-in-kind";
+  const isCollective = !isInKind && type.startsWith("collective");
+  const content = isInKind
+    ? "IN_KIND_DONATION"
+    : type.endsWith("fee")
+      ? "MEMBERSHIP_FEE"
+      : "DONATION";
 
   const data: ConfirmationPdfData = {
     organization: {
@@ -57,11 +62,21 @@ export async function templatePreviewPdfHandler(request: Request): Promise<Respo
       city: "Beispielstadt",
       country: "Deutschland",
     },
-    totalCents: 123456,
-    amountInWords: "eintausendzweihundertvierunddreißig Euro und sechsundfünfzig Cent",
+    totalCents: isInKind ? 129000 : 123456,
+    amountInWords: isInKind
+      ? "eintausendzweihundertneunzig Euro"
+      : "eintausendzweihundertvierunddreißig Euro und sechsundfünfzig Cent",
     periodFrom: new Date("2026-01-01T00:00:00Z"),
     periodTo: new Date("2026-12-31T00:00:00Z"),
-    waived: type.includes("waiver"),
+    waived: !isInKind && type.includes("waiver"),
+    inKind: isInKind
+      ? {
+          itemDescription:
+            "Laptop Lenovo ThinkPad T14 (Baujahr 2024, neuwertig, ursprünglicher Kaufpreis 1.290,00 €)",
+          origin: "PRIVATE_ASSETS",
+          valuationRecordsAvailable: true,
+        }
+      : null,
     membershipFeesDeductible: false,
     items: isCollective
       ? [

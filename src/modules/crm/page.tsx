@@ -7,7 +7,11 @@ export async function generateMetadata() {
   return { title: t("list") };
 }
 
-/** Modül ana sayfası (/crm) — ince rota; köprüyü `pnpm module:sync` üretir. */
-export default function CrmPage() {
-  return <CrmView />;
+/** Modül ana sayfası (/crm) — ince rota; köprüyü `pnpm module:sync` üretir. `?kayit=<id>` kişiyi açar. */
+export default function CrmPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  return <CrmView searchParams={searchParams} />;
 }

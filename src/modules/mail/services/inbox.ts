@@ -5,6 +5,8 @@ import { createHash } from "node:crypto";
 import { ImapFlow } from "imapflow";
 
 import { importPayableFile } from "@/modules/accounting/server";
+import { createDocumentWithFiles } from "@/modules/documents/server";
+import { importMessageToDocumentsWith, type ImportMessageToDocumentsResult } from "./inbox-documents";
 import { listUsableModuleKeys } from "@/modules/system/server";
 import { getDb } from "@/shared/db";
 import { makeStoredName, readFile, removeFile, saveFile } from "@/shared/files";
@@ -199,6 +201,28 @@ export async function isAccountingUsable(): Promise<boolean> {
   return (await listUsableModuleKeys()).includes("accounting");
 }
 
+export async function isDocumentsUsable(): Promise<boolean> {
+  return (await listUsableModuleKeys()).includes("documents");
+}
+
+/**
+ * Scheduled IMAP fetch wrapper for automation worker (`mail.fetch_inbox`).
+ * Returns a clean no-op when IMAP is not configured so the cron job never logs spurious errors.
+ */
+export async function runScheduledImapFetch(): Promise<{
+  skipped: boolean;
+  reason?: string;
+  fetched: number;
+  created: number;
+}> {
+  const settings = await getDb().mailInboxSettings.findUnique({ where: { id: "default" } });
+  if (!settings?.host || !settings.username || !settings.passwordEncrypted) {
+    return { skipped: true, reason: "not_configured", fetched: 0, created: 0 };
+  }
+  const result = await fetchImap();
+  return { skipped: false, ...result };
+}
+
 /** Eki muhasebe gelen faturalar kutusuna aktarır. Tüm ekler aktarıldıysa e-posta "tamamlandı" olur. */
 export async function importAttachmentToAccounting(attachmentId: string, actor: { id: string; label: string }): Promise<{ ok: true; payableId: string; source: string } | { ok: false; reason: "duplicate"; payableId: string }> {
   const db = getDb();
@@ -210,6 +234,16 @@ export async function importAttachmentToAccounting(attachmentId: string, actor: 
   const open = await db.mailInboxAttachment.count({ where: { messageId: attachment.messageId, importedTo: null } });
   if (open === 0) await db.mailInboxMessage.update({ where: { id: attachment.messageId }, data: { status: "DONE" } });
   return result.ok ? { ok: true, payableId, source: result.source } : { ok: false, reason: "duplicate", payableId };
+}
+
+/**
+ * Gelen e-postayı Evrak Kayıt'a gelen evrak olarak aktarır (ayrıntılar: `inbox-documents.ts`).
+ */
+export function importMessageToDocuments(
+  messageId: string,
+  actor: { id: string; label: string },
+): Promise<ImportMessageToDocumentsResult> {
+  return importMessageToDocumentsWith({ createDocumentWithFiles }, messageId, actor);
 }
 
 export async function setMessageStatus(id: string, status: "NEW" | "DONE") {

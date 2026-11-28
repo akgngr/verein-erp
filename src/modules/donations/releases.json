@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-26",
+      "title": {
+        "tr": "Ayni bağış (Sachzuwendung), 300 € basitleştirilmiş kanıt ve EPC-QR (GiroCode)",
+        "de": "Sachzuwendungen (BMF), Vereinfachter Spendennachweis (≤ 300 €) und EPC-QR (GiroCode)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayni bağışlar (Sachzuwendung) için BMF Anlage 4 alanları (eşya açıklaması, kaynak türü, değerleme belgesi) ve tekil BMF bağış bildirimi şablonu eklendi; ayni bağışlar nakit/banka fişi açmaz ve toplu bildirimlere dahil edilmez (#618).",
+          "de": "Unterstützung für Sachzuwendungen nach BMF-Muster Anlage 4 (Gegenstandsbeschreibung, Herkunft aus Betriebs-/Privatvermögen, Wertermittlungsunterlagen) mit Einzelbestätigung ohne Kassen-/Bankbuchung (#618)."
+        },
+        {
+          "type": "feature",
+          "tr": "300 € ve altı nakdi bağışlar için § 50 Abs. 4 Nr. 2 EStDV basitleştirilmiş bağış kanıtı PDF'i (isteğe bağlı yerel GiroCode EPC-QR ile) eklendi (#618).",
+          "de": "Vereinfachter Spendennachweis gemäß § 50 Abs. 4 Nr. 2 EStDV bis 300 € als PDF-Download (optional mit lokalem EPC-QR/GiroCode) ergänzt (#618)."
+        }
+      ]
+    },
+    {
       "version": "1.1.15",
       "date": "2026-11-26",
       "title": {

@@ -136,6 +136,7 @@
     "secretary": "Sekretariat",
     "securityMonitor": "Sicherheitsüberwachung",
     "socialLogin": "Externe Anmeldung",
+    "sponsors": "Sponsoren",
     "students": "Schüler",
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
@@ -389,6 +390,28 @@
     "tooLarge": "Die Datei darf höchstens {maxMb} MB groß sein.",
     "uploadFailed": "Die Datei konnte nicht hochgeladen werden.",
     "maxPerRecord": "Pro Datensatz sind höchstens {max} Dateien erlaubt."
+  },
+  "quickSearch": {
+    "trigger": "Schnellsuche",
+    "triggerAria": "Schnellsuche öffnen (Strg+K)",
+    "shortcut": "Strg K",
+    "placeholder": "Seiten, Mitglieder, Dokumente, Sitzungen, Aufgaben, Termine oder Inventar suchen…",
+    "close": "Schließen",
+    "pagesSection": "Seiten & Module",
+    "recordsSection": "Einträge",
+    "searching": "Suche läuft…",
+    "noResults": "Keine passenden Einträge gefunden.",
+    "minCharsHint": "Mindestens 2 Zeichen für die Datensatzsuche eingeben.",
+    "navigateHint": "↑↓ auswählen · Enter öffnen",
+    "closeHint": "Esc schließen",
+    "modules": {
+      "members": "Mitglieder",
+      "documents": "Dokumente",
+      "meetings": "Sitzungen",
+      "tasks": "Aufgaben",
+      "events": "Veranstaltungen",
+      "inventory": "Inventar"
+    }
   },
   "accounting": {
     "list": {
@@ -1559,7 +1582,9 @@
         "cancel": "Abbrechen",
         "submit": "Buchung anlegen",
         "payable": "Eingangsrechnung",
-        "payableSelect": "Eingangsrechnung"
+        "payableSelect": "Eingangsrechnung",
+        "creditNote": "Gutschrift (Erstattung)",
+        "creditNoteSelect": "Offene Gutschrift"
       },
       "rules": {
         "title": "Gelernte Regeln",
@@ -4177,6 +4202,31 @@
     },
     "calendar": {
       "sessions": "Kurstermine"
+    },
+    "recipients": {
+      "guardians": {
+        "label": "Kurs-Erziehungsberechtigte",
+        "filters": {
+          "course": {
+            "label": "Kurs"
+          },
+          "status": {
+            "label": "Anmeldestatus",
+            "options": {
+              "ACTIVE": "Aktiv",
+              "COMPLETED": "Abgeschlossen",
+              "WITHDRAWN": "Abgemeldet"
+            }
+          },
+          "role": {
+            "label": "Empfängerkreis",
+            "options": {
+              "ALL_GUARDIANS": "Alle Erziehungsberechtigten",
+              "PAYER_ONLY": "Nur Zahlungspflichtige"
+            }
+          }
+        }
+      }
     }
   },
   "crm": {
@@ -4832,6 +4882,7 @@
       "donorFromMember": "Aus Mitglied anlegen",
       "date": "Datum der Zuwendung",
       "amount": "Betrag (€)",
+      "inKindValue": "Wert der Sachzuwendung (€)",
       "amountHint": "Bis 300 € ist keine formelle Bestätigung erforderlich (Kontoauszug genügt).",
       "methodLabel": "Zahlungsart",
       "method": {
@@ -4839,9 +4890,19 @@
         "BANK_TRANSFER": "Überweisung",
         "CARD": "Kartenzahlung",
         "PAYPAL": "PayPal",
+        "IN_KIND": "Sachzuwendung",
         "REIMBURSEMENT_WAIVER": "Aufwandsspende",
         "OTHER": "Sonstige"
       },
+      "inKindNotice": "Sachzuwendungen lösen keinen Geldfluss aus und erzeugen daher keine Kassen- oder Bankbuchung. Eine Einzelbestätigung nach BMF-Muster Anlage 4 kann ausgestellt werden.",
+      "itemDescription": "Genaue Bezeichnung der Sachzuwendung (Alter, Zustand, Kaufpreis usw.)",
+      "inKindOrigin": "Herkunft des Wirtschaftsgutes (BMF)",
+      "origin": {
+        "BUSINESS_ASSETS": "Betriebsvermögen",
+        "PRIVATE_ASSETS": "Privatvermögen",
+        "UNKNOWN": "Keine Angabe zur Herkunft"
+      },
+      "valuationRecordsAvailable": "Unterlagen zur Wertermittlung (z. B. Rechnung, Gutachten) liegen vor",
       "paypalHint": "Nur den beim Verein netto eingehenden Betrag eingeben (PayPal-Gebühr ist keine Spende).",
       "reference": "Referenz",
       "purposeNote": "Verwendungshinweis",
@@ -4865,6 +4926,9 @@
         "method": "Zahlungsart",
         "reference": "Referenz",
         "purposeNote": "Verwendungshinweis",
+        "itemDescription": "Bezeichnung der Sachzuwendung",
+        "inKindOrigin": "Herkunft",
+        "valuationRecordsAvailable": "Wertermittlungsunterlagen vorhanden",
         "waived": "Aufwandsspende",
         "claimBasis": "Grundlage",
         "waiverDeclaredAt": "Erklärt am",
@@ -4881,7 +4945,8 @@
       "cancelReason": "Grund (5-300 Zeichen)",
       "cancelHint": "Die Buchungen werden storniert; stornierte Spenden bleiben durchgestrichen sichtbar und zählen nicht in Statistiken.",
       "toastCancelled": "Spende storniert.",
-      "issue": "Bestätigung erstellen"
+      "issue": "Bestätigung erstellen",
+      "simplifiedProofPdf": "≤ 300 € Vereinfachter Nachweis (PDF)"
     },
     "donors": {
       "title": "Spender/innen",
@@ -4948,6 +5013,7 @@
       },
       "content": {
         "DONATION": "Spende",
+        "IN_KIND_DONATION": "Sachzuwendung",
         "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
       },
       "status": {
@@ -5059,9 +5125,11 @@
       "readiness": "Bereitschaftsprüfung",
       "preview": "Mustervorschauen (MUSTER)",
       "previewSingleDonation": "Einzelne Spende",
+      "previewSingleInKind": "Einzelne Sachzuwendung (BMF Anlage 4)",
       "previewCollectiveDonation": "Sammelbestätigung mit Anlage",
       "previewSingleFee": "Einzelner Mitgliedsbeitrag",
       "previewCollectiveFee": "Mitgliedsbeiträge (Sammel)",
+      "simplifiedProofDownload": "≤ 300 € Vereinfachter Spendennachweis (§ 50 Abs. 4 Nr. 2 EStDV + GiroCode)",
       "bmflink": "BMF amtliche Muster (Formularcenter)",
       "bmflinkHref": "https://www.bundesfinanzministerium.de/Formularcenter",
       "confirmLabel": "Ich habe den Mustertext mit dem offiziellen BMF-Muster verglichen; er passt zu unserem Verein",
@@ -5150,7 +5218,12 @@
       "feePaymentsCovered": "Alle Zahlungen sind bereits in einer aktiven Bestätigung enthalten.",
       "noDonationsInYear": "Für diesen Spender gibt es in diesem Jahr keine bestätigbaren Spenden.",
       "replaceNotCancelled": "Nur für eine stornierte Bestätigung kann ein Ersatz erstellt werden.",
-      "alreadyReplaced": "Für diese Bestätigung wurde bereits ein Ersatz erstellt."
+      "alreadyReplaced": "Für diese Bestätigung wurde bereits ein Ersatz erstellt.",
+      "inKindDetailsMissing": "Für eine Sachzuwendungsbestätigung sind Gegenstandsbeschreibung und Herkunft erforderlich.",
+      "inKindNoCollective": "Sachzuwendungen ({number}) dürfen nicht in einer Sammelbestätigung zusammengefasst werden; bitte als Einzelbestätigung ausstellen.",
+      "simplifiedProofNotInKind": "Der vereinfachte Spendennachweis (§ 50 Abs. 4 Nr. 2 EStDV) gilt nur für Geldzuwendungen, nicht für Sachzuwendungen.",
+      "simplifiedProofLimit": "Der vereinfachte Spendennachweis gilt nur für Zuwendungen bis 300,00 €.",
+      "simplifiedProofIncompleteExemption": "Vereinfachter Spendennachweis kann nicht erstellt werden: Bitte vervollständigen Sie die Angaben zur Gemeinnützigkeit (Freistellungsbescheid, Steuernummer, Datum) unter Vereinsdaten (/ayarlar/dernek)."
     },
     "validation": {
       "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",
@@ -5165,6 +5238,11 @@
       "amountTooLarge": "Der Betrag ist zu hoch.",
       "referenceMax": "Die Referenz darf höchstens 100 Zeichen lang sein.",
       "purposeMax": "Der Verwendungszweck darf höchstens 300 Zeichen lang sein.",
+      "itemDescriptionRequired": "Bitte die Sachzuwendung genau bezeichnen (mindestens 5 Zeichen).",
+      "itemDescriptionMax": "Die Bezeichnung der Sachzuwendung darf höchstens 500 Zeichen lang sein.",
+      "inKindOriginRequired": "Bitte die Herkunft des Wirtschaftsgutes (BMF) auswählen.",
+      "inKindNoWaiver": "Bei Sachzuwendungen ist kein Verzicht auf Aufwendungsersatz (Aufwandsspende) möglich.",
+      "waiverMethodRequired": "Für eine Aufwandsspende muss die Zahlungsart 'Aufwandsspende' gewählt werden.",
       "basisMax": "Die Rechtsgrundlage darf höchstens 300 Zeichen lang sein.",
       "basisRequired": "Die Grundlage des zuvor entstandenen Anspruchs ist erforderlich (mindestens 5 Zeichen).",
       "waiverDateRequired": "Das Datum der Verzichtserklärung ist erforderlich.",
@@ -5208,6 +5286,7 @@
         },
         "contents": {
           "DONATION": "Geldspende",
+          "IN_KIND_DONATION": "Sachzuwendung",
           "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
         }
       },
@@ -5231,6 +5310,7 @@
           "BANK_TRANSFER": "Überweisung",
           "CARD": "Kartenzahlung",
           "PAYPAL": "PayPal",
+          "IN_KIND": "Sachzuwendung",
           "REIMBURSEMENT_WAIVER": "Aufwandsspende",
           "OTHER": "Sonstige"
         }
@@ -5283,6 +5363,7 @@
               "BANK_TRANSFER": "Überweisung",
               "CARD": "Karte",
               "PAYPAL": "PayPal",
+              "IN_KIND": "Sachzuwendung",
               "REIMBURSEMENT_WAIVER": "Aufwandsspende",
               "OTHER": "Sonstige"
             }
@@ -5706,7 +5787,14 @@
       }
     },
     "access": {
-      "system": "Liest den Modulstatus, damit der schwebende Button nur bei aktivem Modul erscheint."
+      "system": "Liest den Modulstatus, damit der schwebende Button nur bei aktivem Modul erscheint.",
+      "notifications": "Sendet dem meldenden Nutzer eine In-App-Benachrichtigung, wenn ein Administrator antwortet oder den Status ändert."
+    },
+    "notifications": {
+      "replied": {
+        "title": "Ihr Feedback wurde aktualisiert (#{number})",
+        "body": "Ein Administrator hat auf Ihr Feedback geantwortet oder den Status geändert."
+      }
     },
     "automation": {
       "events": {
@@ -5843,6 +5931,8 @@
       "funder": "Zuwendungsgeber",
       "fileNumber": "Aktenzeichen",
       "status": "Status",
+      "financingType": "Finanzierungsart",
+      "sharePercent": "Förderquote",
       "periodStart": "Beginn",
       "periodEnd": "Ende",
       "reportDueAt": "Nachweis fällig am",
@@ -5860,6 +5950,11 @@
       "receivedAt": "Eingegangen",
       "note": "Notiz"
     },
+    "financingTypes": {
+      "FEHLBEDARF": "Fehlbedarfsfinanzierung",
+      "ANTEIL": "Anteilfinanzierung",
+      "FESTBETRAG": "Festbetragsfinanzierung"
+    },
     "tabs": {
       "general": "Allgemein",
       "plan": "Finanzierungsplan",
@@ -5874,6 +5969,7 @@
     "pending": "Ausstehend",
     "notLinked": "Die Zuwendung ist mit keinem Buchhaltungsprojekt verknüpft; Ist-Werte sind leer. Projekt unter 'Allgemein' wählen.",
     "reportPdf": "Verwendungsnachweis (PDF)",
+    "receiptsZip": "Belegpaket (ZIP)",
     "submittedAt": "Eingereicht: {date}",
     "missingReceipts": "{count} Buchungen ohne Beleg",
     "deviationHint": "Abweichungen über 20 % je Position werden markiert; nach vielen Nebenbestimmungen (ANBest-P) ist dafür die Zustimmung des Zuwendungsgebers nötig.",
@@ -5928,7 +6024,10 @@
       "reportEmpty": "Bitte vor dem Einreichen den Sachbericht schreiben.",
       "deleteOnlyPlanned": "Es können nur geplante Zuwendungen (PLANNED) gelöscht werden.",
       "hasReceivedPayouts": "Eine Zuwendung mit bereits eingegangenen Auszahlungen kann nicht gelöscht werden.",
-      "payoutAlreadyReceived": "Eine bereits eingegangene Auszahlung kann nicht gelöscht werden."
+      "payoutAlreadyReceived": "Eine bereits eingegangene Auszahlung kann nicht gelöscht werden.",
+      "sharePercent": "Bei Anteilfinanzierung bitte den Fördersatz (1–100 %) angeben.",
+      "zipTooLarge": "Das Belegpaket ist zu groß ({sizeMb} MB, höchstens {limitMb} MB). Bitte den Zeitraum verkleinern oder Belege einzeln herunterladen.",
+      "zipTooManyFiles": "Der Zeitraum hat mehr als {limit} Belegdateien; das Paket wäre unvollständig. Bitte den Zeitraum verkleinern."
     },
     "calendar": {
       "reports": "Verwendungsnachweise"
@@ -6217,14 +6316,15 @@
     },
     "access": {
       "accounting": "Übernimmt Rechnungs-/Belegdateien aus eingehenden E-Mails in den Belegeingang der Buchhaltung.",
-      "system": "Liest, ob das Buchhaltungsmodul aktiv ist (Übernahme nur dann möglich).",
+      "documents": "Übernimmt eingehende E-Mails samt Anhängen als Posteingang in das Dokumentenregister.",
+      "system": "Liest, ob das Buchhaltungs- und Dokumentenmodul aktiv sind (Übernahme nur dann möglich).",
       "tasks": "Legt aus einem bestätigten Sekretär-Vorschlag „Aufgabenentwurf“ eine Aufgabe an (nur mit Zustimmung des Nutzers).",
       "users": "Liest den Namen des Nutzers für das Feld „erstellt von“ der Aufgabe.",
       "notifications": "Benachrichtigt Nutzer mit Einwilligung über neue E-Mails (ohne Absender und Betreff)."
     },
     "inbox": {
       "title": "Posteingang",
-      "description": "Beleg-E-Mails (Rechnungen, Quittungen) per IMAP abrufen oder .eml-Datei hochladen; PDF/XML/Bild-Anhänge per Klick in den Belegeingang der Buchhaltung übernehmen. XRechnung/ZUGFeRD werden automatisch gelesen.",
+      "description": "Beleg-E-Mails (Rechnungen, Quittungen) per IMAP abrufen oder .eml-Datei hochladen; PDF/XML/Bild-Anhänge per Klick in den Belegeingang der Buchhaltung oder ins Dokumentenregister übernehmen. XRechnung/ZUGFeRD werden automatisch gelesen.",
       "fetch": "E-Mails abrufen",
       "uploadEml": ".eml hochladen",
       "fetched": "{fetched} E-Mails gelesen, {created} neu.",
@@ -6233,6 +6333,11 @@
       "imported": "Als Entwurf in den Belegeingang übernommen.",
       "importDuplicate": "Dieser Beleg ist bereits im Belegeingang; verknüpft.",
       "importToAccounting": "In Buchhaltung übernehmen",
+      "importToDocuments": "In Dokumente übernehmen",
+      "importedToDocuments": "Ins Dokumentenregister übernommen ({registryNumber}, {attachments} Anhänge).",
+      "importedToDocumentsPartial": "Ins Dokumentenregister übernommen ({registryNumber}): {attached} von {total} Anhängen archiviert. Die übrigen bleiben im Posteingang.",
+      "importToDocumentsDuplicate": "Diese E-Mail wurde bereits ins Dokumentenregister übernommen.",
+      "importedToDocumentsChip": "Dokumentenregister",
       "importedChip": "Übernommen",
       "accountingOff": "Das Buchhaltungsmodul ist deaktiviert; Anhänge können nicht übernommen werden.",
       "empty": "Keine E-Mails in dieser Ansicht.",
@@ -6279,7 +6384,9 @@
         "encryptionKeyMissing": "Kein Verschlüsselungsschlüssel (AUTH_SECRET).",
         "emlInvalid": "Keine gültige .eml-Datei.",
         "accountingOff": "Das Buchhaltungsmodul ist deaktiviert.",
-        "notFound": "Nicht gefunden."
+        "documentsOff": "Das Dokumentenmodul ist deaktiviert.",
+        "notFound": "Nicht gefunden.",
+        "importInProgress": "Diese E-Mail wird gerade ins Dokumentenregister übernommen. Bitte kurz warten."
       },
       "drafts": {
         "errors": {
@@ -6306,6 +6413,10 @@
             "to": "z. B. vorstand@verein.de oder '{{member.email}}' für das neue Mitglied",
             "body": "Felder wie '{{member.fullName}}' können in den Text eingefügt werden; Liste siehe unten. Personenbezogene Daten werden nur beim Versand gelesen, nicht gespeichert."
           }
+        },
+        "fetch_inbox": {
+          "label": "IMAP-Posteingang abrufen",
+          "description": "Ruft regelmäßig neue Beleg-E-Mails schreibgeschützt vom konfigurierten IMAP-Postfach ab."
         }
       },
       "events": {
@@ -6787,6 +6898,11 @@
     "detail": {
       "approvedLine": "Genehmigt am: {date} – {by}",
       "draftNote": "Das Protokoll liegt im Entwurfsstatus vor.",
+      "noticePeriod": {
+        "compliant": "Einladung {actual} Tage vorher · Richtwert {required} Tage erfüllt",
+        "shortNotice": "Nur {actual} Tage Vorlauf · Richtwert {required} Tage, Satzung prüfen",
+        "notSent": "Einladung noch nicht versandt (Richtwert: mind. {required} Tage)"
+      },
       "tabsAria": "Sitzungsregisterkarten",
       "tabGeneral": "Allgemein",
       "tabAgenda": "Tagesordnung ({count})",
@@ -6828,8 +6944,10 @@
     },
     "actions": {
       "minutesPdf": "Protokoll (PDF)",
+      "invitationPdf": "Einladung & TOP (PDF)",
       "statusButton": "Status",
-      "minutesPdfAria": "PDF-Sprache für Protokoll wählen"
+      "minutesPdfAria": "PDF-Sprache für Protokoll wählen",
+      "invitationPdfAria": "PDF-Sprache für Einladung wählen"
     },
     "statusMenu": {
       "button": "Status",
@@ -7674,7 +7792,9 @@
       "edit": "Bearbeiten",
       "delete": "Löschen",
       "changeStatus": "Status ändern",
-      "currentStatus": "Aktueller Status"
+      "currentStatus": "Aktueller Status",
+      "certificatePdf": "Mitgliedsbescheinigung (PDF)",
+      "certificatePdfAria": "PDF-Sprache für Mitgliedsbescheinigung wählen"
     },
     "statusChange": {
       "resignedTitle": "Ausgetretenes Mitglied",
@@ -9609,6 +9729,102 @@
     "otp": "Bestätigungscode (bei aktiver Zwei-Faktor-Anmeldung)",
     "applicationLocked": "Zum Schutz der Kontoverknüpfungen bleibt die gespeicherte Anwendungskennung unverändert; der geheime Schlüssel kann erneuert werden."
   },
+  "sponsors": {
+    "module": {
+      "label": "Sponsoren",
+      "description": "Verwaltung von Unternehmens- und Einzelsponsorings, Förderstufen und Zusagen."
+    },
+    "permissions": {
+      "sponsors": {
+        "label": "Sponsoren",
+        "description": "Sponsoreneinträge ansehen, anlegen, bearbeiten und löschen."
+      }
+    },
+    "meta": {
+      "list": "Sponsoren"
+    },
+    "title": "Sponsoren",
+    "description": "Verwalten Sie Sponsoren, Förderstufen und zugesagte Förderbeträge des Vereins.",
+    "newSponsor": "Neuer Sponsor",
+    "summary": {
+      "total": "Sponsoren gesamt",
+      "active": "Aktive Sponsoren",
+      "activeAmount": "Aktive Jahreszusage",
+      "leads": "In Vorbereitung"
+    },
+    "tier": {
+      "PLATINUM": "Platin",
+      "GOLD": "Gold",
+      "SILVER": "Silber",
+      "BRONZE": "Bronze",
+      "SUPPORTER": "Förderer"
+    },
+    "status": {
+      "LEAD": "Interessent",
+      "ACTIVE": "Aktiv",
+      "PAUSED": "Pausiert",
+      "ENDED": "Beendet"
+    },
+    "table": {
+      "aria": "Sponsorenliste",
+      "name": "Sponsor",
+      "tier": "Stufe",
+      "status": "Status",
+      "amount": "Betrag",
+      "contact": "Ansprechperson",
+      "period": "Zeitraum",
+      "updatedAt": "Zuletzt geändert",
+      "search": "Sponsorname, Ansprechperson oder Notiz suchen...",
+      "empty": "Noch keine Sponsoren vorhanden. Legen Sie mit „Neuer Sponsor“ den ersten Eintrag an.",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "deleteTitle": "Sponsor löschen",
+      "deleteMessage": "„{name}“ wird dauerhaft gelöscht. Fortfahren?",
+      "deleted": "Sponsoreneintrag gelöscht.",
+      "bulkActivate": "Aktiv setzen",
+      "bulkPause": "Pausieren",
+      "bulkEnd": "Beenden",
+      "bulkSuccess": "{updated} Sponsoren aktualisiert, {skipped} Einträge waren bereits im Zielstatus."
+    },
+    "form": {
+      "createTitle": "Neuer Sponsor",
+      "editTitle": "Sponsor bearbeiten",
+      "name": "Sponsor / Unternehmen",
+      "tier": "Förderstufe",
+      "status": "Status",
+      "amount": "Förderbetrag (EUR)",
+      "amountPlaceholder": "z. B. 1250,00",
+      "contactName": "Ansprechperson",
+      "contactEmail": "E-Mail",
+      "contactPhone": "Telefon",
+      "website": "Website",
+      "websitePlaceholder": "https://beispiel.de",
+      "startDate": "Beginn",
+      "endDate": "Ende",
+      "notes": "Notizen",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "created": "Sponsoreneintrag angelegt.",
+      "updated": "Sponsoreneintrag aktualisiert."
+    },
+    "errors": {
+      "notFound": "Sponsoreneintrag nicht gefunden."
+    },
+    "validation": {
+      "nameRequired": "Der Name des Sponsors ist erforderlich.",
+      "nameMax": "Der Name darf höchstens 200 Zeichen lang sein.",
+      "amountInvalid": "Bitte geben Sie einen gültigen EUR-Betrag ein (nicht negativ).",
+      "contactNameMax": "Die Ansprechperson darf höchstens 150 Zeichen lang sein.",
+      "contactEmailMax": "Die E-Mail-Adresse darf höchstens 200 Zeichen lang sein.",
+      "contactEmailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "contactPhoneMax": "Die Telefonnummer darf höchstens 50 Zeichen lang sein.",
+      "websiteMax": "Die Website-Adresse darf höchstens 300 Zeichen lang sein.",
+      "websiteInvalid": "Die Website muss mit http:// oder https:// beginnen.",
+      "dateInvalid": "Bitte wählen Sie ein gültiges Datum.",
+      "endBeforeStart": "Das Enddatum darf nicht vor dem Beginn liegen.",
+      "notesMax": "Notizen dürfen höchstens 2000 Zeichen lang sein."
+    }
+  },
   "students": {
     "module": {
       "label": "Schüler",
@@ -10537,7 +10753,9 @@
     },
     "access": {
       "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
-      "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen.",
+      "meetings": "Liest Sitzungen und offene Sitzungsaufgaben für die einheitliche Aufgabenübersicht.",
+      "crm": "Liest offene CRM-Wiedervorlagen für die einheitliche Aufgabenübersicht.",
+      "system": "Prüft aktive Module, um nur freigegebene Quellen in der Aufgabenübersicht einzublenden.",
       "users": "Liest die Kontoe-Mail-Adresse des aktiven Benutzers für die Zuordnung eigener Aufgaben in der Sekretariatsübersicht.",
       "notifications": "Benachrichtigt die zugewiesene Person, wenn eine Aufgabe zugewiesen wird."
     },
@@ -10602,6 +10820,17 @@
       "assigned": {
         "title": "Ihnen wurde eine Aufgabe zugewiesen: {title}",
         "body": "Unter „Meine Aufgaben“ öffnen."
+      }
+    },
+    "unifiedHub": {
+      "title": "Verknüpfte Aufgaben & Wiedervorlagen",
+      "description": "Offene Sitzungsaufgaben und CRM-Wiedervorlagen mit direktem Quellverweis.",
+      "count": "{count} offen",
+      "overdue": "Überfällig",
+      "openSource": "Quelle öffnen",
+      "sources": {
+        "meetings": "Sitzung",
+        "crm": "CRM"
       }
     }
   },

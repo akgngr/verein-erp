@@ -83,6 +83,7 @@ export async function createDonationAction(
         return db.$transaction(async (tx) => {
           const { sequence } = await allocateDonationsNumber(tx, "DONATION", year);
           const donationNumber = formatDonationNumber(year, sequence);
+          const isInKind = input.method === "IN_KIND";
 
           const donation = await tx.donation.create({
             data: {
@@ -95,12 +96,15 @@ export async function createDonationAction(
               method: input.method,
               reference: input.reference,
               purposeNote: input.purposeNote,
-              waivedReimbursement: input.waivedReimbursement,
-              claimBasis: input.waivedReimbursement ? input.claimBasis : null,
-              waiverDeclaredAt: input.waivedReimbursement && input.waiverDeclaredAt
+              itemDescription: isInKind ? (input.itemDescription ?? null) : null,
+              inKindOrigin: isInKind ? (input.inKindOrigin ?? null) : null,
+              valuationRecordsAvailable: isInKind ? Boolean(input.valuationRecordsAvailable) : false,
+              waivedReimbursement: isInKind ? false : input.waivedReimbursement,
+              claimBasis: !isInKind && input.waivedReimbursement ? input.claimBasis : null,
+              waiverDeclaredAt: !isInKind && input.waivedReimbursement && input.waiverDeclaredAt
                 ? parseDateOnly(input.waiverDeclaredAt)
                 : null,
-              expenseCategoryId: input.waivedReimbursement ? input.expenseCategoryId : null,
+              expenseCategoryId: !isInKind && input.waivedReimbursement ? input.expenseCategoryId : null,
               createdById: user.id,
               createdByLabel,
               updatedById: user.id,
@@ -109,26 +113,29 @@ export async function createDonationAction(
           });
           await emitAutomationEvent(donationReceivedEvent, { donationId: donation.id, method: donation.method, amount: Number(donation.amount) }, tx);
 
-          // Muhasebe fişleri (§ 11 md. 5) — hata bağışı durdurur.
-          const bookings = await createDonationBookings(tx, {
-            actor,
-            donationId: donation.id,
-            donationNumber,
-            donorNumber: donor.donorNumber,
-            receivedAt,
-            amountCents: cents,
-            method: input.method,
-            waivedReimbursement: input.waivedReimbursement,
-            expenseCategoryId: input.waivedReimbursement ? input.expenseCategoryId : null,
-          });
+          // Sachzuwendung (ayni bağış; #618): nakit/banka akışı olmadığından EÜR fişi açılmaz.
+          if (!isInKind) {
+            // Muhasebe fişleri (§ 11 md. 5) — hata bağışı durdurur.
+            const bookings = await createDonationBookings(tx, {
+              actor,
+              donationId: donation.id,
+              donationNumber,
+              donorNumber: donor.donorNumber,
+              receivedAt,
+              amountCents: cents,
+              method: input.method,
+              waivedReimbursement: input.waivedReimbursement,
+              expenseCategoryId: input.waivedReimbursement ? input.expenseCategoryId : null,
+            });
 
-          await tx.donation.update({
-            where: { id: donation.id },
-            data: {
-              bookingNumber: bookings.bookingNumber,
-              waiverBookingNumber: bookings.waiverBookingNumber,
-            },
-          });
+            await tx.donation.update({
+              where: { id: donation.id },
+              data: {
+                bookingNumber: bookings.bookingNumber,
+                waiverBookingNumber: bookings.waiverBookingNumber,
+              },
+            });
+          }
 
           return donation;
         }, { timeout: 30_000 });
@@ -206,13 +213,19 @@ export async function updateDonationAction(input: unknown): Promise<ActionResult
       const donor = await db.donor.findUnique({ where: { id: existing.donorId } });
       if (!donor) throw new ActionError("donations.errors.donorNotFound");
 
+      const wasInKind = existing.method === "IN_KIND";
+      const isInKind = input.method === "IN_KIND";
+
       // Fiş etkilenecek alanlar değişti mi (§ 11 md. 6)?
       const bookingsAffected =
-        receivedAt.getTime() !== existing.receivedAt.getTime() ||
-        cents !== Number(existing.amount.mul(100).toFixed(0)) ||
-        input.method !== existing.method ||
-        input.waivedReimbursement !== existing.waivedReimbursement ||
-        (input.waivedReimbursement && input.expenseCategoryId !== existing.expenseCategoryId);
+        wasInKind !== isInKind ||
+        (!isInKind && (
+          receivedAt.getTime() !== existing.receivedAt.getTime() ||
+          cents !== Number(existing.amount.mul(100).toFixed(0)) ||
+          input.method !== existing.method ||
+          input.waivedReimbursement !== existing.waivedReimbursement ||
+          (input.waivedReimbursement && input.expenseCategoryId !== existing.expenseCategoryId)
+        ));
 
       await db.$transaction(
         async (tx) => {
@@ -224,42 +237,57 @@ export async function updateDonationAction(input: unknown): Promise<ActionResult
               method: input.method,
               reference: input.reference,
               purposeNote: input.purposeNote,
-              waivedReimbursement: input.waivedReimbursement,
-              claimBasis: input.waivedReimbursement ? input.claimBasis : null,
-              waiverDeclaredAt: input.waivedReimbursement && input.waiverDeclaredAt
+              itemDescription: isInKind ? (input.itemDescription ?? null) : null,
+              inKindOrigin: isInKind ? (input.inKindOrigin ?? null) : null,
+              valuationRecordsAvailable: isInKind ? Boolean(input.valuationRecordsAvailable) : false,
+              waivedReimbursement: isInKind ? false : input.waivedReimbursement,
+              claimBasis: !isInKind && input.waivedReimbursement ? input.claimBasis : null,
+              waiverDeclaredAt: !isInKind && input.waivedReimbursement && input.waiverDeclaredAt
                 ? parseDateOnly(input.waiverDeclaredAt)
                 : null,
-              expenseCategoryId: input.waivedReimbursement ? input.expenseCategoryId : null,
+              expenseCategoryId: !isInKind && input.waivedReimbursement ? input.expenseCategoryId : null,
               updatedById: user.id,
               updatedByLabel: createdByLabel,
             },
           });
 
           if (bookingsAffected) {
-            // Eski fişler ters kayıt + yeni fişler (yerinde düzenleme YOK; § 11 md. 6).
-            await reverseDonationBookings(tx, {
-              actor,
-              donationId: existing.id,
-              reason: "Bağış düzeltildi",
-            });
-            const bookings = await createDonationBookings(tx, {
-              actor,
-              donationId: existing.id,
-              donationNumber: existing.donationNumber,
-              donorNumber: donor.donorNumber,
-              receivedAt,
-              amountCents: cents,
-              method: input.method,
-              waivedReimbursement: input.waivedReimbursement,
-              expenseCategoryId: input.waivedReimbursement ? input.expenseCategoryId : null,
-            });
-            await tx.donation.update({
-              where: { id: existing.id },
-              data: {
-                bookingNumber: bookings.bookingNumber,
-                waiverBookingNumber: bookings.waiverBookingNumber,
-              },
-            });
+            // Eski fişler (varsa) ters kayıt + nakdi ise yeni fişler (yerinde düzenleme YOK; § 11 md. 6).
+            if (!wasInKind) {
+              await reverseDonationBookings(tx, {
+                actor,
+                donationId: existing.id,
+                reason: "Bağış düzeltildi",
+              });
+            }
+            if (!isInKind) {
+              const bookings = await createDonationBookings(tx, {
+                actor,
+                donationId: existing.id,
+                donationNumber: existing.donationNumber,
+                donorNumber: donor.donorNumber,
+                receivedAt,
+                amountCents: cents,
+                method: input.method,
+                waivedReimbursement: input.waivedReimbursement,
+                expenseCategoryId: input.waivedReimbursement ? input.expenseCategoryId : null,
+              });
+              await tx.donation.update({
+                where: { id: existing.id },
+                data: {
+                  bookingNumber: bookings.bookingNumber,
+                  waiverBookingNumber: bookings.waiverBookingNumber,
+                },
+              });
+            } else {
+              await tx.donation.update({
+                where: { id: existing.id },
+                data: {
+                  bookingNumber: null,
+                  waiverBookingNumber: null,
+                },
+              });
+            }
           }
         },
         { timeout: 30_000 },
@@ -317,11 +345,13 @@ export async function cancelDonationAction(input: unknown): Promise<ActionResult
               reverseReason: input.reason,
             },
           });
-          await reverseDonationBookings(tx, {
-            actor: { id: user.id, label },
-            donationId: existing.id,
-            reason: input.reason,
-          });
+          if (existing.method !== "IN_KIND") {
+            await reverseDonationBookings(tx, {
+              actor: { id: user.id, label },
+              donationId: existing.id,
+              reason: input.reason,
+            });
+          }
         },
         { timeout: 30_000 },
       );

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 39
+sidebar_position: 40
 title: "Toplantılar"
 description: "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar."
 slug: /kullanim/moduller/meetings
@@ -13,7 +13,7 @@ Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
 |---|---|
 | Anahtar | `meetings` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.4 |
+| Sürüm | 1.5.0 |
 | Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
 
 ## Sürüm notları
+
+### 1.5.0 — Davet süresi hatırlatıcısı ve Davetiye & Gündem PDF'i (#636)
+
+_2026-11-27_
+
+- **Yeni:** Toplantı ayrıntısında davetin kaç gün önce gönderildiği, toplantı türüne göre öneri değerle (Genel Kurul 14, Yönetim Kurulu 7, Komite 3 gün) karşılaştırılarak gösterilir; bağlayıcı süre derneğin tüzüğündedir. Gün sayımı Berlin takvimine göredir.
+- **Yeni:** Antetli, çift dilli (TR/DE) Davetiye & Gündem PDF çıktısı eklendi. Üyelere giden belgede iç süre değerlendirmesi yer almaz.
 
 ### 1.4.4 — Yerel tarih alanları
 
@@ -86,10 +93,4 @@ _2026-11-18_
 
 - **Yeni:** Yaklaşan toplantılar ve gündemi eksik toplantılar sekreter sabah özetinde görünür.
 
-### 1.3.14 — Toplantılar sekreter özeti
-
-_2026-11-18_
-
-- **Yeni:** Yaklaşan toplantılar ve gündemi eksik toplantılar sekreter sabah özetinde görünür.
-
-Daha eski 16 herkese açık sürüm notu.
+Daha eski 17 herkese açık sürüm notu.

@@ -13,7 +13,7 @@ Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kull
 |---|---|
 | Anahtar | `grants` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.13 |
+| Sürüm | 1.1.1 |
 | Gerektirir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,21 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_grant_overview`
 
 ## Sürüm notları
+
+### 1.1.1 — İade fazlasında negatif destek ihtiyacı
+
+_2026-11-28_
+
+- **Düzeltme:** Dönemde tedarikçi iadeleri giderleri aşarsa oransal ve sabit tutarlı finansmanda destek ihtiyacı sıfırın altına düşmez; raporda hayali fazla ödeme görünmez.
+
+### 1.1.0 — Anteilfinanzierung / Festbetragsfinanzierung ve belge paketi ZIP
+
+_2026-11-28_
+
+- **Yeni:** Hibeler için finansman türü (Fehlbedarfs-, Anteil-, Festbetragsfinanzierung) ve Verwendungsnachweis belge paketi (ZIP) indirme eklendi.
+- **Güvenlik:** Verwendungsnachweis belge listesinde (belegliste.csv) açıklama, karşı taraf ve kalem adı gibi serbest metinler formül enjeksiyonuna karşı etkisizleştirilir.
+- **Düzeltme:** Oransal finansmanda (ANTEIL) destek oranı zorunludur; eksik oran artık sessizce %100 sayılmaz. Belge paketi 200 MB'ı aşarsa dosyalar okunmadan anlaşılır bir hata verilir.
+- **Düzeltme:** Dönemde 5.000'den fazla belge dosyası varsa paket eksik oluşturulmaz; anlaşılır bir hata gösterilir.
 
 ### 1.0.13 — Yerel tarih alanları
 
@@ -79,16 +94,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.0.6 — Hibe durum rozeti ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Rozet/çip görünümleri ortak StatusChip pattern'ine taşındı; modül düzeyindeki doğrudan HeroUI Chip bağımlılığı azaltıldı.
-
-### 1.0.5 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 7 herkese açık sürüm notu.

@@ -31,14 +31,35 @@ export const BATCH_ISSUE_MAX_RECIPIENTS = 200;
 /** Etiket sözlükleri (sunucu içi: audit/export/PDF TR satırları). */
 export const DONOR_TYPE_VALUES: DonorType[] = ["PERSON", "ORGANIZATION"];
 
-export const DONATION_METHOD_VALUES: DonationMethod[] = ["CASH", "BANK_TRANSFER", "CARD", "PAYPAL", "REIMBURSEMENT_WAIVER", "OTHER"];
+export const DONATION_METHOD_VALUES: DonationMethod[] = [
+  "CASH",
+  "BANK_TRANSFER",
+  "CARD",
+  "PAYPAL",
+  "REIMBURSEMENT_WAIVER",
+  "IN_KIND",
+  "OTHER",
+];
 
 /** KARAR (§ 11 md. 4): Aufwandsspende yöntemi ZORUNLU olarak REIMBURSEMENT_WAIVER. */
 export const WAIVER_METHOD: DonationMethod = "REIMBURSEMENT_WAIVER";
 
+/** Ayni bağış (Sachzuwendung; #618): nakit/banka fişi açılmaz, yalnız tek bildirim (SINGLE). */
+export const IN_KIND_METHOD: DonationMethod = "IN_KIND";
+
+export const IN_KIND_ORIGIN_VALUES = [
+  "BUSINESS_ASSETS",
+  "PRIVATE_ASSETS",
+  "UNKNOWN",
+] as const;
+
 export const CONFIRMATION_KIND_VALUES: ConfirmationKind[] = ["SINGLE", "COLLECTIVE"];
 
-export const CONFIRMATION_CONTENT_VALUES: ConfirmationContent[] = ["DONATION", "MEMBERSHIP_FEE"];
+export const CONFIRMATION_CONTENT_VALUES: ConfirmationContent[] = [
+  "DONATION",
+  "IN_KIND_DONATION",
+  "MEMBERSHIP_FEE",
+];
 
 export const CONFIRMATION_STATUS_VALUES: ConfirmationStatus[] = ["ISSUED", "CANCELLED"];
 

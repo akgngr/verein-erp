@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.28.0 |
+| Sürüm | 1.29.4 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/denetim`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -46,6 +46,39 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
+### 1.29.4 — Proje fiş ekleri dışa aktarım sözleşmesi
+
+_2026-11-28_
+
+- **Yeni:** Hibeler modülünün Verwendungsnachweis belge paketi (ZIP) oluşturabilmesi için listProjectBookingFiles sunucu sözleşmesi eklendi.
+- **İyileştirme:** listProjectBookingFiles dosya boyutunu da döndürür; çağıran modül belleği dosyaları okumadan sınırlayabilir.
+
+### 1.29.3 — Banka eşleştirmesinde alacak dekontu iadeleri
+
+_2026-11-28_
+
+- **Düzeltme:** Açık tedarikçi alacak dekontları artık gelen banka iadeleri için önerilir ve eşleştirilebilir.
+
+### 1.29.2 — Gelen alacak dekontu işaretleri ve iade ödemesi
+
+_2026-11-27_
+
+- **Düzeltme:** Pozitif ve negatif vergi grupları içeren gelen alacak dekontlarında (UBL/CII) işaret artık belge başına bir kez belirlenir; gruplar toplamlarla tutarlı kalır (BR-CO-13) ve onay ekranı doğru tutarlarla dolar.
+- **Düzeltme:** Tedarikçi alacak dekontları gelen fatura sayfasındaki ödeme penceresinden iade olarak kapatılabilir (tutar pozitif girilir).
+
+### 1.29.1 — Gelen fatura ödeme dağılımı ve KoSIT yanıt sınırı düzeltmesi
+
+_2026-11-27_
+
+- **Düzeltme:** Pozitif ve negatif vergi grupları içeren gelen faturalarda (ör. indirim veya avans kesintisi satırı) ödeme artık grupların işaretlerini korur; negatif grup gidere dönüşmez ve ön vergi dağılımı belgeyle aynı kalır.
+- **Düzeltme:** KoSIT doğrulayıcısı 2 MB sınırını aşan bir yanıt döndürdüğünde doğrulama artık takılmaz; 'doğrulanamadı' sonucu döner.
+
+### 1.29.0 — Giden faturalarda yerel EPC-QR (GiroCode)
+
+_2026-11-26_
+
+- **Yeni:** IBAN tanımlı açık giden fatura PDF'lerine (ZUGFeRD dahil) dış sunucu olmadan yerel olarak üretilen SEPA EPC-QR (GiroCode) ödeme kodu eklendi (#618).
+
 ### 1.28.0 — Aidat, kurs ücreti ve tek tıkla bağış banka eşleştirmesi
 
 _2026-11-26_
@@ -67,34 +100,4 @@ _2026-11-25_
 - **Düzeltme:** Kesilmiş faturanın tahsilatında faturadaki KDV oranları esas alınır; § 19 UStG ayarı sonradan açılsa da KDV'li fatura KDV'siz kaydedilmez.
 - **Düzeltme:** İçe aktarılan tedarikçi alacak dekontları (negatif tutarlar) iade olarak kapatılabilir: elle veya gelen banka hareketiyle eşleştirilir, gider ve ön KDV azaltılır.
 
-### 1.27.4 — Arayüz düzeltmeleri (#586)
-
-_2026-11-25_
-
-- **Düzeltme:** Varlık, götürü gider ve kasa kapanışı formlarında tarih alanları yerel biçimde (GG.AA.YYYY) ve takvimle seçilir.
-
-### 1.27.3 — nav.json kategori ve alt modül tanımı
-
-_2026-11-24_
-
-- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
-
-### 1.27.2 — TAX_ADVISOR rolü izin tanımı
-
-_2026-11-23_
-
-- **Güvenlik:** TAX_ADVISOR rolü için salt okunur görüntüleme izni tanımlandı.
-
-### 1.27.0 — Kassenprüfer süreli denetim odası (B001 Q1)
-
-_2026-11-23_
-
-- **Yeni:** Son kullanma tarihli salt-okunur denetçi erişimi (/muhasebe/denetim), tüm görüntülemelerin denetim kaydına yazılması, 5 alanlı rehberli kontrol listesi ve Genel Kurul Denetim Raporu PDF'ine aktarılan bulgu kayıtları eklendi.
-
-### 1.26.1 — GoBD silme koruması
-
-_2026-11-23_
-
-- **Güvenlik:** Banka ekstresi hareketleri ilişkisi (AccountingBankTransaction.import) onDelete: Restrict olarak güncellendi.
-
-Daha eski 54 herkese açık sürüm notu.
+Daha eski 59 herkese açık sürüm notu.

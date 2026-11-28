@@ -71,6 +71,10 @@ model MailInboxMessage {
   /// S4.1 (#313): yerel kural sınıfı (invoice | meeting | membership | donation | question | other); yalnız triageEnabled iken.
   category    String?
   triagedAt   DateTime?
+  /// #631: Evrak Kayıt'a aktarılan belge (FK değil; documents modülü). Ek olmasa da yinelenen aktarımı engeller.
+  importedDocumentId String?
+  /// #631: aktarım kilidi; eşzamanlı iki aktarım tek kayıt açar. Bayat kilit (>5 dk) yeniden alınabilir.
+  documentImportStartedAt DateTime?
   createdAt   DateTime            @default(now())
 
   attachments MailInboxAttachment[]
