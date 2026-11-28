@@ -2,6 +2,7 @@ import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 
 import { formatPdfDate, formatPdfMoney, formatPdfNumber } from "@/shared/pdf/format";
 import { Letterhead, type LetterheadProfile } from "@/shared/pdf/letterhead";
+import { EpcQrBlock } from "@/shared/pdf/qr-code";
 
 import type { InvoiceDetail, InvoiceSettingsData } from "../queries/invoices";
 import { calculateInvoiceTotals } from "../services/invoice-calc";
@@ -56,6 +57,14 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
   const number = invoice.number ?? s.draftNumber;
   const cell = (width: number, align: "left" | "right" = "left") => ({ width, textAlign: align, paddingHorizontal: 2 });
   const hasTax = totals.taxCents > 0;
+  const openPayableCents = Math.max(0, totals.grossCents - invoice.paidCents - invoice.skontoCents);
+  const showEpcQr =
+    invoice.kind === "INVOICE" &&
+    invoice.status !== "CANCELLED" &&
+    invoice.status !== "PAID" &&
+    Boolean(invoice.number) &&
+    Boolean(settings.iban) &&
+    openPayableCents > 0;
 
   return (
     <Document title={`${title} ${number}`} author={org.name} language={lang}>
@@ -148,6 +157,19 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
         {isQuote ? <Text style={styles.note}>{s.quoteNote}</Text> : null}
         {!isProforma && !isQuote && invoice.dueDate && invoice.number ? (
           <Text style={styles.note}>{s.paymentNote(formatPdfDate(invoice.dueDate, lang), invoice.number)}</Text>
+        ) : null}
+        {showEpcQr && invoice.number && settings.iban ? (
+          <EpcQrBlock
+            input={{
+              beneficiaryName: org.name,
+              iban: settings.iban,
+              bic: settings.bic,
+              amountCents: openPayableCents,
+              remittanceText: `${s.invoiceTitle} ${invoice.number}`,
+            }}
+            title={s.epcQrTitle}
+            caption={s.epcQrCaption(invoice.number)}
+          />
         ) : null}
         {invoice.footerText ? <Text style={styles.note}>{invoice.footerText}</Text> : null}
 

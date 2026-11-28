@@ -19,6 +19,7 @@ import { getReadiness } from "../services/issue-guards";
 /** Şablon önizleme türleri (handlers/template-preview-pdf `?type=`). */
 const PREVIEWS = [
   { type: "single-donation", labelKey: "previewSingleDonation" },
+  { type: "single-in-kind", labelKey: "previewSingleInKind" },
   { type: "collective-donation", labelKey: "previewCollectiveDonation" },
   { type: "single-fee", labelKey: "previewSingleFee" },
   { type: "collective-fee", labelKey: "previewCollectiveFee" },
@@ -77,6 +78,16 @@ export async function DonationsSettingsView() {
                 </a>
               </li>
             ))}
+            <li>
+              <a
+                href="/api/donations/simplified-proof/pdf"
+                download
+                className="inline-flex items-center gap-2 text-sm text-accent underline"
+              >
+                <FileText className="h-4 w-4" aria-hidden />
+                {t("simplifiedProofDownload")}
+              </a>
+            </li>
           </ul>
           <a
             href={t("bmflinkHref")}

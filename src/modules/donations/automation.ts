@@ -10,7 +10,7 @@ export const donationReceivedEvent = defineEvent({
   description: "donations.received",
   payloadSchema: z.object({
     donationId: z.string().min(1).max(128),
-    method: z.enum(["CASH", "BANK_TRANSFER", "CARD", "PAYPAL", "REIMBURSEMENT_WAIVER", "OTHER"]),
+    method: z.enum(["CASH", "BANK_TRANSFER", "CARD", "PAYPAL", "REIMBURSEMENT_WAIVER", "IN_KIND", "OTHER"]),
     amount: z.number().nonnegative(),
   }).strict(),
   variables: {

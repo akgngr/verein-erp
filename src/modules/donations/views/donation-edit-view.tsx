@@ -67,6 +67,9 @@ export async function DonationEditView({ id }: { id: string }) {
             method: donation.method,
             reference: donation.reference ?? "",
             purposeNote: donation.purposeNote ?? "",
+            itemDescription: donation.itemDescription ?? "",
+            inKindOrigin: donation.inKindOrigin ?? "",
+            valuationRecordsAvailable: donation.valuationRecordsAvailable,
             waivedReimbursement: donation.waivedReimbursement,
             claimBasis: donation.claimBasis ?? "",
             waiverDeclaredAt: donation.waiverDeclaredAt

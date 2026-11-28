@@ -35,7 +35,9 @@ export function PayableActions({
   const [payOpen, setPayOpen] = useState(false);
   const [cancelOpen, setCancelOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
-  const openLabel = (payable.openCents / 100).toFixed(2).replace(".", ",");
+  // Supplier credit notes have a negative open amount; the refund is entered positive (the server applies the sign).
+  const openAbsCents = Math.abs(payable.openCents);
+  const openLabel = (openAbsCents / 100).toFixed(2).replace(".", ",");
   const [amount, setAmount] = useState(openLabel);
   const [paidDate, setPaidDate] = useState(
     new Date().toISOString().slice(0, 10),
@@ -158,7 +160,7 @@ export function PayableActions({
                         !paidDate ||
                         amountCents === null ||
                         amountCents <= 0 ||
-                        amountCents > payable.openCents
+                        amountCents > openAbsCents
                       }
                       onPress={async () => {
                         setBusy(true);

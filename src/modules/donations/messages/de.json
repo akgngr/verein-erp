@@ -52,6 +52,7 @@
     "donorFromMember": "Aus Mitglied anlegen",
     "date": "Datum der Zuwendung",
     "amount": "Betrag (€)",
+    "inKindValue": "Wert der Sachzuwendung (€)",
     "amountHint": "Bis 300 € ist keine formelle Bestätigung erforderlich (Kontoauszug genügt).",
     "methodLabel": "Zahlungsart",
     "method": {
@@ -59,9 +60,19 @@
       "BANK_TRANSFER": "Überweisung",
       "CARD": "Kartenzahlung",
       "PAYPAL": "PayPal",
+      "IN_KIND": "Sachzuwendung",
       "REIMBURSEMENT_WAIVER": "Aufwandsspende",
       "OTHER": "Sonstige"
     },
+    "inKindNotice": "Sachzuwendungen lösen keinen Geldfluss aus und erzeugen daher keine Kassen- oder Bankbuchung. Eine Einzelbestätigung nach BMF-Muster Anlage 4 kann ausgestellt werden.",
+    "itemDescription": "Genaue Bezeichnung der Sachzuwendung (Alter, Zustand, Kaufpreis usw.)",
+    "inKindOrigin": "Herkunft des Wirtschaftsgutes (BMF)",
+    "origin": {
+      "BUSINESS_ASSETS": "Betriebsvermögen",
+      "PRIVATE_ASSETS": "Privatvermögen",
+      "UNKNOWN": "Keine Angabe zur Herkunft"
+    },
+    "valuationRecordsAvailable": "Unterlagen zur Wertermittlung (z. B. Rechnung, Gutachten) liegen vor",
     "paypalHint": "Nur den beim Verein netto eingehenden Betrag eingeben (PayPal-Gebühr ist keine Spende).",
     "reference": "Referenz",
     "purposeNote": "Verwendungshinweis",
@@ -85,6 +96,9 @@
       "method": "Zahlungsart",
       "reference": "Referenz",
       "purposeNote": "Verwendungshinweis",
+      "itemDescription": "Bezeichnung der Sachzuwendung",
+      "inKindOrigin": "Herkunft",
+      "valuationRecordsAvailable": "Wertermittlungsunterlagen vorhanden",
       "waived": "Aufwandsspende",
       "claimBasis": "Grundlage",
       "waiverDeclaredAt": "Erklärt am",
@@ -101,7 +115,8 @@
     "cancelReason": "Grund (5-300 Zeichen)",
     "cancelHint": "Die Buchungen werden storniert; stornierte Spenden bleiben durchgestrichen sichtbar und zählen nicht in Statistiken.",
     "toastCancelled": "Spende storniert.",
-    "issue": "Bestätigung erstellen"
+    "issue": "Bestätigung erstellen",
+    "simplifiedProofPdf": "≤ 300 € Vereinfachter Nachweis (PDF)"
   },
   "donors": {
     "title": "Spender/innen",
@@ -168,6 +183,7 @@
     },
     "content": {
       "DONATION": "Spende",
+      "IN_KIND_DONATION": "Sachzuwendung",
       "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
     },
     "status": {
@@ -279,9 +295,11 @@
     "readiness": "Bereitschaftsprüfung",
     "preview": "Mustervorschauen (MUSTER)",
     "previewSingleDonation": "Einzelne Spende",
+    "previewSingleInKind": "Einzelne Sachzuwendung (BMF Anlage 4)",
     "previewCollectiveDonation": "Sammelbestätigung mit Anlage",
     "previewSingleFee": "Einzelner Mitgliedsbeitrag",
     "previewCollectiveFee": "Mitgliedsbeiträge (Sammel)",
+    "simplifiedProofDownload": "≤ 300 € Vereinfachter Spendennachweis (§ 50 Abs. 4 Nr. 2 EStDV + GiroCode)",
     "bmflink": "BMF amtliche Muster (Formularcenter)",
     "bmflinkHref": "https://www.bundesfinanzministerium.de/Formularcenter",
     "confirmLabel": "Ich habe den Mustertext mit dem offiziellen BMF-Muster verglichen; er passt zu unserem Verein",
@@ -373,7 +391,12 @@
     "feePaymentsCovered": "Alle Zahlungen sind bereits in einer aktiven Bestätigung enthalten.",
     "noDonationsInYear": "Für diesen Spender gibt es in diesem Jahr keine bestätigbaren Spenden.",
     "replaceNotCancelled": "Nur für eine stornierte Bestätigung kann ein Ersatz erstellt werden.",
-    "alreadyReplaced": "Für diese Bestätigung wurde bereits ein Ersatz erstellt."
+    "alreadyReplaced": "Für diese Bestätigung wurde bereits ein Ersatz erstellt.",
+    "inKindDetailsMissing": "Für eine Sachzuwendungsbestätigung sind Gegenstandsbeschreibung und Herkunft erforderlich.",
+    "inKindNoCollective": "Sachzuwendungen ({number}) dürfen nicht in einer Sammelbestätigung zusammengefasst werden; bitte als Einzelbestätigung ausstellen.",
+    "simplifiedProofNotInKind": "Der vereinfachte Spendennachweis (§ 50 Abs. 4 Nr. 2 EStDV) gilt nur für Geldzuwendungen, nicht für Sachzuwendungen.",
+    "simplifiedProofLimit": "Der vereinfachte Spendennachweis gilt nur für Zuwendungen bis 300,00 €.",
+    "simplifiedProofIncompleteExemption": "Vereinfachter Spendennachweis kann nicht erstellt werden: Bitte vervollständigen Sie die Angaben zur Gemeinnützigkeit (Freistellungsbescheid, Steuernummer, Datum) unter Vereinsdaten (/ayarlar/dernek)."
   },
   "validation": {
     "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",
@@ -388,6 +411,11 @@
     "amountTooLarge": "Der Betrag ist zu hoch.",
     "referenceMax": "Die Referenz darf höchstens 100 Zeichen lang sein.",
     "purposeMax": "Der Verwendungszweck darf höchstens 300 Zeichen lang sein.",
+    "itemDescriptionRequired": "Bitte die Sachzuwendung genau bezeichnen (mindestens 5 Zeichen).",
+    "itemDescriptionMax": "Die Bezeichnung der Sachzuwendung darf höchstens 500 Zeichen lang sein.",
+    "inKindOriginRequired": "Bitte die Herkunft des Wirtschaftsgutes (BMF) auswählen.",
+    "inKindNoWaiver": "Bei Sachzuwendungen ist kein Verzicht auf Aufwendungsersatz (Aufwandsspende) möglich.",
+    "waiverMethodRequired": "Für eine Aufwandsspende muss die Zahlungsart 'Aufwandsspende' gewählt werden.",
     "basisMax": "Die Rechtsgrundlage darf höchstens 300 Zeichen lang sein.",
     "basisRequired": "Die Grundlage des zuvor entstandenen Anspruchs ist erforderlich (mindestens 5 Zeichen).",
     "waiverDateRequired": "Das Datum der Verzichtserklärung ist erforderlich.",
@@ -431,6 +459,7 @@
       },
       "contents": {
         "DONATION": "Geldspende",
+        "IN_KIND_DONATION": "Sachzuwendung",
         "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
       }
     },
@@ -454,6 +483,7 @@
         "BANK_TRANSFER": "Überweisung",
         "CARD": "Kartenzahlung",
         "PAYPAL": "PayPal",
+        "IN_KIND": "Sachzuwendung",
         "REIMBURSEMENT_WAIVER": "Aufwandsspende",
         "OTHER": "Sonstige"
       }
@@ -506,6 +536,7 @@
             "BANK_TRANSFER": "Überweisung",
             "CARD": "Karte",
             "PAYPAL": "PayPal",
+            "IN_KIND": "Sachzuwendung",
             "REIMBURSEMENT_WAIVER": "Aufwandsspende",
             "OTHER": "Sonstige"
           }

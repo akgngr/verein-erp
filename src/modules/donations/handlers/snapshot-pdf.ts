@@ -2,7 +2,7 @@ import "server-only";
 
 import type { ZuwendungConfirmation, ZuwendungConfirmationItem } from "@prisma/client";
 
-import type { AnlageItemRow, ConfirmationPdfData } from "../pdf/confirmation-document";
+import type { AnlageItemRow, ConfirmationPdfData, InKindSnapshotData } from "../pdf/confirmation-document";
 import type { RecipientSnapshot } from "../services/confirmation-builder";
 
 /**
@@ -42,6 +42,7 @@ export async function storedSnapshotToPdfData(
     periodFrom: confirmation.periodFrom,
     periodTo: confirmation.periodTo,
     waived: confirmation.waivedReimbursement,
+    inKind: (issuer.inKind as InKindSnapshotData | undefined) ?? null,
     membershipFeesDeductible: Boolean(issuer.membershipFeesDeductible),
     items,
     issuedPlace: confirmation.issuedPlace,
