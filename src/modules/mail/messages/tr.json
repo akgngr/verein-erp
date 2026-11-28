@@ -135,14 +135,15 @@
   },
   "access": {
     "accounting": "Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır.",
-    "system": "Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir).",
+    "documents": "Gelen e-postaları ve eklerini Evrak Kayıt modülüne gelen evrak olarak aktarır.",
+    "system": "Muhasebe ve Evrak Kayıt modüllerinin etkin olup olmadığını okur (aktarma düğmeleri yalnızca etkinken gösterilir).",
     "tasks": "Sekreterin onaylı \"görev taslağı\" önerisinden görev oluşturur (yalnız kullanıcı onayıyla).",
     "users": "Görevdeki \"oluşturan\" etiketi için kullanıcının adını okur.",
     "notifications": "Sınıflamaya rıza veren kullanıcılara yeni e-posta bildirimi gönderir (gönderen ve konu olmadan)."
   },
   "inbox": {
     "title": "Gelen kutusu",
-    "description": "Belge e-postalarını (fatura, makbuz) IMAP ile alın veya kayıtlı .eml dosyası yükleyin; PDF/XML/görsel eklerini tek tıkla muhasebe → gelen faturalara aktarın. XRechnung/ZUGFeRD otomatik okunur.",
+    "description": "Belge e-postalarını (fatura, makbuz) IMAP ile alın veya kayıtlı .eml dosyası yükleyin; PDF/XML/görsel eklerini tek tıkla muhasebe → gelen faturalara veya Evrak Kayıt'a aktarın. XRechnung/ZUGFeRD otomatik okunur.",
     "fetch": "E-postaları al",
     "uploadEml": ".eml yükle",
     "fetched": "{fetched} e-posta okundu, {created} yeni.",
@@ -151,6 +152,11 @@
     "imported": "Gelen faturalara taslak olarak aktarıldı.",
     "importDuplicate": "Bu belge zaten gelen faturalarda var; bağlantı kuruldu.",
     "importToAccounting": "Muhasebeye aktar",
+    "importToDocuments": "Evrak Kayıta aktar",
+    "importedToDocuments": "Evrak Kayıta aktarıldı ({registryNumber}, {attachments} ek).",
+    "importedToDocumentsPartial": "Evrak Kayıt'a aktarıldı ({registryNumber}): {total} ekten {attached} tanesi arşivlendi. Kalanlar gelen kutusunda kalır.",
+    "importToDocumentsDuplicate": "Bu e-posta zaten Evrak Kayıta aktarılmış.",
+    "importedToDocumentsChip": "Evrak Kayıt",
     "importedChip": "Aktarıldı",
     "accountingOff": "Muhasebe modülü kapalı; ekler aktarılamaz.",
     "empty": "Bu görünümde e-posta yok.",
@@ -197,7 +203,9 @@
       "encryptionKeyMissing": "Şifreleme anahtarı yok (AUTH_SECRET).",
       "emlInvalid": "Geçerli bir .eml dosyası değil.",
       "accountingOff": "Muhasebe modülü kapalı.",
-      "notFound": "Bulunamadı."
+      "documentsOff": "Evrak Kayıt modülü kapalı.",
+      "notFound": "Bulunamadı.",
+      "importInProgress": "Bu e-posta şu anda Evrak Kayıt'a aktarılıyor. Lütfen biraz bekleyin."
     },
     "drafts": {
       "errors": {
@@ -224,6 +232,10 @@
           "to": "Ör. yonetim@dernek.de veya yeni üyeye göndermek için '{{member.email}}'",
           "body": "Metne '{{member.fullName}}' gibi alanlar ekleyebilirsiniz; liste aşağıda. Kişisel bilgiler yalnızca gönderim anında okunur, saklanmaz."
         }
+      },
+      "fetch_inbox": {
+        "label": "IMAP gelen kutusunu kontrol et",
+        "description": "IMAP ayarları yapılandırılmışsa posta kutusundan yeni belge e-postalarını salt okunur olarak periyodik çeker."
       }
     },
     "events": {

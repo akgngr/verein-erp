@@ -136,6 +136,7 @@
     "secretary": "Sekreter",
     "securityMonitor": "Güvenlik İzleme",
     "socialLogin": "Sosyal Giriş",
+    "sponsors": "Sponsorlar",
     "students": "Öğrenciler",
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi",
@@ -389,6 +390,28 @@
     "tooLarge": "Dosya en fazla {maxMb} MB olabilir.",
     "uploadFailed": "Dosya yüklenemedi.",
     "maxPerRecord": "Kayıt başına en fazla {max} dosya eklenebilir."
+  },
+  "quickSearch": {
+    "trigger": "Hızlı arama",
+    "triggerAria": "Hızlı arama paletini aç (Ctrl+K)",
+    "shortcut": "Ctrl K",
+    "placeholder": "Sayfa, üye, evrak, toplantı, görev, etkinlik veya envanter ara…",
+    "close": "Kapat",
+    "pagesSection": "Sayfalar ve modüller",
+    "recordsSection": "Kayıtlar",
+    "searching": "Aranıyor…",
+    "noResults": "Eşleşen kayıt bulunamadı.",
+    "minCharsHint": "Kayıt aramak için en az 2 karakter yazın.",
+    "navigateHint": "↑↓ ile seç · Enter ile aç",
+    "closeHint": "Esc ile kapat",
+    "modules": {
+      "members": "Üyeler",
+      "documents": "Evrak Kayıt",
+      "meetings": "Toplantılar",
+      "tasks": "Görevler",
+      "events": "Etkinlikler",
+      "inventory": "Envanter"
+    }
   },
   "accounting": {
     "list": {
@@ -1559,7 +1582,9 @@
         "cancel": "Vazgeç",
         "submit": "Fişi oluştur",
         "payable": "Gelen fatura",
-        "payableSelect": "Gelen fatura"
+        "payableSelect": "Gelen fatura",
+        "creditNote": "Alacak dekontu (iade)",
+        "creditNoteSelect": "Açık alacak dekontu"
       },
       "rules": {
         "title": "Öğrenilmiş kurallar",
@@ -4177,6 +4202,31 @@
     },
     "calendar": {
       "sessions": "Kurs dersleri"
+    },
+    "recipients": {
+      "guardians": {
+        "label": "Kurs velileri",
+        "filters": {
+          "course": {
+            "label": "Kurs"
+          },
+          "status": {
+            "label": "Kayıt durumu",
+            "options": {
+              "ACTIVE": "Devam ediyor",
+              "COMPLETED": "Tamamladı",
+              "WITHDRAWN": "Ayrıldı"
+            }
+          },
+          "role": {
+            "label": "Veli kapsamı",
+            "options": {
+              "ALL_GUARDIANS": "Tüm veliler",
+              "PAYER_ONLY": "Yalnızca ödeme sorumlusu"
+            }
+          }
+        }
+      }
     }
   },
   "crm": {
@@ -5737,7 +5787,14 @@
       }
     },
     "access": {
-      "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur."
+      "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur.",
+      "notifications": "Yönetici geri bildirimi yanıtladığında veya durumunu güncellediğinde bildiren kullanıcıya uygulama içi bildirim gönderir."
+    },
+    "notifications": {
+      "replied": {
+        "title": "Geri bildiriminiz güncellendi (#{number})",
+        "body": "Yönetici geri bildiriminize yanıt verdi veya durumunu güncelledi."
+      }
     },
     "automation": {
       "events": {
@@ -5874,6 +5931,8 @@
       "funder": "Veren kurum (Zuwendungsgeber)",
       "fileNumber": "Dosya no (Aktenzeichen)",
       "status": "Durum",
+      "financingType": "Finansman türü",
+      "sharePercent": "Katkı oranı",
       "periodStart": "Dönem başı",
       "periodEnd": "Dönem sonu",
       "reportDueAt": "Rapor teslim tarihi",
@@ -5891,6 +5950,11 @@
       "receivedAt": "Alındı",
       "note": "Not"
     },
+    "financingTypes": {
+      "FEHLBEDARF": "Fehlbedarfsfinanzierung (Açık finansmanı)",
+      "ANTEIL": "Anteilfinanzierung (Oransal finansman)",
+      "FESTBETRAG": "Festbetragsfinanzierung (Sabit tutar)"
+    },
     "tabs": {
       "general": "Genel",
       "plan": "Finansman planı",
@@ -5905,6 +5969,7 @@
     "pending": "Bekliyor",
     "notLinked": "Hibe bir muhasebe projesine bağlı değil; gerçekleşen tutarlar boş. Genel sekmesinden proje seçin.",
     "reportPdf": "Verwendungsnachweis (PDF)",
+    "receiptsZip": "Belge paketi (ZIP)",
     "submittedAt": "Teslim: {date}",
     "missingReceipts": "{count} fişte belge yok",
     "deviationHint": "%20'yi aşan kalem sapmaları işaretlenir; birçok hibe koşulunda (ANBest-P) veren kurumun onayı gerekir.",
@@ -5959,7 +6024,10 @@
       "reportEmpty": "Teslimden önce faaliyet raporunu yazın.",
       "deleteOnlyPlanned": "Yalnızca planlanan (PLANNED) hibeler silinebilir.",
       "hasReceivedPayouts": "Tahsil edilmiş ödemesi bulunan hibe silinemez.",
-      "payoutAlreadyReceived": "Tahsil edilmiş ödeme kaydı silinemez."
+      "payoutAlreadyReceived": "Tahsil edilmiş ödeme kaydı silinemez.",
+      "sharePercent": "Oransal finansmanda destek oranını (%1–100) girin.",
+      "zipTooLarge": "Belge paketi çok büyük ({sizeMb} MB, en fazla {limitMb} MB). Dönemi daraltın veya belgeleri tek tek indirin.",
+      "zipTooManyFiles": "Dönemde {limit} adetten fazla belge dosyası var; paket eksik kalırdı. Lütfen dönemi daraltın."
     },
     "calendar": {
       "reports": "Hibe raporları"
@@ -6248,14 +6316,15 @@
     },
     "access": {
       "accounting": "Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır.",
-      "system": "Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir).",
+      "documents": "Gelen e-postaları ve eklerini Evrak Kayıt modülüne gelen evrak olarak aktarır.",
+      "system": "Muhasebe ve Evrak Kayıt modüllerinin etkin olup olmadığını okur (aktarma düğmeleri yalnızca etkinken gösterilir).",
       "tasks": "Sekreterin onaylı \"görev taslağı\" önerisinden görev oluşturur (yalnız kullanıcı onayıyla).",
       "users": "Görevdeki \"oluşturan\" etiketi için kullanıcının adını okur.",
       "notifications": "Sınıflamaya rıza veren kullanıcılara yeni e-posta bildirimi gönderir (gönderen ve konu olmadan)."
     },
     "inbox": {
       "title": "Gelen kutusu",
-      "description": "Belge e-postalarını (fatura, makbuz) IMAP ile alın veya kayıtlı .eml dosyası yükleyin; PDF/XML/görsel eklerini tek tıkla muhasebe → gelen faturalara aktarın. XRechnung/ZUGFeRD otomatik okunur.",
+      "description": "Belge e-postalarını (fatura, makbuz) IMAP ile alın veya kayıtlı .eml dosyası yükleyin; PDF/XML/görsel eklerini tek tıkla muhasebe → gelen faturalara veya Evrak Kayıt'a aktarın. XRechnung/ZUGFeRD otomatik okunur.",
       "fetch": "E-postaları al",
       "uploadEml": ".eml yükle",
       "fetched": "{fetched} e-posta okundu, {created} yeni.",
@@ -6264,6 +6333,11 @@
       "imported": "Gelen faturalara taslak olarak aktarıldı.",
       "importDuplicate": "Bu belge zaten gelen faturalarda var; bağlantı kuruldu.",
       "importToAccounting": "Muhasebeye aktar",
+      "importToDocuments": "Evrak Kayıta aktar",
+      "importedToDocuments": "Evrak Kayıta aktarıldı ({registryNumber}, {attachments} ek).",
+      "importedToDocumentsPartial": "Evrak Kayıt'a aktarıldı ({registryNumber}): {total} ekten {attached} tanesi arşivlendi. Kalanlar gelen kutusunda kalır.",
+      "importToDocumentsDuplicate": "Bu e-posta zaten Evrak Kayıta aktarılmış.",
+      "importedToDocumentsChip": "Evrak Kayıt",
       "importedChip": "Aktarıldı",
       "accountingOff": "Muhasebe modülü kapalı; ekler aktarılamaz.",
       "empty": "Bu görünümde e-posta yok.",
@@ -6310,7 +6384,9 @@
         "encryptionKeyMissing": "Şifreleme anahtarı yok (AUTH_SECRET).",
         "emlInvalid": "Geçerli bir .eml dosyası değil.",
         "accountingOff": "Muhasebe modülü kapalı.",
-        "notFound": "Bulunamadı."
+        "documentsOff": "Evrak Kayıt modülü kapalı.",
+        "notFound": "Bulunamadı.",
+        "importInProgress": "Bu e-posta şu anda Evrak Kayıt'a aktarılıyor. Lütfen biraz bekleyin."
       },
       "drafts": {
         "errors": {
@@ -6337,6 +6413,10 @@
             "to": "Ör. yonetim@dernek.de veya yeni üyeye göndermek için '{{member.email}}'",
             "body": "Metne '{{member.fullName}}' gibi alanlar ekleyebilirsiniz; liste aşağıda. Kişisel bilgiler yalnızca gönderim anında okunur, saklanmaz."
           }
+        },
+        "fetch_inbox": {
+          "label": "IMAP gelen kutusunu kontrol et",
+          "description": "IMAP ayarları yapılandırılmışsa posta kutusundan yeni belge e-postalarını salt okunur olarak periyodik çeker."
         }
       },
       "events": {
@@ -6818,6 +6898,11 @@
     "detail": {
       "approvedLine": "Onaylandı: {date} – {by}",
       "draftNote": "Tutanak taslak durumundadır.",
+      "noticePeriod": {
+        "compliant": "Davet {actual} gün önce · {required} günlük öneri karşılandı",
+        "shortNotice": "Yalnız {actual} gün önce · öneri {required} gün, tüzüğü kontrol edin",
+        "notSent": "Davet henüz gönderilmedi (öneri: en az {required} gün)"
+      },
       "tabsAria": "Toplantı sekmeleri",
       "tabGeneral": "Genel",
       "tabAgenda": "Gündem ({count})",
@@ -6859,8 +6944,10 @@
     },
     "actions": {
       "minutesPdf": "Tutanak (PDF)",
+      "invitationPdf": "Davetiye & Gündem (PDF)",
       "statusButton": "Durum",
-      "minutesPdfAria": "Tutanak PDF dili seçimi"
+      "minutesPdfAria": "Tutanak PDF dili seçimi",
+      "invitationPdfAria": "Davetiye PDF dili seçimi"
     },
     "statusMenu": {
       "button": "Durum",
@@ -9640,6 +9727,102 @@
     "otp": "Doğrulama kodu (iki adımlı doğrulama açıksa)",
     "applicationLocked": "Kimlik eşleştirmelerini korumak için kayıtlı uygulama kimliği sabittir; gizli anahtar yenilenebilir."
   },
+  "sponsors": {
+    "module": {
+      "label": "Sponsorlar",
+      "description": "Kurumsal ve bireysel sponsorluk kayıtları, seviye ve taahhüt tutarlarının yönetimi."
+    },
+    "permissions": {
+      "sponsors": {
+        "label": "Sponsorlar",
+        "description": "Sponsorluk kayıtlarını görüntüleme, oluşturma, düzenleme ve silme."
+      }
+    },
+    "meta": {
+      "list": "Sponsorlar"
+    },
+    "title": "Sponsorlar",
+    "description": "Derneğin sponsorlarını, destek seviyelerini ve taahhüt tutarlarını yönetin.",
+    "newSponsor": "Yeni sponsor",
+    "summary": {
+      "total": "Toplam sponsor",
+      "active": "Aktif sponsor",
+      "activeAmount": "Aktif yıllık taahhüt",
+      "leads": "Görüşme aşamasında"
+    },
+    "tier": {
+      "PLATINUM": "Platin",
+      "GOLD": "Altın",
+      "SILVER": "Gümüş",
+      "BRONZE": "Bronz",
+      "SUPPORTER": "Destekçi"
+    },
+    "status": {
+      "LEAD": "Aday",
+      "ACTIVE": "Aktif",
+      "PAUSED": "Duraklatıldı",
+      "ENDED": "Sona erdi"
+    },
+    "table": {
+      "aria": "Sponsor listesi",
+      "name": "Sponsor",
+      "tier": "Seviye",
+      "status": "Durum",
+      "amount": "Tutar",
+      "contact": "İletişim kişisi",
+      "period": "Süre",
+      "updatedAt": "Son değişiklik",
+      "search": "Sponsor adı, iletişim kişisi veya not ara...",
+      "empty": "Henüz sponsor kaydı yok. 'Yeni sponsor' ile ilk kaydı ekleyin.",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "deleteTitle": "Sponsoru sil",
+      "deleteMessage": "\"{name}\" kalıcı olarak silinecek. Onaylıyor musunuz?",
+      "deleted": "Sponsor kaydı silindi.",
+      "bulkActivate": "Aktif yap",
+      "bulkPause": "Duraklat",
+      "bulkEnd": "Sona erdir",
+      "bulkSuccess": "{updated} sponsor güncellendi, {skipped} kayıt zaten hedef durumdaydı."
+    },
+    "form": {
+      "createTitle": "Yeni sponsor",
+      "editTitle": "Sponsoru düzenle",
+      "name": "Sponsor / Kurum adı",
+      "tier": "Destek seviyesi",
+      "status": "Durum",
+      "amount": "Taahhüt tutarı (EUR)",
+      "amountPlaceholder": "Örn. 1250,00",
+      "contactName": "İletişim kişisi",
+      "contactEmail": "E-posta",
+      "contactPhone": "Telefon",
+      "website": "Web sitesi",
+      "websitePlaceholder": "https://ornek.de",
+      "startDate": "Başlangıç tarihi",
+      "endDate": "Bitiş tarihi",
+      "notes": "Notlar",
+      "save": "Kaydet",
+      "cancel": "Vazgeç",
+      "created": "Sponsor kaydı oluşturuldu.",
+      "updated": "Sponsor kaydı güncellendi."
+    },
+    "errors": {
+      "notFound": "Sponsor kaydı bulunamadı."
+    },
+    "validation": {
+      "nameRequired": "Sponsor adı zorunludur.",
+      "nameMax": "Sponsor adı en fazla 200 karakter olabilir.",
+      "amountInvalid": "Geçerli bir EUR tutarı girin (negatif olamaz).",
+      "contactNameMax": "İletişim kişisi en fazla 150 karakter olabilir.",
+      "contactEmailMax": "E-posta en fazla 200 karakter olabilir.",
+      "contactEmailInvalid": "Geçerli bir e-posta adresi girin.",
+      "contactPhoneMax": "Telefon en fazla 50 karakter olabilir.",
+      "websiteMax": "Web sitesi adresi en fazla 300 karakter olabilir.",
+      "websiteInvalid": "Web sitesi http:// veya https:// ile başlamalıdır.",
+      "dateInvalid": "Geçerli bir tarih seçin.",
+      "endBeforeStart": "Bitiş tarihi başlangıç tarihinden önce olamaz.",
+      "notesMax": "Notlar en fazla 2000 karakter olabilir."
+    }
+  },
   "students": {
     "module": {
       "label": "Öğrenciler",
@@ -10568,7 +10751,9 @@
     },
     "access": {
       "members": "Görev sorumlusu seçmek için üye listesini okur.",
-      "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur.",
+      "meetings": "Görevi bir toplantıya bağlamak ve toplantı aksiyonlarını Birleşik Görev Merkezi'nde göstermek için toplantı verilerini okur.",
+      "crm": "Açık CRM takiplerini Birleşik Görev Merkezi'nde listelemek için okur.",
+      "system": "Birleşik Görev Merkezi'nde yalnızca etkin modülleri göstermek için modül durumunu okur.",
       "users": "Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur.",
       "notifications": "Görev atandığında atanan kişiye bildirim gönderir."
     },
@@ -10633,6 +10818,17 @@
       "assigned": {
         "title": "Size görev atandı: {title}",
         "body": "Görevlerim sayfasında açın."
+      }
+    },
+    "unifiedHub": {
+      "title": "Bağlı görevler ve takipler",
+      "description": "Toplantı aksiyon maddeleri ve açık CRM takipleri kaynak bağlantılarıyla birlikte.",
+      "count": "{count} açık kayıt",
+      "overdue": "Gecikmiş",
+      "openSource": "Kaynağı aç",
+      "sources": {
+        "meetings": "Toplantı",
+        "crm": "CRM"
       }
     }
   },

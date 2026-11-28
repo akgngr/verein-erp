@@ -8,19 +8,27 @@ enum GrantStatus {
   REJECTED
 }
 
+enum GrantFinancingType {
+  FEHLBEDARF
+  ANTEIL
+  FESTBETRAG
+}
+
 /// Hibe / Zuwendung. Harcamalar muhasebedeki bağlı projeden okunur (kopyalanmaz).
 model Grant {
-  id                String        @id @default(cuid())
+  id                String             @id @default(cuid())
   name              String
   /// Zuwendungsgeber (ör. Stadt, Land, Stiftung)
   funder            String
   /// Aktenzeichen / Förderkennzeichen
   fileNumber        String?
   purpose           String?
-  status            GrantStatus   @default(PLANNED)
+  status            GrantStatus        @default(PLANNED)
+  financingType     GrantFinancingType @default(FEHLBEDARF)
+  sharePercent      Int?
   approvedCents     Int?
-  ownShareCents     Int           @default(0)
-  thirdPartyCents   Int           @default(0)
+  ownShareCents     Int                @default(0)
+  thirdPartyCents   Int                @default(0)
   periodStart       DateTime      @db.Date
   periodEnd         DateTime      @db.Date
   /// Verwendungsnachweis teslim tarihi

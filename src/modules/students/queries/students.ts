@@ -99,3 +99,18 @@ export async function getStudentPayer(studentId: string): Promise<StudentPayer> 
   });
   return link ? { guardianId: link.guardianId, label: personName(link.guardian), debtorNumber: link.guardian.debtorNumber } : null;
 }
+
+/**
+ * Of the given IDs, the students that are not soft-deleted. Other modules keep
+ * student IDs (e.g. course enrollments) without a foreign key, so they must
+ * filter through this before contacting a family.
+ */
+export async function listActiveStudentIds(studentIds: string[]): Promise<Set<string>> {
+  const unique = [...new Set(studentIds.filter(Boolean))];
+  if (unique.length === 0) return new Set();
+  const rows = await getDb().student.findMany({
+    where: { id: { in: unique }, deletedAt: null },
+    select: { id: true },
+  });
+  return new Set(rows.map((row) => row.id));
+}

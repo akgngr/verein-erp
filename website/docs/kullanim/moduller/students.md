@@ -13,7 +13,7 @@ Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayı
 |---|---|
 | Anahtar | `students` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.14 |
+| Sürüm | 1.4.15 |
 | Sayfalar | `/ogrenciler`, `/ogrenciler/veliler`, `/ogrenciler/ayarlar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -41,6 +41,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_student_statistics`
 
 ## Sürüm notları
+
+### 1.4.15 — Kurs duyuruları için toplu veli iletişim sorgusu (#631)
+
+_2026-11-27_
+
+- **İyileştirme:** Kurslar modülünün alıcı kaynağı için opt-out ve kanal izinlerini koruyan listGuardianContactsForStudents sunucu yardımcısı eklendi.
+- **İyileştirme:** Diğer modüllerin sakladığı öğrenci kimliklerini silinmemiş öğrencilere süzmek için listActiveStudentIds sunucu yardımcısı eklendi.
 
 ### 1.4.14 — Veli self-servis silinmiş kayıt filtresi ve denetim kaydı gizliliği
 
@@ -84,10 +91,4 @@ _2026-11-15_
 
 - **Güvenlik:** Öğrenci ve veli sayfalarındaki e-imza bağlantıları artık bildirilmiş erişimle çalışır. Yönetici erişimi bir kez onaylar.
 
-### 1.4.5 — AI takma ad çözümlemesi
-
-_2026-11-15_
-
-- **İyileştirme:** AI asistanı için canlı öğrenci ve veli adı sorgusu eklendi (yalnız AI modülünün sunucu tarafı kullanır).
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 11 herkese açık sürüm notu.

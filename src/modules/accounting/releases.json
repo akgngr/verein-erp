@@ -2,6 +2,41 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.29.4",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Proje fiş ekleri dışa aktarım sözleşmesi",
+        "de": "Exportvertrag für Projektbuchungsbelege"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Hibeler modülünün Verwendungsnachweis belge paketi (ZIP) oluşturabilmesi için listProjectBookingFiles sunucu sözleşmesi eklendi.",
+          "de": "Server-Vertrag listProjectBookingFiles für das Belegpaket (ZIP) des Verwendungsnachweises im Fördermittel-Modul ergänzt."
+        },
+        {
+          "type": "improvement",
+          "tr": "listProjectBookingFiles dosya boyutunu da döndürür; çağıran modül belleği dosyaları okumadan sınırlayabilir.",
+          "de": "listProjectBookingFiles liefert zusätzlich die Dateigröße, damit aufrufende Module den Speicherbedarf vor dem Lesen begrenzen können."
+        }
+      ]
+    },
+    {
+      "version": "1.29.3",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Banka eşleştirmesinde alacak dekontu iadeleri",
+        "de": "Gutschrift-Erstattungen im Bankabgleich"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Açık tedarikçi alacak dekontları artık gelen banka iadeleri için önerilir ve eşleştirilebilir.",
+          "de": "Offene Lieferantengutschriften werden nun bei eingehenden Bankerstattungen vorgeschlagen und können zugeordnet werden."
+        }
+      ]
+    },
+    {
       "version": "1.29.2",
       "date": "2026-11-27",
       "title": {

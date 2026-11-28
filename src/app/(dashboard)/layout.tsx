@@ -16,6 +16,7 @@ import {
   loadPermissionPolicy,
 } from "@/modules/users/server";
 import { RolesProvider } from "@/shared/components/roles/roles-provider";
+import { QuickSearchProvider } from "@/shared/components/search/quick-search-palette";
 
 import {
   DesktopSidebar,
@@ -77,44 +78,50 @@ export default async function DashboardLayout({
         definition,
       }))}
     >
-      <SidebarProvider initialCollapsed={collapsed}>
-        <div className="workspace-shell flex min-h-dvh">
-          <DesktopSidebar
-            role={user.role}
-            activeModuleKeys={activeModuleKeys}
-            initialNavConfig={initialNavConfig}
-            userName={user.name}
-            userEmail={user.email}
-            onSignOut={signOutAction}
-          />
-          {/* AI asistanı içerik sütununu sarar: altta yüzen giriş çubuğu, sağda sohbet sütunu.
-            Modül kapalıysa, rol izinli değilse sütun olduğu gibi döner. */}
-          <AiAssistantSlot user={user}>
-            <div className="flex min-w-0 flex-1 flex-col">
-              <MobileHeader widgetAccess={widgetAccess} />
-              <WorkspaceHeader
-                dateLabel={dateLabel}
-                widgetAccess={widgetAccess}
-              />
-              {/* #586: Alt boşluk (güvenli alan dahil): yüzen AI/geri bildirim düğmeleri son satırları,
-                sayfalamayı ve kaydet düğmelerini örtmez. */}
-              <main className="workspace-main flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] md:px-7 lg:pt-8 lg:pb-28">
-                {children}
-              </main>
-            </div>
-          </AiAssistantSlot>
-          {/* Test aşaması: sağ altta yüzen hata/öneri butonu (modül kapalıysa çizilmez). */}
-          <FeedbackSlot user={user} />
-          <MobileSidebar
-            role={user.role}
-            activeModuleKeys={activeModuleKeys}
-            initialNavConfig={initialNavConfig}
-            userName={user.name}
-            userEmail={user.email}
-            onSignOut={signOutAction}
-          />
-        </div>
-      </SidebarProvider>
+      <QuickSearchProvider
+        role={user.role}
+        activeModuleKeys={activeModuleKeys}
+        disabled={user.mustChangePassword}
+      >
+        <SidebarProvider initialCollapsed={collapsed}>
+          <div className="workspace-shell flex min-h-dvh">
+            <DesktopSidebar
+              role={user.role}
+              activeModuleKeys={activeModuleKeys}
+              initialNavConfig={initialNavConfig}
+              userName={user.name}
+              userEmail={user.email}
+              onSignOut={signOutAction}
+            />
+            {/* AI asistanı içerik sütununu sarar: altta yüzen giriş çubuğu, sağda sohbet sütunu.
+              Modül kapalıysa, rol izinli değilse sütun olduğu gibi döner. */}
+            <AiAssistantSlot user={user}>
+              <div className="flex min-w-0 flex-1 flex-col">
+                <MobileHeader widgetAccess={widgetAccess} />
+                <WorkspaceHeader
+                  dateLabel={dateLabel}
+                  widgetAccess={widgetAccess}
+                />
+                {/* #586: Alt boşluk (güvenli alan dahil): yüzen AI/geri bildirim düğmeleri son satırları,
+                  sayfalamayı ve kaydet düğmelerini örtmez. */}
+                <main className="workspace-main flex-1 px-4 pt-6 pb-[calc(6rem+env(safe-area-inset-bottom))] md:px-7 lg:pt-8 lg:pb-28">
+                  {children}
+                </main>
+              </div>
+            </AiAssistantSlot>
+            {/* Test aşaması: sağ altta yüzen hata/öneri butonu (modül kapalıysa çizilmez). */}
+            <FeedbackSlot user={user} />
+            <MobileSidebar
+              role={user.role}
+              activeModuleKeys={activeModuleKeys}
+              initialNavConfig={initialNavConfig}
+              userName={user.name}
+              userEmail={user.email}
+              onSignOut={signOutAction}
+            />
+          </div>
+        </SidebarProvider>
+      </QuickSearchProvider>
     </RolesProvider>
   );
 }
