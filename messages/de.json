@@ -7837,7 +7837,9 @@
       "edit": "Bearbeiten",
       "delete": "Löschen",
       "changeStatus": "Status ändern",
-      "currentStatus": "Aktueller Status"
+      "currentStatus": "Aktueller Status",
+      "certificatePdf": "Mitgliedsbescheinigung (PDF)",
+      "certificatePdfAria": "PDF-Sprache für Mitgliedsbescheinigung wählen"
     },
     "statusChange": {
       "resignedTitle": "Ausgetretenes Mitglied",
@@ -8251,7 +8253,8 @@
     "access": {
       "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten.",
       "online-forms": "Um von der Mitgliederseite E-Signatur-/Online-Formular-Links zu senden, signierte Dokumente anzuzeigen und beim Löschen offene Einladungen zu stornieren.",
-      "member-portal": "Widerruft aktive Mitgliederportal-Sitzungen, wenn ein Mitglied gelöscht wird."
+      "member-portal": "Widerruft aktive Mitgliederportal-Sitzungen, wenn ein Mitglied gelöscht wird.",
+      "system": "Lässt beim Löschen eines Mitglieds die anderen Module dessen personenbezogene Daten bereinigen (z. B. Inventar-Ausleihen anonymisieren)."
     },
     "permissions": {
       "memberPayments": {

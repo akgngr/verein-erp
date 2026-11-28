@@ -2,6 +2,41 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.16.3",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Üye silinince modül kancaları",
+        "de": "Modul-Hooks beim Löschen eines Mitglieds"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Üye silindiğinde diğer modüllerin onMemberDeleted kancaları çalışır (ör. envanter ödünç kayıtları anonimleşir); başarısız modüller denetim kaydına yazılır.",
+          "de": "Beim Löschen eines Mitglieds laufen die onMemberDeleted-Hooks der anderen Module (z. B. werden Inventar-Ausleihen anonymisiert); fehlgeschlagene Module werden im Audit vermerkt."
+        }
+      ]
+    },
+    {
+      "version": "1.16.2",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Üyelik belgesi ve üye kartı PDF çıktısı",
+        "de": "Mitgliedsbescheinigung & Mitgliedsausweis als PDF"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üye detay sayfasından iki dilli (TR/DE) Üyelik Belgesi ve Üye Kartı PDF'i indirme özelliği eklendi.",
+          "de": "Zweisprachige Mitgliedsbescheinigung inkl. Mitgliedsausweis als PDF auf der Mitgliedsdetailseite ergänzt."
+        },
+        {
+          "type": "fix",
+          "tr": "Belgedeki üyelik türü gerçek türlere (Asıl, Onursal, Fahri, Destekçi) göre yazılır; giriş cümlesi türden bağımsızdır, onursal veya destekçi üye 'asıl üye' olarak belgelenmez.",
+          "de": "Die Mitgliedsart in der Bescheinigung folgt den tatsächlichen Arten (ordentlich, Ehren-, ehrenamtlich, Förder-); der Einleitungssatz ist neutral, Ehren- oder Fördermitglieder werden nicht als ordentliche Mitglieder bescheinigt."
+        }
+      ]
+    },
+    {
       "version": "1.16.1",
       "date": "2026-11-26",
       "title": {

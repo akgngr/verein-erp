@@ -9,6 +9,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { PdfSplitButton } from "@/shared/components/ui/pdf-split-button";
 
 import type { MemberStatus } from "@prisma/client";
 
@@ -17,7 +18,7 @@ import { StatusChangeMenu } from "./status-change-menu";
 import { TextLink as ActionLink, buttonClassName, Button } from "@/shared/components/kit";
 
 /**
- * Detay sayfası aksiyon kümesi: Düzenle / Durum değiştir / Sil.
+ * Detay sayfası aksiyon kümesi: Belge PDF / Düzenle / Durum değiştir / Sil.
  * Butonlar yetkiye göre gösterilir; güvenlik sunucuda sağlanır.
  */
 export function MemberDetailActions({
@@ -51,11 +52,16 @@ export function MemberDetailActions({
     router.refresh();
   };
 
-  if (!canUpdate && !canDelete) return null;
-
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">
+        <PdfSplitButton
+          buildHref={(lang) =>
+            `/api/members/${memberId}/certificate-pdf?lang=${lang}`
+          }
+          label={t("actions.certificatePdf")}
+          aria={t("actions.certificatePdfAria")}
+        />
         {canUpdate ? (
           <ActionLink
             href={`/uyeler/${memberId}?duzenle`}

@@ -18,7 +18,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "members",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.16.1",
+  version: "1.16.3",
   label: "Üyeler",
   description: "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi.",
   category: "OFFICIAL",
@@ -28,6 +28,8 @@ export const moduleConfig: ModuleConfig = {
     { module: "organization", operations: ["read"] },
     { module: "online-forms", operations: ["read", "write"] },
     { module: "member-portal", operations: ["read", "write"] },
+    // Üye silinince diğer modüllerin onMemberDeleted kancalarını çalıştırır.
+    { module: "system", operations: ["write"] },
   ],
   // Kurulu ve yetkiliyse kullanılır (e-imza bağlantısı); yoksa düğme gizlenir.
   recommends: ["online-forms"],

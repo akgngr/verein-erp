@@ -119,7 +119,9 @@
     "edit": "Düzenle",
     "delete": "Sil",
     "changeStatus": "Durum değiştir",
-    "currentStatus": "Mevcut durum"
+    "currentStatus": "Mevcut durum",
+    "certificatePdf": "Üyelik belgesi (PDF)",
+    "certificatePdfAria": "Üyelik belgesi PDF dili seçimi"
   },
   "statusChange": {
     "resignedTitle": "Ayrılan üye",
@@ -536,7 +538,8 @@
   "access": {
     "organization": "Makbuz ve belgelerde dernek antetini kullanır.",
     "online-forms": "Üye sayfasından e-imza/uzaktan form bağlantısı göndermek, imzalı belgeleri göstermek ve üye silindiğinde bekleyen davetleri iptal etmek için.",
-    "member-portal": "Üye silindiğinde o üyeye ait aktif üye portalı oturumlarını iptal eder."
+    "member-portal": "Üye silindiğinde o üyeye ait aktif üye portalı oturumlarını iptal eder.",
+    "system": "Bir üye silindiğinde diğer modüllerin o üyeye ait kişisel verilerini temizlemesini sağlar (ör. envanter ödünç kayıtlarını anonimleştirme)."
   },
   "permissions": {
     "memberPayments": {

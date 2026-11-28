@@ -46,6 +46,8 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-28_
 
 - **Yeni:** Demirbaş ödünç/iade geçmişi ve DGUV V3 / TÜV periyodik muayene takibi için /inventory/bakim-ve-zimmet ekranı eklendi.
+- **Güvenlik:** Ödünç ve bakım kayıtları kişisel veri olarak sınıflandırıldı (ödünç alanın adı, denetçi adı). Üye silindiğinde iade edilmiş ödünçlerde ad anonimleşir ve üye bağlantısı kaldırılır; açık ödünç, eşya geri alınana kadar adı korur.
+- **Düzeltme:** Açık ödünçler sınırsız ve önce listelenir (iade düğmesi kaybolmaz); muayene takvimi vadesi gelen ve geçen muayeneleri doğrudan tarihe göre bulur; eşya seçimlerinde tüm aktif eşyalar yer alır.
 
 ### 1.2.1 — Arayüz düzeltmeleri (#586)
 
