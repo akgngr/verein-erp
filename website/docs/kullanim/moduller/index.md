@@ -63,7 +63,7 @@ Verein ERP 46 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Outlook Takvim](./moduller/calendar-outlook) | Microsoft 365 / Outlook takvimini salt okunur bağlar (OAuth; yönetici kendi Azure uygulamasını girer). | 1.0.2 |
 | [Sekreter](./moduller/secretary) | Kişisel sekreter: sabah özeti ve onaylı öneriler. | 0.13.4 |
 | [SMS](./moduller/campaign-sms) | Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere gider. | 1.1.4 |
-| [Sponsorlar](./moduller/sponsors) | Kurumsal ve bireysel sponsorluk kayıtlarının yönetimi. | 1.0.0 |
+| [Sponsorlar](./moduller/sponsors) | Kurumsal ve bireysel sponsorluk kayıtlarının yönetimi. | 1.1.0 |
 | [Telegram](./moduller/campaign-telegram) | Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone olur; /stop ile ayrılır. | 1.1.0 |
 | [Uyum kontrolü](./moduller/compliance) | Kamu yararı (Gemeinnützigkeit) için iç kontrol listesi: süreler ve sınırlar. Vergi danışmanlığı değildir. | 0.3.0 |
 | [Üye Portalı](./moduller/member-portal) | Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı. | 0.4.1 |

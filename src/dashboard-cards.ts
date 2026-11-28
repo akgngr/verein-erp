@@ -12,6 +12,7 @@ import { cards as coursesCards } from "@/modules/courses/cards";
 import { cards as financeCards } from "@/modules/finance/cards";
 import { cards as progressCards } from "@/modules/progress/cards";
 import { cards as secretaryCards } from "@/modules/secretary/cards";
+import { cards as sponsorsCards } from "@/modules/sponsors/cards";
 import { cards as studentsCards } from "@/modules/students/cards";
 import { cards as weatherCards } from "@/modules/weather/cards";
 
@@ -26,6 +27,7 @@ export const dashboardCards: { moduleKey: string; cards: DashboardCardDefinition
   { moduleKey: "finance", cards: financeCards },
   { moduleKey: "progress", cards: progressCards },
   { moduleKey: "secretary", cards: secretaryCards },
+  { moduleKey: "sponsors", cards: sponsorsCards },
   { moduleKey: "students", cards: studentsCards },
   { moduleKey: "weather", cards: weatherCards },
 ];

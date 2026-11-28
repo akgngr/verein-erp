@@ -42,7 +42,7 @@ export const cards = defineCards([
 - **İmportlar:** `import "server-only";`, `aiToolV2`, `defineModuleAiV2` (`@/shared/ai/v2`), `aiAction`, `PROPOSED` (`@/shared/ai/define`), `proposalAcknowledgementSchema` (`@/shared/ai/dataset`).
 - **YASAK:** Legacy `defineModuleAi` ve `aiTool` (v1) **KESİNLİKLE YASAK** (`tests/ai/ai-contract-v2-only.test.ts` + `validate-module.ts`).
 - **Zorunlu Merkezi Kayıt:** Her aracın adı `src/shared/data-policy.ts → AI_TOOL_POLICY.<tool_name>` içine `{ module, reads, serverReads, modelFields }` olarak eklenmelidir!
-  - `serverReads`: K0 tablo yasak; yalnız sahip modülün tabloları.
+  - `reads` vs `serverReads`: `reads` dizisi **yalnız K2/K3** tabloları kabul eder (`tests/shared/data-policy.test.ts`). Tablo `K1` ise (ör. `Sponsor`, `Donation`, `Student`) `ai.ts` doğrudan Prisma sorgusu yapmaz, `./server` içindeki toplu istatistik sorgusunu çağırır ve `AI_TOOL_POLICY` içinde `reads: [], serverReads: ["<Model>"]` yazar! `K0` tablolar ne `reads` ne `serverReads` içine konabilir.
   - `modelFields`: Modele dönen TÜM alanlar (iç içe alanlar nokta ile: `"items.title"`). Listede olmayan alan çalışma anında `AI_OUTPUT_FIELD_DENIED` ile reddedilir.
   - `processing`: `"approved_provider"` veya `"local_only"` (serbest kişisel metinler yalnız `"local_only"`).
   - `modelDataClass`: `"approved_provider"` ise ZORUNLU (`"aggregate" | "internal" | "pseudonymous"`). Kişi ad/iletişim/adres/IBAN/kimlik asla dönmez (`[[Kn]]` takma adıyla yalnız `pseudonymous`).
@@ -97,7 +97,10 @@ export const sponsorCreatedEvent = defineEvent({
 });
 ```
 - Yayımlama (mümkünse aynı `tx` ile): `await emitAutomationEvent(sponsorCreatedEvent, { sponsorId: item.id, tier: item.tier }, tx);` (`@/shared/automation/emit`; otomasyon kapalıysa no-op).
-- **Zorunlu Çeviriler (`tests/automation/module-events.test.ts`):** `messages/{tr,de}.json → automation.events.<ad>.{label, fields.<alan>, options.<alan>.<DEGER>, variables.<alan>}`. Olay modül kodunda gerçekten `emitAutomationEvent` ile yayımlanmalıdır.
+- **Zorunlu Kurallar (`tests/automation/module-events.test.ts`):**
+  - `payloadSchema` alan adları PII deseniyle (`name|email|mail|phone|tel|address|street|city|zip|postal|birth|iban|bic|tax|passport|kimlik|note|comment|description`) eşleşemez — bunları `variables.load` ile gönderim anında çek.
+  - Çeviriler: `messages/{tr,de}.json → automation.events.<ad>.{label, fields.<alan>, options.<alan>.<DEGER>, variables.<alan>}`.
+  - Olay, modülün `automation.ts` dışındaki bir kaynak dosyasında gerçekten `emitAutomationEvent(<exportAdi>, ...)` ile yayımlanmalıdır.
 
 ---
 
