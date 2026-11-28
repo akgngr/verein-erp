@@ -13,7 +13,7 @@ Kurumsal ve bireysel sponsorluk kayıtlarının yönetimi.
 |---|---|
 | Anahtar | `sponsors` |
 | Tür | Eklenti |
-| Sürüm | 1.0.0 |
+| Sürüm | 1.1.0 |
 | Sayfalar | `/sponsors` |
 
 ## Varsayılan yetkiler
@@ -24,7 +24,21 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 |---|---|---|---|---|---|---|---|---|
 | Sponsorlar | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | görüntüleme |
 
+## Asistan araçları
+
+Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/kullanim/asistan)):
+
+`get_sponsor_statistics`
+
 ## Sürüm notları
+
+### 1.1.0 — Panel kartı, yapay zekâ istatistik aracı ve otomasyon olayı
+
+_2026-11-28_
+
+- **Yeni:** Ana panel için sponsor özet kartı (cards/index.tsx) eklendi.
+- **Yeni:** Asistan v2 için kişisel veri içermeyen toplu istatistik aracı (get_sponsor_statistics) eklendi.
+- **Yeni:** Yeni sponsor eklendiğinde tetiklenen iş akışı olayı (sponsors.created) eklendi.
 
 ### 1.0.0 — İlk sürüm — Sponsorluk yönetimi
 

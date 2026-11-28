@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Panel kartı, yapay zekâ istatistik aracı ve otomasyon olayı",
+        "de": "Dashboard-Karte, KI-Statistikwerkzeug und Automatisierungsereignis"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ana panel için sponsor özet kartı (cards/index.tsx) eklendi.",
+          "de": "Übersichtskarte für das Dashboard (cards/index.tsx) hinzugefügt."
+        },
+        {
+          "type": "feature",
+          "tr": "Asistan v2 için kişisel veri içermeyen toplu istatistik aracı (get_sponsor_statistics) eklendi.",
+          "de": "Datenschutzkonformes KI-v2-Statistikwerkzeug (get_sponsor_statistics) ohne personenbezogene Daten hinzugefügt."
+        },
+        {
+          "type": "feature",
+          "tr": "Yeni sponsor eklendiğinde tetiklenen iş akışı olayı (sponsors.created) eklendi.",
+          "de": "Workflow-Auslöser beim Anlegen neuer Sponsoren (sponsors.created) hinzugefügt."
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-11-27",
       "title": {
