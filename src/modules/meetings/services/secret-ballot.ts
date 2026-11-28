@@ -2,6 +2,7 @@ import "server-only";
 
 import { getDb } from "@/shared/db";
 
+import { computeVotingWeight } from "../lib/proxy-voting";
 import {
   addMonthsUtc,
   ballotListHash,
@@ -52,13 +53,19 @@ export async function issueBallot(voteId: string, memberId: string): Promise<{ o
   const db = getDb();
   const vote = await db.meetingVote.findUnique({ where: { id: voteId }, select: { status: true, meetingId: true } });
   if (!vote || vote.status !== "OPEN") return { ok: false, error: "voteNotOpen" };
-  const attendee = await db.meetingAttendee.findFirst({ where: { meetingId: vote.meetingId, memberId, attendance: "PRESENT" }, select: { id: true } });
+  const attendees = await db.meetingAttendee.findMany({
+    where: { meetingId: vote.meetingId },
+    select: { id: true, memberId: true, attendance: true, proxyToAttendeeId: true },
+  });
+  const attendee = attendees.find((a) => a.memberId === memberId && a.attendance === "PRESENT");
   if (!attendee) return { ok: false, error: "notPresent" };
+  const weight = computeVotingWeight(attendee.id, attendees);
+  if (weight < 1) return { ok: false, error: "notPresent" };
   const code = newBallotCode();
   try {
     await db.$transaction([
-      db.meetingVoteEligibility.create({ data: { voteId, memberId, weight: 1, usedAt: minutePrecision(new Date()) } }),
-      db.meetingVoteCredential.create({ data: { voteId, credentialHash: hashBallotCode(code), weight: 1 } }),
+      db.meetingVoteEligibility.create({ data: { voteId, memberId, weight, usedAt: minutePrecision(new Date()) } }),
+      db.meetingVoteCredential.create({ data: { voteId, credentialHash: hashBallotCode(code), weight } }),
     ]);
   } catch (error) {
     if ((error as { code?: string }).code === "P2002") return { ok: false, error: "alreadyIssued" };

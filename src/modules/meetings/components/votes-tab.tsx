@@ -34,7 +34,7 @@ export type VoteRow = {
  * Gizli oylama sekmesi (RFC-004 aşama 3, yüz yüze). Giriş masası: yoklamada "katıldı" olan üyeye tek kullanımlık
  * kod verilir (yazdır / kabinde göster). Oylar /oy kabininde kullanılır. Kapanışta sonuç, makbuz listesi ve özet.
  */
-export function VotesTab({ meetingId, votes, present, agendaItems, editable }: { meetingId: string; votes: VoteRow[]; present: { memberId: string; name: string }[]; agendaItems: { id: string; position: number; title: string }[]; editable: boolean }) {
+export function VotesTab({ meetingId, votes, present, agendaItems, editable }: { meetingId: string; votes: VoteRow[]; present: { memberId: string; name: string; weight?: number }[]; agendaItems: { id: string; position: number; title: string }[]; editable: boolean }) {
   const t = useTranslations("meetings.vote");
   const translate = useTranslateMessage();
   const router = useRouter();
@@ -89,9 +89,17 @@ export function VotesTab({ meetingId, votes, present, agendaItems, editable }: {
               <ul className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 {present.map((member) => {
                   const done = vote.issuedMemberIds.includes(member.memberId);
+                  const weight = member.weight ?? 1;
                   return (
                     <li key={member.memberId} className="flex items-center justify-between gap-2 rounded-lg border border-ink-100 px-3 py-2 text-sm">
-                      <span>{member.name}</span>
+                      <span>
+                        {member.name}
+                        {weight > 1 ? (
+                          <span className="ml-1.5 rounded bg-ink-100 px-1.5 py-0.5 text-xs font-medium text-ink-700">
+                            {t("proxyWeight", { weight })}
+                          </span>
+                        ) : null}
+                      </span>
                       {done ? (
                         <span className="text-xs text-ink-500">{t("issued")}</span>
                       ) : (

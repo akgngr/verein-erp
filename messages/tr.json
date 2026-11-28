@@ -7099,7 +7099,10 @@
       "markedToast": "{count} katılımcı 'Katıldı' olarak işaretlendi",
       "namePlaceholder": "Ad Soyad",
       "member": "Dernek üyesi",
-      "openMember": "Üye kaydını aç"
+      "openMember": "Üye kaydını aç",
+      "proxy": "Vekâlet",
+      "noProxy": "Vekâlet yok",
+      "proxyWeight": "Oy gücü: {weight}"
     },
     "attendeeAdd": {
       "title": "Katılımcı ekle",
@@ -7261,6 +7264,11 @@
       "forbidden": "Bu işlem için yetkiniz yok.",
       "approveNeedsAgenda": "Onaylamak için en az bir gündem maddesi gereklidir.",
       "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir.",
+      "proxySelf": "Katılımcı kendi kendine vekâlet veremez.",
+      "proxySourcePresent": "Toplantıda hazır bulunan katılımcı vekâlet veremez.",
+      "proxyTargetNotPresent": "Vekâlet yalnızca toplantıda 'Katıldı' olarak işaretli üyeye verilebilir.",
+      "proxyTargetNoMember": "Vekâlet yalnızca dernek üyesi olan katılımcıya verilebilir.",
+      "proxyTargetHasProxy": "Vekâlet alan katılımcı aynı anda başkasına vekâlet vermiş olamaz.",
       "meetingNotFound2": "Toplantı bulunamadı.",
       "notEditable": "Toplantı düzenlenemez.",
       "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş.",
@@ -7449,6 +7457,7 @@
         "CLOSED": "Kapandı"
       },
       "issuedCount": "{count} kod verildi",
+      "proxyWeight": "×{weight} oy",
       "minBallotsInfo": "en az {count} oy",
       "issued": "Kod verildi",
       "issue": "Kod ver",

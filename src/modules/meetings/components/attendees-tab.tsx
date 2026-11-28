@@ -23,12 +23,13 @@ import {
   type AttendeeMemberOption,
 } from "./attendee-add-modal";
 import { QuorumBanner } from "./quorum-banner";
+import { computeVotingWeight } from "../lib/proxy-voting";
 import type { AttendeeItem, QuorumInfo } from "../types";
 import { ATTENDEE_ROLE_VALUES, ATTENDANCE_VALUES } from "../constants";
 
 /**
  * Katılımcılar sekmesi (7.3): tablo (ad, kayıtlı/konuk, rol seçimi, katılım
- * seçimi, not); kullanıcı ekle, konuk ekle (hızlı giriş), tümünü katıldı
+ * seçimi, vekâlet/oy gücü, not); kullanıcı ekle, konuk ekle (hızlı giriş), tümünü katıldı
  * işaretle, çıkar. Yeter sayısı bandı üsttedir.
  */
 export function AttendeesTab({
@@ -57,9 +58,19 @@ export function AttendeesTab({
   const [guestName, setGuestName] = useState("");
   const [busy, setBusy] = useState(false);
 
+  const proxyEligibleHolders = attendees.filter(
+    (a) => a.memberId && a.attendance === "PRESENT" && !a.proxyToAttendeeId,
+  );
+  const attendeeById = new Map(attendees.map((a) => [a.id, a]));
+
   const update = async (
     id: string,
-    data: { role?: string; attendance?: string; note?: string },
+    data: {
+      role?: string;
+      attendance?: string;
+      proxyToAttendeeId?: string | null;
+      note?: string;
+    },
   ) => {
     const current = attendees.find((attendee) => attendee.id === id);
     if (!current) return;
@@ -67,6 +78,10 @@ export function AttendeesTab({
       id,
       role: data.role ?? current.role,
       attendance: data.attendance ?? current.attendance,
+      proxyToAttendeeId:
+        data.proxyToAttendeeId !== undefined
+          ? data.proxyToAttendeeId
+          : current.proxyToAttendeeId,
       note: data.note ?? current.note ?? "",
     });
     if (!result.ok) {
@@ -166,6 +181,7 @@ export function AttendeesTab({
                 <th className="p-2">{t("source")}</th>
                 <th className="p-2">{t("role")}</th>
                 <th className="p-2">{t("attendance")}</th>
+                <th className="p-2">{t("proxy")}</th>
                 <th className="p-2">{t("note")}</th>
                 <th className="p-2 w-12" />
               </tr>
@@ -256,6 +272,60 @@ export function AttendeesTab({
                       </div>
                     ) : (
                       tAttendance(attendee.attendance)
+                    )}
+                  </td>
+                  <td className="p-2">
+                    {attendee.attendance === "PRESENT" ? (
+                      (() => {
+                        const weight = computeVotingWeight(attendee.id, attendees);
+                        return weight > 1 ? (
+                          <span className="inline-flex items-center rounded-md bg-ink-100 px-2 py-0.5 text-xs font-medium text-ink-700">
+                            {t("proxyWeight", { weight })}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-ink-400">-</span>
+                        );
+                      })()
+                    ) : editable ? (
+                      <div className="relative inline-block w-full min-w-[150px]">
+                        <select
+                          id={`attendee-proxy-${attendee.id}`}
+                          aria-label={t("proxy")}
+                          value={attendee.proxyToAttendeeId ?? ""}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            void update(attendee.id, {
+                              proxyToAttendeeId: val ? val : null,
+                            });
+                          }}
+                          className="h-8 w-full appearance-none rounded-lg bg-ink-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-ink-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-accent/40 cursor-pointer border border-transparent focus:border-accent/50"
+                        >
+                          <option value="" className="bg-background text-foreground">
+                            {t("noProxy")}
+                          </option>
+                          {proxyEligibleHolders
+                            .filter((holder) => holder.id !== attendee.id)
+                            .map((holder) => (
+                              <option
+                                key={holder.id}
+                                value={holder.id}
+                                className="bg-background text-foreground"
+                              >
+                                {holder.name}
+                              </option>
+                            ))}
+                        </select>
+                        <ChevronDown
+                          className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-ink-400"
+                          aria-hidden="true"
+                        />
+                      </div>
+                    ) : attendee.proxyToAttendeeId ? (
+                      <span className="text-xs text-ink-700">
+                        {attendeeById.get(attendee.proxyToAttendeeId)?.name ?? "-"}
+                      </span>
+                    ) : (
+                      <span className="text-xs text-ink-400">-</span>
                     )}
                   </td>
                   <td className="p-2">
