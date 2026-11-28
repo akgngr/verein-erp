@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.16.1 |
+| Sürüm | 0.17.0 |
 | Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular`, `/ayarlar/bildirimler/aboneler` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.17.0 — PostgreSQL LISTEN/NOTIFY ile süreçler arası canlı SSE bildirimleri (#633)
+
+_2026-11-27_
+
+- **Yeni:** Bildirim SSE veriyolu PostgreSQL LISTEN/NOTIFY kanalıyla güçlendirildi; otomasyon worker'ının oluşturduğu bildirimler ve okundu/erteleme işlemleri tüm sekmelere anında ulaşır.
+- **Düzeltme:** Canlı bildirim dinleyicisi (LISTEN) varsa havuzsuz DIRECT_URL bağlantısını kullanır; Neon/PgBouncer işlem havuzunda oturum kopmaz.
 
 ### 0.16.1 — Ayar merkezi grubu
 
@@ -81,12 +88,4 @@ _2026-11-23_
 
 - **Yeni:** Ayarlar → Bildirimler → Aboneler ekranı eklendi: kanal başına özet kartları, kullanıcı tablosu (e-posta/Telegram/Web Push durum rozetleri), arama, kanal filtresi ve onaylı bağlantı kaldırma.
 
-### 0.13.0 — Anlık bildirim akışı (SSE) ve erişilebilirlik
-
-_2026-11-23_
-
-- **Yeni:** Yoklama yerine Server-Sent Events (SSE) ile anlık okunmamış sayısı ve güncelleme akışı (/api/notifications/stream); bağlantı koptuğunda zarif biçimde yoklamaya geri düşme ve sekme gizliyken duraklatma.
-- **İyileştirme:** Bildirim çekmecesi için aria-live, aria-haspopup, genişletilmiş durum yönetimi ve ekran okuyuculara yönelik bağlamsal buton etiketleri ile tam erişilebilirlik sağlandı.
-- **Güvenlik:** SSE akışı kullanıcı bazında katı şekilde yalıtılmıştır; akış üzerinden kişisel veri (PII) iletilmez, yalnızca hafif sinyal ve sayılar taşınır.
-
-Daha eski 12 herkese açık sürüm notu.
+Daha eski 13 herkese açık sürüm notu.

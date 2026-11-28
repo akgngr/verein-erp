@@ -18,6 +18,7 @@ const SHELL_ROUTE_FILES = new Set([
   "(auth)/giris/page.tsx", // Giriş: oturum öncesi düzen (dashboard dışında)
   "(auth)/davet/[token]/page.tsx", // Davet bağlantısı: oturum öncesi şifre belirleme (users/invitations)
   "api/health/route.ts", // Konteyner sağlık kontrolü
+  "api/search/route.ts", // Küresel hızlı arama (Ctrl/Cmd+K): birden çok modülü server.ts üzerinden arar
 ]);
 
 function listRouteFiles(dir: string): string[] {
