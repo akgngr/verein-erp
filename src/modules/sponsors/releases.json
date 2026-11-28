@@ -1,0 +1,20 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı.",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-27",
+      "title": {
+        "tr": "İlk sürüm — Sponsorluk yönetimi",
+        "de": "Erste Version — Sponsoringverwaltung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sponsorluk kayıtları, seviye ve durum filtreleri, EUR tutar takibi, sağ çekmece formu ve toplu durum güncelleme eklendi.",
+          "de": "Sponsoringeinträge, Stufen- und Statusfilter, EUR-Betragsverwaltung, Formular-Drawer und Massen-Statusänderung hinzugefügt."
+        }
+      ]
+    }
+  ]
+}
