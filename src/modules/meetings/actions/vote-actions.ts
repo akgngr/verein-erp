@@ -51,7 +51,7 @@ export async function openVoteAction(input: unknown): Promise<ActionResult<{ id:
  * Giriş masası: yoklamada "katıldı" olan üyeye tek kullanımlık oy kodu verir. Kod yalnız bu yanıtta döner
  * (yazdırılır veya kabinde gösterilir); sunucuda yalnız özeti kalır. Denetim kaydı oy kimliğini içermez.
  */
-export async function issueBallotAction(input: unknown): Promise<ActionResult<{ code: string }>> {
+export async function issueBallotAction(input: unknown): Promise<ActionResult<{ code: string; codes: string[] }>> {
   return createAction({
     permission: { definition: meetingsPermissions, action: "update" },
     schema: z.object({ meetingId: id, voteId: id, memberId: id }),
@@ -65,7 +65,7 @@ export async function issueBallotAction(input: unknown): Promise<ActionResult<{ 
       const result = await issueBallot(input.voteId, input.memberId);
       if (!result.ok) throw new ActionError(`meetings.vote.errors.${result.error}`); // i18n-ignore (dynamic key; every code exists in meetings.vote.errors)
       await audit({ action: "UPDATE", entity: "MeetingVote", entityId: input.voteId, after: { ballotIssued: true } });
-      return { code: result.code };
+      return { code: result.code, codes: result.codes };
     },
   })(input);
 }

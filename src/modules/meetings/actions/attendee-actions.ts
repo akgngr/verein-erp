@@ -255,8 +255,26 @@ export async function updateAttendeeAction(
       let nextProxyToAttendeeId =
         input.proxyToAttendeeId !== undefined ? input.proxyToAttendeeId : attendee.proxyToAttendeeId;
 
-      if (input.attendance === "PRESENT" && input.proxyToAttendeeId === undefined) {
+      if (input.attendance === "PRESENT" && attendee.attendance !== "PRESENT") {
         nextProxyToAttendeeId = null;
+      } else if (input.attendance === "PRESENT" && input.proxyToAttendeeId === undefined) {
+        nextProxyToAttendeeId = null;
+      }
+
+      if (
+        attendee.memberId &&
+        (input.attendance !== attendee.attendance || nextProxyToAttendeeId !== attendee.proxyToAttendeeId)
+      ) {
+        const reserved = await db.meetingVoteEligibility.findFirst({
+          where: {
+            memberId: attendee.memberId,
+            vote: { meetingId: attendee.meeting.id, status: "OPEN" },
+          },
+          select: { voteId: true },
+        });
+        if (reserved) {
+          throw new ActionError("meetings.errors.proxyLockedByOpenVote");
+        }
       }
 
       if (nextProxyToAttendeeId) {
@@ -279,6 +297,7 @@ export async function updateAttendeeAction(
         if (!check.ok) {
           const errorKeyMap = {
             self: "meetings.errors.proxySelf",
+            sourceNoMember: "meetings.errors.proxySourceNoMember",
             sourcePresent: "meetings.errors.proxySourcePresent",
             targetNotPresent: "meetings.errors.proxyTargetNotPresent",
             targetNoMember: "meetings.errors.proxyTargetNoMember",
@@ -336,12 +355,26 @@ export async function removeAttendeeAction(
         where: { id: input.id },
         select: {
           id: true,
+          memberId: true,
           name: true,
           meeting: { select: { id: true, meetingNumber: true, status: true, deletedAt: true } },
         },
       });
       if (!attendee) throw new ActionError("meetings.errors.attendeeNotFound");
       assertMeetingEditable(attendee.meeting, "content", user.role, meetingsPermissions);
+
+      if (attendee.memberId) {
+        const reserved = await db.meetingVoteEligibility.findFirst({
+          where: {
+            memberId: attendee.memberId,
+            vote: { meetingId: attendee.meeting.id, status: "OPEN" },
+          },
+          select: { voteId: true },
+        });
+        if (reserved) {
+          throw new ActionError("meetings.errors.proxyLockedByOpenVote");
+        }
+      }
 
       await db.meetingAttendee.updateMany({
         where: { meetingId: attendee.meeting.id, proxyToAttendeeId: attendee.id },

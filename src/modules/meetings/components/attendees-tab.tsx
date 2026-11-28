@@ -79,9 +79,11 @@ export function AttendeesTab({
       role: data.role ?? current.role,
       attendance: data.attendance ?? current.attendance,
       proxyToAttendeeId:
-        data.proxyToAttendeeId !== undefined
-          ? data.proxyToAttendeeId
-          : current.proxyToAttendeeId,
+        data.attendance === "PRESENT"
+          ? null
+          : data.proxyToAttendeeId !== undefined
+            ? data.proxyToAttendeeId
+            : current.proxyToAttendeeId,
       note: data.note ?? current.note ?? "",
     });
     if (!result.ok) {
@@ -286,7 +288,7 @@ export function AttendeesTab({
                           <span className="text-xs text-ink-400">-</span>
                         );
                       })()
-                    ) : editable ? (
+                    ) : editable && attendee.memberId ? (
                       <div className="relative inline-block w-full min-w-[150px]">
                         <select
                           id={`attendee-proxy-${attendee.id}`}
