@@ -203,6 +203,7 @@ export function GrantForm({
           <TextField
             value={value.sharePct}
             isDisabled={!canEdit}
+            isRequired
             onChange={(next) => set({ sharePct: next })}
             className="w-full"
           >

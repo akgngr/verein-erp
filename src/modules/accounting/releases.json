@@ -13,6 +13,11 @@
           "type": "feature",
           "tr": "Hibeler modülünün Verwendungsnachweis belge paketi (ZIP) oluşturabilmesi için listProjectBookingFiles sunucu sözleşmesi eklendi.",
           "de": "Server-Vertrag listProjectBookingFiles für das Belegpaket (ZIP) des Verwendungsnachweises im Fördermittel-Modul ergänzt."
+        },
+        {
+          "type": "improvement",
+          "tr": "listProjectBookingFiles dosya boyutunu da döndürür; çağıran modül belleği dosyaları okumadan sınırlayabilir.",
+          "de": "listProjectBookingFiles liefert zusätzlich die Dateigröße, damit aufrufende Module den Speicherbedarf vor dem Lesen begrenzen können."
         }
       ]
     },

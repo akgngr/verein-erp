@@ -106,3 +106,38 @@ describe("Grants — Anteilfinanzierung / Festbetragsfinanzierung & Verwendungsn
     );
   });
 });
+
+describe("#653 review fixes", () => {
+  test("neutralizes spreadsheet formulas in belegliste.csv cells but keeps plain amounts", async () => {
+    const { csvCell } = await import("../../src/modules/grants/lib/receipts-csv");
+    assert.equal(csvCell('=HYPERLINK("http://example.org","x")'), `"'=HYPERLINK(""http://example.org"",""x"")"`);
+    assert.equal(csvCell("@SUM(A1)"), `"'@SUM(A1)"`);
+    assert.equal(csvCell("-12,50"), `"-12,50"`);
+    assert.equal(csvCell(null), `""`);
+  });
+
+  test("requires a percentage for Anteilfinanzierung and stores none for other types", async () => {
+    const { grantSchema } = await import("../../src/modules/grants/schemas/grant");
+    const base = { id: null, name: "Synthetic grant", funder: "Synthetic funder", fileNumber: "", purpose: "", status: "PLANNED", approvedCents: null, ownShareCents: 0, thirdPartyCents: 0, periodStart: "2026-01-01", periodEnd: "2026-12-31", reportDueAt: null, projectId: null, useNetAmounts: false };
+    const missing = grantSchema.safeParse({ ...base, financingType: "ANTEIL", sharePercent: null });
+    assert.equal(missing.success, false);
+    assert.ok(!missing.success && missing.error.issues.some((issue) => issue.message === "grants.errors.sharePercent"));
+    const anteil = grantSchema.safeParse({ ...base, financingType: "ANTEIL", sharePercent: 80 });
+    assert.ok(anteil.success && anteil.data.sharePercent === 80);
+    const fixed = grantSchema.safeParse({ ...base, financingType: "FESTBETRAG", sharePercent: 50 });
+    assert.ok(fixed.success && fixed.data.sharePercent === null, "a stale rate is dropped for other financing types");
+  });
+
+  test("refuses an oversized receipt bundle before reading any file", async () => {
+    const { RECEIPTS_ZIP_MAX_BYTES } = await import("../../src/modules/grants/lib/receipts-csv");
+    assert.equal(RECEIPTS_ZIP_MAX_BYTES, 200 * 1024 * 1024);
+    const src = fs.readFileSync(path.join(process.cwd(), "src/modules/grants/handlers/receipts-zip.ts"), "utf8");
+    const cap = src.indexOf("totalBytes > RECEIPTS_ZIP_MAX_BYTES");
+    assert.ok(cap > 0, "aggregate byte cap exists");
+    assert.ok(cap < src.indexOf("await readFile("), "the cap is checked before any file is read");
+    assert.ok(src.includes("{ status: 413 }"));
+    const query = fs.readFileSync(path.join(process.cwd(), "src/modules/accounting/queries/project-bookings.ts"), "utf8");
+    assert.ok(query.includes("size: f.size"), "stored sizes come from the file rows, not from reading files");
+  });
+});
+

@@ -47,6 +47,8 @@ export type ProjectBookingFileRow = {
   date: string;
   originalName: string;
   storagePath: string;
+  /** Stored size in bytes (lets callers bound memory before reading files). */
+  size: number;
 };
 
 /** Hibe Verwendungsnachweis belge paketi (ZIP) için proje gider fişlerinin silinmemiş ekleri. */
@@ -69,6 +71,7 @@ export async function listProjectBookingFiles(
       bookingId: true,
       originalName: true,
       storagePath: true,
+      size: true,
       booking: { select: { bookingNumber: true, bookingDate: true } },
     },
     orderBy: [{ booking: { bookingDate: "asc" } }, { createdAt: "asc" }],
@@ -80,5 +83,6 @@ export async function listProjectBookingFiles(
     date: f.booking.bookingDate.toISOString().slice(0, 10),
     originalName: f.originalName,
     storagePath: f.storagePath,
+    size: f.size,
   }));
 }

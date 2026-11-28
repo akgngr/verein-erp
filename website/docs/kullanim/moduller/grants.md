@@ -46,6 +46,8 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-28_
 
 - **Yeni:** Hibeler için finansman türü (Fehlbedarfs-, Anteil-, Festbetragsfinanzierung) ve Verwendungsnachweis belge paketi (ZIP) indirme eklendi.
+- **Güvenlik:** Verwendungsnachweis belge listesinde (belegliste.csv) açıklama, karşı taraf ve kalem adı gibi serbest metinler formül enjeksiyonuna karşı etkisizleştirilir.
+- **Düzeltme:** Oransal finansmanda (ANTEIL) destek oranı zorunludur; eksik oran artık sessizce %100 sayılmaz. Belge paketi 200 MB'ı aşarsa dosyalar okunmadan anlaşılır bir hata verilir.
 
 ### 1.0.13 — Yerel tarih alanları
 

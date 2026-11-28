@@ -8,7 +8,8 @@ import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
 import { grantsPermissions } from "../permissions";
-import { addPayout, deleteGrant, deletePayout, FINANCING_TYPES, saveGrant, saveLines, saveReportText, setPayoutReceived, STATUSES } from "../services/grants";
+import { grantSchema } from "../schemas/grant";
+import { addPayout, deleteGrant, deletePayout, saveGrant, saveLines, saveReportText, setPayoutReceived } from "../services/grants";
 
 const id = z.string().min(1).max(64);
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "grants.errors.date");
@@ -18,25 +19,6 @@ const done = (grantId?: string) => {
   revalidatePath("/muhasebe/hibeler");
   if (grantId) revalidatePath(`/muhasebe/hibeler/${grantId}`);
 };
-
-const grantSchema = z.object({
-  id: id.nullable(),
-  name: z.string().trim().min(2, "grants.errors.name").max(200),
-  funder: z.string().trim().min(2, "grants.errors.funder").max(200),
-  fileNumber: text(100),
-  purpose: text(4000),
-  status: z.enum(STATUSES),
-  financingType: z.enum(FINANCING_TYPES),
-  sharePercent: z.number().int().min(1).max(100).nullable(),
-  approvedCents: cents.nullable(),
-  ownShareCents: cents,
-  thirdPartyCents: cents,
-  periodStart: date,
-  periodEnd: date,
-  reportDueAt: date.nullable(),
-  projectId: id.nullable(),
-  useNetAmounts: z.boolean(),
-}).refine((value) => value.periodStart <= value.periodEnd, { message: "grants.errors.period", path: ["periodEnd"] });
 
 export async function saveGrantAction(input: unknown): Promise<ActionResult<{ id: string }>> {
   // #582: Yeni hibe "create", mevcut hibe "update" yetkisi ister.

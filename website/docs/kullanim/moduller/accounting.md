@@ -51,6 +51,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-28_
 
 - **Yeni:** Hibeler modülünün Verwendungsnachweis belge paketi (ZIP) oluşturabilmesi için listProjectBookingFiles sunucu sözleşmesi eklendi.
+- **İyileştirme:** listProjectBookingFiles dosya boyutunu da döndürür; çağıran modül belleği dosyaları okumadan sınırlayabilir.
 
 ### 1.29.3 — Banka eşleştirmesinde alacak dekontu iadeleri
 

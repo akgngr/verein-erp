@@ -6024,7 +6024,9 @@
       "reportEmpty": "Bitte vor dem Einreichen den Sachbericht schreiben.",
       "deleteOnlyPlanned": "Es können nur geplante Zuwendungen (PLANNED) gelöscht werden.",
       "hasReceivedPayouts": "Eine Zuwendung mit bereits eingegangenen Auszahlungen kann nicht gelöscht werden.",
-      "payoutAlreadyReceived": "Eine bereits eingegangene Auszahlung kann nicht gelöscht werden."
+      "payoutAlreadyReceived": "Eine bereits eingegangene Auszahlung kann nicht gelöscht werden.",
+      "sharePercent": "Bei Anteilfinanzierung bitte den Fördersatz (1–100 %) angeben.",
+      "zipTooLarge": "Das Belegpaket ist zu groß ({sizeMb} MB, höchstens {limitMb} MB). Bitte den Zeitraum verkleinern oder Belege einzeln herunterladen."
     },
     "calendar": {
       "reports": "Verwendungsnachweise"

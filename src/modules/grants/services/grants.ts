@@ -11,7 +11,8 @@ import { payoutReceivedChangeError } from "../lib/payout-guard";
 
 export { computeNeededGrantCents, FINANCING_TYPES };
 export type Actor = { id: string; label: string };
-export const STATUSES = ["PLANNED", "APPLIED", "APPROVED", "ACTIVE", "REPORTED", "CLOSED", "REJECTED"] as const;
+import { STATUSES } from "../lib/statuses";
+export { STATUSES };
 /** Bu oranı aşan kalem sapmaları raporda işaretlenir (çoğu ANBest-P: %20). */
 export const DEVIATION_LIMIT = 0.2;
 

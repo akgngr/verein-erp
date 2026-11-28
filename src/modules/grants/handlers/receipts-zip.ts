@@ -9,16 +9,14 @@ import { buildZipArchive, type ZipEntry } from "@/shared/files/zip";
 import { translateMessage } from "@/shared/i18n/translate-message";
 import { can } from "@/shared/permissions/define";
 
+import { csvCell, RECEIPTS_ZIP_MAX_BYTES } from "../lib/receipts-csv";
 import { grantsPermissions } from "../permissions";
 import { buildReport, getGrant } from "../services/grants";
 
 const sanitizeFilePart = (value: string) =>
   value.replace(/[^A-Za-z0-9._-]+/g, "_").replace(/^_+|_+$/g, "") || "file";
 
-const csvCell = (value: string | number | null | undefined) => {
-  const s = value === null || value === undefined ? "" : String(value);
-  return `"${s.replace(/"/g, '""')}"`;
-};
+
 
 /**
  * GET /api/grants/[id]/receipts-zip — Verwendungsnachweis belge paketi (Belegliste CSV + tüm fiş ekleri).
@@ -93,6 +91,17 @@ export async function exportReceiptsZipHandler(
       new Date(`${grant.periodStart}T00:00:00Z`),
       new Date(`${grant.periodEnd}T00:00:00Z`),
     );
+    const totalBytes = files.reduce((sum, file) => sum + file.size, 0);
+    if (totalBytes > RECEIPTS_ZIP_MAX_BYTES) {
+      const mb = (bytes: number) => Math.ceil(bytes / (1024 * 1024));
+      return NextResponse.json(
+        {
+          ok: false,
+          error: await translateMessage("grants.errors.zipTooLarge", { sizeMb: mb(totalBytes), limitMb: mb(RECEIPTS_ZIP_MAX_BYTES) }),
+        },
+        { status: 413 },
+      );
+    }
     const usedNames = new Set<string>();
     for (const file of files) {
       try {
