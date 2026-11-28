@@ -1,14 +1,16 @@
 import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
-import type { MemberStatus } from "@prisma/client";
+import type { MembershipType, MemberStatus } from "@prisma/client";
 
 import { Letterhead, type LetterheadProfile } from "@/shared/pdf/letterhead";
+
+import { CERTIFICATE_STRINGS } from "./certificate-strings";
 
 export type CertificatePdfData = {
   organization: LetterheadProfile;
   lang: "de" | "tr";
   membershipNumber: string;
   fullName: string;
-  type: string;
+  type: MembershipType;
   status: MemberStatus;
   joinDateLabel: string;
   exitDateLabel: string | null;
@@ -16,70 +18,6 @@ export type CertificatePdfData = {
   issuedAtLabel: string;
 };
 
-const CERTIFICATE_STRINGS = {
-  de: {
-    title: "Mitgliedsbescheinigung",
-    subtitle: "Amtliche Bestätigung der Vereinsmitgliedschaft",
-    introActive:
-      "Hiermit wird bestätigt, dass die unten genannte Person ordentliches Mitglied unseres Vereins ist.",
-    introInactive:
-      "Hiermit wird die Mitgliedschaft der unten genannten Person in unserem Verein gemäß den gespeicherten Vereinsdaten bescheinigt.",
-    memberName: "Name",
-    membershipNumber: "Mitgliedsnummer",
-    typeLabel: "Mitgliedsart",
-    statusLabel: "Status",
-    joinDate: "Eintrittsdatum",
-    exitDate: "Austrittsdatum",
-    address: "Anschrift",
-    issuedAt: "Ausgestellt am",
-    cardTitle: "Mitgliedsausweis",
-    cardMemberSince: "Mitglied seit",
-    signatureHint: "Dieses Dokument wurde elektronisch erstellt und ist ohne Unterschrift gültig.",
-    types: {
-      REGULAR: "Ordentliches Mitglied",
-      HONORARY: "Ehrenmitglied",
-      YOUTH: "Jugendmitglied",
-      SUPPORTING: "Fördermitglied",
-    } as Record<string, string>,
-    statuses: {
-      ACTIVE: "Aktiv",
-      PASSIVE: "Passiv",
-      RESIGNED: "Ausgetreten",
-      DECEASED: "Verstorben",
-    } as Record<MemberStatus, string>,
-  },
-  tr: {
-    title: "Üyelik Belgesi",
-    subtitle: "Resmî Dernek Üyelik Onayı",
-    introActive:
-      "Aşağıda bilgileri yer alan kişinin derneğimizin kayıtlı üyesi olduğu onaylanır.",
-    introInactive:
-      "Aşağıda bilgileri yer alan kişinin derneğimizdeki üyelik kaydına ilişkin durum bilgileri aşağıda sunulmuştur.",
-    memberName: "Ad Soyad",
-    membershipNumber: "Üye Numarası",
-    typeLabel: "Üyelik Türü",
-    statusLabel: "Durum",
-    joinDate: "Katılım Tarihi",
-    exitDate: "Ayrılış Tarihi",
-    address: "Adres",
-    issuedAt: "Düzenlenme Tarihi",
-    cardTitle: "Üye Kartı",
-    cardMemberSince: "Üyelik Başlangıcı",
-    signatureHint: "Bu belge elektronik ortamda düzenlenmiştir; imza gerektirmez.",
-    types: {
-      REGULAR: "Asil Üye",
-      HONORARY: "Onursal Üye",
-      YOUTH: "Genç Üye",
-      SUPPORTING: "Destekleyici Üye",
-    } as Record<string, string>,
-    statuses: {
-      ACTIVE: "Aktif",
-      PASSIVE: "Pasif",
-      RESIGNED: "Ayrıldı",
-      DECEASED: "Vefat",
-    } as Record<MemberStatus, string>,
-  },
-} as const;
 
 const styles = StyleSheet.create({
   page: {
@@ -194,7 +132,7 @@ export function MembershipCertificateDocument({ data }: { data: CertificatePdfDa
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>{s.typeLabel}:</Text>
-            <Text style={styles.value}>{s.types[data.type] ?? data.type}</Text>
+            <Text style={styles.value}>{s.types[data.type]}</Text>
           </View>
           <View style={styles.row}>
             <Text style={styles.label}>{s.statusLabel}:</Text>

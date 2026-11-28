@@ -13,6 +13,11 @@
           "type": "feature",
           "tr": "Üye detay sayfasından iki dilli (TR/DE) Üyelik Belgesi ve Üye Kartı PDF'i indirme özelliği eklendi.",
           "de": "Zweisprachige Mitgliedsbescheinigung inkl. Mitgliedsausweis als PDF auf der Mitgliedsdetailseite ergänzt."
+        },
+        {
+          "type": "fix",
+          "tr": "Belgedeki üyelik türü gerçek türlere (Asıl, Onursal, Fahri, Destekçi) göre yazılır; giriş cümlesi türden bağımsızdır, onursal veya destekçi üye 'asıl üye' olarak belgelenmez.",
+          "de": "Die Mitgliedsart in der Bescheinigung folgt den tatsächlichen Arten (ordentlich, Ehren-, ehrenamtlich, Förder-); der Einleitungssatz ist neutral, Ehren- oder Fördermitglieder werden nicht als ordentliche Mitglieder bescheinigt."
         }
       ]
     },

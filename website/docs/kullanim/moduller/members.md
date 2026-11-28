@@ -51,6 +51,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 _2026-11-28_
 
 - **Yeni:** Üye detay sayfasından iki dilli (TR/DE) Üyelik Belgesi ve Üye Kartı PDF'i indirme özelliği eklendi.
+- **Düzeltme:** Belgedeki üyelik türü gerçek türlere (Asıl, Onursal, Fahri, Destekçi) göre yazılır; giriş cümlesi türden bağımsızdır, onursal veya destekçi üye 'asıl üye' olarak belgelenmez.
 
 ### 1.16.1 — Banka eşleştirme aidat sözleşmesi (#616)
 

@@ -40,3 +40,55 @@ export async function listProjectBookings(projectId: string, from: Date, to: Dat
     fileCount: row._count.files,
   }));
 }
+
+export type ProjectBookingFileRow = {
+  bookingId: string;
+  bookingNumber: string;
+  date: string;
+  originalName: string;
+  storagePath: string;
+  /** Stored size in bytes (lets callers bound memory before reading files). */
+  size: number;
+};
+
+/** Most files one receipt bundle may contain; the query returns one more row so callers can detect overflow. */
+export const PROJECT_BOOKING_FILES_LIMIT = 5000;
+
+/**
+ * Hibe Verwendungsnachweis belge paketi (ZIP) için proje gider fişlerinin silinmemiş ekleri.
+ * En fazla PROJECT_BOOKING_FILES_LIMIT + 1 satır döner: fazlası, paketin eksik kalacağını gösterir.
+ */
+export async function listProjectBookingFiles(
+  projectId: string,
+  from: Date,
+  to: Date,
+): Promise<ProjectBookingFileRow[]> {
+  const files = await getDb().accountingBookingFile.findMany({
+    where: {
+      deletedAt: null,
+      booking: {
+        projectId,
+        reversedAt: null,
+        type: "EXPENSE",
+        bookingDate: { gte: from, lte: to },
+      },
+    },
+    select: {
+      bookingId: true,
+      originalName: true,
+      storagePath: true,
+      size: true,
+      booking: { select: { bookingNumber: true, bookingDate: true } },
+    },
+    orderBy: [{ booking: { bookingDate: "asc" } }, { createdAt: "asc" }],
+    take: PROJECT_BOOKING_FILES_LIMIT + 1,
+  });
+  return files.map((f) => ({
+    bookingId: f.bookingId,
+    bookingNumber: f.booking.bookingNumber,
+    date: f.booking.bookingDate.toISOString().slice(0, 10),
+    originalName: f.originalName,
+    storagePath: f.storagePath,
+    size: f.size,
+  }));
+}
