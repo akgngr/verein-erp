@@ -6144,12 +6144,59 @@
       "total": "Gesamt"
     },
     "menu": {
+      "operations": "Ausleihe & Wartung",
       "categories": "Kategorien",
       "export": "Excel-Export"
     },
     "meta": {
       "list": "Inventar",
-      "categories": "Inventarkategorien"
+      "categories": "Inventarkategorien",
+      "operations": "Ausleihe & Wartung"
+    },
+    "operations": {
+      "pageTitle": "Ausleihe & Wartung",
+      "pageDescription": "Ausleihhistorie und DGUV V3 / TÜV-Prüftermine.",
+      "inspectionsTitle": "Anstehende und überfällige Prüfungen",
+      "inspectionsDescription": "Geräte mit hinterlegtem nächstem Prüftermin.",
+      "noInspections": "Keine Prüftermine hinterlegt.",
+      "inspectionStatuses": {
+        "overdue": "Überfällig",
+        "due_soon": "Bald fällig",
+        "ok": "Aktuell",
+        "none": "—"
+      },
+      "lendingTitle": "Ausleihhistorie",
+      "item": "Gegenstand",
+      "borrower": "Entleiher",
+      "borrowerMember": "Mitglied auswählen (optional)",
+      "borrowerExternal": "Extern / Freitext",
+      "lentAt": "Ausgeliehen am",
+      "dueAt": "Rückgabe bis",
+      "lendSubmit": "Ausleihe erfassen",
+      "lentToast": "Ausleihe gespeichert.",
+      "noLoans": "Noch keine Ausleihen erfasst.",
+      "markReturned": "Zurückgegeben",
+      "returnedToast": "Rückgabe gespeichert.",
+      "returnedOn": "Zurück: {date}",
+      "openLoan": "Ausgeliehen",
+      "maintenanceTitle": "Wartungs- & Prüfprotokolle",
+      "kind": "Prüfart",
+      "kinds": {
+        "DGUV_V3": "DGUV V3",
+        "TUV": "TÜV",
+        "SERVICE": "Wartung / Service",
+        "OTHER": "Sonstiges"
+      },
+      "performedAt": "Durchgeführt am",
+      "nextDueAt": "Nächste Prüfung",
+      "inspector": "Prüfer / Firma",
+      "passed": "Prüfung bestanden",
+      "maintenanceSubmit": "Wartung speichern",
+      "maintenanceToast": "Wartungseintrag gespeichert.",
+      "noMaintenances": "Noch keine Wartungen erfasst.",
+      "nextShort": "Nächste",
+      "passedBadge": "Bestanden",
+      "failedBadge": "Nicht bestanden"
     },
     "module": {
       "label": "Inventar",
@@ -6180,6 +6227,7 @@
     },
     "access": {
       "accounting": "Führt markierte Gegenstände als Anlagen (AfA) in der Buchhaltung und hält sie synchron.",
+      "members": "Liest die Mitgliederliste zur Auswahl von Entleihern bei der Ausleihe.",
       "system": "Liest, ob das Buchhaltungsmodul aktiv ist."
     }
   },
@@ -8219,7 +8267,8 @@
     "access": {
       "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten.",
       "online-forms": "Um von der Mitgliederseite E-Signatur-/Online-Formular-Links zu senden, signierte Dokumente anzuzeigen und beim Löschen offene Einladungen zu stornieren.",
-      "member-portal": "Widerruft aktive Mitgliederportal-Sitzungen, wenn ein Mitglied gelöscht wird."
+      "member-portal": "Widerruft aktive Mitgliederportal-Sitzungen, wenn ein Mitglied gelöscht wird.",
+      "system": "Lässt beim Löschen eines Mitglieds die anderen Module dessen personenbezogene Daten bereinigen (z. B. Inventar-Ausleihen anonymisieren)."
     },
     "permissions": {
       "memberPayments": {

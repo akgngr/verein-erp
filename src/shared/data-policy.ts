@@ -231,6 +231,8 @@ export const DATA_POLICY = {
   DonationsSettings: { owner: "donations", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   Event: { owner: "events", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   InventoryItem: { owner: "inventory", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
+  InventoryLoan: { owner: "inventory", category: "K1", reason: "Ödünç kayıtları: ödünç alanın adı ve üye bağlantısı (kişisel veri; üye silinince iade edilmiş kayıtlarda anonimleşir)", sensitiveFields: ["borrowerName", "borrowerMemberId"] },
+  InventoryMaintenance: { owner: "inventory", category: "K1", reason: "Bakım ve muayene kayıtları (denetçi adı kişisel veridir)", sensitiveFields: ["inspector"] },
   MeetingCounter: { owner: "meetings", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   MemberCounter: { owner: "members", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   MemberPaymentCounter: { owner: "members", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },

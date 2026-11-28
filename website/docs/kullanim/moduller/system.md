@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.21.0 |
+| Sürüm | 1.21.1 |
 | Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/menu`, `/ayarlar/yedekleme`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.21.1 — Üye silme kancaları
+
+_2026-11-28_
+
+- **İyileştirme:** Modüller onMemberDeleted yaşam döngüsü kancasıyla, silinen üyeye ait kişisel verilerini temizleyebilir; runMemberDeletionHooks tüm kancaları çalıştırır, hata diğerlerini durdurmaz.
 
 ### 1.21.0 — Şifreli yedekleme ve kurtarma doğrulama ekranı (#617)
 
@@ -89,10 +95,4 @@ _2026-11-25_
 
 - **İyileştirme:** Menü düzeni sayfasında özel gruplar modüller arasında yukarı/aşağı sıralanabilir ve ikon seçilebilir hâle getirildi.
 
-### 1.18.3 — Menü düzeni ayar sayfası
-
-_2026-11-24_
-
-- **İyileştirme:** Kullanıcı bazlı menü özelleştirme sayfası Ayarlar menüsüne (/ayarlar/menu) taşındı.
-
-Daha eski 33 herkese açık sürüm notu.
+Daha eski 34 herkese açık sürüm notu.

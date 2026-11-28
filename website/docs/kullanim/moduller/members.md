@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.16.2 |
+| Sürüm | 1.16.3 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -26,6 +26,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | [Dernek Bilgileri](./organization) | okuma | Makbuz ve belgelerde dernek antetini kullanır. |
 | [e-Sign](./online-forms) | okuma, yazma | Üye sayfasından e-imza/uzaktan form bağlantısı göndermek, imzalı belgeleri göstermek ve üye silindiğinde bekleyen davetleri iptal etmek için. |
 | [Üye Portalı](./member-portal) | okuma, yazma | Üye silindiğinde o üyeye ait aktif üye portalı oturumlarını iptal eder. |
+| [Modül Yönetimi](./system) | yazma | Bir üye silindiğinde diğer modüllerin o üyeye ait kişisel verilerini temizlemesini sağlar (ör. envanter ödünç kayıtlarını anonimleştirme). |
 
 ## Varsayılan yetkiler
 
@@ -45,6 +46,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.16.3 — Üye silinince modül kancaları
+
+_2026-11-28_
+
+- **Güvenlik:** Üye silindiğinde diğer modüllerin onMemberDeleted kancaları çalışır (ör. envanter ödünç kayıtları anonimleşir); başarısız modüller denetim kaydına yazılır.
 
 ### 1.16.2 — Üyelik belgesi ve üye kartı PDF çıktısı
 
@@ -91,10 +98,4 @@ _2026-11-25_
 
 - **Güvenlik:** Telegram /start ve /stop ile tek tıkla e-posta çıkışı üyenin rızasını ve toplu e-posta itirazını günceller.
 
-### 1.15.7 — nav.json kategori ve alt modül tanımı
-
-_2026-11-24_
-
-- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
-
-Daha eski 39 herkese açık sürüm notu.
+Daha eski 40 herkese açık sürüm notu.

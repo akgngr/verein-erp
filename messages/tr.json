@@ -6144,12 +6144,59 @@
       "total": "Toplam"
     },
     "menu": {
+      "operations": "Bakım ve Zimmet",
       "categories": "Kategoriler",
       "export": "Excel'e aktar"
     },
     "meta": {
       "list": "Envanter",
-      "categories": "Envanter kategorileri"
+      "categories": "Envanter kategorileri",
+      "operations": "Bakım ve Zimmet"
+    },
+    "operations": {
+      "pageTitle": "Bakım ve Zimmet Takibi",
+      "pageDescription": "Ödünç/iade geçmişi ve DGUV V3 / TÜV periyodik muayene takvimi.",
+      "inspectionsTitle": "Yaklaşan ve geciken muayeneler",
+      "inspectionsDescription": "Sonraki muayene tarihi girilmiş ekipmanlar.",
+      "noInspections": "Planlanmış muayene kaydı yok.",
+      "inspectionStatuses": {
+        "overdue": "Gecikmiş",
+        "due_soon": "Yaklaşıyor",
+        "ok": "Uygun",
+        "none": "—"
+      },
+      "lendingTitle": "Ödünç / Zimmet Geçmişi",
+      "item": "Demirbaş",
+      "borrower": "Teslim alan",
+      "borrowerMember": "Üye seçimi (isteğe bağlı)",
+      "borrowerExternal": "Üye dışı / serbest giriş",
+      "lentAt": "Veriliş tarihi",
+      "dueAt": "İade hedefi",
+      "lendSubmit": "Ödünç ver",
+      "lentToast": "Ödünç kaydı oluşturuldu.",
+      "noLoans": "Henüz ödünç kaydı yok.",
+      "markReturned": "İade alındı",
+      "returnedToast": "İade kaydedildi.",
+      "returnedOn": "İade: {date}",
+      "openLoan": "Ödünçte",
+      "maintenanceTitle": "Bakım ve Muayene Kayıtları",
+      "kind": "Tür",
+      "kinds": {
+        "DGUV_V3": "DGUV V3",
+        "TUV": "TÜV",
+        "SERVICE": "Bakım / Servis",
+        "OTHER": "Diğer"
+      },
+      "performedAt": "Yapıldığı tarih",
+      "nextDueAt": "Sonraki muayene",
+      "inspector": "Kontrol eden / Firma",
+      "passed": "Muayeneden geçti",
+      "maintenanceSubmit": "Bakım kaydet",
+      "maintenanceToast": "Bakım kaydı eklendi.",
+      "noMaintenances": "Henüz bakım kaydı yok.",
+      "nextShort": "Sonraki",
+      "passedBadge": "Geçti",
+      "failedBadge": "Başarısız"
     },
     "module": {
       "label": "Envanter ve Demirbaş",
@@ -6180,6 +6227,7 @@
     },
     "access": {
       "accounting": "İşaretli eşyaları muhasebede demirbaş (AfA) olarak açar ve senkron tutar.",
+      "members": "Zimmet kaydında dernek üyesi seçebilmek için üye listesini okur.",
       "system": "Muhasebe modülünün etkin olup olmadığını okur."
     }
   },
@@ -8219,7 +8267,8 @@
     "access": {
       "organization": "Makbuz ve belgelerde dernek antetini kullanır.",
       "online-forms": "Üye sayfasından e-imza/uzaktan form bağlantısı göndermek, imzalı belgeleri göstermek ve üye silindiğinde bekleyen davetleri iptal etmek için.",
-      "member-portal": "Üye silindiğinde o üyeye ait aktif üye portalı oturumlarını iptal eder."
+      "member-portal": "Üye silindiğinde o üyeye ait aktif üye portalı oturumlarını iptal eder.",
+      "system": "Bir üye silindiğinde diğer modüllerin o üyeye ait kişisel verilerini temizlemesini sağlar (ör. envanter ödünç kayıtlarını anonimleştirme)."
     },
     "permissions": {
       "memberPayments": {

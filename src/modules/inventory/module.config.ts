@@ -1,11 +1,11 @@
-import { Download, FolderTree, Package } from "lucide-react";
+import { ClipboardCheck, Download, FolderTree, Package } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
 import { inventoryPermissions } from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "inventory",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.2.1",
+  version: "1.3.0",
   label: "Envanter ve Demirbaş",
   description:
     "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.",
@@ -14,6 +14,7 @@ export const moduleConfig: ModuleConfig = {
   // Demirbaş senkronu (muhasebe ↔ envanter); karşı modül etkin mi diye modül durumunu okur.
   access: [
     { module: "accounting", operations: ["write"] },
+    { module: "members", operations: ["read"] },
     { module: "system", operations: ["read"] },
   ],
   nav: [
@@ -28,6 +29,12 @@ export const moduleConfig: ModuleConfig = {
     },
   ],
   menu: [
+    {
+      key: "operations",
+      label: "Bakım ve Zimmet",
+      href: "/inventory/bakim-ve-zimmet",
+      icon: ClipboardCheck,
+    },
     {
       key: "categories",
       label: "Kategoriler",

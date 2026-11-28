@@ -46,3 +46,21 @@ export async function runUserDeletionHooks(userId: string): Promise<{ failed: st
   }
   return { failed };
 }
+
+/**
+ * Üye silindikten sonra tüm modüllerin `onMemberDeleted` kancalarını çalıştırır (modül kapalı olsa da).
+ * Bir kanca hata verirse diğerleri yine çalışır; başarısız modüller döndürülür.
+ */
+export async function runMemberDeletionHooks(memberId: string): Promise<{ failed: string[] }> {
+  const failed: string[] = [];
+  for (const lifecycle of moduleLifecycleRegistry) {
+    if (!lifecycle.onMemberDeleted) continue;
+    try {
+      await lifecycle.onMemberDeleted(memberId);
+    } catch (error) {
+      failed.push(lifecycle.moduleKey);
+      console.error(`[lifecycle] ${lifecycle.moduleKey}.onMemberDeleted:`, error instanceof Error ? error.message.slice(0, 120) : "failed");
+    }
+  }
+  return { failed };
+}

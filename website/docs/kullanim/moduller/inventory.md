@@ -13,8 +13,8 @@ Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.
 |---|---|
 | Anahtar | `inventory` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.1 |
-| Sayfalar | `/inventory`, `/inventory/kategoriler` |
+| Sürüm | 1.3.0 |
+| Sayfalar | `/inventory`, `/inventory/bakim-ve-zimmet`, `/inventory/kategoriler` |
 
 ## Diğer modüllere erişim
 
@@ -23,6 +23,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | Modül | İşlem | Gerekçe |
 |---|---|---|
 | [Muhasebe](./accounting) | yazma | İşaretli eşyaları muhasebede demirbaş (AfA) olarak açar ve senkron tutar. |
+| [Üyeler](./members) | okuma | Zimmet kaydında dernek üyesi seçebilmek için üye listesini okur. |
 | [Modül Yönetimi](./system) | okuma | Muhasebe modülünün etkin olup olmadığını okur. |
 
 ## Varsayılan yetkiler
@@ -40,6 +41,14 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_inventory_overview` · `list_inventory_items` · `propose_delete_inventory_item` · `propose_inventory_item` · `propose_inventory_status`
 
 ## Sürüm notları
+
+### 1.3.0 — Ödünç/zimmet geçmişi ve DGUV V3 / TÜV bakım takvimi (#589)
+
+_2026-11-28_
+
+- **Yeni:** Demirbaş ödünç/iade geçmişi ve DGUV V3 / TÜV periyodik muayene takibi için /inventory/bakim-ve-zimmet ekranı eklendi.
+- **Güvenlik:** Ödünç ve bakım kayıtları kişisel veri olarak sınıflandırıldı (ödünç alanın adı, denetçi adı). Üye silindiğinde iade edilmiş ödünçlerde ad anonimleşir ve üye bağlantısı kaldırılır; açık ödünç, eşya geri alınana kadar adı korur.
+- **Düzeltme:** Açık ödünçler sınırsız ve önce listelenir (iade düğmesi kaybolmaz); muayene takvimi vadesi gelen ve geçen muayeneleri doğrudan tarihe göre bulur; eşya seçimlerinde tüm aktif eşyalar yer alır.
 
 ### 1.2.1 — Arayüz düzeltmeleri (#586)
 
@@ -86,10 +95,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.1.7 — Mobilde alttan açılan çekmece
-
-_2026-11-16_
-
-- **İyileştirme:** Form/ayrıntı çekmecesi mobilde alttan açılır (masaüstünde sağdan).
-
-Daha eski 8 herkese açık sürüm notu.
+Daha eski 9 herkese açık sürüm notu.
