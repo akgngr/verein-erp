@@ -29,6 +29,7 @@ export type AttendeeItem = {
   name: string;
   role: AttendeeRole;
   attendance: AttendanceStatus;
+  proxyToAttendeeId: string | null;
   note: string | null;
 };
 

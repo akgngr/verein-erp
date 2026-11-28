@@ -122,13 +122,15 @@ model MeetingAttendee {
   memberId   String? // FK DEĞİL (yumuşak referans); dernek üyesi. İkisi de null = dış konuk
   name       String // görüntülenen ad anlık görüntüsü
   role       AttendeeRole     @default(MEMBER)
-  attendance AttendanceStatus @default(INVITED)
-  note       String?
-  createdAt  DateTime         @default(now())
+  attendance        AttendanceStatus @default(INVITED)
+  proxyToAttendeeId String? // Stimmrechtsübertragung: vekâlet verilen katılımcı id'si (aynı toplantıda)
+  note              String?
+  createdAt         DateTime         @default(now())
 
   @@unique([meetingId, userId])
   @@unique([meetingId, memberId])
   @@index([meetingId])
+  @@index([proxyToAttendeeId])
 }
 
 model MeetingDecision {
