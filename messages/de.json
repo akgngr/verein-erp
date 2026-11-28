@@ -7792,7 +7792,9 @@
       "edit": "Bearbeiten",
       "delete": "Löschen",
       "changeStatus": "Status ändern",
-      "currentStatus": "Aktueller Status"
+      "currentStatus": "Aktueller Status",
+      "certificatePdf": "Mitgliedsbescheinigung (PDF)",
+      "certificatePdfAria": "PDF-Sprache für Mitgliedsbescheinigung wählen"
     },
     "statusChange": {
       "resignedTitle": "Ausgetretenes Mitglied",
