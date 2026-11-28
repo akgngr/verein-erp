@@ -106,6 +106,7 @@ export type MeetingDetail = {
   location: string | null;
   description: string | null;
   quorumRequired: number | null;
+  invitationSentAt: Date | null;
   status: MeetingStatus;
   approvedAt: Date | null;
   approvedByLabel: string | null;

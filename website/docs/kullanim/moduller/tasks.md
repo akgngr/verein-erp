@@ -13,7 +13,7 @@ Görev ve iş takibi yönetimi.
 |---|---|
 | Anahtar | `tasks` |
 | Tür | Eklenti |
-| Sürüm | 1.3.14 |
+| Sürüm | 1.3.15 |
 | Sayfalar | `/tasks`, `/tasks/bana-atananlar` |
 
 ## Diğer modüllere erişim
@@ -25,6 +25,8 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | [Bildirimler](./notifications) | yazma | Görev atandığında atanan kişiye bildirim gönderir. |
 | [Üyeler](./members) | okuma | Görev sorumlusu seçmek için üye listesini okur. |
 | [Toplantılar](./meetings) | okuma | Görevi bir toplantıya bağlamak için toplantı listesini okur. |
+| [CRM](./crm) | okuma | Birleşik görev merkezinde açık CRM takiplerini listelemek için okur. |
+| [Modül Yönetimi](./system) | okuma | Hangi modüllerin etkin olduğunu denetlemek için sistem durumunu okur. |
 | [Kullanıcılar](./users) | okuma | Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur. |
 
 ## Varsayılan yetkiler
@@ -42,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_open_tasks` · `propose_complete_task` · `propose_delete_task` · `propose_task`
 
 ## Sürüm notları
+
+### 1.3.15 — Birleşik görev merkezi (Toplantılar ve CRM) (#636)
+
+_2026-11-28_
+
+- **Yeni:** /tasks ve /tasks/bana-atananlar sayfalarında açık toplantı görevleri ve CRM takipleri kaynak rozetleri ve geri bağlantılarla listelenir.
 
 ### 1.3.14 — Bana atananlar ve toplantı bağlantısı
 
@@ -86,10 +94,4 @@ _2026-11-18_
 
 - **Yeni:** Bana atanan veya oluşturduğum, bugün vadesi dolan ve geciken açık görev sayıları sekreterde gösterilir.
 
-### 1.3.7 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 12 herkese açık sürüm notu.
+Daha eski 13 herkese açık sürüm notu.

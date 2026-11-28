@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.5",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Tüzük davet süresi denetimi ve Davetiye/Gündem PDF'i (#636)",
+        "de": "Satzungsfrist-Prüfung und Einladungs-/Tagesordnungs-PDF (#636)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Toplantı türüne göre tüzük davet süresi kontrolü (14/7/3 gün) ve iki dilli (TR/DE) Davetiye ve Gündem PDF çıktısı eklendi.",
+          "de": "Prüfung der satzungsgemäßen Einladungsfrist (14/7/3 Tage) sowie zweisprachiges Einladungs- & Tagesordnungs-PDF (DE/TR) ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.4.4",
       "date": "2026-11-26",
       "title": {

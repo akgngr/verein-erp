@@ -18,6 +18,7 @@ import { can } from "@/shared/permissions/define";
 import { formatDate, formatDateTime } from "@/shared/utils";
 
 import { getMeeting } from "../queries/get-meeting";
+import { evaluateInvitationNoticePeriod } from "../services/notice-period";
 import { listVotes } from "../services/secret-ballot";
 import { VotesTab } from "../components/votes-tab";
 import { meetingLabel } from "../recipients";
@@ -185,6 +186,15 @@ export async function MeetingDetailView({
             {/* KARAR: PDF yeni sekmede açılır; LinkButton target desteklemediği
                 için (paylaşılan bileşen değişikliği yasak) düz <a> kullanılır. */}
             <a
+              href={`/api/meetings/${meeting.id}/invitation-pdf`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-md border border-ink-300 bg-ink-50 px-4 py-1.5 text-sm font-medium transition-colors hover:bg-ink-100"
+            >
+              <FileText className="h-4 w-4" aria-hidden />
+              {t("invitationPdf")}
+            </a>
+            <a
               href={`/api/meetings/${meeting.id}/minutes-pdf`}
               target="_blank"
               rel="noopener noreferrer"
@@ -242,9 +252,34 @@ export async function MeetingDetailView({
         })}
       </div>
 
-      {tab === "genel" ? (
+      {tab === "genel" ? (() => {
+        const notice = evaluateInvitationNoticePeriod({
+          type: meeting.type,
+          meetingDate: meeting.meetingDate,
+          invitationSentAt: meeting.invitationSentAt,
+        });
+        const noticeTone =
+          notice.status === "compliant"
+            ? "border-success-200 bg-success-50 text-success-800"
+            : notice.status === "short_notice"
+              ? "border-warning-200 bg-warning-50 text-warning-800"
+              : "border-ink-200 bg-ink-50 text-ink-700";
+        return (
         <div className="flex max-w-3xl flex-col gap-4">
           <QuorumBanner quorum={meeting.quorum} />
+          <div className={`rounded-md border px-3 py-2 text-sm ${noticeTone}`}>
+            {notice.status === "compliant"
+              ? t("notice.compliant", {
+                  actual: notice.actualDays ?? 0,
+                  required: notice.requiredDays,
+                })
+              : notice.status === "short_notice"
+                ? t("notice.shortNotice", {
+                    actual: notice.actualDays ?? 0,
+                    required: notice.requiredDays,
+                  })
+                : t("notice.notSent", { required: notice.requiredDays })}
+          </div>
           <dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
             <InfoItem label={t("fieldNumber")} value={meeting.meetingNumber} />
             <InfoItem label={t("fieldType")} value={tType(meeting.type)} />
@@ -293,7 +328,8 @@ export async function MeetingDetailView({
             </div>
           ) : null}
         </div>
-      ) : null}
+        );
+      })() : null}
 
       {tab === "gundem" ? (
         <AgendaTab

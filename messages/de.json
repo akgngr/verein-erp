@@ -6851,13 +6851,21 @@
       "updatedAt": "Zuletzt geändert",
       "notSpecified": "Nicht angegeben",
       "quorumValueShort": "{required} Teilnehmer ({present} anwesend)",
-      "tabVotesShort": "Geheime Abstimmung"
+      "tabVotesShort": "Geheime Abstimmung",
+      "invitationPdf": "Einladung (PDF)",
+      "notice": {
+        "compliant": "Satzungsfrist eingehalten ({actual} / mind. {required} Tage).",
+        "shortNotice": "Hinweis: Satzungsfrist unterschritten ({actual} / mind. {required} Tage).",
+        "notSent": "Versanddatum noch nicht erfasst (mind. {required} Tage erforderlich)."
+      }
     },
     "quorum": {
       "reached": "Die Beschlussfähigkeit wurde festgestellt ({present}/{required})",
       "notReached": "Die Beschlussfähigkeit war nicht gegeben ({present}/{required})"
     },
     "actions": {
+      "invitationPdf": "Einladung (PDF)",
+      "invitationPdfAria": "PDF-Sprache für Einladung wählen",
       "minutesPdf": "Protokoll (PDF)",
       "statusButton": "Status",
       "minutesPdfAria": "PDF-Sprache für Protokoll wählen"
@@ -10569,6 +10577,8 @@
     "access": {
       "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
       "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen.",
+      "crm": "Liest offene CRM-Wiedervorlagen für den zentralen Aufgabenhub.",
+      "system": "Liest den Modulstatus, um aktive verknüpfte Module zu prüfen.",
       "users": "Liest die Kontoe-Mail-Adresse des aktiven Benutzers für die Zuordnung eigener Aufgaben in der Sekretariatsübersicht.",
       "notifications": "Benachrichtigt die zugewiesene Person, wenn eine Aufgabe zugewiesen wird."
     },
@@ -10633,6 +10643,17 @@
       "assigned": {
         "title": "Ihnen wurde eine Aufgabe zugewiesen: {title}",
         "body": "Unter „Meine Aufgaben“ öffnen."
+      }
+    },
+    "linkedHub": {
+      "title": "Offene Punkte aus anderen Modulen",
+      "description": "Sitzungsaufgaben und CRM-Wiedervorlagen in einer Übersicht.",
+      "count": "{count} Einträge",
+      "overdue": "Überfällig",
+      "openSource": "Quelle öffnen",
+      "sources": {
+        "meetings": "Sitzung",
+        "crm": "CRM"
       }
     }
   },

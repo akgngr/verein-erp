@@ -124,13 +124,21 @@
     "updatedAt": "Zuletzt geändert",
     "notSpecified": "Nicht angegeben",
     "quorumValueShort": "{required} Teilnehmer ({present} anwesend)",
-    "tabVotesShort": "Geheime Abstimmung"
+    "tabVotesShort": "Geheime Abstimmung",
+    "invitationPdf": "Einladung (PDF)",
+    "notice": {
+      "compliant": "Satzungsfrist eingehalten ({actual} / mind. {required} Tage).",
+      "shortNotice": "Hinweis: Satzungsfrist unterschritten ({actual} / mind. {required} Tage).",
+      "notSent": "Versanddatum noch nicht erfasst (mind. {required} Tage erforderlich)."
+    }
   },
   "quorum": {
     "reached": "Die Beschlussfähigkeit wurde festgestellt ({present}/{required})",
     "notReached": "Die Beschlussfähigkeit war nicht gegeben ({present}/{required})"
   },
   "actions": {
+    "invitationPdf": "Einladung (PDF)",
+    "invitationPdfAria": "PDF-Sprache für Einladung wählen",
     "minutesPdf": "Protokoll (PDF)",
     "statusButton": "Status",
     "minutesPdfAria": "PDF-Sprache für Protokoll wählen"

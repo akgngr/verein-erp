@@ -255,6 +255,43 @@ export async function listOpenFollowUps(viewer: PartyViewer) {
   return rows.map((row) => ({ id: row.id, dueAt: row.dueAt.toISOString(), note: row.note, partyId: row.party.id, partyName: summaries.get(`${row.party.sourceModule}:${row.party.sourceId}`)?.name ?? "—" }));
 }
 
+export type HubFollowUpItem = {
+  id: string;
+  assigneeId: string | null;
+  partyId: string;
+  partyName: string;
+  dueAt: string;
+  note: string;
+};
+
+/** Birleşik görev merkezi (tasks) için açık CRM takipleri (viewer RBAC korunur). */
+export async function listOpenFollowUpsForHub(
+  viewer: PartyViewer,
+  options?: { assigneeId?: string },
+): Promise<HubFollowUpItem[]> {
+  const rows = await getDb().crmFollowUp.findMany({
+    where: {
+      doneAt: null,
+      ...(options?.assigneeId ? { assigneeId: options.assigneeId } : {}),
+    },
+    include: { party: { select: { id: true, sourceModule: true, sourceId: true } } },
+    orderBy: { dueAt: "asc" },
+    take: 200,
+  });
+  const summaries = await resolveParties(
+    rows.map((row) => row.party),
+    viewer,
+  );
+  return rows.map((row) => ({
+    id: row.id,
+    assigneeId: row.assigneeId,
+    partyId: row.party.id,
+    partyName: summaries.get(`${row.party.sourceModule}:${row.party.sourceId}`)?.name ?? "—",
+    dueAt: row.dueAt.toISOString(),
+    note: row.note,
+  }));
+}
+
 /** Panel ve AI için toplu sayılar (kişi bilgisi yok). */
 export async function pipelineStats() {
   const db = getDb();

@@ -2,4 +2,4 @@
 import "server-only";
 
 export { crmPermissions } from "./permissions";
-export { pipelineStats } from "./services/crm";
+export { listOpenFollowUpsForHub, pipelineStats, type HubFollowUpItem } from "./services/crm";

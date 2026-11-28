@@ -13,7 +13,7 @@ Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı 
 |---|---|
 | Anahtar | `crm` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.12 |
+| Sürüm | 1.0.13 |
 | Sayfalar | `/crm` |
 | Önerir | [Üyeler](./members), [Muhasebe](./accounting) |
 
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_crm_pipeline`
 
 ## Sürüm notları
+
+### 1.0.13 — Birleşik görev merkezi takip sözleşmesi (#636)
+
+_2026-11-28_
+
+- **Yeni:** Görevler modülünün açık CRM takiplerini yetki ve sorumlu filtresiyle okuyabilmesi için listOpenFollowUpsForHub sunucu sözleşmesi eklendi.
 
 ### 1.0.12 — Yerel tarih alanları
 
@@ -87,10 +93,4 @@ _2026-11-16_
 
 - **İyileştirme:** Form/ayrıntı çekmecesi mobilde alttan açılır (masaüstünde sağdan).
 
-### 1.0.4 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 4 herkese açık sürüm notu.
+Daha eski 5 herkese açık sürüm notu.

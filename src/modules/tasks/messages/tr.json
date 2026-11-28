@@ -92,6 +92,8 @@
   "access": {
     "members": "Görev sorumlusu seçmek için üye listesini okur.",
     "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur.",
+    "crm": "Birleşik görev merkezinde açık CRM takiplerini listelemek için okur.",
+    "system": "Hangi modüllerin etkin olduğunu denetlemek için sistem durumunu okur.",
     "users": "Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur.",
     "notifications": "Görev atandığında atanan kişiye bildirim gönderir."
   },
@@ -156,6 +158,17 @@
     "assigned": {
       "title": "Size görev atandı: {title}",
       "body": "Görevlerim sayfasında açın."
+    }
+  },
+  "linkedHub": {
+    "title": "Diğer modüllerden açık işler",
+    "description": "Toplantı aksiyon maddeleri ve CRM takipleri tek listede gösterilir.",
+    "count": "{count} kayıt",
+    "overdue": "Süresi geçmiş",
+    "openSource": "Kaynağı aç",
+    "sources": {
+      "meetings": "Toplantı",
+      "crm": "CRM"
     }
   }
 }
