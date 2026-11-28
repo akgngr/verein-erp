@@ -1,0 +1,21 @@
+model Sponsor {
+  id           String    @id @default(uuid())
+  name         String
+  tier         String    @default("SUPPORTER")
+  status       String    @default("ACTIVE")
+  amountCents  Int       @default(0)
+  contactName  String?
+  contactEmail String?
+  contactPhone String?
+  website      String?
+  startDate    DateTime?
+  endDate      DateTime?
+  notes        String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([name])
+  @@index([status])
+  @@index([tier])
+  @@map("sponsors_records")
+}
