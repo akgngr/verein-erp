@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.29.4",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Proje fiş ekleri dışa aktarım sözleşmesi",
+        "de": "Exportvertrag für Projektbuchungsbelege"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Hibeler modülünün Verwendungsnachweis belge paketi (ZIP) oluşturabilmesi için listProjectBookingFiles sunucu sözleşmesi eklendi.",
+          "de": "Server-Vertrag listProjectBookingFiles für das Belegpaket (ZIP) des Verwendungsnachweises im Fördermittel-Modul ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.29.3",
       "date": "2026-11-28",
       "title": {

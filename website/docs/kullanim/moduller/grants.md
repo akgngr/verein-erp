@@ -13,7 +13,7 @@ Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kull
 |---|---|
 | Anahtar | `grants` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.13 |
+| Sürüm | 1.1.0 |
 | Gerektirir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_grant_overview`
 
 ## Sürüm notları
+
+### 1.1.0 — Anteilfinanzierung / Festbetragsfinanzierung ve belge paketi ZIP
+
+_2026-11-28_
+
+- **Yeni:** Hibeler için finansman türü (Fehlbedarfs-, Anteil-, Festbetragsfinanzierung) ve Verwendungsnachweis belge paketi (ZIP) indirme eklendi.
 
 ### 1.0.13 — Yerel tarih alanları
 
@@ -85,10 +91,4 @@ _2026-11-17_
 
 - **İyileştirme:** Rozet/çip görünümleri ortak StatusChip pattern'ine taşındı; modül düzeyindeki doğrudan HeroUI Chip bağımlılığı azaltıldı.
 
-### 1.0.5 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-28",
+      "title": {
+        "tr": "Anteilfinanzierung / Festbetragsfinanzierung ve belge paketi ZIP",
+        "de": "Anteilfinanzierung / Festbetragsfinanzierung und Belegpaket (ZIP)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Hibeler için finansman türü (Fehlbedarfs-, Anteil-, Festbetragsfinanzierung) ve Verwendungsnachweis belge paketi (ZIP) indirme eklendi.",
+          "de": "Finanzierungsarten (Fehlbedarfs-, Anteil-, Festbetragsfinanzierung) sowie Belegpaket-Download (ZIP) für den Verwendungsnachweis ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.0.13",
       "date": "2026-11-26",
       "title": {

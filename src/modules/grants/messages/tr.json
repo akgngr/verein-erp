@@ -45,6 +45,8 @@
     "funder": "Veren kurum (Zuwendungsgeber)",
     "fileNumber": "Dosya no (Aktenzeichen)",
     "status": "Durum",
+    "financingType": "Finansman türü",
+    "sharePercent": "Katkı oranı",
     "periodStart": "Dönem başı",
     "periodEnd": "Dönem sonu",
     "reportDueAt": "Rapor teslim tarihi",
@@ -62,6 +64,11 @@
     "receivedAt": "Alındı",
     "note": "Not"
   },
+  "financingTypes": {
+    "FEHLBEDARF": "Fehlbedarfsfinanzierung (Açık finansmanı)",
+    "ANTEIL": "Anteilfinanzierung (Oransal finansman)",
+    "FESTBETRAG": "Festbetragsfinanzierung (Sabit tutar)"
+  },
   "tabs": {
     "general": "Genel",
     "plan": "Finansman planı",
@@ -76,6 +83,7 @@
   "pending": "Bekliyor",
   "notLinked": "Hibe bir muhasebe projesine bağlı değil; gerçekleşen tutarlar boş. Genel sekmesinden proje seçin.",
   "reportPdf": "Verwendungsnachweis (PDF)",
+  "receiptsZip": "Belge paketi (ZIP)",
   "submittedAt": "Teslim: {date}",
   "missingReceipts": "{count} fişte belge yok",
   "deviationHint": "%20'yi aşan kalem sapmaları işaretlenir; birçok hibe koşulunda (ANBest-P) veren kurumun onayı gerekir.",

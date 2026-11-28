@@ -45,6 +45,8 @@
     "funder": "Zuwendungsgeber",
     "fileNumber": "Aktenzeichen",
     "status": "Status",
+    "financingType": "Finanzierungsart",
+    "sharePercent": "Förderquote",
     "periodStart": "Beginn",
     "periodEnd": "Ende",
     "reportDueAt": "Nachweis fällig am",
@@ -62,6 +64,11 @@
     "receivedAt": "Eingegangen",
     "note": "Notiz"
   },
+  "financingTypes": {
+    "FEHLBEDARF": "Fehlbedarfsfinanzierung",
+    "ANTEIL": "Anteilfinanzierung",
+    "FESTBETRAG": "Festbetragsfinanzierung"
+  },
   "tabs": {
     "general": "Allgemein",
     "plan": "Finanzierungsplan",
@@ -76,6 +83,7 @@
   "pending": "Ausstehend",
   "notLinked": "Die Zuwendung ist mit keinem Buchhaltungsprojekt verknüpft; Ist-Werte sind leer. Projekt unter 'Allgemein' wählen.",
   "reportPdf": "Verwendungsnachweis (PDF)",
+  "receiptsZip": "Belegpaket (ZIP)",
   "submittedAt": "Eingereicht: {date}",
   "missingReceipts": "{count} Buchungen ohne Beleg",
   "deviationHint": "Abweichungen über 20 % je Position werden markiert; nach vielen Nebenbestimmungen (ANBest-P) ist dafür die Zustimmung des Zuwendungsgebers nötig.",

@@ -8,7 +8,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
 import { grantsPermissions } from "../permissions";
-import { addPayout, deleteGrant, deletePayout, saveGrant, saveLines, saveReportText, setPayoutReceived, STATUSES } from "../services/grants";
+import { addPayout, deleteGrant, deletePayout, FINANCING_TYPES, saveGrant, saveLines, saveReportText, setPayoutReceived, STATUSES } from "../services/grants";
 
 const id = z.string().min(1).max(64);
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "grants.errors.date");
@@ -26,6 +26,8 @@ const grantSchema = z.object({
   fileNumber: text(100),
   purpose: text(4000),
   status: z.enum(STATUSES),
+  financingType: z.enum(FINANCING_TYPES),
+  sharePercent: z.number().int().min(1).max(100).nullable(),
   approvedCents: cents.nullable(),
   ownShareCents: cents,
   thirdPartyCents: cents,

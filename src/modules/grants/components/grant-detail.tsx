@@ -392,17 +392,30 @@ export function GrantDetailApp({
           <div className="flex flex-wrap items-center gap-2">
             {/* #582: Verwendungsnachweis fiş listesini içerir; muhasebe yetkisi yoksa gösterilmez. */}
             {report.bookingDetailsHidden ? null : (
-            <ActionLink
-              href={`/api/grants/${grant.id}/report-pdf`}
-              target="_blank"
-              rel="noopener"
-              className={buttonClassName({
-                variant: actionVariant("primary", "flat"),
-              })}
-            >
-              {<FileDown className="size-4" />}
-              {t("reportPdf")}
-            </ActionLink>
+              <>
+                <ActionLink
+                  href={`/api/grants/${grant.id}/report-pdf`}
+                  target="_blank"
+                  rel="noopener"
+                  className={buttonClassName({
+                    variant: actionVariant("primary", "flat"),
+                  })}
+                >
+                  {<FileDown className="size-4" />}
+                  {t("reportPdf")}
+                </ActionLink>
+                <ActionLink
+                  href={`/api/grants/${grant.id}/receipts-zip`}
+                  target="_blank"
+                  rel="noopener"
+                  className={buttonClassName({
+                    variant: actionVariant("default", "bordered"),
+                  })}
+                >
+                  {<FileDown className="size-4" />}
+                  {t("receiptsZip")}
+                </ActionLink>
+              </>
             )}
             {grant.reportSubmittedAt ? (
               <StatusChip tone="success">
