@@ -9,8 +9,12 @@ import { CrmApp, type PartyRow } from "../components/crm-app";
 import { crmPermissions } from "../permissions";
 import { listDeals, listOpenFollowUps, listParties, pipelineStats } from "../services/crm";
 
-/** /crm: kişiler, fırsat panosu ve takipler tek ekranda. */
-export async function CrmView() {
+/** /crm: kişiler, fırsat panosu ve takipler tek ekranda. `?kayit=<id>` (ör. Görev Merkezi'nden) kişi panelini açar. */
+export async function CrmView({
+  searchParams,
+}: {
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+} = {}) {
   const t = await getTranslations("crm");
   let user;
   try {
@@ -22,6 +26,10 @@ export async function CrmView() {
   // #582: Kişi adı/iletişimi yalnız kaynak modülü görebilen rollere çözülür.
   const viewer = { role: user.role, restrictedLabel: t("restricted") };
   const [parties, deals, followUps, stats] = await Promise.all([listParties({}, viewer), listDeals(viewer), listOpenFollowUps(viewer), pipelineStats()]);
+  const requested = (await searchParams)?.kayit;
+  const openParam = typeof requested === "string" ? requested : null;
+  // Only a party this list already shows can be opened; anything else is ignored.
+  const initialOpenId = openParam && parties.some((party) => party.id === openParam) ? openParam : null;
   return (
     <div>
       <PageHeader title={t("title")} description={t("description")} />
@@ -30,6 +38,7 @@ export async function CrmView() {
         deals={deals}
         followUps={followUps}
         stats={stats}
+        initialOpenId={initialOpenId}
         can={{ create: can(user.role, crmPermissions, "create"), update: can(user.role, crmPermissions, "update"), delete: can(user.role, crmPermissions, "delete") }}
       />
     </div>

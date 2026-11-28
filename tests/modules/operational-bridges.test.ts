@@ -203,4 +203,11 @@ describe("Roadmap E1.3 Operational Bridges (#631)", () => {
     assert.deepEqual(result.map((r) => r.id), ["g1", "g2"]);
     assert.deepEqual(result.find((r) => r.id === "g2")?.consents, { sms: true });
   });
+
+  it("keeps course filter values within the mailing filter limit (40 characters)", () => {
+    const label = courseLabel({ code: "K-2026-01", title: "Deutsch als Zweitsprache für Erwachsene – Aufbaukurs B2" });
+    assert.ok(label.length <= 40, `label is ${label.length} characters`);
+    assert.ok(label.startsWith("K-2026-01 · Deutsch"));
+  });
 });
+

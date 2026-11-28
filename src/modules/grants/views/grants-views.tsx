@@ -38,7 +38,7 @@ export async function GrantsListView({ searchParams }: { searchParams: Promise<R
       <GrantsList rows={rows} canCreate={can(user.role, grantsPermissions, "create")} today={berlinToday()} />
       {can(user.role, grantsPermissions, "create") && (await searchParams).yeni !== undefined ? (
         <FormDrawer title={t("newGrant")} description={t("description")}>
-          <GrantForm canEdit openAfterSave projects={projects} initial={{ id: null, name: "", funder: "", fileNumber: null, purpose: null, status: "PLANNED", approvedCents: null, ownShareCents: 0, thirdPartyCents: 0, periodStart: berlinToday(), periodEnd: berlinToday(), reportDueAt: null, projectId: null, useNetAmounts: false }} />
+          <GrantForm canEdit openAfterSave projects={projects} initial={{ id: null, name: "", funder: "", fileNumber: null, purpose: null, status: "PLANNED", financingType: "FEHLBEDARF", sharePercent: null, approvedCents: null, ownShareCents: 0, thirdPartyCents: 0, periodStart: berlinToday(), periodEnd: berlinToday(), reportDueAt: null, projectId: null, useNetAmounts: false }} />
         </FormDrawer>
       ) : null}
     </div>

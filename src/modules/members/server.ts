@@ -304,3 +304,4 @@ export {
   recordBankDuePayment,
   type OpenMemberDueForBankMatch,
 } from "./services/bank-reconciliation";
+export { exportMemberCertificatePdfHandler } from "./handlers/certificate-pdf";

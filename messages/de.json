@@ -5931,6 +5931,8 @@
       "funder": "Zuwendungsgeber",
       "fileNumber": "Aktenzeichen",
       "status": "Status",
+      "financingType": "Finanzierungsart",
+      "sharePercent": "Förderquote",
       "periodStart": "Beginn",
       "periodEnd": "Ende",
       "reportDueAt": "Nachweis fällig am",
@@ -5948,6 +5950,11 @@
       "receivedAt": "Eingegangen",
       "note": "Notiz"
     },
+    "financingTypes": {
+      "FEHLBEDARF": "Fehlbedarfsfinanzierung",
+      "ANTEIL": "Anteilfinanzierung",
+      "FESTBETRAG": "Festbetragsfinanzierung"
+    },
     "tabs": {
       "general": "Allgemein",
       "plan": "Finanzierungsplan",
@@ -5962,6 +5969,7 @@
     "pending": "Ausstehend",
     "notLinked": "Die Zuwendung ist mit keinem Buchhaltungsprojekt verknüpft; Ist-Werte sind leer. Projekt unter 'Allgemein' wählen.",
     "reportPdf": "Verwendungsnachweis (PDF)",
+    "receiptsZip": "Belegpaket (ZIP)",
     "submittedAt": "Eingereicht: {date}",
     "missingReceipts": "{count} Buchungen ohne Beleg",
     "deviationHint": "Abweichungen über 20 % je Position werden markiert; nach vielen Nebenbestimmungen (ANBest-P) ist dafür die Zustimmung des Zuwendungsgebers nötig.",
@@ -6016,7 +6024,10 @@
       "reportEmpty": "Bitte vor dem Einreichen den Sachbericht schreiben.",
       "deleteOnlyPlanned": "Es können nur geplante Zuwendungen (PLANNED) gelöscht werden.",
       "hasReceivedPayouts": "Eine Zuwendung mit bereits eingegangenen Auszahlungen kann nicht gelöscht werden.",
-      "payoutAlreadyReceived": "Eine bereits eingegangene Auszahlung kann nicht gelöscht werden."
+      "payoutAlreadyReceived": "Eine bereits eingegangene Auszahlung kann nicht gelöscht werden.",
+      "sharePercent": "Bei Anteilfinanzierung bitte den Fördersatz (1–100 %) angeben.",
+      "zipTooLarge": "Das Belegpaket ist zu groß ({sizeMb} MB, höchstens {limitMb} MB). Bitte den Zeitraum verkleinern oder Belege einzeln herunterladen.",
+      "zipTooManyFiles": "Der Zeitraum hat mehr als {limit} Belegdateien; das Paket wäre unvollständig. Bitte den Zeitraum verkleinern."
     },
     "calendar": {
       "reports": "Verwendungsnachweise"
@@ -6932,6 +6943,11 @@
     "detail": {
       "approvedLine": "Genehmigt am: {date} – {by}",
       "draftNote": "Das Protokoll liegt im Entwurfsstatus vor.",
+      "noticePeriod": {
+        "compliant": "Einladung {actual} Tage vorher · Richtwert {required} Tage erfüllt",
+        "shortNotice": "Nur {actual} Tage Vorlauf · Richtwert {required} Tage, Satzung prüfen",
+        "notSent": "Einladung noch nicht versandt (Richtwert: mind. {required} Tage)"
+      },
       "tabsAria": "Sitzungsregisterkarten",
       "tabGeneral": "Allgemein",
       "tabAgenda": "Tagesordnung ({count})",
@@ -6973,8 +6989,10 @@
     },
     "actions": {
       "minutesPdf": "Protokoll (PDF)",
+      "invitationPdf": "Einladung & TOP (PDF)",
       "statusButton": "Status",
-      "minutesPdfAria": "PDF-Sprache für Protokoll wählen"
+      "minutesPdfAria": "PDF-Sprache für Protokoll wählen",
+      "invitationPdfAria": "PDF-Sprache für Einladung wählen"
     },
     "statusMenu": {
       "button": "Status",
@@ -7819,7 +7837,9 @@
       "edit": "Bearbeiten",
       "delete": "Löschen",
       "changeStatus": "Status ändern",
-      "currentStatus": "Aktueller Status"
+      "currentStatus": "Aktueller Status",
+      "certificatePdf": "Mitgliedsbescheinigung (PDF)",
+      "certificatePdfAria": "PDF-Sprache für Mitgliedsbescheinigung wählen"
     },
     "statusChange": {
       "resignedTitle": "Ausgetretenes Mitglied",
@@ -10778,7 +10798,9 @@
     },
     "access": {
       "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
-      "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen.",
+      "meetings": "Liest Sitzungen und offene Sitzungsaufgaben für die einheitliche Aufgabenübersicht.",
+      "crm": "Liest offene CRM-Wiedervorlagen für die einheitliche Aufgabenübersicht.",
+      "system": "Prüft aktive Module, um nur freigegebene Quellen in der Aufgabenübersicht einzublenden.",
       "users": "Liest die Kontoe-Mail-Adresse des aktiven Benutzers für die Zuordnung eigener Aufgaben in der Sekretariatsübersicht.",
       "notifications": "Benachrichtigt die zugewiesene Person, wenn eine Aufgabe zugewiesen wird."
     },
@@ -10843,6 +10865,17 @@
       "assigned": {
         "title": "Ihnen wurde eine Aufgabe zugewiesen: {title}",
         "body": "Unter „Meine Aufgaben“ öffnen."
+      }
+    },
+    "unifiedHub": {
+      "title": "Verknüpfte Aufgaben & Wiedervorlagen",
+      "description": "Offene Sitzungsaufgaben und CRM-Wiedervorlagen mit direktem Quellverweis.",
+      "count": "{count} offen",
+      "overdue": "Überfällig",
+      "openSource": "Quelle öffnen",
+      "sources": {
+        "meetings": "Sitzung",
+        "crm": "CRM"
       }
     }
   },
