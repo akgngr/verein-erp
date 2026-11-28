@@ -1170,7 +1170,9 @@
       "cancel": "Vazgeç",
       "submit": "Fişi oluştur",
       "payable": "Gelen fatura",
-      "payableSelect": "Gelen fatura"
+      "payableSelect": "Gelen fatura",
+      "creditNote": "Alacak dekontu (iade)",
+      "creditNoteSelect": "Açık alacak dekontu"
     },
     "rules": {
       "title": "Öğrenilmiş kurallar",

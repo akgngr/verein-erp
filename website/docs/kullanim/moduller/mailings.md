@@ -1,5 +1,5 @@
 ---
-sidebar_position: 40
+sidebar_position: 41
 title: "Toplu e-posta"
 description: "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta."
 slug: /kullanim/moduller/mailings
@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.7.2 |
+| Sürüm | 2.7.3 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft` · `propose_dues_reminder_draft`
 
 ## Sürüm notları
+
+### 2.7.3 — Ortak adrese tek gönderim
+
+_2026-11-28_
+
+- **Düzeltme:** Kampanyada aynı kanal adresini (ör. ailenin ortak e-postası) paylaşan uygun alıcılar artık mesajı tek kez alır; tekilleştirme izin denetiminden sonra yapılır, böylece izni olmayan ilk kayıt izni olan ikinciyi engellemez.
 
 ### 2.7.2 — Yerel tarih alanları
 
@@ -89,10 +95,4 @@ _2026-11-23_
 - **Güvenlik:** Yeni kampanyalarda açılma/tıklama izleme artık varsayılan olarak kapalı; gerekirse kampanya sihirbazında açılabilir. Mevcut kampanyalar değişmedi.
 - **Güvenlik:** Tarayıcısı Global Privacy Control (Sec-GPC) gönderen alıcıların açılma ve tıklamaları kaydedilmez; bağlantılar yine çalışır.
 
-### 2.4.9 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 22 herkese açık sürüm notu.
+Daha eski 23 herkese açık sürüm notu.

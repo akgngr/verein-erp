@@ -136,6 +136,7 @@
     "secretary": "Sekretariat",
     "securityMonitor": "Sicherheitsüberwachung",
     "socialLogin": "Externe Anmeldung",
+    "sponsors": "Sponsoren",
     "students": "Schüler",
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
@@ -1581,7 +1582,9 @@
         "cancel": "Abbrechen",
         "submit": "Buchung anlegen",
         "payable": "Eingangsrechnung",
-        "payableSelect": "Eingangsrechnung"
+        "payableSelect": "Eingangsrechnung",
+        "creditNote": "Gutschrift (Erstattung)",
+        "creditNoteSelect": "Offene Gutschrift"
       },
       "rules": {
         "title": "Gelernte Regeln",
@@ -4199,6 +4202,31 @@
     },
     "calendar": {
       "sessions": "Kurstermine"
+    },
+    "recipients": {
+      "guardians": {
+        "label": "Kurs-Erziehungsberechtigte",
+        "filters": {
+          "course": {
+            "label": "Kurs"
+          },
+          "status": {
+            "label": "Anmeldestatus",
+            "options": {
+              "ACTIVE": "Aktiv",
+              "COMPLETED": "Abgeschlossen",
+              "WITHDRAWN": "Abgemeldet"
+            }
+          },
+          "role": {
+            "label": "Empfängerkreis",
+            "options": {
+              "ALL_GUARDIANS": "Alle Erziehungsberechtigten",
+              "PAYER_ONLY": "Nur Zahlungspflichtige"
+            }
+          }
+        }
+      }
     }
   },
   "crm": {
@@ -6277,14 +6305,15 @@
     },
     "access": {
       "accounting": "Übernimmt Rechnungs-/Belegdateien aus eingehenden E-Mails in den Belegeingang der Buchhaltung.",
-      "system": "Liest, ob das Buchhaltungsmodul aktiv ist (Übernahme nur dann möglich).",
+      "documents": "Übernimmt eingehende E-Mails samt Anhängen als Posteingang in das Dokumentenregister.",
+      "system": "Liest, ob das Buchhaltungs- und Dokumentenmodul aktiv sind (Übernahme nur dann möglich).",
       "tasks": "Legt aus einem bestätigten Sekretär-Vorschlag „Aufgabenentwurf“ eine Aufgabe an (nur mit Zustimmung des Nutzers).",
       "users": "Liest den Namen des Nutzers für das Feld „erstellt von“ der Aufgabe.",
       "notifications": "Benachrichtigt Nutzer mit Einwilligung über neue E-Mails (ohne Absender und Betreff)."
     },
     "inbox": {
       "title": "Posteingang",
-      "description": "Beleg-E-Mails (Rechnungen, Quittungen) per IMAP abrufen oder .eml-Datei hochladen; PDF/XML/Bild-Anhänge per Klick in den Belegeingang der Buchhaltung übernehmen. XRechnung/ZUGFeRD werden automatisch gelesen.",
+      "description": "Beleg-E-Mails (Rechnungen, Quittungen) per IMAP abrufen oder .eml-Datei hochladen; PDF/XML/Bild-Anhänge per Klick in den Belegeingang der Buchhaltung oder ins Dokumentenregister übernehmen. XRechnung/ZUGFeRD werden automatisch gelesen.",
       "fetch": "E-Mails abrufen",
       "uploadEml": ".eml hochladen",
       "fetched": "{fetched} E-Mails gelesen, {created} neu.",
@@ -6293,6 +6322,11 @@
       "imported": "Als Entwurf in den Belegeingang übernommen.",
       "importDuplicate": "Dieser Beleg ist bereits im Belegeingang; verknüpft.",
       "importToAccounting": "In Buchhaltung übernehmen",
+      "importToDocuments": "In Dokumente übernehmen",
+      "importedToDocuments": "Ins Dokumentenregister übernommen ({registryNumber}, {attachments} Anhänge).",
+      "importedToDocumentsPartial": "Ins Dokumentenregister übernommen ({registryNumber}): {attached} von {total} Anhängen archiviert. Die übrigen bleiben im Posteingang.",
+      "importToDocumentsDuplicate": "Diese E-Mail wurde bereits ins Dokumentenregister übernommen.",
+      "importedToDocumentsChip": "Dokumentenregister",
       "importedChip": "Übernommen",
       "accountingOff": "Das Buchhaltungsmodul ist deaktiviert; Anhänge können nicht übernommen werden.",
       "empty": "Keine E-Mails in dieser Ansicht.",
@@ -6339,7 +6373,9 @@
         "encryptionKeyMissing": "Kein Verschlüsselungsschlüssel (AUTH_SECRET).",
         "emlInvalid": "Keine gültige .eml-Datei.",
         "accountingOff": "Das Buchhaltungsmodul ist deaktiviert.",
-        "notFound": "Nicht gefunden."
+        "documentsOff": "Das Dokumentenmodul ist deaktiviert.",
+        "notFound": "Nicht gefunden.",
+        "importInProgress": "Diese E-Mail wird gerade ins Dokumentenregister übernommen. Bitte kurz warten."
       },
       "drafts": {
         "errors": {
@@ -6366,6 +6402,10 @@
             "to": "z. B. vorstand@verein.de oder '{{member.email}}' für das neue Mitglied",
             "body": "Felder wie '{{member.fullName}}' können in den Text eingefügt werden; Liste siehe unten. Personenbezogene Daten werden nur beim Versand gelesen, nicht gespeichert."
           }
+        },
+        "fetch_inbox": {
+          "label": "IMAP-Posteingang abrufen",
+          "description": "Ruft regelmäßig neue Beleg-E-Mails schreibgeschützt vom konfigurierten IMAP-Postfach ab."
         }
       },
       "events": {
@@ -9668,6 +9708,102 @@
     "linkDenied": "Konto konnte nicht verknüpft werden. Bitte erneut versuchen.",
     "otp": "Bestätigungscode (bei aktiver Zwei-Faktor-Anmeldung)",
     "applicationLocked": "Zum Schutz der Kontoverknüpfungen bleibt die gespeicherte Anwendungskennung unverändert; der geheime Schlüssel kann erneuert werden."
+  },
+  "sponsors": {
+    "module": {
+      "label": "Sponsoren",
+      "description": "Verwaltung von Unternehmens- und Einzelsponsorings, Förderstufen und Zusagen."
+    },
+    "permissions": {
+      "sponsors": {
+        "label": "Sponsoren",
+        "description": "Sponsoreneinträge ansehen, anlegen, bearbeiten und löschen."
+      }
+    },
+    "meta": {
+      "list": "Sponsoren"
+    },
+    "title": "Sponsoren",
+    "description": "Verwalten Sie Sponsoren, Förderstufen und zugesagte Förderbeträge des Vereins.",
+    "newSponsor": "Neuer Sponsor",
+    "summary": {
+      "total": "Sponsoren gesamt",
+      "active": "Aktive Sponsoren",
+      "activeAmount": "Aktive Jahreszusage",
+      "leads": "In Vorbereitung"
+    },
+    "tier": {
+      "PLATINUM": "Platin",
+      "GOLD": "Gold",
+      "SILVER": "Silber",
+      "BRONZE": "Bronze",
+      "SUPPORTER": "Förderer"
+    },
+    "status": {
+      "LEAD": "Interessent",
+      "ACTIVE": "Aktiv",
+      "PAUSED": "Pausiert",
+      "ENDED": "Beendet"
+    },
+    "table": {
+      "aria": "Sponsorenliste",
+      "name": "Sponsor",
+      "tier": "Stufe",
+      "status": "Status",
+      "amount": "Betrag",
+      "contact": "Ansprechperson",
+      "period": "Zeitraum",
+      "updatedAt": "Zuletzt geändert",
+      "search": "Sponsorname, Ansprechperson oder Notiz suchen...",
+      "empty": "Noch keine Sponsoren vorhanden. Legen Sie mit „Neuer Sponsor“ den ersten Eintrag an.",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "deleteTitle": "Sponsor löschen",
+      "deleteMessage": "„{name}“ wird dauerhaft gelöscht. Fortfahren?",
+      "deleted": "Sponsoreneintrag gelöscht.",
+      "bulkActivate": "Aktiv setzen",
+      "bulkPause": "Pausieren",
+      "bulkEnd": "Beenden",
+      "bulkSuccess": "{updated} Sponsoren aktualisiert, {skipped} Einträge waren bereits im Zielstatus."
+    },
+    "form": {
+      "createTitle": "Neuer Sponsor",
+      "editTitle": "Sponsor bearbeiten",
+      "name": "Sponsor / Unternehmen",
+      "tier": "Förderstufe",
+      "status": "Status",
+      "amount": "Förderbetrag (EUR)",
+      "amountPlaceholder": "z. B. 1250,00",
+      "contactName": "Ansprechperson",
+      "contactEmail": "E-Mail",
+      "contactPhone": "Telefon",
+      "website": "Website",
+      "websitePlaceholder": "https://beispiel.de",
+      "startDate": "Beginn",
+      "endDate": "Ende",
+      "notes": "Notizen",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "created": "Sponsoreneintrag angelegt.",
+      "updated": "Sponsoreneintrag aktualisiert."
+    },
+    "errors": {
+      "notFound": "Sponsoreneintrag nicht gefunden."
+    },
+    "validation": {
+      "nameRequired": "Der Name des Sponsors ist erforderlich.",
+      "nameMax": "Der Name darf höchstens 200 Zeichen lang sein.",
+      "amountInvalid": "Bitte geben Sie einen gültigen EUR-Betrag ein (nicht negativ).",
+      "contactNameMax": "Die Ansprechperson darf höchstens 150 Zeichen lang sein.",
+      "contactEmailMax": "Die E-Mail-Adresse darf höchstens 200 Zeichen lang sein.",
+      "contactEmailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "contactPhoneMax": "Die Telefonnummer darf höchstens 50 Zeichen lang sein.",
+      "websiteMax": "Die Website-Adresse darf höchstens 300 Zeichen lang sein.",
+      "websiteInvalid": "Die Website muss mit http:// oder https:// beginnen.",
+      "dateInvalid": "Bitte wählen Sie ein gültiges Datum.",
+      "endBeforeStart": "Das Enddatum darf nicht vor dem Beginn liegen.",
+      "notesMax": "Notizen dürfen höchstens 2000 Zeichen lang sein."
+    }
   },
   "students": {
     "module": {

@@ -91,3 +91,78 @@ export async function listGuardianOptions(): Promise<{ id: string; label: string
 export async function listGuardiansForDatev() {
   return getDb().studentGuardian.findMany({ where: { deletedAt: null }, orderBy: { debtorNumber: "asc" } });
 }
+
+export interface GuardianContactRecord {
+  id: string;
+  salutation: string | null;
+  firstName: string;
+  lastName: string;
+  email: string | null;
+  phone: string | null;
+  bulkMailOptOut: boolean;
+  messagingConsents: string[];
+}
+
+/**
+ * Batch-fetches active, non-deleted guardian contacts and their student links
+ * for cross-module recipient resolution (e.g., courses → mailings campaigns).
+ */
+export async function listGuardianContactsForStudents(
+  studentIds: string[],
+  extraGuardianIds: string[] = [],
+): Promise<{
+  guardiansById: Map<string, GuardianContactRecord>;
+  linksByStudentId: Map<string, Array<{ guardianId: string; isPayer: boolean }>>;
+}> {
+  const uniqueStudentIds = [...new Set(studentIds.filter(Boolean))];
+  const uniqueExtraIds = [...new Set(extraGuardianIds.filter(Boolean))];
+  if (uniqueStudentIds.length === 0 && uniqueExtraIds.length === 0) {
+    return { guardiansById: new Map(), linksByStudentId: new Map() };
+  }
+
+  const db = getDb();
+  const links = uniqueStudentIds.length
+    ? await db.studentGuardianLink.findMany({
+        where: {
+          studentId: { in: uniqueStudentIds },
+          student: { deletedAt: null },
+          guardian: { deletedAt: null },
+        },
+        select: { studentId: true, guardianId: true, isPayer: true },
+      })
+    : [];
+
+  const linksByStudentId = new Map<string, Array<{ guardianId: string; isPayer: boolean }>>();
+  const guardianIdSet = new Set<string>(uniqueExtraIds);
+  for (const link of links) {
+    guardianIdSet.add(link.guardianId);
+    const list = linksByStudentId.get(link.studentId) ?? [];
+    list.push({ guardianId: link.guardianId, isPayer: link.isPayer });
+    linksByStudentId.set(link.studentId, list);
+  }
+
+  if (guardianIdSet.size === 0) {
+    return { guardiansById: new Map(), linksByStudentId };
+  }
+
+  const guardians = await db.studentGuardian.findMany({
+    where: { id: { in: [...guardianIdSet] }, deletedAt: null },
+    select: {
+      id: true,
+      salutation: true,
+      firstName: true,
+      lastName: true,
+      email: true,
+      phone: true,
+      bulkMailOptOut: true,
+      messagingConsents: true,
+    },
+  });
+
+  const guardiansById = new Map<string, GuardianContactRecord>();
+  for (const row of guardians) {
+    guardiansById.set(row.id, row);
+  }
+
+  return { guardiansById, linksByStudentId };
+}

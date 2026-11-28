@@ -2,7 +2,11 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { detectFormat, parseAmount, parseCamt053, parseCsv, parseDate, parseMt940, transactionKey } from "@/modules/accounting/services/bank-parsers";
-import { suggestMatches } from "@/modules/accounting/services/bank-matching";
+import {
+  canMatchPayableToBankAmount,
+  filterOpenPayablesForDirection,
+  suggestMatches,
+} from "@/modules/accounting/services/bank-matching";
 
 const CAMT = `<?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02"><BkToCstmrStmt><Stmt><Acct><Id><IBAN>DE02120300000000202051</IBAN></Id><Ccy>EUR</Ccy></Acct>
@@ -314,4 +318,43 @@ test("claimOpenBankTransaction: eşzamanlı çağrılarda yalnızca ilk işlem O
   }
 });
 
+test("eşleştirme: gelen iade ↔ açık tedarikçi alacak dekontu (openCents < 0)", () => {
+  const incoming = {
+    amountCents: 12000,
+    counterpartyName: "Buerobedarf Mueller GmbH",
+    purpose: "Erstattung Gutschrift GS-2026-09",
+  };
+  const payables = [
+    { id: "cn-match", number: "GS-2026-09", supplierName: "Bürobedarf Müller GmbH", openCents: -12000 },
+    { id: "cn-too-small", number: "GS-2026-10", supplierName: "Bürobedarf Müller GmbH", openCents: -5000 },
+    { id: "inv-positive", number: "GS-2026-09", supplierName: "Bürobedarf Müller GmbH", openCents: 12000 },
+  ];
+
+  const incomingOptions = filterOpenPayablesForDirection(payables, incoming.amountCents);
+  assert.deepEqual(
+    incomingOptions.map((p) => p.id),
+    ["cn-match", "cn-too-small"],
+  );
+
+  const outgoingOptions = filterOpenPayablesForDirection(payables, -12000);
+  assert.deepEqual(
+    outgoingOptions.map((p) => p.id),
+    ["inv-positive"],
+  );
+
+  assert.equal(canMatchPayableToBankAmount(-12000, 12000), true);
+  assert.equal(canMatchPayableToBankAmount(-15000, 12000), true);
+  assert.equal(canMatchPayableToBankAmount(-5000, 12000), false);
+  assert.equal(canMatchPayableToBankAmount(12000, 12000), false);
+  assert.equal(canMatchPayableToBankAmount(12000, -12000), true);
+  assert.equal(canMatchPayableToBankAmount(-12000, -12000), false);
+
+  const suggestions = suggestMatches(incoming, [], [], payables);
+  assert.equal(suggestions.length, 1);
+  assert.equal(suggestions[0].kind, "payable");
+  if (suggestions[0].kind === "payable") {
+    assert.equal(suggestions[0].payableId, "cn-match");
+    assert.deepEqual(suggestions[0].reasons, ["invoiceNumber", "amount", "name"]);
+  }
+});
 

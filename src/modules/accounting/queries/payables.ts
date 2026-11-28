@@ -124,10 +124,10 @@ export async function getPayable(id: string): Promise<PayableDetail | null> {
   };
 }
 
-/** Banka eşleştirmesi: açık gelen faturalar. */
+/** Banka eşleştirmesi: açık gelen faturalar ve açık tedarikçi alacak dekontları (openCents < 0). */
 export async function listOpenPayables(): Promise<Array<{ id: string; number: string | null; supplierName: string; openCents: number }>> {
   const items = await getDb().accountingPayable.findMany({ where: { status: "OPEN" }, select: { id: true, number: true, supplierName: true, grossCents: true, paidCents: true } });
-  return items.map((item) => ({ id: item.id, number: item.number, supplierName: item.supplierName, openCents: item.grossCents - item.paidCents })).filter((item) => item.openCents > 0);
+  return items.map((item) => ({ id: item.id, number: item.number, supplierName: item.supplierName, openCents: item.grossCents - item.paidCents })).filter((item) => item.openCents !== 0);
 }
 
 export async function listSupplierOptions() {
